@@ -1,0 +1,1911 @@
+/**
+ * DemarrerMenu Component
+ * 
+ * Menu contextuel hiérarchique pour automatiser les prompts E-audit
+ * Design inspiré du menu Claude/ChatGPT avec deux panneaux côte à côte
+ */
+
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import ReactDOM from 'react-dom';
+import {
+  Play,
+  ChevronRight,
+  FileText,
+  Shield,
+  ClipboardList,
+  FileCheck,
+  Target,
+  AlertTriangle,
+  CheckSquare,
+  FileSearch,
+  BookOpen,
+  HelpCircle,
+  Map,
+  BarChart3,
+  Grid3X3,
+  Calculator,
+  Briefcase,
+  X,
+  Zap,
+  Brain,
+  TrendingUp,
+  Settings,
+  User,
+  Package,
+  Building
+} from 'lucide-react';
+
+// ============================================================
+// TYPES
+// ============================================================
+
+interface ModeItem {
+  id: string;
+  label: string;
+  prefix: string;
+}
+
+interface EtapeItem {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  command: string;
+  norme?: string; // Norme d'audit associée
+}
+
+interface TestItem {
+  id: string;
+  reference: string;
+  label: string;
+  processus: string;
+  command: string;
+}
+
+interface CycleComptable {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  tests: TestItem[];
+}
+
+interface PhaseItem {
+  id: string;
+  label: string;
+  etapes?: EtapeItem[];
+  cycles?: CycleComptable[];
+}
+
+interface LogicielItem {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  phases: PhaseItem[];
+}
+
+interface DemarrerMenuProps {
+  onInsertCommand: (command: string) => void;
+  disabled?: boolean;
+}
+
+// ============================================================
+// MODES DISPONIBLES
+// ============================================================
+
+const MODES: ModeItem[] = [
+  { id: 'normal', label: 'Normal', prefix: '' },
+  { id: 'demo', label: 'Demo', prefix: '[Demo] = Activate\n' },
+  { id: 'avance', label: 'Avancé', prefix: '[Mode] = Avancé\n' },
+  { id: 'intelligent', label: 'Intelligent', prefix: '[Mode] = Intelligent\n' },
+  { id: 'manuel', label: 'Manuel', prefix: '[Mode] = Manuel\n' }
+];
+
+// ============================================================
+// CONFIGURATION DU MENU
+// ============================================================
+
+const MENU_DATA: LogicielItem[] = [
+  {
+    id: 'e-audit-pro',
+    label: 'E-audit pro',
+    icon: <Briefcase className="w-4 h-4" />,
+    phases: [
+      {
+        id: 'phase-preparation',
+        label: 'Phase de préparation',
+        etapes: [
+          {
+            id: 'cartographie-risques',
+            label: 'Cartographie des risques',
+            norme: '13.2 Évaluation des risques dans le cadre de la mission',
+            icon: <Map className="w-4 h-4" />,
+            command: `[Command] = Cartographie des risques
+[Processus] = inventaire de caisse
+[Risques critiques] = fraude
+[Objectif] = couvrir la fraude`
+          },
+          {
+            id: 'referentiel-ci',
+            label: 'Référentiel de contrôle interne',
+            norme: '13.4 Critères d\'évaluation',
+            icon: <Shield className="w-4 h-4" />,
+            command: `[Command] = Référentiel de contrôle interne
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'questionnaire-ci',
+            label: 'Questionnaire de contrôle interne',
+            norme: '14.1 Collecte d\'informations pour l\'analyse et l\'évaluation',
+            icon: <ClipboardList className="w-4 h-4" />,
+            command: `[Command] = Questionnaire de contrôle interne
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'tableau-ffa',
+            label: 'Tableau des forces et faiblesses',
+            norme: '14.2 Analyses et constats potentiels de la mission',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = Tableau des forces et faiblesses apparentes
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'rapport-orientation',
+            label: "Rapport d'orientation",
+            norme: '13.3 Objectifs et périmètre de la mission',
+            icon: <Target className="w-4 h-4" />,
+            command: `[Command] = Rapport d'orientation
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'programme-travail',
+            label: 'Programme de travail',
+            norme: '13.6 Programme de travail',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = Programme de travail
+[Processus] = inventaire de caisse`
+          }
+        ]
+      },
+      {
+        id: 'phase-realisation',
+        label: 'Phase de réalisation',
+        etapes: [
+          {
+            id: 'feuille-couverture',
+            label: 'Feuille couverture',
+            norme: '14.6 Documentation relative à la mission',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = Feuille couverture
+[Processus] = 
+[Objectif] = `
+          }
+        ]
+      },
+      {
+        id: 'phase-conclusion',
+        label: 'Phase de conclusion',
+        etapes: [
+          {
+            id: 'frap',
+            label: 'Frap',
+            norme: '14.3 Évaluation des constats',
+            icon: <AlertTriangle className="w-4 h-4" />,
+            command: `[Command] = Frap
+[Processus] = 
+[Constat] = 
+[Recommandation] = `
+          },
+          {
+            id: 'synthese-frap',
+            label: 'Synthèse des Frap',
+            norme: '14.2 Analyses et constats potentiels de la mission',
+            icon: <FileSearch className="w-4 h-4" />,
+            command: `[Command] = Synthèse des Frap
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'rapport-provisoire',
+            label: 'Rapport provisoire',
+            norme: '14.5 Conclusions de la mission',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = Rapport provisoire
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'reunion-cloture',
+            label: 'Réunion de clôture',
+            norme: '11.3 Communication des résultats',
+            icon: <CheckSquare className="w-4 h-4" />,
+            command: `[Command] = Réunion de clôture
+[Processus] = 
+[Objectif] = `
+          },
+          {
+            id: 'rapport-final',
+            label: 'Rapport final',
+            norme: '15.1 Communication des résultats définitifs de la mission',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = Rapport final
+[Processus] = 
+[Objectif] = `
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'e-cartographie',
+    label: 'E-cartographie',
+    icon: <Map className="w-4 h-4" />,
+    phases: [
+      {
+        id: 'analyse-risques',
+        label: 'Analyse des risques',
+        etapes: [
+          {
+            id: 'identification-risques',
+            label: 'Identification des risques',
+            icon: <Target className="w-4 h-4" />,
+            command: `[Command] = Identification des risques
+[Domaine] = 
+[Périmètre] = `
+          },
+          {
+            id: 'evaluation-risques',
+            label: 'Évaluation des risques',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = Évaluation des risques
+[Domaine] = 
+[Critères] = `
+          },
+          {
+            id: 'matrice-risques',
+            label: 'Matrice des risques',
+            icon: <Grid3X3 className="w-4 h-4" />,
+            command: `[Command] = Matrice des risques
+[Domaine] = 
+[Format] = `
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'e-revision',
+    label: 'E-revision',
+    icon: <Calculator className="w-4 h-4" />,
+    phases: [
+      {
+        id: 'revue-analytique',
+        label: 'Revue analytique',
+        etapes: [
+          {
+            id: 'revue-analytique-generale',
+            label: 'Revue analytique générale',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = Revue analytique
+[Processus] = 
+[Période] = 
+[Objectif] = `
+          },
+          {
+            id: 'analyse-variations',
+            label: 'Analyse des variations',
+            icon: <TrendingUp className="w-4 h-4" />,
+            command: `[Command] = Analyse des variations
+[Compte] = 
+[Période] = 
+[Seuil] = `
+          }
+        ]
+      },
+      {
+        id: 'programme-controle',
+        label: 'Programme de contrôle',
+        cycles: [
+          {
+            id: 'cycle-tresorerie',
+            label: 'Trésorerie',
+            icon: <Calculator className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'tresorerie-aa040',
+                reference: 'AA040',
+                label: 'Rapprochements',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA040
+[reference] = Rapprochements
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa145',
+                reference: 'AA145',
+                label: 'Test sur les décaissements après la clôture',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA145
+[reference] = Test sur les décaissements après la clôture
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa160',
+                reference: 'AA160',
+                label: 'Test sur les décaissements avant la clôture',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA160
+[reference] = Test sur les décaissements avant la clôture
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa200',
+                reference: 'AA200',
+                label: 'Caisse',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA200
+[reference] = Caisse
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa400',
+                reference: 'AA400',
+                label: 'Suspens Banque',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA400
+[reference] = Suspens Banque
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa465',
+                reference: 'AA465',
+                label: 'Note de synthèse rapprochement',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA465
+[reference] = Note de synthèse rapprochement
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa02',
+                reference: 'AA02',
+                label: 'Feuilles maîtresses-TRESORERIE',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA02
+[reference] = Feuilles maîtresses-TRESORERIE
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'tresorerie-aa02-travaux',
+                reference: 'AA02',
+                label: 'Travaux analytiques caisse',
+                processus: 'Trésorerie',
+                command: `[Command] = /feuille couverture
+[Processus] = Trésorerie
+[test] = AA02
+[reference] = Travaux analytiques caisse
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-ventes',
+            label: 'Ventes',
+            icon: <BarChart3 className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'ventes-bb040',
+                reference: 'BB040',
+                label: 'Rapprochement CA',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB040
+[reference] = Rapprochement CA
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb145',
+                reference: 'BB145',
+                label: 'Test de séparation des exercices ventes',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB145
+[reference] = Test de séparation des exercices ventes
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb160',
+                reference: 'BB160',
+                label: 'Test de séparation des exercices avoir',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB160
+[reference] = Test de séparation des exercices avoir
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb300',
+                reference: 'BB300',
+                label: 'Test de validation analytique',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB300
+[reference] = Test de validation analytique
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb545',
+                reference: 'BB545',
+                label: 'Note de synthèse Test de séparation des exercices',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB545
+[reference] = Note de synthèse Test de séparation des exercices
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb30',
+                reference: 'BB30',
+                label: 'CA-TSE-TVA',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB30
+[reference] = CA-TSE-TVA
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb20',
+                reference: 'BB20',
+                label: 'Rapprochement de solde CA TVA_TSE',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB20
+[reference] = Rapprochement de solde CA TVA_TSE
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb02',
+                reference: 'BB02',
+                label: 'Feuilles maîtresses-CHIFFRE D\'AFFAIRES',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB02
+[reference] = Feuilles maîtresses-CHIFFRE D'AFFAIRES
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'ventes-bb02-travaux',
+                reference: 'BB02',
+                label: 'Travaux analytiques CA',
+                processus: 'VENTES',
+                command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB02
+[reference] = Travaux analytiques CA
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-stocks',
+            label: 'Stocks',
+            icon: <Package className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'stocks-cc20',
+                reference: 'CC20',
+                label: 'Test sur la centralisation',
+                processus: 'STOCKS',
+                command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC20
+[reference] = Test sur la centralisation
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'stocks-cc30',
+                reference: 'CC30',
+                label: 'Test Stock Physique Inventorié',
+                processus: 'STOCKS',
+                command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC30
+[reference] = Test Stock Physique Inventorié
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'stocks-cc104',
+                reference: 'CC104',
+                label: 'Test la variation stock',
+                processus: 'STOCKS',
+                command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC104
+[reference] = Test la variation stock
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'stocks-cc145',
+                reference: 'CC145',
+                label: 'Valorisation en CUMP',
+                processus: 'STOCKS',
+                command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC145
+[reference] = Valorisation en CUMP
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'stocks-cc300',
+                reference: 'CC300',
+                label: 'Provisions Dépréciation',
+                processus: 'STOCKS',
+                command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC300
+[reference] = Provisions Dépréciation
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-immobilisations',
+            label: 'Immobilisations',
+            icon: <Briefcase className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'immobilisations-dd040',
+                reference: 'DD040',
+                label: 'Tableau Mouvement immobilisations',
+                processus: 'IMMOBILISATIONS',
+                command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD040
+[reference] = Tableau Mouvement immobilisations
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'immobilisations-dd104',
+                reference: 'DD104',
+                label: 'Test acquisitions',
+                processus: 'IMMOBILISATIONS',
+                command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD104
+[reference] = Test acquisitions
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'immobilisations-dd120',
+                reference: 'DD120',
+                label: 'Test sur les cessions',
+                processus: 'IMMOBILISATIONS',
+                command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD120
+[reference] = Test sur les cessions
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'immobilisations-dd145',
+                reference: 'DD145',
+                label: 'Test dotation aux amortissements',
+                processus: 'IMMOBILISATIONS',
+                command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD145
+[reference] = Test dotation aux amortissements
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'immobilisations-dd180',
+                reference: 'DD180',
+                label: 'Test entretien charges',
+                processus: 'IMMOBILISATIONS',
+                command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD180
+[reference] = Test entretien charges
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-clients',
+            label: 'Clients',
+            icon: <User className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'clients-fe040',
+                reference: 'FE040',
+                label: 'Circularisation client',
+                processus: 'client',
+                command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE040
+[reference] = Circularisation client
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'clients-fe200',
+                reference: 'FE200',
+                label: 'Procédure alternative',
+                processus: 'client',
+                command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE200
+[reference] = Procédure alternative
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'clients-fe300',
+                reference: 'FE300',
+                label: 'Test de séparation des exercices Client',
+                processus: 'client',
+                command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE300
+[reference] = Test de séparation des exercices Client
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'clients-fe345',
+                reference: 'FE345',
+                label: 'Créances provisionnées',
+                processus: 'client',
+                command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE345
+[reference] = Créances provisionnées
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'clients-fe360',
+                reference: 'FE360',
+                label: 'Revue Balance agée',
+                processus: 'client',
+                command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE360
+[reference] = Revue Balance agée
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-fournisseurs',
+            label: 'Fournisseurs',
+            icon: <Building className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'fournisseurs-gg040',
+                reference: 'GG040',
+                label: 'Circularisation fournisseur',
+                processus: 'fournisseur',
+                command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = GG040
+[reference] = Circularisation fournisseur
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'fournisseurs-gg200',
+                reference: 'GG200',
+                label: 'Procédure alternative',
+                processus: 'fournisseur',
+                command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = GG200
+[reference] = Procédure alternative
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'fournisseurs-gg300',
+                reference: 'GG300',
+                label: 'Test de séparation des exercices Fournisseur',
+                processus: 'fournisseur',
+                command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = GG300
+[reference] = Test de séparation des exercices Fournisseur
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-personnel',
+            label: 'Personnel',
+            icon: <User className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'personnel-fp040',
+                reference: 'FP040',
+                label: 'Test Cotisations Fiscales',
+                processus: 'personnel',
+                command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP040
+[reference] = Test Cotisations Fiscales
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'personnel-fp104',
+                reference: 'FP104',
+                label: 'Test Cotisations sociales',
+                processus: 'personnel',
+                command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP104
+[reference] = Test Cotisations sociales
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'personnel-fp130',
+                reference: 'FP130',
+                label: 'Validation base imposable',
+                processus: 'personnel',
+                command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP130
+[reference] = Validation base imposable
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'personnel-fp145',
+                reference: 'FP145',
+                label: 'Travaux analytiques salaire',
+                processus: 'personnel',
+                command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP145
+[reference] = Travaux analytiques salaire
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-capitaux-propres',
+            label: 'Capitaux propres',
+            icon: <Calculator className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'capitaux-mm040',
+                reference: 'MM040',
+                label: 'Test Tableau mouvement capitaux propres',
+                processus: 'capitaux propres',
+                command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = MM040
+[reference] = Test Tableau mouvement capitaux propres
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'capitaux-mm104',
+                reference: 'MM104',
+                label: 'Test Augmentation capital',
+                processus: 'capitaux propres',
+                command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = MM104
+[reference] = Test Augmentation capital
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'capitaux-mm120',
+                reference: 'MM120',
+                label: 'Test Réduction capital',
+                processus: 'capitaux propres',
+                command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = MM120
+[reference] = Test Réduction capital
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-charges-exploitation',
+            label: 'Charges d\'exploitation',
+            icon: <BarChart3 className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'charges-ll040',
+                reference: 'LL040',
+                label: 'Test Charges externes',
+                processus: 'charges d\'exploitation',
+                command: `[Command] = /feuille couverture
+[Processus] = charges d'exploitation
+[test] = LL040
+[reference] = Test Charges externes
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'charges-ll104',
+                reference: 'LL104',
+                label: 'Test Autres charges',
+                processus: 'charges d\'exploitation',
+                command: `[Command] = /feuille couverture
+[Processus] = charges d'exploitation
+[test] = LL104
+[reference] = Test Autres charges
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'charges-ll300',
+                reference: 'LL300',
+                label: 'Test Provisions pour risques',
+                processus: 'charges d\'exploitation',
+                command: `[Command] = /feuille couverture
+[Processus] = charges d'exploitation
+[test] = LL300
+[reference] = Test Provisions pour risques
+[Nb de lignes] = 10`
+              }
+            ]
+          },
+          {
+            id: 'cycle-impots-taxes',
+            label: 'Impôts et taxes',
+            icon: <Calculator className="w-4 h-4" />,
+            tests: [
+              {
+                id: 'impots-nn040',
+                reference: 'NN040',
+                label: 'Test IS',
+                processus: 'impôt et taxes',
+                command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN040
+[reference] = Test IS
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'impots-nn104',
+                reference: 'NN104',
+                label: 'Test TVA',
+                processus: 'impôt et taxes',
+                command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN104
+[reference] = Test TVA
+[Nb de lignes] = 10`
+              },
+              {
+                id: 'impots-nn300',
+                reference: 'NN300',
+                label: 'Test IRVM',
+                processus: 'impôt et taxes',
+                command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN300
+[reference] = Test IRVM
+[Nb de lignes] = 10`
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'synthese-mission',
+        label: 'Synthèse de mission',
+        etapes: [
+          {
+            id: 'synthese-travaux',
+            label: 'Synthèse des travaux',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = Synthèse des travaux
+[Mission] = 
+[Période] = 
+[Conclusions] = `
+          },
+          {
+            id: 'points-attention',
+            label: "Points d'attention",
+            icon: <AlertTriangle className="w-4 h-4" />,
+            command: `[Command] = Points d'attention
+[Domaine] = 
+[Risque] = 
+[Recommandation] = `
+          },
+          {
+            id: 'rapport-synthese',
+            label: 'Rapport de synthèse',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = Rapport de synthèse
+[Mission] = 
+[Conclusions] = 
+[Recommandations] = `
+          }
+        ]
+      }
+    ]
+  },
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB145
+[reference] = Test de séparation des exercices ventes
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb160',
+            label: 'BB160 - Test de séparation des exercices avoir',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB160
+[reference] = Test de séparation des exercices avoir
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb300',
+            label: 'BB300 - Test de validation analytique',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB300
+[reference] = Test de validation analytique
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb545',
+            label: 'BB545 - Note de synthèse Test de séparation des exercices',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB545
+[reference] = Note de synthèse Test de séparation des exercices
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb30',
+            label: 'BB30 - CA-TSE-TVA',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB30
+[reference] = CA-TSE-TVA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb20',
+            label: 'BB20 - Rapprochement de solde CA TVA_TSE',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB20
+[reference] = Rapprochement de solde CA TVA_TSE
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb02',
+            label: 'BB02 - Feuilles maîtresses-CHIFFRE D\'AFFAIRES',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB02
+[reference] = Feuilles maîtresses-CHIFFRE D'AFFAIRES
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'ventes-bb02-travaux',
+            label: 'BB02 - Travaux analytiques CA',
+            icon: <BarChart3 className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = VENTES
+[test] = BB02
+[reference] = Travaux analytiques CA
+[Nb de lignes] = 10`
+          }
+        ]
+      },
+      {
+        id: 'controle-comptes-stocks',
+        label: 'Stocks',
+        etapes: [
+          {
+            id: 'stocks-bb040',
+            label: 'BB040 - Rapprochement CA',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = BB040
+[reference] = Rapprochement CA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'stocks-cc20',
+            label: 'CC20 - Test sur la centralisation',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC20
+[reference] = Test sur la centralisation
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'stocks-cc30',
+            label: 'CC30 - Test Stock Physique Inventorié',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC30
+[reference] = Test Stock Physique Inventorié
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'stocks-cc104',
+            label: 'CC104 - Test la variation stock',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC104
+[reference] = Test la variation stock
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'stocks-cc145',
+            label: 'CC145 - Valorisation en CUMP',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC145
+[reference] = Valorisation en CUMP
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'stocks-cc300',
+            label: 'CC300 - Provisions Dépréciation',
+            icon: <Package className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = STOCKS
+[test] = CC300
+[reference] = Provisions Dépréciation
+[Nb de lignes] = 10`
+          }
+        ]
+      },
+      {
+        id: 'controle-comptes-immobilisations',
+        label: 'Immobilisations',
+        etapes: [
+          {
+            id: 'immobilisations-dd040',
+            label: 'DD040 - Tableau Mouvement immobilisations',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD040
+[reference] = Tableau Mouvement immobilisations
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd104',
+            label: 'DD104 - Test acquisitions',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD104
+[reference] = Test acquisitions
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd120',
+            label: 'DD120 - Test sur les cessions',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD120
+[reference] = Test sur les cessions
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd145',
+            label: 'DD145 - Test dotation aux amortissements',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD145
+[reference] = Test dotation aux amortissements
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'immobilisations-dd180',
+            label: 'DD180 - Test entretien charges',
+            icon: <Briefcase className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = IMMOBILISATIONS
+[test] = DD180
+[reference] = Test entretien charges
+[Nb de lignes] = 10`
+          },
+          // CYCLE CLIENTS
+          {
+            id: 'clients-fe040',
+            label: 'FE040 - Circularisation client',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE040
+[reference] = Circularisation client
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe200',
+            label: 'FE200 - Procédure alternative',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE200
+[reference] = Procédure alternative
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe300',
+            label: 'FE300 - Test de séparation des exercices Client',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE300
+[reference] = Test de séparation des exercices Client
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe345',
+            label: 'FE345 - Créances provisionnées',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE345
+[reference] = Créances provisionnées
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'clients-fe360',
+            label: 'FE360 - Revue Balance agée',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = client
+[test] = FE360
+[reference] = Revue Balance agée
+[Nb de lignes] = 10`
+          },
+          // CYCLE FOURNISSEURS
+          {
+            id: 'fournisseurs-ff040',
+            label: 'FF040 - Circularisation fournisseurs',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF040
+[reference] = Circularisation fournisseurs
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff200',
+            label: 'FF200 - Procédure alternative FRS',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF200
+[reference] = Procédure alternative FRS
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff300',
+            label: 'FF300 - Test de séparation des exercices Fournisseurs',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF300
+[reference] = Test de séparation des exercices Fournisseurs
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff400',
+            label: 'FF400 - Test PCA CCA',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF400
+[reference] = Test PCA CCA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'fournisseurs-ff445',
+            label: 'FF445 - Test charges récurrentes',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = fournisseur
+[test] = FF445
+[reference] = Test charges récurrentes
+[Nb de lignes] = 10`
+          },
+          // CYCLE PERSONNEL
+          {
+            id: 'personnel-fp040',
+            label: 'FP040 - Test Cotisations Fiscales',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP040
+[reference] = Test Cotisations Fiscales
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp45',
+            label: 'FP45 - Rapprochement de solde BG-livre de paie',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP45
+[reference] = Rapprochement de solde BG-livre de paie
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp104',
+            label: 'FP104 - Test Cotisations sociales',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP104
+[reference] = Test Cotisations sociales
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp130',
+            label: 'FP130 - Validation base imposable',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP130
+[reference] = Validation base imposable
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'personnel-fp145',
+            label: 'FP145 - Travaux analytiques salaire',
+            icon: <User className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = personnel
+[test] = FP145
+[reference] = Travaux analytiques salaire
+[Nb de lignes] = 10`
+          },
+          // CYCLE CAPITAUX PROPRES
+          {
+            id: 'capitaux-fq200',
+            label: 'FQ200 - Emprunts et dettes',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ200
+[reference] = Emprunts et dettes
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'capitaux-fq300',
+            label: 'FQ300 - Tableau provision RC',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ300
+[reference] = Tableau provision RC
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'capitaux-fq400',
+            label: 'FQ400 - Subventions',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = capitaux propres
+[test] = FQ400
+[reference] = Subventions
+[Nb de lignes] = 10`
+          },
+          // CYCLE CHARGES D'EXPLOITATION
+          {
+            id: 'charges-mm042',
+            label: 'MM042 - TEST DETAIL PUB',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM042
+[reference] = TEST DETAIL PUB
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm200',
+            label: 'MM200 - Test sur les charges prestations',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM200
+[reference] = Test sur les charges prestations
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm245',
+            label: 'MM245 - Test TSE',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM245
+[reference] = Test TSE
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm300',
+            label: 'MM300 - Test patentes',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM300
+[reference] = Test patentes
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'charges-mm400',
+            label: 'MM400 - Test impôt Foncier',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = charge d'exploitation
+[test] = MM400
+[reference] = Test impôt Foncier
+[Nb de lignes] = 10`
+          },
+          // CYCLE IMPÔTS ET TAXES
+          {
+            id: 'impots-nn040',
+            label: 'NN040 - Rapprochement de solde TVA - CA',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN040
+[reference] = Rapprochement de solde TVA - CA
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn200',
+            label: 'NN200 - Test CN',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN200
+[reference] = Test CN
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn220',
+            label: 'NN220 - Test IGR',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN220
+[reference] = Test IGR
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn245',
+            label: 'NN245 - Test IRC',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN245
+[reference] = Test IRC
+[Nb de lignes] = 10`
+          },
+          {
+            id: 'impots-nn300',
+            label: 'NN300 - Test IRVM',
+            icon: <Calculator className="w-4 h-4" />,
+            command: `[Command] = /feuille couverture
+[Processus] = impôt et taxes
+[test] = NN300
+[reference] = Test IRVM
+[Nb de lignes] = 10`
+          }
+        ]
+      },
+      {
+        id: 'synthese-mission',
+        label: 'Synthèse de mission',
+        etapes: [
+          {
+            id: 'synthese-travaux',
+            label: 'Synthèse des travaux',
+            icon: <FileText className="w-4 h-4" />,
+            command: `[Command] = Synthèse des travaux
+[Mission] = 
+[Période] = 
+[Conclusions] = `
+          },
+          {
+            id: 'points-attention',
+            label: "Points d'attention",
+            icon: <AlertTriangle className="w-4 h-4" />,
+            command: `[Command] = Points d'attention
+[Domaine] = 
+[Risque] = 
+[Recommandation] = `
+          },
+          {
+            id: 'rapport-synthese',
+            label: 'Rapport de synthèse',
+            icon: <FileCheck className="w-4 h-4" />,
+            command: `[Command] = Rapport de synthèse
+[Mission] = 
+[Conclusions] = 
+[Recommandations] = `
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'bibliotheque',
+    label: 'Bibliothèque',
+    icon: <BookOpen className="w-4 h-4" />,
+    phases: [
+      {
+        id: 'guides',
+        label: 'Guides',
+        etapes: [
+          {
+            id: 'guide-methodologique',
+            label: 'Guide méthodologique',
+            icon: <BookOpen className="w-4 h-4" />,
+            command: `[Command] = Guide méthodologique
+[Thème] = `
+          },
+          {
+            id: 'bonnes-pratiques',
+            label: 'Bonnes pratiques',
+            icon: <CheckSquare className="w-4 h-4" />,
+            command: `[Command] = Bonnes pratiques
+[Domaine] = `
+          }
+        ]
+      },
+      {
+        id: 'commandes-complementaires',
+        label: 'Commandes complémentaires',
+        etapes: [
+          {
+            id: 'aide-contextuelle',
+            label: 'Aide contextuelle',
+            icon: <HelpCircle className="w-4 h-4" />,
+            command: `[Command] = Aide
+[Sujet] = `
+          }
+        ]
+      }
+    ]
+  }
+];
+
+// ============================================================
+// ICÔNES POUR LES MODES
+// ============================================================
+
+const getModeIcon = (modeId: string) => {
+  switch (modeId) {
+    case 'normal': return <User className="w-4 h-4" />;
+    case 'demo': return <Play className="w-4 h-4" />;
+    case 'avance': return <Zap className="w-4 h-4" />;
+    case 'intelligent': return <Brain className="w-4 h-4" />;
+    case 'manuel': return <Settings className="w-4 h-4" />;
+    default: return null;
+  }
+};
+
+// ============================================================
+// COMPOSANT SOUS-MENU (PORTAIL)
+// ============================================================
+
+interface SubMenuPortalProps {
+  etape: EtapeItem;
+  anchorRect: DOMRect;
+  onModeClick: (mode: ModeItem) => void;
+  onClose: () => void;
+}
+
+const SubMenuPortal: React.FC<SubMenuPortalProps> = ({ etape, anchorRect, onModeClick, onClose }) => {
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Utiliser un délai pour laisser le click se propager d'abord
+      setTimeout(() => {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+          // Ne pas fermer si on clique sur le menu principal
+          const target = event.target as HTMLElement;
+          if (!target.closest('[data-demarrer-menu]') && !target.closest('[data-submenu-portal]')) {
+            onClose();
+          }
+        }
+      }, 0);
+    };
+
+    // Utiliser click au lieu de mousedown pour éviter de fermer avant le traitement du clic
+    document.addEventListener('click', handleClickOutside, true);
+    return () => document.removeEventListener('click', handleClickOutside, true);
+  }, [onClose]);
+
+  // Calculer la position du sous-menu
+  const style: React.CSSProperties = {
+    position: 'fixed',
+    top: anchorRect.top,
+    left: anchorRect.right + 4,
+    zIndex: 9999,
+  };
+
+  // Vérifier si le menu dépasse à droite de l'écran
+  if (anchorRect.right + 200 > window.innerWidth) {
+    style.left = anchorRect.left - 200 - 4;
+  }
+
+  return ReactDOM.createPortal(
+    <div
+      ref={menuRef}
+      data-submenu-portal
+      style={style}
+      className="min-w-[220px] max-w-[320px] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 py-1 animate-in fade-in-0 zoom-in-95 duration-150"
+    >
+      <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700">
+        <div className="text-xs font-semibold text-[#6b1102] dark:text-[#ff6b5b]">
+          {etape.label}
+        </div>
+        {etape.norme && (
+          <div className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 leading-tight">
+            Norme {etape.norme}
+          </div>
+        )}
+      </div>
+      {MODES.map(mode => (
+        <button
+          key={mode.id}
+          type="button"
+          className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-[#6b1102]/10 dark:hover:bg-[#6b1102]/20 hover:text-[#6b1102] dark:hover:text-[#ff6b5b] transition-colors"
+          onMouseDown={(e) => {
+            // Empêcher la propagation du mousedown pour éviter la fermeture
+            e.stopPropagation();
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('[SubMenuPortal] Mode button clicked:', mode.label);
+            onModeClick(mode);
+          }}
+        >
+          <span className="text-gray-400 dark:text-gray-500">
+            {getModeIcon(mode.id)}
+          </span>
+          <span>{mode.label}</span>
+        </button>
+      ))}
+    </div>,
+    document.body
+  );
+};
+
+// ============================================================
+// COMPOSANT PRINCIPAL
+// ============================================================
+
+const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeLogiciel, setActiveLogiciel] = useState<string | null>(null);
+  const [activeEtape, setActiveEtape] = useState<EtapeItem | null>(null);
+  const [activeCycle, setActiveCycle] = useState<CycleComptable | null>(null);
+  const [activeTest, setActiveTest] = useState<TestItem | null>(null);
+  const [etapeAnchorRect, setEtapeAnchorRect] = useState<DOMRect | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Fermer le menu si clic en dehors
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node) &&
+          buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
+        const target = event.target as HTMLElement;
+        // Ne pas fermer si on clique sur le sous-menu
+        if (!target.closest('[data-submenu-portal]')) {
+          closeMenu();
+        }
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Fermer avec Escape
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen]);
+
+  const closeMenu = () => {
+    setIsOpen(false);
+    setActiveLogiciel(null);
+    setActiveEtape(null);
+    setEtapeAnchorRect(null);
+  };
+
+  const toggleMenu = useCallback(() => {
+    if (isOpen) {
+      closeMenu();
+    } else {
+      setIsOpen(true);
+    }
+  }, [isOpen]);
+
+  const handleEtapeClick = (etape: EtapeItem, event: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (activeEtape?.id === etape.id) {
+      setActiveEtape(null);
+      setEtapeAnchorRect(null);
+    } else {
+      setActiveEtape(etape);
+      setEtapeAnchorRect(rect);
+    }
+  };
+
+  const handleModeClick = (mode: ModeItem) => {
+    console.log('[DemarrerMenu] handleModeClick called with mode:', mode);
+    console.log('[DemarrerMenu] activeEtape:', activeEtape);
+    
+    if (activeEtape) {
+      const finalCommand = mode.prefix + activeEtape.command;
+      console.log('[DemarrerMenu] Final command to insert:', finalCommand);
+      
+      // Appeler onInsertCommand AVANT de fermer le menu
+      try {
+        onInsertCommand(finalCommand);
+        console.log('[DemarrerMenu] onInsertCommand called successfully');
+      } catch (error) {
+        console.error('[DemarrerMenu] Error calling onInsertCommand:', error);
+      }
+      
+      // Fermer le menu après un court délai pour s'assurer que l'insertion est faite
+      setTimeout(() => {
+        closeMenu();
+      }, 100);
+    } else {
+      console.warn('[DemarrerMenu] No activeEtape, cannot insert command');
+    }
+  };
+
+  const handleCycleClick = (cycle: CycleComptable) => {
+    if (activeCycle?.id === cycle.id) {
+      setActiveCycle(null);
+      setActiveTest(null);
+    } else {
+      setActiveCycle(cycle);
+      setActiveTest(null);
+    }
+  };
+
+  const handleTestClick = (test: TestItem, event: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (activeTest?.id === test.id) {
+      setActiveTest(null);
+      setEtapeAnchorRect(null);
+    } else {
+      // Créer un objet EtapeItem à partir du TestItem pour la compatibilité
+      const etapeFromTest: EtapeItem = {
+        id: test.id,
+        label: `${test.reference} - ${test.label}`,
+        icon: <FileText className="w-4 h-4" />,
+        command: test.command
+      };
+      setActiveTest(test);
+      setActiveEtape(etapeFromTest);
+      setEtapeAnchorRect(rect);
+    }
+  };
+
+  return (
+    <div className="relative">
+      {/* Bouton Démarrer - Rouge bordeaux */}
+      <button
+        ref={buttonRef}
+        onClick={toggleMenu}
+        disabled={disabled}
+        className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-all
+          ${isOpen 
+            ? 'bg-[#6b1102] text-white shadow-lg shadow-[#6b1102]/30' 
+            : 'bg-gray-100/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-[#6b1102]/10 dark:hover:bg-[#6b1102]/20 hover:text-[#6b1102] dark:hover:text-[#ff6b5b]'
+          }
+          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+        `}
+        title="Menu Démarrer E-audit"
+      >
+        <Play className={`w-4 h-4 ${isOpen ? 'fill-white' : ''}`} />
+        <span>Démarrer</span>
+      </button>
+
+      {/* Menu déroulant principal */}
+      {isOpen && (
+        <div
+          ref={menuRef}
+          data-demarrer-menu
+          className="absolute bottom-full mb-2 left-0 min-w-[280px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+          style={{ maxHeight: '70vh' }}
+        >
+          {/* Header - Rouge bordeaux */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-[#6b1102] to-[#8b2112]">
+            <div className="flex items-center gap-2 text-white">
+              <Play className="w-5 h-5 fill-white" />
+              <span className="font-semibold">Menu Démarrer</span>
+            </div>
+            <button
+              onClick={closeMenu}
+              className="p-1 rounded-full hover:bg-white/20 transition-colors text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Contenu du menu */}
+          <div className="py-1 max-h-[60vh] overflow-y-auto">
+            {MENU_DATA.map(logiciel => (
+              <div key={logiciel.id}>
+                {/* Logiciel */}
+                <button
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors border-b border-gray-100 dark:border-gray-700/50
+                    ${activeLogiciel === logiciel.id 
+                      ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                      : 'text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                    }`}
+                  onClick={() => {
+                    setActiveLogiciel(activeLogiciel === logiciel.id ? null : logiciel.id);
+                    setActiveEtape(null);
+                    setEtapeAnchorRect(null);
+                  }}
+                >
+                  <span className={`flex-shrink-0 ${activeLogiciel === logiciel.id ? 'text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-500 dark:text-gray-400'}`}>
+                    {logiciel.icon}
+                  </span>
+                  <span className="flex-1">{logiciel.label}</span>
+                  <ChevronRight className={`w-4 h-4 flex-shrink-0 transition-transform duration-200 ${activeLogiciel === logiciel.id ? 'rotate-90 text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400'}`} />
+                </button>
+
+                {/* Phases et Étapes */}
+                {activeLogiciel === logiciel.id && (
+                  <div className="bg-gray-50 dark:bg-gray-900/50">
+                    {logiciel.phases.map(phase => (
+                      <div key={phase.id}>
+                        {/* Phase (titre) */}
+                        <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-800/50">
+                          {phase.label}
+                        </div>
+                        
+                        {/* Étapes ou Cycles */}
+                        {phase.etapes && phase.etapes.map(etape => (
+                          <button
+                            key={etape.id}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 pl-6 text-left text-sm transition-colors
+                              ${activeEtape?.id === etape.id 
+                                ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                                : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                              }`}
+                            onClick={(e) => handleEtapeClick(etape, e)}
+                          >
+                            <span className={`flex-shrink-0 ${activeEtape?.id === etape.id ? 'text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400 dark:text-gray-500'}`}>
+                              {etape.icon}
+                            </span>
+                            <span className="flex-1">{etape.label}</span>
+                            <ChevronRight className={`w-4 h-4 flex-shrink-0 text-gray-400 ${activeEtape?.id === etape.id ? 'text-[#6b1102] dark:text-[#ff6b5b]' : ''}`} />
+                          </button>
+                        ))}
+                        
+                        {/* Cycles comptables */}
+                        {phase.cycles && phase.cycles.map(cycle => (
+                          <div key={cycle.id}>
+                            <button
+                              className={`w-full flex items-center gap-3 px-4 py-2.5 pl-6 text-left text-sm transition-colors
+                                ${activeCycle?.id === cycle.id 
+                                  ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                                  : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                }`}
+                              onClick={() => handleCycleClick(cycle)}
+                            >
+                              <span className={`flex-shrink-0 ${activeCycle?.id === cycle.id ? 'text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400 dark:text-gray-500'}`}>
+                                {cycle.icon}
+                              </span>
+                              <span className="flex-1">{cycle.label}</span>
+                              <ChevronRight className={`w-4 h-4 flex-shrink-0 transition-transform duration-200 ${activeCycle?.id === cycle.id ? 'rotate-90 text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400'}`} />
+                            </button>
+                            
+                            {/* Tests du cycle */}
+                            {activeCycle?.id === cycle.id && (
+                              <div className="bg-gray-100 dark:bg-gray-800/30">
+                                {cycle.tests.map(test => (
+                                  <button
+                                    key={test.id}
+                                    className={`w-full flex items-center gap-3 px-4 py-2 pl-12 text-left text-sm transition-colors
+                                      ${activeTest?.id === test.id 
+                                        ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                      }`}
+                                    onClick={(e) => handleTestClick(test, e)}
+                                  >
+                                    <span className="text-xs font-mono text-gray-500 dark:text-gray-400 min-w-[3rem]">
+                                      {test.reference}
+                                    </span>
+                                    <span className="flex-1">{test.label}</span>
+                                    <ChevronRight className={`w-4 h-4 flex-shrink-0 text-gray-400 ${activeTest?.id === test.id ? 'text-[#6b1102] dark:text-[#ff6b5b]' : ''}`} />
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Sous-menu des modes (portail) */}
+      {activeEtape && etapeAnchorRect && (
+        <SubMenuPortal
+          etape={activeEtape}
+          anchorRect={etapeAnchorRect}
+          onModeClick={handleModeClick}
+          onClose={() => {
+            setActiveEtape(null);
+            setEtapeAnchorRect(null);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+export default DemarrerMenu;

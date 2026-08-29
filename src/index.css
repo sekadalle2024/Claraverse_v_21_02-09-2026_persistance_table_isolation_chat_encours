@@ -1,0 +1,2592 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap");
+@import "prismjs/themes/prism.css";
+@import "prismjs/themes/prism-dark.css";
+
+/* Import global scrollbar hiding first to ensure it takes precedence */
+@import "./styles/scrollbar-global.css";
+
+/* Clara specific styles */
+@import "./styles/claraSidebar.css";
+
+/* ESPACEMENT FORCE - Importé avant Tailwind */
+@import "./espacement-force.css";
+
+/* Style Grok - Masquer la sélection des LLM */
+@import "./styles/grok-style-overrides.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --sakura-50: #fef7f7;
+  --sakura-100: #fee2e2;
+  --sakura-200: #fecaca;
+  --sakura-300: #fca5a5;
+  --sakura-400: #f87171;
+  --sakura-500: #ef4444;
+  --sakura-600: #dc2626;
+  --sakura-700: #b91c1c;
+  --sakura-800: #991b1b;
+  --sakura-900: #7f1d1d;
+  --sidebar-bg: #fcfcfc;
+}
+
+/* Mode sombre - Variable sidebar */
+.dark {
+  --sidebar-bg: #111827;
+}
+
+/* Menu principal - Fond forcé pour tous les thèmes */
+.main-nav-menu {
+  background-color: var(--sidebar-bg) !important;
+}
+
+.dark .main-nav-menu {
+  background-color: #111827 !important;
+}
+
+@layer base {
+  :root {
+    --sakura-50: #fef6f9;
+    --sakura-100: #fee3ec;
+    --sakura-200: #ffc6da;
+    --sakura-300: #ff9dc1;
+    --sakura-400: #ff669d;
+    --sakura-500: #ff1a75;
+    --sakura-600: #e6006b;
+    
+    /* Thème gris Grok-style */
+    --grok-50: #f9fafb;
+    --grok-100: #f3f4f6;
+    --grok-200: #e5e7eb;
+    --grok-300: #d1d5db;
+    --grok-400: #9ca3af;
+    --grok-500: #6b7280;
+    --grok-600: #4b5563;
+    --grok-700: #374151;
+    --grok-800: #1f2937;
+    --grok-900: #111827;
+    
+    font-family: "Quicksand", sans-serif;
+  }
+
+  .dark {
+    --sakura-50: #1a0f13;
+    --sakura-100: #2a1820;
+    --sakura-200: #3d1f2d;
+    --sakura-300: #4f2639;
+    --sakura-400: #662d46;
+    --sakura-500: #ff1a75;
+    --sakura-600: #ff3385;
+    
+    /* Thème gris Grok-style en mode sombre */
+    --grok-50: #111827;
+    --grok-100: #1f2937;
+    --grok-200: #374151;
+    --grok-300: #4b5563;
+    --grok-400: #6b7280;
+    --grok-500: #9ca3af;
+    --grok-600: #d1d5db;
+    --grok-700: #e5e7eb;
+    --grok-800: #f3f4f6;
+    --grok-900: #f9fafb;
+  }
+  
+  /* Thème gris uniforme - Grok style */
+  .theme-gray {
+    --bg-primary: #f3f4f6;
+    --bg-secondary: #e5e7eb;
+    --bg-chat: #f9fafb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #d1d5db;
+  }
+  
+  .dark.theme-gray {
+    /* Mode sombre du thème gris - Utiliser des gris moyens au lieu de noir */
+    --bg-primary: #6b7280;
+    --bg-secondary: #9ca3af;
+    --bg-chat: #6b7280;
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+    --border-color: #9ca3af;
+  }
+  
+  /* Thème blanc pur et lumineux */
+  .theme-white {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-chat: #ffffff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+  }
+  
+  .dark.theme-white {
+    --bg-primary: #1f2937;
+    --bg-secondary: #111827;
+    --bg-chat: #1f2937;
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+    --border-color: #374151;
+  }
+}
+
+@layer components {
+  .prose-sakura {
+    @apply prose dark:prose-invert;
+  }
+
+  .prose-sakura a {
+    @apply text-sakura-500 transition-colors;
+  }
+
+  .prose-sakura a:hover {
+    color: var(--sakura-600);
+  }
+
+  .dark .prose-sakura a {
+    @apply text-sakura-400;
+  }
+
+  .dark .prose-sakura a:hover {
+    @apply text-sakura-500;
+  }
+
+  .glassmorphic {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 dark:bg-gray-900/70 dark:border-gray-800/20;
+  }
+
+  .glassmorphic-card {
+    @apply bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-xl;
+  }
+
+  /* Grok Style - Topbar transparent qui se fond avec le chat */
+  .topbar-grok {
+    @apply bg-gradient-to-br from-white to-sakura-100 dark:from-gray-900 dark:to-sakura-100;
+    border-bottom: none;
+  }
+  
+  /* Thème gris uniforme - Grok style */
+  .theme-gray .glassmorphic {
+    @apply bg-grok-100/90 backdrop-blur-lg border border-grok-200/30 dark:bg-grok-800/90 dark:border-grok-700/30;
+  }
+  
+  .theme-gray .glassmorphic-card {
+    @apply bg-grok-50/80 dark:bg-grok-900/80 backdrop-blur-md border border-grok-200/40 dark:border-grok-700/40 shadow-xl;
+  }
+  
+  .theme-gray .topbar-grok {
+    @apply bg-grok-50 dark:bg-grok-900;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  /* Chat window avec fond gris uniforme */
+  .theme-gray .chat-window {
+    @apply bg-grok-50 dark:bg-grok-900;
+  }
+  
+  /* Sidebar INVISIBLE - Seules les icônes sont visibles (style Grok) */
+  .theme-gray .sidebar-grok {
+    background-color: transparent !important;
+    border-right: none !important;
+  }
+  
+  /* Sidebar gauche (menu) - Transparente */
+  .theme-gray aside,
+  .theme-gray .sidebar,
+  .theme-gray nav[class*="sidebar"],
+  .theme-gray div[class*="sidebar"]:not([class*="clara"]) {
+    background-color: transparent !important;
+    border-right: none !important;
+  }
+  
+  /* Messages avec fond gris subtil */
+  .theme-gray .message-bubble-user {
+    @apply bg-grok-200 dark:bg-grok-700 text-grok-900 dark:text-grok-50;
+  }
+  
+  /* Messages assistant - MÊME COULEUR QUE LE FOND DU CHAT */
+  .theme-gray .message-bubble-assistant {
+    @apply bg-grok-50 dark:bg-grok-900 text-grok-900 dark:text-grok-50;
+  }
+  
+  /* Input area avec fond gris uniforme - MÊME COULEUR QUE LE CHAT */
+  .theme-gray .input-area {
+    @apply bg-grok-50 dark:bg-grok-900 border-t border-grok-200 dark:border-grok-700;
+  }
+  
+  /* Boutons avec style gris */
+  .theme-gray .btn-primary {
+    @apply bg-grok-600 hover:bg-grok-700 text-white dark:bg-grok-500 dark:hover:bg-grok-400;
+  }
+  
+  .theme-gray .btn-secondary {
+    @apply bg-grok-200 hover:bg-grok-300 text-grok-900 dark:bg-grok-700 dark:hover:bg-grok-600 dark:text-grok-50;
+  }
+  
+  /* FORCE : Styles avec !important pour surcharger tous les autres styles */
+  /* Gris très clair uniforme : #fcfcfc (rgba(252, 252, 252)) */
+  .theme-gray .chat-window,
+  .theme-gray .message-bubble-assistant,
+  .theme-gray .input-area,
+  .theme-gray .topbar-grok,
+  .theme-gray .clara-sidebar,
+  .theme-gray [class*="clara"][class*="sidebar"],
+  .theme-gray [class*="message"][class*="assistant"],
+  .theme-gray [class*="assistant"][class*="message"],
+  .theme-gray div[class*="assistant"],
+  .theme-gray div[class*="message"]:not([class*="user"]),
+  .theme-gray div[class*="clara"],
+  .theme-gray aside[class*="clara"] {
+    background-color: #fcfcfc !important;
+  }
+  
+  .dark.theme-gray .chat-window,
+  .dark.theme-gray .message-bubble-assistant,
+  .dark.theme-gray .input-area,
+  .dark.theme-gray .topbar-grok,
+  .dark.theme-gray .clara-sidebar,
+  .dark.theme-gray [class*="clara"][class*="sidebar"],
+  .dark.theme-gray [class*="message"][class*="assistant"],
+  .dark.theme-gray [class*="assistant"][class*="message"],
+  .dark.theme-gray div[class*="assistant"],
+  .dark.theme-gray div[class*="message"]:not([class*="user"]),
+  .dark.theme-gray div[class*="clara"],
+  .dark.theme-gray aside[class*="clara"] {
+    background-color: #6b7280 !important;
+  }
+  
+  /* TABLEAUX EN GRIS UNIFORME - Surcharge des en-têtes bordeaux */
+  .theme-gray .prose table.min-w-full th {
+    background-color: #d1d5db !important;
+    color: #111827 !important;
+  }
+  
+  .dark.theme-gray .prose table.min-w-full th {
+    background-color: #374151 !important;
+    color: #f9fafb !important;
+  }
+  
+  .theme-gray .prose table.min-w-full {
+    border-color: #d1d5db !important;
+  }
+  
+  .dark.theme-gray .prose table.min-w-full {
+    border-color: #374151 !important;
+  }
+  
+  .theme-gray .prose table.min-w-full tbody tr:hover {
+    background-color: #e5e7eb !important;
+  }
+  
+  .dark.theme-gray .prose table.min-w-full tbody tr:hover {
+    background-color: #1f2937 !important;
+  }
+  
+  /* ========================================
+     THÈME BLANC - Pur et lumineux
+     ======================================== */
+  
+  /* Thème blanc - Glassmorphic */
+  .theme-white .glassmorphic {
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+  }
+  
+  .theme-white .glassmorphic-card {
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Thème blanc - Topbar */
+  .theme-white .topbar-grok {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+  
+  /* Thème blanc - Chat window */
+  .theme-white .chat-window,
+  .theme-white .message-bubble-assistant,
+  .theme-white .input-area,
+  .theme-white [class*="clara"][class*="sidebar"],
+  .theme-white [class*="message"][class*="assistant"],
+  .theme-white div[class*="assistant"],
+  .theme-white div[class*="message"]:not([class*="user"]),
+  .theme-white div[class*="clara"],
+  .theme-white aside[class*="clara"] {
+    background-color: #ffffff !important;
+  }
+  
+  /* Thème blanc - Sidebar */
+  .theme-white aside,
+  .theme-white .sidebar,
+  .theme-white nav[class*="sidebar"],
+  .theme-white div[class*="sidebar"]:not([class*="clara"]) {
+    background-color: #ffffff !important;
+    border-right: 1px solid #e5e7eb !important;
+  }
+  
+  /* Thème blanc - Messages utilisateur */
+  .theme-white .message-bubble-user {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+  }
+  
+  /* Thème blanc - Input area */
+  .theme-white .input-area {
+    background-color: #ffffff !important;
+    border-top: 1px solid #e5e7eb !important;
+  }
+  
+  /* Thème blanc - Boutons */
+  .theme-white .btn-primary {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  .theme-white .btn-primary:hover {
+    background-color: #2563eb !important;
+  }
+  
+  .theme-white .btn-secondary {
+    background-color: #f3f4f6 !important;
+    color: #111827 !important;
+  }
+  
+  .theme-white .btn-secondary:hover {
+    background-color: #e5e7eb !important;
+  }
+  
+  /* Thème blanc - Tables */
+  .theme-white .prose table.min-w-full th {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  .theme-white .prose table.min-w-full {
+    border-color: #e5e7eb !important;
+  }
+  
+  .theme-white .prose table.min-w-full tbody tr:hover {
+    background-color: #f9fafb !important;
+  }
+  
+  /* Thème blanc - Gradient de fond */
+  .theme-white .bg-gradient-to-br {
+    background: linear-gradient(to bottom right, #ffffff, #f9fafb) !important;
+  }
+  
+  /* Thème blanc - Mode sombre */
+  .dark.theme-white .glassmorphic,
+  .dark.theme-white .glassmorphic-card,
+  .dark.theme-white .topbar-grok,
+  .dark.theme-white .chat-window,
+  .dark.theme-white .message-bubble-assistant,
+  .dark.theme-white .input-area,
+  .dark.theme-white [class*="clara"][class*="sidebar"],
+  .dark.theme-white div[class*="assistant"],
+  .dark.theme-white div[class*="clara"],
+  .dark.theme-white aside[class*="clara"] {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+  
+  .dark.theme-white aside,
+  .dark.theme-white .sidebar,
+  .dark.theme-white nav[class*="sidebar"],
+  .dark.theme-white div[class*="sidebar"]:not([class*="clara"]) {
+    background-color: #1f2937 !important;
+    border-right: 1px solid #374151 !important;
+  }
+  
+  .dark.theme-white .prose table.min-w-full th {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+  }
+  
+  .dark.theme-white .prose table.min-w-full {
+    border-color: #374151 !important;
+  }
+  
+  .dark.theme-white .prose table.min-w-full tbody tr:hover {
+    background-color: #374151 !important;
+  }
+  
+  .dark.theme-white .bg-gradient-to-br {
+    background: linear-gradient(to bottom right, #1f2937, #111827) !important;
+  }
+}
+
+/* Complete cleanup of code blocks in markdown for both light and dark mode */
+.prose pre,
+.prose code,
+.dark .prose pre,
+.dark .prose code {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Completely remove code syntax highlighting for all spans */
+.prose pre code span,
+.dark .prose pre code span {
+  background: transparent !important;
+  color: #e5e7eb !important;
+  border: none !important;
+  font-weight: normal !important;
+  text-decoration: none !important;
+}
+
+/* Make code blocks consistent in both modes */
+.prose pre,
+.dark .prose pre {
+  background-color: #1e1e1e !important;
+  color: #e5e7eb !important;
+  border-radius: 4px !important;
+  padding: 0.75rem 1rem !important;
+  border: none !important;
+}
+
+/* Ensure code text is visible in both modes with no highlighting */
+.prose pre code,
+.dark .prose pre code {
+  color: #e5e7eb !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+/* Inline code styling for both modes */
+.prose :not(pre) > code,
+.dark .prose :not(pre) > code {
+  background-color: #f3f4f6 !important;
+  color: #1f2937 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 0.25rem !important;
+  border: none !important;
+}
+
+/* Dark mode inline code */
+.dark .prose :not(pre) > code {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+/* Override any theme-specific syntax highlighting */
+.prose pre [class*="language-"],
+.prose code [class*="language-"],
+.dark .prose pre [class*="language-"],
+.dark .prose code [class*="language-"] {
+  color: #e5e7eb !important;
+  background: transparent !important;
+  text-shadow: none !important;
+  font-family: monospace !important;
+}
+
+/* Smooth width transitions */
+.w-0 {
+  width: 0;
+}
+
+.w-auto {
+  width: auto;
+}
+
+/* Scrollbar styling - Global hiding with optional thin scrollbar utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply bg-gray-400/50 dark:bg-gray-600/50 rounded-full;
+}
+
+/* Global scrollbar hiding - Override any existing scrollbar styles */
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari and Opera */
+}
+
+/* Hide scrollbar but maintain functionality - Enhanced version */
+.scrollbar-none {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari and Opera */
+}
+
+/* Smooth scrolling */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes autoModeGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(147, 51, 234, 0.6);
+  }
+}
+
+@keyframes enhancedSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-message-slide-in {
+  animation: messageSlideIn 0.4s ease-out;
+}
+
+.animate-auto-mode-glow {
+  animation: autoModeGlow 2s ease-in-out infinite;
+}
+
+.animate-enhanced-spin {
+  animation: enhancedSpin 1s linear infinite;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+/* App runner animations */
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.4s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+/* Auto-resize textarea */
+textarea {
+  min-height: 2.5rem;
+  transition: height 0.2s ease;
+}
+
+/* Ensure markdown content has proper colors in dark mode */
+.dark .markdown-wrapper {
+  color-scheme: dark;
+}
+
+.dark-mode-prose {
+  color-scheme: dark;
+}
+
+.dark .dark-mode-prose {
+  --tw-prose-body: #e5e7eb;
+  --tw-prose-headings: #f9fafb;
+  --tw-prose-lead: #d1d5db;
+  --tw-prose-links: #93c5fd;
+  --tw-prose-bold: #f9fafb;
+  --tw-prose-counters: #d1d5db;
+  --tw-prose-bullets: #d1d5db;
+  --tw-prose-hr: #374151;
+  --tw-prose-quotes: #f3f4f6;
+  --tw-prose-quote-borders: #374151;
+  --tw-prose-captions: #9ca3af;
+  --tw-prose-code: #f9fafb;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-th-borders: #374151;
+  --tw-prose-td-borders: #374151;
+}
+
+/* Code blocks in dark mode */
+.dark .prose pre {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+}
+
+.dark .prose code {
+  color: #f9fafb;
+  background-color: #374151;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.dark .prose a {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+/* Lists in dark mode */
+.dark .prose ul,
+.dark .prose ol {
+  color: #e5e7eb;
+}
+
+/* Table styling in dark mode */
+.dark .prose table {
+  border-color: #374151;
+}
+
+.dark .prose thead {
+  color: #f9fafb;
+  border-bottom-color: #4b5563;
+}
+
+.dark .prose tbody tr {
+  border-bottom-color: #374151;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mb-4 text-gray-900 dark:text-white mt-8;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold mb-3 text-gray-800 dark:text-gray-100 mt-6;
+}
+
+.prose p {
+  @apply mb-4 text-gray-700 dark:text-gray-300;
+}
+
+/* Complete cleanup of code blocks in markdown for both light and dark mode */
+.bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #ffffff, #fee3ec);
+}
+
+.dark .bg-gradient-to-br {
+  background: #000000;
+}
+
+/* Thème gris - Fond gris uniforme au lieu de rose */
+.theme-gray .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #fcfcfc, #fcfcfc);
+}
+
+.dark.theme-gray .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #1f2937, #111827);
+}
+
+/* Sidebar icon transitions */
+.sidebar-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-expanded .sidebar-icon,
+.glassmorphic:hover .sidebar-icon {
+  opacity: 1;
+}
+
+/* Enhanced prose styling for markdown content */
+.prose {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  @apply text-gray-900 dark:text-gray-100 font-bold;
+  @apply border-b border-gray-200 dark:border-gray-700 pb-2 mb-4;
+}
+
+.prose h1 {
+  @apply text-2xl;
+}
+.prose h2 {
+  @apply text-xl;
+}
+.prose h3 {
+  @apply text-lg;
+}
+
+.prose p {
+  @apply mb-4 leading-relaxed;
+}
+
+.prose ul,
+.prose ol {
+  @apply mb-4;
+}
+
+.prose li {
+  @apply mb-2 pl-2;
+}
+
+/* Ensure proper list alignment and spacing */
+.prose ol {
+  @apply list-decimal mb-4 space-y-2 pl-6;
+  list-style-position: outside;
+}
+
+.prose ul {
+  @apply list-disc mb-4 space-y-2 pl-6;
+  list-style-position: outside;
+}
+
+/* Nested list styling */
+.prose ol ol,
+.prose ul ul,
+.prose ol ul,
+.prose ul ol {
+  @apply mt-2 mb-2;
+}
+
+/* List item content alignment */
+.prose li > p {
+  @apply mb-2;
+}
+
+.prose li > p:first-child {
+  @apply mt-0;
+}
+
+.prose li > p:last-child {
+  @apply mb-0;
+}
+
+.prose table {
+  @apply border-collapse border border-gray-300 dark:border-gray-600;
+}
+
+.prose th,
+.prose td {
+  @apply border border-gray-300 dark:border-gray-600 px-4 py-2;
+}
+
+.prose th {
+  @apply bg-gray-100 dark:bg-gray-800 font-semibold;
+}
+
+/* Code block enhancements */
+.prose pre {
+  @apply bg-transparent p-0 m-0;
+}
+
+.prose :not(pre) > code {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+/* Enhanced glassmorphism effects for voice chat */
+.glassmorphic-card {
+  @apply bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-xl;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Voice chat specific animations */
+@keyframes voicePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes voiceRipple {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes sakuraGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(236, 72, 153, 0.3),
+      0 0 40px rgba(236, 72, 153, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(236, 72, 153, 0.5),
+      0 0 60px rgba(236, 72, 153, 0.2);
+  }
+}
+
+@keyframes floatingParticle {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+.animate-voice-pulse {
+  animation: voicePulse 2s ease-in-out infinite;
+}
+
+.animate-voice-ripple {
+  animation: voiceRipple 1.5s ease-out infinite;
+}
+
+.animate-sakura-glow {
+  animation: sakuraGlow 3s ease-in-out infinite;
+}
+
+.animate-floating-particle {
+  animation: floatingParticle 4s ease-in-out infinite;
+}
+
+/* Enhanced button hover effects */
+.voice-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.voice-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.voice-button:hover::before {
+  left: 100%;
+}
+
+/* Breathing animation for idle states */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Status indicator animations */
+@keyframes statusPing {
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-status-ping {
+  animation: statusPing 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background: linear-gradient(-45deg, #ec4899, #8b5cf6, #06b6d4, #10b981);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Enhanced card animations */
+@keyframes shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine {
+  animation: shine 1.5s ease-in-out infinite;
+}
+
+/* Enhanced Custom Scrollbar for LumaUI-lite */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.3),
+    rgba(236, 72, 153, 0.3)
+  );
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.5),
+    rgba(236, 72, 153, 0.5)
+  );
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: rgba(107, 114, 128, 0.4) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.4),
+    rgba(75, 85, 99, 0.4)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(107, 114, 128, 0.6),
+    rgba(75, 85, 99, 0.6)
+  );
+}
+
+/* Enhanced Message Animations */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-message-slide-in {
+  animation: messageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Button Hover Effects */
+@keyframes buttonGlow {
+  0%,
+  100% {
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
+  }
+}
+
+.animate-button-glow {
+  animation: buttonGlow 2s ease-in-out infinite;
+}
+
+/* Enhanced Glassmorphism Effects */
+.glassmorphic-enhanced {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glassmorphic-enhanced {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Focus States */
+.focus-enhanced:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgba(239, 68, 68, 0.5);
+  ring-offset: 2px;
+  ring-offset-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .focus-enhanced:focus {
+  ring-offset-color: rgba(17, 24, 39, 0.8);
+}
+
+/* Enhanced Checkpoint Badge Animation */
+@keyframes checkpointPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+  }
+}
+
+.animate-checkpoint-pulse {
+  animation: checkpointPulse 2s infinite;
+}
+
+/* Enhanced Loading Spinner */
+@keyframes enhancedSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-enhanced-spin {
+  animation: enhancedSpin 1s linear infinite;
+}
+
+/* Enhanced Tooltip Styles */
+.tooltip-enhanced {
+  position: relative;
+}
+
+.tooltip-enhanced::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 24, 39, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-enhanced::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(1px);
+  border: 4px solid transparent;
+  border-top-color: rgba(17, 24, 39, 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tooltip-enhanced:hover::before,
+.tooltip-enhanced:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Enhanced Auto Mode Status Animation */
+@keyframes autoModeGlow {
+  0%,
+  100% {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+  }
+}
+
+.animate-auto-mode-glow {
+  animation: autoModeGlow 3s ease-in-out infinite;
+}
+
+/* ========================================
+   STYLES POUR TABLES CLARAVERSE
+   Adaptés depuis Open WebUI
+   Version complète finale - Tous problèmes corrigés
+   ======================================== */
+
+/* --- Tables dans le contenu prose --- */
+.prose table.min-w-full {
+  box-shadow:
+    0 12px 24px 0 rgba(0, 0, 0, 0.25),      /* Ombre bas principale - plus prononcée */
+    0 8px 16px 0 rgba(0, 0, 0, 0.2),        /* Ombre bas secondaire */
+    0 4px 8px 0 rgba(0, 0, 0, 0.15) !important; /* Ombre bas douce */
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: calc(100% - 40px) !important; /* Réduit pour laisser place aux ombres */
+  table-layout: auto !important;
+}
+
+/* --- En-têtes de tables (th) - ROUGE BORDEAUX #6b1102 --- */
+.prose table.min-w-full th {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  text-align: left !important;
+  background-color: #6b1102 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.5 !important;
+  vertical-align: top !important;
+}
+
+/* Dernier th sans bordure droite */
+.prose table.min-w-full th:last-child {
+  border-right: none !important;
+}
+
+/* Mode sombre pour les en-têtes - ROUGE BORDEAUX */
+.dark .prose table.min-w-full th {
+  background-color: #6b1102 !important;
+  color: white !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* --- En-tête sticky pour scroll vertical --- */
+.prose table.min-w-full thead {
+  position: sticky !important;
+  top: 0px !important;
+  left: 0px !important;
+  z-index: 10 !important;
+}
+
+/* --- Conteneur parent de la table - SCROLL HORIZONTAL ACTIVÉ --- */
+.prose > div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 15px !important; /* Augmenté pour l'ombre bas */
+  padding-right: 20px !important; /* Espace pour l'ombre droite */
+  padding-left: 20px !important; /* Espace pour l'ombre gauche */
+  position: relative !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* --- SCROLLBAR INVISIBLE - Apparaît uniquement au survol --- */
+.prose > div:has(> table.min-w-full)::-webkit-scrollbar,
+.prose div:has(> table.min-w-full)::-webkit-scrollbar {
+  height: 6px !important;
+  width: 6px !important;
+  display: block !important;
+  -webkit-appearance: none !important;
+}
+
+/* Track totalement transparente */
+.prose > div:has(> table.min-w-full)::-webkit-scrollbar-track,
+.prose div:has(> table.min-w-full)::-webkit-scrollbar-track {
+  background: transparent !important;
+  border-radius: 3px !important;
+}
+
+/* Thumb INVISIBLE par défaut - même couleur que le fond du chat */
+.prose > div:has(> table.min-w-full)::-webkit-scrollbar-thumb,
+.prose div:has(> table.min-w-full)::-webkit-scrollbar-thumb {
+  background: transparent !important;
+  border-radius: 3px !important;
+  transition: background 0.2s ease !important;
+}
+
+/* Thumb visible au survol du conteneur - couleur du fond du chat avec légère opacité */
+.prose > div:has(> table.min-w-full):hover::-webkit-scrollbar-thumb,
+.prose div:has(> table.min-w-full):hover::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 0.3) !important;
+}
+
+/* Thumb bien visible au survol direct - couleur gris clair */
+.prose > div:has(> table.min-w-full)::-webkit-scrollbar-thumb:hover,
+.prose div:has(> table.min-w-full)::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.6) !important;
+}
+
+/* Firefox - scrollbar invisible par défaut */
+.prose > div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) {
+  scrollbar-width: thin !important;
+  scrollbar-color: transparent transparent !important;
+  transition: scrollbar-color 0.2s ease !important;
+}
+
+/* Firefox - scrollbar visible au survol */
+.prose > div:has(> table.min-w-full):hover,
+.prose div:has(> table.min-w-full):hover {
+  scrollbar-color: rgba(200, 200, 200, 0.3) transparent !important;
+}
+
+/* Mode sombre - Thumb invisible par défaut */
+.dark .prose > div:has(> table.min-w-full)::-webkit-scrollbar-thumb,
+.dark .prose div:has(> table.min-w-full)::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+
+/* Mode sombre - Thumb visible au survol */
+.dark .prose > div:has(> table.min-w-full):hover::-webkit-scrollbar-thumb,
+.dark .prose div:has(> table.min-w-full):hover::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 100, 0.3) !important;
+}
+
+/* Mode sombre - Thumb bien visible au survol direct */
+.dark .prose > div:has(> table.min-w-full)::-webkit-scrollbar-thumb:hover,
+.dark .prose div:has(> table.min-w-full)::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 120, 0.6) !important;
+}
+
+/* --- Cellules de données (td) --- */
+.prose table.min-w-full td {
+  padding: 12px 16px !important;
+  border-right: 1px solid rgba(209, 213, 219, 0.3) !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.6 !important;
+  vertical-align: top !important;
+  max-width: 400px !important;
+}
+
+.prose table.min-w-full td:last-child {
+  border-right: none !important;
+}
+
+.dark .prose table.min-w-full td {
+  border-right: 1px solid rgba(75, 85, 99, 0.3) !important;
+}
+
+/* --- Lignes du tbody avec effet hover --- */
+.prose table.min-w-full tbody tr {
+  transition: background-color 0.2s ease !important;
+}
+
+.prose table.min-w-full tbody tr:hover {
+  background-color: rgba(107, 17, 2, 0.05) !important;
+}
+
+.dark .prose table.min-w-full tbody tr:hover {
+  background-color: rgba(107, 17, 2, 0.15) !important;
+}
+
+/* --- Bordures de table - ROUGE BORDEAUX --- */
+.prose table.min-w-full {
+  border: 2px solid #6b1102 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.dark .prose table.min-w-full {
+  border: 2px solid #6b1102 !important;
+}
+
+/* --- Amélioration de la lisibilité en mode sombre --- */
+.dark .prose table.min-w-full tbody tr {
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3) !important;
+}
+
+.dark .prose table.min-w-full tbody tr:last-child {
+  border-bottom: none !important;
+}
+
+/* --- Animation au chargement --- */
+.prose table.min-w-full {
+  animation: tableSlideIn 0.3s ease-out !important;
+}
+
+@keyframes tableSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   GESTION DE L'ESPACEMENT ENTRE TABLES - ULTRA RÉDUIT
+   ======================================== */
+
+/* Tables successives dans des divs - Aucun espace */
+.prose > div:has(> table.min-w-full) + div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+
+.prose table.min-w-full + div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+}
+
+/* Conteneurs de tables - Espace ultra minimal (0.5px) */
+.prose > div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0.5px !important;
+}
+
+/* Divs successifs contenant des tables */
+.prose div:has(> table.min-w-full) ~ div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+}
+
+/* Éléments avant et après les tables - Espace ultra réduit */
+.prose > * + div:has(> table.min-w-full) {
+  margin-top: 1px !important;
+}
+
+.prose div:has(> table.min-w-full) + * {
+  margin-top: 1px !important;
+}
+
+/* ========================================
+   HR INVISIBLES - Se fondent avec le fond du chat
+   ======================================== */
+
+/* HR après une table - INVISIBLE (même couleur que le fond) */
+.prose div:has(> table.min-w-full) + hr,
+.prose table.min-w-full + hr {
+  margin-top: 0.5px !important;
+  margin-bottom: 0.5px !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  border-width: 0px !important;
+  height: 0.5px !important;
+  opacity: 0 !important;
+}
+
+/* HR avant une table - Espace ultra minimal */
+.prose hr + div:has(> table.min-w-full) {
+  margin-top: 0.5px !important;
+}
+
+/* HR entre deux tables - INVISIBLE */
+.prose div:has(> table.min-w-full) + hr + div:has(> table.min-w-full) {
+  margin-top: 0.5px !important;
+}
+
+/* Tous les HR dans prose proches des tables - INVISIBLE */
+.prose hr {
+  margin-top: 0.5px !important;
+  margin-bottom: 0.5px !important;
+  border-color: transparent !important;
+  background-color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* Mode sombre - HR toujours invisible */
+.dark .prose div:has(> table.min-w-full) + hr,
+.dark .prose table.min-w-full + hr {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  opacity: 0 !important;
+}
+
+/* Thème gris - HR invisible (même couleur que le fond #fcfcfc) */
+.theme-gray .prose hr {
+  border-color: #fcfcfc !important;
+  background-color: #fcfcfc !important;
+  opacity: 0 !important;
+}
+
+.dark.theme-gray .prose hr {
+  border-color: #1f2937 !important;
+  background-color: #1f2937 !important;
+  opacity: 0 !important;
+}
+
+/* ========================================
+   OPTION : MASQUER LES HR ENTRE TABLES
+   Décommentez si vous voulez supprimer les lignes
+   ======================================== */
+/*
+.prose div:has(> table.min-w-full) + hr {
+  display: none !important;
+}
+.prose hr + div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+}
+*/
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .prose table.min-w-full {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+    font-size: 0.875rem !important;
+  }
+
+  .prose table.min-w-full th,
+  .prose table.min-w-full td {
+    padding: 8px 12px !important;
+  }
+}
+
+/* ========================================
+   OVERRIDE DU MASQUAGE GLOBAL DES SCROLLBARS
+   Force l'affichage des scrollbars pour les tables
+   ======================================== */
+
+.prose > div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) {
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+}
+
+.prose > div:has(> table.min-w-full)::-webkit-scrollbar,
+.prose div:has(> table.min-w-full)::-webkit-scrollbar {
+  display: block !important;
+}
+
+/* ========================================
+   FIN DES STYLES TABLES CLARAVERSE
+   ======================================== */
+
+/* ========================================
+   STYLES FINAUX POUR THÈME GRIS
+   Appliqués avec !important pour surcharger tout
+   ======================================== */
+
+/* Messages assistant - Fond gris solide SANS blur ni ombre */
+.theme-gray .glassmorphic {
+  background-color: #fcfcfc !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.dark.theme-gray .glassmorphic {
+  background-color: #111827 !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ========================================
+   THÈME GRIS - SIDEBAR HISTORIQUE DES CHATS
+   Fond gris uniforme : #fcfcfc (rgba(252, 252, 252))
+   ======================================== */
+
+/* Sidebar historique des chats - Fond gris solide SANS blur ni ombre */
+.theme-gray .glassmorphic.h-full,
+.theme-gray div.glassmorphic[class*="h-full"],
+.theme-gray .glassmorphic.animate-in {
+  background-color: #fcfcfc !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  border-right: 1px solid rgba(229, 231, 235, 0.3) !important;
+  box-shadow: none !important;
+}
+
+.dark.theme-gray .glassmorphic.h-full,
+.dark.theme-gray div.glassmorphic[class*="h-full"],
+.dark.theme-gray .glassmorphic.animate-in {
+  background-color: #111827 !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  border-right: 1px solid rgba(75, 85, 99, 0.3) !important;
+  box-shadow: none !important;
+}
+
+/* Tables - En-têtes rouge foncé avec fond blanc pour les cellules */
+.theme-gray .prose table.min-w-full th {
+  background-color: #8b0000 !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.theme-gray .prose table.min-w-full td {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+.theme-gray .prose table.min-w-full tbody tr:hover td {
+  background-color: #f9fafb !important;
+}
+
+.dark.theme-gray .prose table.min-w-full th {
+  background-color: #8b0000 !important;
+  color: white !important;
+}
+
+.dark.theme-gray .prose table.min-w-full td {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+.dark.theme-gray .prose table.min-w-full tbody tr:hover td {
+  background-color: #374151 !important;
+}
+
+
+/* ========================================
+   FORCE MAXIMALE - ESPACEMENT TABLES ULTRA RÉDUIT
+   Spécificité CSS maximale pour surcharger TOUT
+   ======================================== */
+
+/* TABLES - Marges à zéro avec spécificité maximale */
+.prose > div:has(> table.min-w-full) table.min-w-full,
+.prose div:has(> table.min-w-full) table.min-w-full,
+.prose table.min-w-full {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  margin-block-start: 0px !important;
+  margin-block-end: 0px !important;
+}
+
+/* CONTENEURS DE TABLES - Padding et margin à zéro */
+.prose > div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-block-start: 0px !important;
+  margin-block-end: 0px !important;
+  padding-block-start: 0px !important;
+  padding-block-end: 0px !important;
+}
+
+/* HR - Totalement invisibles et sans espace */
+.prose hr,
+.prose > hr,
+.prose div:has(> table.min-w-full) + hr,
+.prose table.min-w-full + hr,
+.prose hr + div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-block-start: 0px !important;
+  margin-block-end: 0px !important;
+  padding-block-start: 0px !important;
+  padding-block-end: 0px !important;
+  height: 0px !important;
+  border: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  display: block !important;
+  line-height: 0 !important;
+}
+
+/* DIVS SUCCESSIFS - Aucun espace */
+.prose > div:has(> table.min-w-full) + div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) ~ div:has(> table.min-w-full),
+.prose table.min-w-full + div:has(> table.min-w-full) {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+  margin-block-start: 0px !important;
+  padding-block-start: 0px !important;
+}
+
+/* ÉLÉMENTS AVANT/APRÈS TABLES - Espace minimal */
+.prose > * + div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) + * {
+  margin-top: 0px !important;
+  margin-block-start: 0px !important;
+}
+
+/* THÈME GRIS - HR invisibles */
+.theme-gray .prose hr,
+.theme-gray .prose > hr,
+.theme-gray .prose div:has(> table.min-w-full) + hr {
+  border-color: #fcfcfc !important;
+  background-color: #fcfcfc !important;
+  opacity: 0 !important;
+  height: 0px !important;
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+.dark.theme-gray .prose hr,
+.dark.theme-gray .prose > hr,
+.dark.theme-gray .prose div:has(> table.min-w-full) + hr {
+  border-color: #1f2937 !important;
+  background-color: #1f2937 !important;
+  opacity: 0 !important;
+  height: 0px !important;
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+
+/* ========================================
+   FORCE ULTIME - HR SANS AUCUN ESPACE
+   Surcharge TOUT y compris Tailwind prose
+   ======================================== */
+
+/* HR - Marges forcées à zéro partout */
+div.prose hr,
+.prose hr,
+hr {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  margin-block-start: 0px !important;
+  margin-block-end: 0px !important;
+  margin-inline-start: 0px !important;
+  margin-inline-end: 0px !important;
+  padding: 0px !important;
+  height: 0px !important;
+  border: none !important;
+  opacity: 0 !important;
+  line-height: 0 !important;
+  display: block !important;
+}
+
+/* HR entre tables - Spécificité maximale */
+div.prose > hr,
+div.prose div:has(> table.min-w-full) + hr,
+div.prose hr + div:has(> table.min-w-full),
+.prose > hr,
+.prose div:has(> table.min-w-full) + hr,
+.prose hr + div:has(> table.min-w-full) {
+  margin: 0px !important;
+  padding: 0px !important;
+  height: 0px !important;
+  border: none !important;
+  opacity: 0 !important;
+}
+
+
+/* ========================================
+   CORRECTIONS FINALES
+   ======================================== */
+
+/* SIDEBAR GAUCHE - Même couleur que le fond du chat */
+.theme-gray aside,
+.theme-gray nav,
+.theme-gray .sidebar,
+.theme-gray [class*="sidebar"]:not([class*="clara"]) {
+  background-color: #fcfcfc !important;
+}
+
+.dark.theme-gray aside,
+.dark.theme-gray nav,
+.dark.theme-gray .sidebar,
+.dark.theme-gray [class*="sidebar"]:not([class*="clara"]) {
+  background-color: #1f2937 !important;
+}
+
+/* HR - DISPLAY NONE (solution définitive pour les marges) */
+.prose hr {
+  display: none !important;
+}
+
+
+/* ========================================
+   SIDEBAR - COULEUR GRISE UNIFORME
+   ======================================== */
+
+/* Forcer TOUTE la sidebar en gris #fcfcfc */
+.theme-gray aside,
+.theme-gray nav,
+.theme-gray .sidebar,
+.theme-gray [class*="sidebar"],
+.theme-gray aside > *,
+.theme-gray nav > *,
+.theme-gray .sidebar > *,
+.theme-gray [class*="sidebar"] > * {
+  background-color: #fcfcfc !important;
+}
+
+.dark.theme-gray aside,
+.dark.theme-gray nav,
+.dark.theme-gray .sidebar,
+.dark.theme-gray [class*="sidebar"],
+.dark.theme-gray aside > *,
+.dark.theme-gray nav > *,
+.dark.theme-gray .sidebar > *,
+.dark.theme-gray [class*="sidebar"] > * {
+  background-color: #1f2937 !important;
+}
+
+/* Forcer les éléments enfants de la sidebar */
+.theme-gray aside div,
+.theme-gray nav div,
+.theme-gray .sidebar div,
+.theme-gray aside button,
+.theme-gray nav button,
+.theme-gray .sidebar button {
+  background-color: #fcfcfc !important;
+}
+
+.dark.theme-gray aside div,
+.dark.theme-gray nav div,
+.dark.theme-gray .sidebar div,
+.dark.theme-gray aside button,
+.dark.theme-gray nav button,
+.dark.theme-gray .sidebar button {
+  background-color: #1f2937 !important;
+}
+
+
+/* ========================================
+   SOLUTION ULTIME - MARGES NÉGATIVES (75% de réduction)
+   Compenser l'espace entre les tables
+   ======================================== */
+
+/* Conteneurs de tables - Marges négatives TRIPLÉES */
+.prose > div:has(> table.min-w-full) {
+  margin-top: -60px !important;
+  margin-bottom: -60px !important;
+}
+
+/* Premier conteneur - Pas de marge négative en haut */
+.prose > div:has(> table.min-w-full):first-of-type {
+  margin-top: 0px !important;
+}
+
+/* Dernier conteneur - Pas de marge négative en bas */
+.prose > div:has(> table.min-w-full):last-of-type {
+  margin-bottom: 0px !important;
+}
+
+/* Tables elles-mêmes - Marges négatives TRIPLÉES */
+.prose table.min-w-full {
+  margin-top: -30px !important;
+  margin-bottom: -30px !important;
+}
+
+/* ========================================
+   ESPACEMENT TABLES ULTRA COMPACT - 75%
+   ======================================== */
+
+/* Réduire drastiquement l'espacement entre les tables */
+.prose hr,
+.dark\:prose-invert hr {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+  opacity: 0.2 !important;
+  border-color: rgba(156, 163, 175, 0.2) !important;
+  height: 1px !important;
+}
+
+.overflow-x-auto {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.my-4 {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.prose > *,
+.dark\:prose-invert > * {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+[data-container-id] {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Préserver les ombres des tables */
+table {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.prose p,
+.dark\:prose-invert p {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.prose div,
+.dark\:prose-invert div {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Réduire l'espacement dans les messages glassmorphic */
+.glassmorphic {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.glassmorphic .prose,
+.glassmorphic .dark\:prose-invert {
+  line-height: 1.4 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Réduire l'espacement vertical global */
+.prose > * + *,
+.dark\:prose-invert > * + * {
+  margin-top: 0.25rem !important;
+}
+
+/* Réduire le padding des conteneurs prose */
+.prose,
+.dark\:prose-invert {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+
+/* ========================================
+   THÈME BLANC - FORCE MAXIMALE
+   Blanc pur #ffffff appliqué partout
+   ======================================== */
+
+/* THÈME BLANC - Fond blanc pur pour TOUT */
+html.theme-white,
+html.theme-white body,
+.theme-white,
+.theme-white body {
+  background-color: #ffffff !important;
+}
+
+/* THÈME BLANC - Topbar */
+.theme-white .topbar-grok,
+.theme-white header,
+.theme-white [class*="topbar"],
+.theme-white nav:not([class*="sidebar"]) {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* THÈME BLANC - Zone de chat principale */
+.theme-white main,
+.theme-white [class*="chat"],
+.theme-white [class*="message-container"],
+.theme-white [class*="messages"],
+.theme-white .flex-1,
+.theme-white .bg-gradient-to-br {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* THÈME BLANC - Sidebar menu gauche */
+.theme-white .main-nav-menu,
+.theme-white aside,
+.theme-white [class*="sidebar"],
+.theme-white nav[class*="sidebar"],
+.theme-white div[class*="sidebar"] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border-right: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* THÈME BLANC - Sidebar historique des chats (glassmorphic) */
+.theme-white .glassmorphic,
+.theme-white .glassmorphic-card,
+.theme-white [class*="glassmorphic"] {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* THÈME BLANC - Messages assistant */
+.theme-white [class*="assistant"],
+.theme-white [class*="message"]:not([class*="user"]),
+.theme-white .message-bubble-assistant {
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* THÈME BLANC - Zone de saisie */
+.theme-white [class*="input"],
+.theme-white textarea,
+.theme-white .input-area {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+/* THÈME BLANC - Supprimer TOUTE brume/blur/ombre */
+.theme-white *::before,
+.theme-white *::after {
+  box-shadow: none !important;
+}
+
+.theme-white [style*="box-shadow"],
+.theme-white [style*="backdrop-filter"] {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* THÈME BLANC - Forcer le fond blanc sur les divs principaux */
+.theme-white > div,
+.theme-white body > div,
+.theme-white #root,
+.theme-white #root > div,
+.theme-white #app,
+.theme-white #app > div {
+  background-color: #ffffff !important;
+}
+
+/* THÈME BLANC - Texte lisible */
+.theme-white,
+.theme-white * {
+  --tw-text-opacity: 1;
+}
+
+.theme-white h1,
+.theme-white h2,
+.theme-white h3,
+.theme-white h4,
+.theme-white h5,
+.theme-white h6,
+.theme-white p,
+.theme-white span,
+.theme-white div {
+  color: #111827;
+}
+
+/* THÈME BLANC - Bordures subtiles */
+.theme-white [class*="border"] {
+  border-color: #e5e7eb !important;
+}
+
+
+/* ========================================
+   THÈME BLANC - SURCHARGE DU GRADIENT ROSE
+   Force maximale pour surcharger from-white to-sakura-100
+   ======================================== */
+
+/* Surcharger le gradient principal de App.tsx */
+.theme-white .min-h-screen.bg-gradient-to-br,
+.theme-white .bg-gradient-to-br.from-white.to-sakura-100,
+.theme-white [class*="from-white"][class*="to-sakura"],
+.theme-white [class*="bg-gradient"] {
+  background: #ffffff !important;
+  background-image: none !important;
+  --tw-gradient-from: #ffffff !important;
+  --tw-gradient-to: #ffffff !important;
+  --tw-gradient-stops: #ffffff !important;
+}
+
+/* Forcer le fond blanc sur le conteneur principal */
+.theme-white .min-h-screen {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  background: #ffffff !important;
+}
+
+/* Supprimer tout effet de brume/blur sur les bords */
+.theme-white *,
+.theme-white *::before,
+.theme-white *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Forcer le fond blanc sur tous les éléments enfants directs */
+.theme-white .min-h-screen > *,
+.theme-white .min-h-screen > div,
+.theme-white [data-clara-container],
+.theme-white [data-clara-container] > * {
+  background-color: #ffffff !important;
+}
+
+
+/* ========================================
+   THÈME BLANC - CIBLAGE DIRECT DES CLASSES TAILWIND
+   ======================================== */
+
+/* Cibler directement les classes Tailwind du gradient */
+.theme-white .from-white {
+  --tw-gradient-from: #ffffff var(--tw-gradient-from-position) !important;
+}
+
+.theme-white .to-sakura-100 {
+  --tw-gradient-to: #ffffff var(--tw-gradient-to-position) !important;
+}
+
+/* Forcer le fond blanc sur le body et html */
+html.theme-white {
+  background-color: #ffffff !important;
+}
+
+html.theme-white body {
+  background-color: #ffffff !important;
+}
+
+/* Supprimer la brume grise sur le bord droit - cibler tous les éléments avec ombre */
+.theme-white [class*="shadow"],
+.theme-white [style*="shadow"] {
+  box-shadow: none !important;
+}
+
+/* Thème blanc - Menu principal gauche */
+.theme-white .main-nav-menu {
+  background-color: #ffffff !important;
+  border-right: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+}
+
+/* Thème blanc - Variable CSS pour sidebar */
+.theme-white {
+  --sidebar-bg: #ffffff !important;
+}
+
+
+/* ========================================
+   THÈME BLANC - MENUS CONTEXTUELS BLEUS
+   Couleur bleue #3b82f6 pour les menus
+   ======================================== */
+
+/* Menus contextuels - Fond blanc avec accent bleu */
+.theme-white [class*="menu"],
+.theme-white [class*="dropdown"],
+.theme-white [class*="popup"],
+.theme-white [class*="modal"],
+.theme-white [class*="dialog"],
+.theme-white [role="menu"],
+.theme-white [role="listbox"] {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Boutons dans les menus - Accent bleu */
+.theme-white [class*="menu"] button,
+.theme-white [class*="dropdown"] button,
+.theme-white [role="menuitem"] {
+  background-color: transparent !important;
+  color: #111827 !important;
+}
+
+.theme-white [class*="menu"] button:hover,
+.theme-white [class*="dropdown"] button:hover,
+.theme-white [role="menuitem"]:hover {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Bouton Démarrer et ses menus - Accent bleu */
+.theme-white [class*="demarrer"],
+.theme-white [class*="Demarrer"],
+.theme-white [class*="start-menu"] {
+  background-color: #ffffff !important;
+}
+
+.theme-white [class*="demarrer"] button:hover,
+.theme-white [class*="Demarrer"] button:hover {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Menu contextuel des tables - Accent bleu */
+.theme-white [class*="table-menu"],
+.theme-white [class*="context-menu"],
+.theme-white .table-actions {
+  background-color: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.theme-white [class*="table-menu"] button:hover,
+.theme-white [class*="context-menu"] button:hover {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Menu assertions conso - Accent bleu */
+.theme-white [class*="assertion"],
+.theme-white [class*="conso-menu"] {
+  background-color: #ffffff !important;
+}
+
+.theme-white [class*="assertion"] button:hover,
+.theme-white [class*="conso-menu"] button:hover {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Sélecteurs et dropdowns - Accent bleu */
+.theme-white select,
+.theme-white [class*="select"] {
+  background-color: #ffffff !important;
+  border-color: #e5e7eb !important;
+}
+
+.theme-white select:focus,
+.theme-white [class*="select"]:focus {
+  border-color: #3b82f6 !important;
+  outline-color: #3b82f6 !important;
+}
+
+/* Options sélectionnées - Bleu */
+.theme-white option:checked,
+.theme-white [class*="selected"],
+.theme-white [aria-selected="true"] {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* SUPPRIMER TOUTE BRUME/BLUR - Force maximale */
+.theme-white .glassmorphic,
+.theme-white [class*="glass"],
+.theme-white [class*="blur"],
+.theme-white [class*="backdrop"] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Bordure droite de la sidebar - Pas de brume */
+.theme-white .glassmorphic {
+  border-right: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+}
+
+/* Supprimer les ombres sur le côté droit */
+.theme-white aside,
+.theme-white [class*="sidebar"] {
+  box-shadow: none !important;
+}
+
+/* Boutons principaux - Bleu */
+.theme-white .btn-primary,
+.theme-white [class*="primary"],
+.theme-white button[class*="sakura"] {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+.theme-white .btn-primary:hover,
+.theme-white [class*="primary"]:hover,
+.theme-white button[class*="sakura"]:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+
+/* ========================================
+   SUPPRESSION TOTALE DE LA BRUME GRISE
+   Force maximale pour tous les thèmes
+   ======================================== */
+
+/* Supprimer TOUT effet de brume/blur/ombre sur les bords */
+.theme-white .glassmorphic,
+.theme-gray .glassmorphic,
+.glassmorphic {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+}
+
+/* Supprimer les pseudo-éléments qui pourraient créer des ombres */
+.theme-white .glassmorphic::before,
+.theme-white .glassmorphic::after,
+.theme-gray .glassmorphic::before,
+.theme-gray .glassmorphic::after {
+  display: none !important;
+  box-shadow: none !important;
+}
+
+/* Supprimer les ombres sur les sidebars */
+.theme-white aside,
+.theme-white [class*="sidebar"],
+.theme-white nav,
+.theme-gray aside,
+.theme-gray [class*="sidebar"],
+.theme-gray nav {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+/* Supprimer les ombres sur les conteneurs principaux */
+.theme-white main,
+.theme-white .flex-1,
+.theme-white [class*="chat"],
+.theme-gray main,
+.theme-gray .flex-1,
+.theme-gray [class*="chat"] {
+  box-shadow: none !important;
+}
+
+/* Forcer la suppression du backdrop-filter partout */
+.theme-white *,
+.theme-gray * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Supprimer les ombres sur les éléments avec transition */
+.theme-white .transition-all,
+.theme-white .animate-in,
+.theme-gray .transition-all,
+.theme-gray .animate-in {
+  box-shadow: none !important;
+}
+
+/* Bordure simple sans ombre pour la sidebar */
+.theme-white .glassmorphic.h-full {
+  border-right: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+  background-color: #ffffff !important;
+}
+
+.theme-gray .glassmorphic.h-full {
+  border-right: 1px solid rgba(229, 231, 235, 0.3) !important;
+  box-shadow: none !important;
+  background-color: #fcfcfc !important;
+}
+
+
+/* ========================================
+   SUPPRESSION TOTALE DE LA BRUME SUR LE CÔTÉ DROIT
+   Ciblage spécifique de tous les éléments pouvant créer une brume
+   ======================================== */
+
+/* Supprimer la brume sur la sidebar ClaraSidebar */
+.theme-white .glassmorphic.animate-in.slide-in-from-left,
+.theme-gray .glassmorphic.animate-in.slide-in-from-left,
+.glassmorphic.animate-in.slide-in-from-left {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Supprimer la brume sur le bord droit de la zone de chat */
+.theme-white .flex-1.overflow-y-auto,
+.theme-gray .flex-1.overflow-y-auto,
+.theme-white main,
+.theme-gray main {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+/* Supprimer tout effet de brume sur les conteneurs principaux */
+.theme-white [class*="flex-1"],
+.theme-gray [class*="flex-1"] {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Supprimer la brume sur les éléments avec z-index élevé */
+.theme-white [style*="z-index"],
+.theme-gray [style*="z-index"] {
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur les éléments de transition */
+.theme-white .transition-all,
+.theme-gray .transition-all,
+.theme-white .duration-300,
+.theme-gray .duration-300 {
+  box-shadow: none !important;
+}
+
+/* Forcer la suppression de toute ombre sur le côté droit du chat */
+.theme-white .max-w-4xl,
+.theme-gray .max-w-4xl {
+  box-shadow: none !important;
+}
+
+/* Supprimer les ombres sur les conteneurs de messages */
+.theme-white [class*="message"],
+.theme-gray [class*="message"] {
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur le conteneur principal de l'application */
+.theme-white #root,
+.theme-gray #root,
+.theme-white #root > div,
+.theme-gray #root > div {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Supprimer la brume sur les éléments avec overflow */
+.theme-white [class*="overflow"],
+.theme-gray [class*="overflow"] {
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur les éléments flex */
+.theme-white .flex,
+.theme-gray .flex {
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur le conteneur Clara */
+.theme-white [data-clara-container],
+.theme-gray [data-clara-container],
+.theme-white [data-clara-container] > *,
+.theme-gray [data-clara-container] > * {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+
+/* ========================================
+   SUPPRESSION DÉFINITIVE DE LA BRUME ROSE/GRISE
+   Forcer le fond uniforme sur TOUT le conteneur
+   ======================================== */
+
+/* THÈME BLANC - Supprimer le gradient rose to-sakura-100 */
+.theme-white .min-h-screen,
+.theme-white .min-h-screen.bg-gradient-to-br,
+.theme-white [class*="to-sakura"],
+.theme-white [class*="sakura-100"] {
+  background: #ffffff !important;
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+/* THÈME GRIS - Supprimer le gradient rose to-sakura-100 */
+.theme-gray .min-h-screen,
+.theme-gray .min-h-screen.bg-gradient-to-br,
+.theme-gray [class*="to-sakura"],
+.theme-gray [class*="sakura-100"] {
+  background: #fcfcfc !important;
+  background-image: none !important;
+  background-color: #fcfcfc !important;
+}
+
+/* Forcer le fond sur le conteneur principal */
+.theme-white > div,
+.theme-white .min-h-screen > div,
+.theme-white .bg-gradient-to-br > div {
+  background-color: #ffffff !important;
+}
+
+.theme-gray > div,
+.theme-gray .min-h-screen > div,
+.theme-gray .bg-gradient-to-br > div {
+  background-color: #fcfcfc !important;
+}
+
+/* Supprimer le wallpaper blur pour les thèmes blanc et gris */
+.theme-white [style*="filter: blur"],
+.theme-gray [style*="filter: blur"] {
+  filter: none !important;
+  opacity: 0 !important;
+}
+
+/* Forcer le fond sur la zone de chat principale */
+.theme-white .flex.h-screen.w-full,
+.theme-white .relative.z-10.flex.h-screen.w-full {
+  background-color: #ffffff !important;
+}
+
+.theme-gray .flex.h-screen.w-full,
+.theme-gray .relative.z-10.flex.h-screen.w-full {
+  background-color: #fcfcfc !important;
+}
+
+/* Supprimer toute ombre sur le côté droit de la zone de chat */
+.theme-white .flex-1.flex.flex-col.h-full,
+.theme-gray .flex-1.flex.flex-col.h-full {
+  box-shadow: none !important;
+  background-color: inherit !important;
+}
+
+/* Forcer le fond sur le conteneur de messages */
+.theme-white .flex-1.overflow-y-auto.p-6,
+.theme-gray .flex-1.overflow-y-auto.p-6 {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur les éléments avec position relative */
+.theme-white .relative,
+.theme-gray .relative {
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur les éléments avec position absolute */
+.theme-white .absolute,
+.theme-gray .absolute {
+  box-shadow: none !important;
+}
+
+/* Forcer la suppression du gradient Tailwind */
+.theme-white .from-white,
+.theme-white .to-sakura-100 {
+  --tw-gradient-from: #ffffff var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: #ffffff var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: #ffffff !important;
+}
+
+.theme-gray .from-white,
+.theme-gray .to-sakura-100 {
+  --tw-gradient-from: #fcfcfc var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: #fcfcfc var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: #fcfcfc !important;
+}

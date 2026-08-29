@@ -1,0 +1,334 @@
+/* Clara Sidebar Styles */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Optional thin scrollbar utility - only use when explicitly needed */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(155, 155, 155, 0.7);
+}
+
+/* Global scrollbar hiding for Clara sidebar */
+.clara-sidebar * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.clara-sidebar *::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Glassmorphic effect */
+.glassmorphic {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glassmorphic {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ========================================
+   THÈME GRIS - Barre latérale historique des chats
+   Couleur gris uniforme : #fcfcfc (rgba(252, 252, 252))
+   ======================================== */
+
+/* Thème gris - Fond gris uniforme SANS blur ni ombre */
+.theme-gray .glassmorphic {
+  background-color: #fcfcfc !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.dark.theme-gray .glassmorphic {
+  background-color: #6b7280 !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Thème gris - Styles spécifiques pour ClaraSidebar */
+.theme-gray .glassmorphic h1,
+.theme-gray .glassmorphic .text-gray-800 {
+  color: #111827 !important;
+}
+
+.dark.theme-gray .glassmorphic h1,
+.dark.theme-gray .glassmorphic .text-gray-800 {
+  color: #f9fafb !important;
+}
+
+/* Thème gris - Input de recherche */
+.theme-gray .glassmorphic input {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+  border-color: rgba(209, 213, 219, 0.5) !important;
+}
+
+.dark.theme-gray .glassmorphic input {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+  border-color: rgba(75, 85, 99, 0.5) !important;
+}
+
+/* Thème gris - Onglets de filtre */
+.theme-gray .glassmorphic .bg-gray-100\/50 {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+}
+
+.dark.theme-gray .glassmorphic .bg-gray-100\/50,
+.dark.theme-gray .glassmorphic .dark\:bg-gray-800\/50 {
+  background-color: rgba(31, 41, 55, 0.5) !important;
+}
+
+/* Thème gris - Éléments de la liste des chats au survol */
+.theme-gray .glassmorphic .hover\:bg-sakura-50:hover {
+  background-color: rgba(229, 231, 235, 0.5) !important;
+}
+
+.dark.theme-gray .glassmorphic .dark\:hover\:bg-sakura-100\/10:hover {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Thème gris - Chat sélectionné */
+.theme-gray .glassmorphic .bg-sakura-50 {
+  background-color: rgba(229, 231, 235, 0.7) !important;
+  border-color: rgba(156, 163, 175, 0.5) !important;
+}
+
+.dark.theme-gray .glassmorphic .dark\:bg-sakura-100\/10 {
+  background-color: rgba(55, 65, 81, 0.7) !important;
+  border-color: rgba(107, 114, 128, 0.5) !important;
+}
+
+/* Thème gris - Bordure du bas */
+.theme-gray .glassmorphic .border-gray-200\/30 {
+  border-color: rgba(209, 213, 219, 0.3) !important;
+}
+
+.dark.theme-gray .glassmorphic .dark\:border-gray-700\/50 {
+  border-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Thème gris - Logo avec fond clair (pas de fond foncé) */
+.theme-gray img[alt*="Logo"],
+.theme-gray img[alt*="logo"],
+.theme-gray img[alt="E-audit"],
+.theme-gray img[alt="E-audit Logo"] {
+  background-color: #fcfcfc !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+  box-shadow: none !important;
+}
+
+/* Alternative : Conteneur du logo avec fond clair */
+.theme-gray button:has(img[alt*="Logo"]),
+.theme-gray button:has(img[alt="E-audit"]) {
+  background-color: transparent !important;
+}
+
+/* Sidebar collapsed - Logo avec fond clair */
+.theme-gray .glassmorphic img[alt*="Logo"],
+.theme-gray .glassmorphic img[alt="E-audit"] {
+  background-color: #fcfcfc !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+} 
+
+
+/* ========================================
+   THÈME BLANC - Barre latérale historique des chats
+   Couleur blanc pur : #ffffff
+   ======================================== */
+
+/* Thème blanc - Fond blanc SANS blur ni ombre */
+.theme-white .glassmorphic {
+  background-color: #ffffff !important;
+  backdrop-filter: none !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: none !important;
+}
+
+.dark.theme-white .glassmorphic {
+  background-color: #1f2937 !important;
+  backdrop-filter: none !important;
+  border: 1px solid #374151 !important;
+  box-shadow: none !important;
+}
+
+/* Thème blanc - Styles spécifiques pour ClaraSidebar */
+.theme-white .glassmorphic h1,
+.theme-white .glassmorphic .text-gray-800 {
+  color: #111827 !important;
+}
+
+.dark.theme-white .glassmorphic h1,
+.dark.theme-white .glassmorphic .text-gray-800 {
+  color: #f9fafb !important;
+}
+
+/* Thème blanc - Input de recherche */
+.theme-white .glassmorphic input {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+.dark.theme-white .glassmorphic input {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+  border-color: rgba(75, 85, 99, 0.5) !important;
+}
+
+/* Thème blanc - Onglets de filtre */
+.theme-white .glassmorphic .bg-gray-100\/50 {
+  background-color: #f3f4f6 !important;
+}
+
+.dark.theme-white .glassmorphic .bg-gray-100\/50,
+.dark.theme-white .glassmorphic .dark\:bg-gray-800\/50 {
+  background-color: rgba(31, 41, 55, 0.5) !important;
+}
+
+/* Thème blanc - Éléments de la liste des chats au survol */
+.theme-white .glassmorphic .hover\:bg-sakura-50:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.dark.theme-white .glassmorphic .dark\:hover\:bg-sakura-100\/10:hover {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Thème blanc - Chat sélectionné */
+.theme-white .glassmorphic .bg-sakura-50 {
+  background-color: #e5e7eb !important;
+  border-color: #d1d5db !important;
+}
+
+.dark.theme-white .glassmorphic .dark\:bg-sakura-100\/10 {
+  background-color: rgba(55, 65, 81, 0.7) !important;
+  border-color: rgba(107, 114, 128, 0.5) !important;
+}
+
+/* Thème blanc - Bordure du bas */
+.theme-white .glassmorphic .border-gray-200\/30 {
+  border-color: #e5e7eb !important;
+}
+
+.dark.theme-white .glassmorphic .dark\:border-gray-700\/50 {
+  border-color: rgba(55, 65, 81, 0.5) !important;
+}
+
+/* Thème blanc - Logo */
+.theme-white img[alt*="Logo"],
+.theme-white img[alt*="logo"],
+.theme-white img[alt="E-audit"],
+.theme-white img[alt="E-audit Logo"] {
+  background-color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+  box-shadow: none !important;
+}
+
+/* Thème blanc - Conteneur du logo */
+.theme-white button:has(img[alt*="Logo"]),
+.theme-white button:has(img[alt="E-audit"]) {
+  background-color: transparent !important;
+}
+
+/* Thème blanc - Sidebar collapsed - Logo */
+.theme-white .glassmorphic img[alt*="Logo"],
+.theme-white .glassmorphic img[alt="E-audit"] {
+  background-color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+}
+
+
+/* ========================================
+   SUPPRESSION TOTALE DE LA BRUME SUR LE CÔTÉ DROIT
+   Pour tous les thèmes
+   ======================================== */
+
+/* Supprimer la brume sur la sidebar glassmorphic */
+.theme-white .glassmorphic,
+.theme-gray .glassmorphic {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Supprimer la brume sur les éléments avec animation */
+.theme-white .glassmorphic.animate-in,
+.theme-gray .glassmorphic.animate-in,
+.theme-white .animate-in.slide-in-from-left,
+.theme-gray .animate-in.slide-in-from-left {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Supprimer la brume sur le bord droit de la sidebar */
+.theme-white .glassmorphic.h-full,
+.theme-gray .glassmorphic.h-full {
+  box-shadow: none !important;
+  border-right: 1px solid rgba(229, 231, 235, 0.3) !important;
+}
+
+/* Thème blanc - Bordure simple sans ombre */
+.theme-white .glassmorphic.h-full {
+  border-right: 1px solid #e5e7eb !important;
+  background-color: #ffffff !important;
+}
+
+/* Thème gris - Bordure simple sans ombre */
+.theme-gray .glassmorphic.h-full {
+  border-right: 1px solid rgba(229, 231, 235, 0.3) !important;
+  background-color: #fcfcfc !important;
+}
+
+/* Supprimer les pseudo-éléments qui pourraient créer des ombres */
+.theme-white .glassmorphic::before,
+.theme-white .glassmorphic::after,
+.theme-gray .glassmorphic::before,
+.theme-gray .glassmorphic::after {
+  display: none !important;
+  content: none !important;
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur les éléments de transition */
+.theme-white .transition-all,
+.theme-gray .transition-all {
+  box-shadow: none !important;
+}
+
+/* Supprimer la brume sur les éléments avec z-index élevé */
+.theme-white [style*="z-index: 10000"],
+.theme-gray [style*="z-index: 10000"] {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}

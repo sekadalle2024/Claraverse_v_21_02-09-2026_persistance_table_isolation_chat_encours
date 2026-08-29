@@ -1,0 +1,102 @@
+/**
+ * Style Grok - Overrides pour masquer la sélection des LLM
+ * 
+ * Ce fichier contient les styles CSS pour masquer la zone de sélection
+ * des modèles LLM selon le design de Grok.
+ * 
+ * IMPORTANT: Ce fichier est complété par le script JavaScript
+ * /public/masquer-selecteurs-llm.js pour un masquage dynamique
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   RÈGLES CSS GLOBALES - MASQUAGE DES SÉLECTEURS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Masquer les sélecteurs de provider et de modèles */
+.provider-selector-container,
+.model-selector-container,
+[data-provider-selector],
+[data-model-selector] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Masquer les dropdowns de sélection de modèles */
+select[name="provider"],
+select[name="model"],
+button[aria-label*="provider" i],
+button[aria-label*="model" i],
+button[aria-label*="Select provider" i],
+button[aria-label*="Select model" i] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Masquer les options avancées */
+.advanced-options .provider-selector,
+.advanced-options .model-selector {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MASQUER LES BOUTONS SOUS LA ZONE DE SAISIE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Masquer les icônes de paramètres (Settings) */
+/* EXCEPTION: Ne pas masquer les boutons de thème dans la topbar */
+button[aria-label*="settings" i]:not([aria-label*="theme" i]):not([title*="theme" i]),
+button[aria-label*="paramètres" i]:not([aria-label*="theme" i]):not([title*="theme" i]),
+button[aria-label*="options" i]:not([aria-label*="theme" i]):not([title*="theme" i]),
+button[title*="settings" i]:not([aria-label*="theme" i]):not([title*="theme" i]),
+button[title*="paramètres" i]:not([aria-label*="theme" i]):not([title*="theme" i]),
+button[title*="options" i]:not([aria-label*="theme" i]):not([title*="theme" i]) {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRÉSERVER LES ICÔNES DE THÈME
+   ═══════════════════════════════════════════════════════════════ */
+
+/* S'assurer que les boutons de thème restent visibles */
+button[aria-label*="theme" i],
+button[title*="theme" i],
+button[aria-label*="Toggle dark mode" i],
+button[title*="Toggle dark mode" i],
+button[title*="Changer de thème" i],
+.theme-selector,
+.theme-selector button,
+.theme-selector svg {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Préserver spécifiquement le ThemeSelector avec l'icône Palette */
+button[title="Changer de thème"],
+button[title="Changer de thème"] svg,
+button[title="Changer de thème"] * {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RÈGLE ULTIME - MASQUAGE GLOBAL
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Masquer par attribut data */
+[data-model-selector],
+[data-provider-selector],
+[data-settings-button],
+[data-options-button] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}

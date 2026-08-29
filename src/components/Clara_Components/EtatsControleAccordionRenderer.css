@@ -1,0 +1,263 @@
+/* États de Contrôle - Styles */
+
+.etats-controle-container {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  max-width: 100%;
+  margin: 16px 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.etats-controle-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.etats-controle-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.etats-controle-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.controls-ec {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.btn-ec {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-ec:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.btn-ec:active {
+  transform: translateY(0);
+}
+
+.etats-controle-section {
+  margin: 0;
+  border-bottom: 1px solid #dee2e6;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.etats-controle-section:last-child {
+  border-bottom: none;
+}
+
+.section-header-ec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: #f8f9fa;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s;
+  user-select: none;
+}
+
+.section-header-ec:hover {
+  background: #e9ecef;
+}
+
+.section-header-ec.active {
+  background: #dee2e6;
+}
+
+.section-header-ec .arrow {
+  transition: transform 0.3s ease;
+  font-size: 18px;
+  color: #667eea;
+}
+
+.etats-controle-section.active .section-header-ec .arrow {
+  transform: rotate(90deg);
+}
+
+.section-content-ec {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background: white;
+}
+
+.section-content-ec.active {
+  max-height: 3000px;
+}
+
+.etats-controle-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.etats-controle-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.etats-controle-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.etats-controle-table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.etats-controle-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.etats-controle-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.total-row {
+  background-color: #f0f0f0 !important;
+  font-weight: 700;
+  border-top: 2px solid #667eea !important;
+}
+
+.ref-cell {
+  font-weight: 700;
+  color: #667eea;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.libelle-cell {
+  color: #333;
+}
+
+.montant-cell {
+  text-align: right;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-weight: 500;
+  color: #059669;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .etats-controle-header h2 {
+    font-size: 18px;
+  }
+
+  .etats-controle-header p {
+    font-size: 12px;
+  }
+
+  .controls-ec {
+    flex-wrap: wrap;
+  }
+
+  .btn-ec {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .section-header-ec {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .etats-controle-table {
+    font-size: 12px;
+  }
+
+  .etats-controle-table th,
+  .etats-controle-table td {
+    padding: 8px 10px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .controls-ec {
+    display: none;
+  }
+
+  .etats-controle-section {
+    page-break-inside: avoid;
+  }
+
+  .section-content-ec {
+    max-height: none !important;
+  }
+
+  .section-header-ec .arrow {
+    display: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .etats-controle-container {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .section-header-ec {
+    background: #2a2a2a;
+    color: #e0e0e0;
+  }
+
+  .section-header-ec:hover {
+    background: #333;
+  }
+
+  .section-content-ec {
+    background: #1a1a1a;
+  }
+
+  .etats-controle-table td {
+    border-bottom-color: #333;
+  }
+
+  .etats-controle-table tbody tr:hover {
+    background-color: #2a2a2a;
+  }
+
+  .total-row {
+    background-color: #2a2a2a !important;
+  }
+
+  .libelle-cell {
+    color: #e0e0e0;
+  }
+
+  .controls-ec {
+    background: #2a2a2a;
+    border-bottom-color: #333;
+  }
+}

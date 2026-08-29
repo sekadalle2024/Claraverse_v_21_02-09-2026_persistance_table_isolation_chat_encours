@@ -1,0 +1,871 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+@import 'prismjs/themes/prism.css';
+@import 'prismjs/themes/prism-dark.css';
+
+/* Import global scrollbar hiding first to ensure it takes precedence */
+@import './styles/scrollbar-global.css';
+
+/* Clara specific styles */
+@import './styles/claraSidebar.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables */
+:root {
+  --sakura-50: #fef7f7;
+  --sakura-100: #fee2e2;
+  --sakura-200: #fecaca;
+  --sakura-300: #fca5a5;
+  --sakura-400: #f87171;
+  --sakura-500: #ef4444;
+  --sakura-600: #dc2626;
+  --sakura-700: #b91c1c;
+  --sakura-800: #991b1b;
+  --sakura-900: #7f1d1d;
+}
+
+@layer base {
+  :root {
+    --sakura-50: #fef6f9;
+    --sakura-100: #fee3ec;
+    --sakura-200: #ffc6da;
+    --sakura-300: #ff9dc1;
+    --sakura-400: #ff669d;
+    --sakura-500: #ff1a75;
+    --sakura-600: #e6006b;
+    font-family: 'Quicksand', sans-serif;
+  }
+
+  .dark {
+    --sakura-50: #1a0f13;
+    --sakura-100: #2a1820;
+    --sakura-200: #3d1f2d;
+    --sakura-300: #4f2639;
+    --sakura-400: #662d46;
+    --sakura-500: #ff1a75;
+    --sakura-600: #ff3385;
+  }
+}
+
+@layer components {
+  .prose-sakura {
+    @apply prose dark:prose-invert;
+  }
+
+  .prose-sakura a {
+    @apply text-sakura-500 transition-colors;
+  }
+
+  .prose-sakura a:hover {
+    color: var(--sakura-600);
+  }
+
+  .dark .prose-sakura a {
+    @apply text-sakura-400;
+  }
+
+  .dark .prose-sakura a:hover {
+    @apply text-sakura-500;
+  }
+
+  .glassmorphic {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20 dark:bg-gray-900/70 dark:border-gray-800/20;
+  }
+
+  .glassmorphic-card {
+    @apply bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-xl;
+  }
+}
+
+/* Complete cleanup of code blocks in markdown for both light and dark mode */
+.prose pre, 
+.prose code,
+.dark .prose pre,
+.dark .prose code {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Completely remove code syntax highlighting for all spans */
+.prose pre code span,
+.dark .prose pre code span {
+  background: transparent !important;
+  color: #e5e7eb !important;
+  border: none !important;
+  font-weight: normal !important;
+  text-decoration: none !important;
+}
+
+/* Make code blocks consistent in both modes */
+.prose pre,
+.dark .prose pre {
+  background-color: #1E1E1E !important;
+  color: #e5e7eb !important;
+  border-radius: 4px !important;
+  padding: 0.75rem 1rem !important;
+  border: none !important;
+}
+
+/* Ensure code text is visible in both modes with no highlighting */
+.prose pre code,
+.dark .prose pre code {
+  color: #e5e7eb !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+/* Inline code styling for both modes */
+.prose :not(pre) > code,
+.dark .prose :not(pre) > code {
+  background-color: #f3f4f6 !important;
+  color: #1f2937 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 0.25rem !important;
+  border: none !important;
+}
+
+/* Dark mode inline code */
+.dark .prose :not(pre) > code {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+/* Override any theme-specific syntax highlighting */
+.prose pre [class*="language-"],
+.prose code [class*="language-"],
+.dark .prose pre [class*="language-"],
+.dark .prose code [class*="language-"] {
+  color: #e5e7eb !important;
+  background: transparent !important;
+  text-shadow: none !important;
+  font-family: monospace !important;
+}
+
+/* Smooth width transitions */
+.w-0 {
+  width: 0;
+}
+
+.w-auto {
+  width: auto;
+}
+
+/* Scrollbar styling - Global hiding with optional thin scrollbar utility */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply bg-gray-400/50 dark:bg-gray-600/50 rounded-full;
+}
+
+/* Global scrollbar hiding - Override any existing scrollbar styles */
+* {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari and Opera */
+}
+
+/* Hide scrollbar but maintain functionality - Enhanced version */
+.scrollbar-none {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari and Opera */
+}
+
+/* Smooth scrolling */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes autoModeGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(147, 51, 234, 0.6);
+  }
+}
+
+@keyframes enhancedSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-message-slide-in {
+  animation: messageSlideIn 0.4s ease-out;
+}
+
+.animate-auto-mode-glow {
+  animation: autoModeGlow 2s ease-in-out infinite;
+}
+
+.animate-enhanced-spin {
+  animation: enhancedSpin 1s linear infinite;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+/* App runner animations */
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.4s ease-out forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s infinite ease-in-out;
+}
+
+/* Auto-resize textarea */
+textarea {
+  min-height: 2.5rem;
+  transition: height 0.2s ease;
+}
+
+/* Ensure markdown content has proper colors in dark mode */
+.dark .markdown-wrapper {
+  color-scheme: dark;
+}
+
+.dark-mode-prose {
+  color-scheme: dark;
+}
+
+.dark .dark-mode-prose {
+  --tw-prose-body: #e5e7eb;
+  --tw-prose-headings: #f9fafb;
+  --tw-prose-lead: #d1d5db;
+  --tw-prose-links: #93c5fd;
+  --tw-prose-bold: #f9fafb;
+  --tw-prose-counters: #d1d5db;
+  --tw-prose-bullets: #d1d5db;
+  --tw-prose-hr: #374151;
+  --tw-prose-quotes: #f3f4f6;
+  --tw-prose-quote-borders: #374151;
+  --tw-prose-captions: #9ca3af;
+  --tw-prose-code: #f9fafb;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-th-borders: #374151;
+  --tw-prose-td-borders: #374151;
+}
+
+/* Code blocks in dark mode */
+.dark .prose pre {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+}
+
+.dark .prose code {
+  color: #f9fafb;
+  background-color: #374151;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.dark .prose a {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+/* Lists in dark mode */
+.dark .prose ul, 
+.dark .prose ol {
+  color: #e5e7eb;
+}
+
+/* Table styling in dark mode */
+.dark .prose table {
+  border-color: #374151;
+}
+
+.dark .prose thead {
+  color: #f9fafb;
+  border-bottom-color: #4b5563;
+}
+
+.dark .prose tbody tr {
+  border-bottom-color: #374151;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mb-4 text-gray-900 dark:text-white mt-8;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold mb-3 text-gray-800 dark:text-gray-100 mt-6;
+}
+
+.prose p {
+  @apply mb-4 text-gray-700 dark:text-gray-300;
+}
+
+/* Complete cleanup of code blocks in markdown for both light and dark mode */
+.bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #ffffff, #fee3ec);
+}
+
+.dark .bg-gradient-to-br {
+  background: #000000;
+}
+
+div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.rounded-lg {
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+  margin-left: 15px !important;
+  margin-right: 15px !important;
+  margin-top: 15px !important;
+  margin-bottom: 25px !important;
+}
+ div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.rounded-lg th {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  text-align: left !important;
+  background-color: #6b1102 !important;
+  color: white !important;
+}
+
+div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.rounded-lg thead {
+  position: sticky !important;
+  top: 0px !important;
+}
+/* Sidebar icon transitions */
+.sidebar-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar-expanded .sidebar-icon,
+.glassmorphic:hover .sidebar-icon {
+  opacity: 1;
+}
+
+/* Enhanced prose styling for markdown content */
+.prose {
+  @apply text-gray-800 dark:text-gray-200;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  @apply text-gray-900 dark:text-gray-100 font-bold;
+  @apply border-b border-gray-200 dark:border-gray-700 pb-2 mb-4;
+}
+
+.prose h1 { @apply text-2xl; }
+.prose h2 { @apply text-xl; }
+.prose h3 { @apply text-lg; }
+
+.prose p {
+  @apply mb-4 leading-relaxed;
+}
+
+.prose ul, .prose ol {
+  @apply mb-4;
+}
+
+.prose li {
+  @apply mb-2 pl-2;
+}
+
+/* Ensure proper list alignment and spacing */
+.prose ol {
+  @apply list-decimal mb-4 space-y-2 pl-6;
+  list-style-position: outside;
+}
+
+.prose ul {
+  @apply list-disc mb-4 space-y-2 pl-6;
+  list-style-position: outside;
+}
+
+/* Nested list styling */
+.prose ol ol,
+.prose ul ul,
+.prose ol ul,
+.prose ul ol {
+  @apply mt-2 mb-2;
+}
+
+/* List item content alignment */
+.prose li > p {
+  @apply mb-2;
+}
+
+.prose li > p:first-child {
+  @apply mt-0;
+}
+
+.prose li > p:last-child {
+  @apply mb-0;
+}
+
+.prose table {
+  @apply border-collapse border border-gray-300 dark:border-gray-600;
+}
+
+.prose th, .prose td {
+  @apply border border-gray-300 dark:border-gray-600 px-4 py-2;
+}
+
+.prose th {
+  @apply bg-gray-100 dark:bg-gray-800 font-semibold;
+}
+
+/* Code block enhancements */
+.prose pre {
+  @apply bg-transparent p-0 m-0;
+}
+
+.prose :not(pre) > code {
+  @apply bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+/* Enhanced glassmorphism effects for voice chat */
+.glassmorphic-card {
+  @apply bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border border-white/30 dark:border-gray-700/30 shadow-xl;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* Voice chat specific animations */
+@keyframes voicePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes voiceRipple {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes sakuraGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), 0 0 40px rgba(236, 72, 153, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.5), 0 0 60px rgba(236, 72, 153, 0.2);
+  }
+}
+
+@keyframes floatingParticle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+.animate-voice-pulse {
+  animation: voicePulse 2s ease-in-out infinite;
+}
+
+.animate-voice-ripple {
+  animation: voiceRipple 1.5s ease-out infinite;
+}
+
+.animate-sakura-glow {
+  animation: sakuraGlow 3s ease-in-out infinite;
+}
+
+.animate-floating-particle {
+  animation: floatingParticle 4s ease-in-out infinite;
+}
+
+/* Enhanced button hover effects */
+.voice-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.voice-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.voice-button:hover::before {
+  left: 100%;
+}
+
+/* Breathing animation for idle states */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Status indicator animations */
+@keyframes statusPing {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-status-ping {
+  animation: statusPing 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background: linear-gradient(-45deg, #ec4899, #8b5cf6, #06b6d4, #10b981);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Enhanced card animations */
+@keyframes shine {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine {
+  animation: shine 1.5s ease-in-out infinite;
+}
+
+/* Enhanced Custom Scrollbar for LumaUI-lite */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(236, 72, 153, 0.3));
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(236, 72, 153, 0.5));
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: rgba(107, 114, 128, 0.4) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, rgba(107, 114, 128, 0.4), rgba(75, 85, 99, 0.4));
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, rgba(107, 114, 128, 0.6), rgba(75, 85, 99, 0.6));
+}
+
+/* Enhanced Message Animations */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-message-slide-in {
+  animation: messageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced Button Hover Effects */
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+  }
+  50% {
+    box-shadow: 0 6px 25px rgba(239, 68, 68, 0.4);
+  }
+}
+
+.animate-button-glow {
+  animation: buttonGlow 2s ease-in-out infinite;
+}
+
+/* Enhanced Glassmorphism Effects */
+.glassmorphic-enhanced {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glassmorphic-enhanced {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Focus States */
+.focus-enhanced:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgba(239, 68, 68, 0.5);
+  ring-offset: 2px;
+  ring-offset-color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .focus-enhanced:focus {
+  ring-offset-color: rgba(17, 24, 39, 0.8);
+}
+
+/* Enhanced Checkpoint Badge Animation */
+@keyframes checkpointPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(245, 158, 11, 0);
+  }
+}
+
+.animate-checkpoint-pulse {
+  animation: checkpointPulse 2s infinite;
+}
+
+/* Enhanced Loading Spinner */
+@keyframes enhancedSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-enhanced-spin {
+  animation: enhancedSpin 1s linear infinite;
+}
+
+/* Enhanced Tooltip Styles */
+.tooltip-enhanced {
+  position: relative;
+}
+
+.tooltip-enhanced::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 24, 39, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-enhanced::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(1px);
+  border: 4px solid transparent;
+  border-top-color: rgba(17, 24, 39, 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tooltip-enhanced:hover::before,
+.tooltip-enhanced:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Enhanced Auto Mode Status Animation */
+@keyframes autoModeGlow {
+  0%, 100% {
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    background: linear-gradient(135deg, #a855f7, #6366f1);
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+  }
+}
+
+.animate-auto-mode-glow {
+  animation: autoModeGlow 3s ease-in-out infinite;
+}
+
+/* styles for the container div wrapped around the tables */
+div.w-full {
+  max-height: 700px;
+  padding: 10px 45px 3px 1px;
+}
