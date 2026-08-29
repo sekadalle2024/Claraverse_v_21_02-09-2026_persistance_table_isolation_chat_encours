@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Status Persistance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .status {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .error {
+            background: #f44336;
+            color: white;
+        }
+
+        .warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .info {
+            background: #2196f3;
+            color: white;
+        }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1976d2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>📊 Status Persistance - Diagnostic Instantané</h1>
+
+    <button onclick="location.reload()">🔄 Rafraîchir</button>
+    <button onclick="runFullDiagnostic()">🔍 Diagnostic Complet</button>
+
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function addStatus(title, status, details = '') {
+            const div = document.createElement('div');
+            div.className = `status ${status}`;
+            div.innerHTML = `<strong>${title}</strong>${details ? '<br>' + details : ''}`;
+            results.appendChild(div);
+        }
+
+        function addCode(title, code) {
+            const h3 = document.createElement('h3');
+            h3.textContent = title;
+            results.appendChild(h3);
+
+            const pre = document.createElement('pre');
+            pre.textContent = code;
+            results.appendChild(pre);
+        }
+
+        async function runFullDiagnostic() {
+            results.innerHTML = '<h2>🔍 Diagnostic en cours...</h2>';
+
+            // 1. Session
+            const session = sessionStorage.getItem('claraverse_stable_session');
+            if (session) {
+                addStatus('✅ Session Stable', 'success', `ID: ${session}`);
+            } else {
+                addStatus('❌ Pas de Session', 'error', 'Créez une table d\'abord');
+                return;
+            }
+
+            // 2. API Restauration
+            if (window.claraverseRestore) {
+                const isComplete = window.claraverseRestore.isComplete();
+                if (isComplete) {
+                    addStatus('✅ Restauration Terminée', 'success');
+                } else {
+                    addStatus('⚠️ Restauration Non Terminée', 'warning', 'En cours ou échec');
+                }
+            } else {
+                addStatus('❌ API Restauration Absente', 'error', 'Script force-restore-on-load.js non chargé');
+            }
+
+            // 3. IndexedDB
+            try {
+                const db = await new Promise((resolve, reject) => {
+                    const request = indexedDB.open('clara_db', 12);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+
+                const tables = await new Promise((resolve, reject) => {
+                    const tx = db.transaction('clara_generated_tables', 'readonly');
+                    const store = tx.objectStore('clara_generated_tables');
+                    const index = store.index('sessionId');
+                    const request = index.getAll(session);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+
+                if (tables.length > 0) {
+                    addStatus('✅ Tables dans IndexedDB', 'success', `${tables.length} table(s) trouvée(s)`);
+
+                    // Détails des tables
+                    let details = '';
+                    tables.forEach((t, i) => {
+                        const div = document.createElement('div');
+                        div.innerHTML = t.tableHTML;
+                        const rows = div.querySelectorAll('tbody tr').length;
+                        details += `\nTable ${i + 1}: ${t.keyword} - ${rows} lignes - ${new Date(t.timestamp).toLocaleString()}`;
+                    });
+                    addCode('📋 Détails des Tables', details);
+                } else {
+                    addStatus('❌ Aucune Table dans IndexedDB', 'error', 'Problème de sauvegarde');
+                }
+            } catch (error) {
+                addStatus('❌ Erreur IndexedDB', 'error', error.message);
+            }
+
+            // 4. DOM
+            const domTables = document.querySelectorAll('table');
+            if (domTables.length > 0) {
+                addStatus('✅ Tables dans le DOM', 'success', `${domTables.length} table(s) visible(s)`);
+
+                let domDetails = '';
+                domTables.forEach((table, i) => {
+                    const rows = table.querySelectorAll('tbody tr').length;
+                    const parent = table.parentElement;
+                    const containerId = parent?.getAttribute('data-container-id') || 'none';
+                    domDetails += `\nTable ${i + 1}: ${rows} lignes - Container: ${containerId}`;
+                });
+                addCode('📋 Tables dans le DOM', domDetails);
+            } else {
+                addStatus('❌ Aucune Table dans le DOM', 'error', 'Problème de restauration');
+            }
+
+            // 5. Comparaison
+            const dbCount = await getTableCount(session);
+            const domCount = domTables.length;
+
+            if (dbCount > 0 && domCount === 0) {
+                addStatus('🔴 PROBLÈME: Tables en DB mais pas dans DOM', 'error', 'La restauration ne fonctionne pas');
+            } else if (dbCount === 0 && domCount === 0) {
+                addStatus('🔴 PROBLÈME: Aucune table nulle part', 'error', 'La sauvegarde ne fonctionne pas');
+            } else if (dbCount === domCount) {
+                addStatus('✅ SUCCÈS: Tout fonctionne!', 'success', 'Tables sauvegardées ET restaurées');
+            } else {
+                addStatus('⚠️ ATTENTION: Nombre différent', 'warning', `DB: ${dbCount}, DOM: ${domCount}`);
+            }
+        }
+
+        async function getTableCount(session) {
+            try {
+                const db = await new Promise((resolve, reject) => {
+                    const request = indexedDB.open('clara_db', 12);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+
+                const tables = await new Promise((resolve, reject) => {
+                    const tx = db.transaction('clara_generated_tables', 'readonly');
+                    const store = tx.objectStore('clara_generated_tables');
+                    const index = store.index('sessionId');
+                    const request = index.getAll(session);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+
+                return tables.length;
+            } catch {
+                return 0;
+            }
+        }
+
+        // Auto-run au chargement
+        setTimeout(runFullDiagnostic, 500);
+    </script>
+</body>
+
+</html>
