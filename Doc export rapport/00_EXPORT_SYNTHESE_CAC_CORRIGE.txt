@@ -1,0 +1,186 @@
+=================================================================
+CORRECTION EXPORT SYNTHÈSE CAC - VERSION FINALE
+Date: 25 Mars 2026
+=================================================================
+
+PROBLÈMES RÉSOLUS:
+==================
+
+1. ❌ Template Word (.doc) non utilisable
+   ✅ Solution: Création programmatique du document (sans template)
+
+2. ❌ Champs manquants dans l'export (Description notamment)
+   ✅ Solution: Tous les champs sont maintenant exportés
+
+FICHIERS MODIFIÉS:
+==================
+
+1. py_backend/export_synthese_cac_v2.py (NOUVEAU)
+   - Version programmatique complète
+   - Crée le document Word from scratch
+   - Intègre TOUS les champs
+
+2. py_backend/main.py
+   - Ajout du routeur V2
+
+3. public/menu.js
+   - Changement d'URL: /export-synthese-cac-v2
+
+STRUCTURE DU RAPPORT GÉNÉRÉ:
+============================
+
+SYNTHÈSE DES TRAVAUX DE RÉVISION
+
+Entité: [Nom]
+Exercice: [Année]
+Date du rapport: [Date]
+
+1. INTRODUCTION
+   [Texte standard]
+
+2. OBSERVATIONS D'AUDIT
+   2.1. [Intitulé Point 1]
+        Référence: [Ref]
+        Description: [TEXTE COMPLET] ✅
+        Observation: [TEXTE COMPLET] ✅
+        Ajustement/Reclassement proposé: [TEXTE COMPLET] ✅
+        Régularisation comptable: [TEXTE COMPLET] ✅
+   
+   2.2. [Intitulé Point 2]
+        ...
+
+3. POINTS DE CONTRÔLE INTERNE
+   3.1. [Intitulé Point 1]
+        Référence: [Ref]
+        Type: FRAP / Recos CI
+        Observation: [TEXTE COMPLET] ✅
+        Constat: [TEXTE COMPLET] ✅
+        Risques identifiés: [TEXTE COMPLET] ✅
+        Recommandation: [TEXTE COMPLET] ✅
+   
+   3.2. [Intitulé Point 2]
+        ...
+
+4. CONCLUSION
+   [Texte standard avec nombre de points]
+
+CHAMPS EXPORTÉS PAR TYPE:
+=========================
+
+Recos Révision des Comptes:
+✅ Intitulé
+✅ Référence
+✅ Description (CORRIGÉ - était manquant)
+✅ Observation
+✅ Ajustement/Reclassement
+✅ Régularisation comptable
+
+FRAP:
+✅ Intitulé
+✅ Référence
+✅ Type (FRAP)
+✅ Observation
+✅ Constat
+✅ Risques identifiés
+✅ Recommandation
+
+Recos Contrôle Interne Comptable:
+✅ Intitulé
+✅ Référence
+✅ Type (Recos CI)
+✅ Observation
+✅ Constat
+✅ Risques identifiés
+✅ Recommandation
+
+GESTION DES RETOURS À LA LIGNE:
+===============================
+
+Le code gère correctement les retours à la ligne:
+- \\n → saut de ligne
+- \\\\n → saut de ligne
+- Préserve la mise en forme du texte
+
+ENDPOINT API:
+============
+
+URL: POST http://localhost:5000/api/word/export-synthese-cac-v2
+
+Body JSON:
+{
+  "frap_points": [...],
+  "recos_revision_points": [...],
+  "recos_controle_interne_points": [...],
+  "date_rapport": "2026-03-25",
+  "entite": "Nom de l'entité",
+  "exercice": "2025"
+}
+
+Response: Fichier .docx
+
+TESTS:
+======
+
+Pour tester:
+
+1. Redémarrer le backend:
+   .\stop-claraverse.ps1
+   .\start-claraverse.ps1
+
+2. Rafraîchir le frontend (Ctrl+F5)
+
+3. Dans le chat, générer des tables de:
+   - Recos révision des comptes
+   - FRAP
+   - Recos contrôle interne comptable
+
+4. Clic droit sur une table
+   → Rapports CAC & Expert-Comptable
+   → Export Synthèse CAC
+
+5. Vérifier le fichier Word généré:
+   ✅ Tous les champs présents
+   ✅ Mise en forme correcte
+   ✅ Retours à la ligne préservés
+
+LOGS ATTENDUS:
+=============
+
+Backend:
+✅ Export Synthèse CAC V2 router loaded successfully
+📊 Export Synthèse CAC V2: 3 points au total
+   - FRAP: 0
+   - Recos Révision: 3
+   - Recos CI: 0
+✅ Document généré avec succès (version programmatique)
+✅ Export réussi: synthese_cac_2026-03-25_XX-XX-XX.docx
+
+Frontend (Console F12):
+🔍 [Export CAC] X table(s) trouvée(s) dans le chat
+📊 [Export CAC] Points collectés:
+   - FRAP: X
+   - Recos Révision: X
+   - Recos Contrôle Interne: X
+✅ Synthèse CAC exportée! (X points)
+
+AVANTAGES DE LA VERSION V2:
+===========================
+
+✅ Pas de dépendance au template Word
+✅ Fonctionne avec python-docx standard
+✅ Tous les champs exportés
+✅ Code plus simple et maintenable
+✅ Gestion correcte des retours à la ligne
+✅ Logs détaillés pour le debug
+
+PROCHAINES ÉTAPES:
+==================
+
+1. Redémarrer le backend
+2. Tester l'export avec des données réelles
+3. Vérifier que tous les champs sont présents
+4. Valider la mise en forme du document
+
+=================================================================
+FIN DU DOCUMENT
+=================================================================

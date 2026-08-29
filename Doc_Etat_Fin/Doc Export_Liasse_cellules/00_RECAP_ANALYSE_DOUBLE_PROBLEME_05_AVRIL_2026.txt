@@ -1,0 +1,126 @@
+================================================================================
+RÉCAPITULATIF ANALYSE - DOUBLE PROBLÈME EXPORT LIASSE
+05 AVRIL 2026
+================================================================================
+
+✅ ANALYSE TERMINÉE
+
+J'ai analysé les fichiers clés et identifié les deux problèmes:
+
+1. États de contrôle incorrects
+2. Valeurs non renseignées dans les états financiers
+
+================================================================================
+📊 FICHIERS ANALYSÉS
+================================================================================
+
+✅ py_backend/export_liasse.py
+   → Fonction remplir_liasse_officielle()
+   → Problème: Mappings de cellules incorrects
+
+✅ py_backend/etats_financiers_v2.py
+   → Fonction process_balance_to_liasse_format()
+   → Source de vérité pour les états financiers
+
+✅ py_backend/generer_onglet_controle_coherence.py
+   → Fonction generer_etats_controle_pour_export()
+   → Problème: Génère 8 états au lieu de 16
+
+✅ py_backend/etats_controle_exhaustifs.py
+   → Fonction generer_controles_exhaustifs()
+   → Source de vérité pour les contrôles (utilisée en frontend)
+
+✅ py_backend/etats_controle_exhaustifs_html.py
+   → Fonction generate_all_16_etats_controle_html()
+   → Génération HTML des 16 états (frontend)
+
+================================================================================
+🔍 DIAGNOSTIC DÉTAILLÉ
+================================================================================
+
+PROBLÈME 1: ÉTATS DE CONTRÔLE
+------------------------------
+Fichier: generer_onglet_controle_coherence.py
+Ligne: ~100-250
+
+CAUSE:
+- La fonction generer_etats_controle_pour_export() génère seulement 8 états
+- États 9-16 sont des placeholders vides
+- N'utilise pas la même source que le frontend
+
+SOLUTION:
+- Utiliser generer_controles_exhaustifs() (même source que frontend)
+- Générer les 16 états complets (8 pour N, 8 pour N-1)
+- Structure identique au frontend
+
+
+PROBLÈME 2: VALEURS NON RENSEIGNÉES
+------------------------------------
+Fichier: export_liasse.py
+Ligne: ~50-150 (mappings), ~200-400 (remplissage)
+
+CAUSE:
+- Les mappings MAPPING_BILAN_ACTIF, etc. utilisent des références incorrectes
+- Exemple: Mapping dit 'AD' → 'C10', mais les postes réels ont d'autres refs
+- Les données sont converties LIST→DICT mais les clés ne correspondent pas
+
+SOLUTION:
+- Vérifier les vraies références des postes dans etats_financiers_v2.py
+- Mettre à jour les mappings pour correspondre
+- Ou utiliser un mapping dynamique basé sur l'ordre des postes
+
+================================================================================
+📁 DOCUMENTATION CRÉÉE
+================================================================================
+
+1. 00_DIAGNOSTIC_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   → Diagnostic complet avec analyse détaillée
+
+2. QUICK_START_CORRECTION_DOUBLE_PROBLEME.txt
+   → Guide rapide pour commencer les corrections
+
+3. py_backend/test_export_double_probleme.py
+   → Script de test pour reproduire et diagnostiquer
+
+4. py_backend/CORRECTION_ETATS_CONTROLE_05_AVRIL_2026.md
+   → Guide détaillé de correction des états de contrôle
+
+5. py_backend/CORRECTION_VALEURS_ETATS_FINANCIERS_05_AVRIL_2026.md
+   → Guide détaillé de correction des valeurs
+
+6. 00_RECAP_ANALYSE_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   → Ce fichier (récapitulatif)
+
+================================================================================
+🎯 PROCHAINES ÉTAPES
+================================================================================
+
+1. LIRE:
+   - 00_DIAGNOSTIC_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   - QUICK_START_CORRECTION_DOUBLE_PROBLEME.txt
+
+2. TESTER:
+   cd py_backend
+   python test_export_double_probleme.py
+
+3. CORRIGER:
+   - generer_onglet_controle_coherence.py (états de contrôle)
+   - export_liasse.py (valeurs états financiers)
+
+4. VALIDER:
+   - Tester avec de vraies données
+   - Comparer avec le menu accordéon frontend
+   - Vérifier que les 16 états sont présents
+   - Vérifier que toutes les valeurs sont renseignées
+
+================================================================================
+💡 PRINCIPE CLÉS
+================================================================================
+
+✅ Utiliser strictement nos propres formules et valeurs
+✅ NE PAS utiliser les formules Excel du template
+✅ Même source pour frontend et export (etats_financiers_v2.py)
+✅ 16 états de contrôle exhaustifs (pas 8)
+✅ Toutes les valeurs doivent être renseignées
+
+================================================================================

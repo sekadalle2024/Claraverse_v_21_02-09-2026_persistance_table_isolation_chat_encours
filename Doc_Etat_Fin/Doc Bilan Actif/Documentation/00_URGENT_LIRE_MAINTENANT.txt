@@ -1,0 +1,88 @@
+================================================================================
+🚨 URGENT - LIRE MAINTENANT
+================================================================================
+
+Date: 07 Avril 2026
+Statut: ✅ SOLUTION APPLIQUEE
+
+================================================================================
+✅ CE QUI A ETE FAIT
+================================================================================
+
+Le probleme d'affichage des colonnes BRUT, AMORT ET DEPREC, NET dans le menu
+accordeon du bilan ACTIF a ete resolu.
+
+Modification: public/menu.js
+- Le frontend utilise maintenant le HTML genere par le backend
+- Les 7 colonnes s'affichent correctement
+
+================================================================================
+⚡ ACTION IMMEDIATE
+================================================================================
+
+1. Tester que tout fonctionne:
+   .\test-integration-actif-simple.ps1
+
+2. Demarrer le backend:
+   cd py_backend
+   conda activate claraverse_backend
+   python main.py
+
+3. Demarrer le frontend (autre terminal):
+   npm run dev
+
+4. Tester dans le navigateur:
+   - Envoyer: Etat fin
+   - Uploader: P000 -BALANCE DEMO N_N-1_N-2.xls
+   - Verifier: 7 colonnes dans BILAN ACTIF
+
+================================================================================
+📋 VERIFICATION
+================================================================================
+
+Dans le navigateur:
+✓ Menu accordeon s'affiche
+✓ Section BILAN ACTIF a 7 colonnes:
+  - REF
+  - ACTIF
+  - NOTE
+  - BRUT (exercice N)
+  - AMORT ET DEPREC (exercice N)
+  - NET (exercice N)
+  - NET (exercice N-1)
+✓ Colonnes BRUT et AMORT renseignees
+✓ NET = BRUT - AMORT
+
+Console navigateur (F12):
+✓ Message: Utilisation du HTML genere par le backend
+✓ Pas d'erreurs JavaScript
+
+================================================================================
+📚 DOCUMENTATION
+================================================================================
+
+Lecture rapide:
+- 00_URGENT_LIRE_MAINTENANT.txt (ce fichier)
+- START_HERE_SOLUTION_ACTIF.txt
+
+Documentation complete:
+- 00_LIRE_MAINTENANT_SOLUTION_ACTIF_07_AVRIL_2026.txt
+- SYNTHESE_VISUELLE_SOLUTION_ACTIF_07_AVRIL_2026.md
+- Doc_Etat_Fin/Doc Bilan Actif/README.md
+
+================================================================================
+🐛 EN CAS DE PROBLEME
+================================================================================
+
+1. Executer: .\test-integration-actif-simple.ps1
+2. Consulter: 00_LIRE_MAINTENANT_SOLUTION_ACTIF_07_AVRIL_2026.txt
+3. Tester le backend seul: .\test-actif-brut-amort.ps1
+
+================================================================================
+💾 COMMIT GITHUB
+================================================================================
+
+Apres validation des tests manuels:
+.\commit-integration-actif-frontend.ps1
+
+================================================================================

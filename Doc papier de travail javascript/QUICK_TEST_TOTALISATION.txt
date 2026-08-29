@@ -1,0 +1,198 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ GUIDE RAPIDE - TEST TOTALISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 FONCTIONNALITÉ : Totalisation automatique des colonnes numériques
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 OBJECTIF
+═══════════════════════════════════════════════════════════════════════════════
+
+Ajouter une ligne de totalisation en bas des tables de test avec:
+- Détection automatique des colonnes numériques
+- Calcul automatique des totaux
+- Actualisation en temps réel
+- Persistance après actualisation
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 PRÉREQUIS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Fichier créé: public/papier-travail-totalisation.js
+2. ✅ Méthodes ajoutées dans public/menu.js:
+   - ajouterTotalisation()
+   - actualiserTotalisation()
+   - supprimerTotalisation()
+3. ✅ Raccourci clavier: Ctrl+Shift+T
+4. ✅ Menu contextuel: Section "Papier de travail"
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔧 ÉTAPE 1 : CHARGER LE MODULE
+═══════════════════════════════════════════════════════════════════════════════
+
+Ajouter dans index.html (avant la fermeture de </body>):
+
+<script src="/papier-travail-totalisation.js"></script>
+
+Position recommandée:
+- Après papier-travail-schema-calcul.js
+- Après papier-travail-cross-ref-horizontale.js
+- Avant menu.js
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 2 : TEST BASIQUE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir l'application ClaraVerse
+2. Créer ou ouvrir une table de test avec des colonnes numériques
+3. Clic droit sur la table
+4. Menu "Papier de travail" → "Ajouter Totalisation"
+5. Vérifier qu'une ligne "Totalisation" apparaît en bas
+
+RÉSULTAT ATTENDU:
+✅ Ligne de totalisation ajoutée
+✅ Totaux calculés pour les colonnes numériques
+✅ Fond jaune clair
+✅ Texte en gras
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 3 : TEST ACTUALISATION AUTOMATIQUE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Modifier une valeur dans une colonne numérique
+2. Attendre 500ms
+3. Vérifier que le total se met à jour automatiquement
+
+RÉSULTAT ATTENDU:
+✅ Total recalculé automatiquement
+✅ Pas besoin de cliquer sur "Actualiser"
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 4 : TEST RACCOURCI CLAVIER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cliquer sur une cellule de la table
+2. Appuyer sur Ctrl+Shift+T
+3. Vérifier que la totalisation est ajoutée
+
+RÉSULTAT ATTENDU:
+✅ Totalisation ajoutée via raccourci
+✅ Notification "✅ Totalisation ajoutée"
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 5 : TEST PERSISTANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ajouter une totalisation à une table
+2. Actualiser la page (F5)
+3. Vérifier que la totalisation est restaurée
+
+RÉSULTAT ATTENDU:
+✅ Totalisation restaurée automatiquement
+✅ Totaux recalculés correctement
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 6 : TEST SUPPRESSION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Clic droit sur la table avec totalisation
+2. Menu "Papier de travail" → "Supprimer Totalisation"
+3. Confirmer la suppression
+4. Vérifier que la ligne est supprimée
+
+RÉSULTAT ATTENDU:
+✅ Ligne de totalisation supprimée
+✅ Notification "✅ Totalisation supprimée"
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 7 : TEST COLONNES MIXTES
+═══════════════════════════════════════════════════════════════════════════════
+
+Créer une table avec:
+- Colonnes texte: Compte, Libellé, Conclusion
+- Colonnes numériques: Solde N-1, Mouvement, Solde N, Écart
+
+RÉSULTAT ATTENDU:
+✅ Seules les colonnes numériques ont un total
+✅ Colonnes texte restent vides dans la ligne de totalisation
+✅ Première colonne affiche "Totalisation"
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 ÉTAPE 8 : TEST FORMATS NUMÉRIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+Tester avec différents formats:
+- 1234
+- 1 234
+- 1,234.56
+- 1 234,56
+- 1 234 €
+- $5,000.00
+
+RÉSULTAT ATTENDU:
+✅ Tous les formats sont reconnus
+✅ Totaux formatés en français: 1 234,56
+
+═══════════════════════════════════════════════════════════════════════════════
+  🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Module non chargé
+SOLUTION: Vérifier dans la console:
+  window.PapierTravailTotalisation
+  → Doit retourner un objet avec les méthodes
+
+PROBLÈME: Aucune colonne numérique détectée
+SOLUTION: Vérifier dans la console:
+  totalisationCommands.showStorage()
+  → Voir les colonnes détectées
+
+PROBLÈME: Totaux incorrects
+SOLUTION: Actualiser manuellement:
+  Menu → "Actualiser Totalisation"
+
+PROBLÈME: Totalisation disparaît après F5
+SOLUTION: Vérifier localStorage:
+  totalisationCommands.showStorage()
+  → Doit contenir les données
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 COMMANDES DEBUG
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans la console du navigateur:
+
+// Afficher le storage
+totalisationCommands.showStorage()
+
+// Restaurer toutes les totalisations
+totalisationCommands.restoreAll()
+
+// Retraiter toutes les tables
+totalisationCommands.processAll()
+
+// Effacer le storage
+totalisationCommands.clearStorage()
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Module chargé dans index.html
+□ Méthodes présentes dans menu.js
+□ Menu contextuel affiche les 3 actions
+□ Raccourci Ctrl+Shift+T fonctionne
+□ Totalisation s'ajoute correctement
+□ Totaux se calculent automatiquement
+□ Actualisation en temps réel fonctionne
+□ Persistance après F5 fonctionne
+□ Suppression fonctionne
+□ Formats numériques reconnus
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎉 SUCCÈS !
+═══════════════════════════════════════════════════════════════════════════════
+
+Si tous les tests passent, la fonctionnalité Totalisation est opérationnelle !
+
+═══════════════════════════════════════════════════════════════════════════════

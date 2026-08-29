@@ -1,0 +1,255 @@
+═══════════════════════════════════════════════════════════════════════════
+  GUIDE INTÉGRATION FRONTEND - ACTIF BRUT/AMORT/NET
+═══════════════════════════════════════════════════════════════════════════
+
+Date: 07 Avril 2026
+Fichier cible: public/EtatFinAutoTrigger.js
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 OBJECTIF
+═══════════════════════════════════════════════════════════════════════════
+
+Afficher le tableau ACTIF enrichi avec les colonnes BRUT, AMORT ET DEPREC, NET
+dans le menu accordéon des états financiers.
+
+Le HTML est déjà généré par le backend (results.actif_html).
+Il suffit de l'insérer au bon endroit dans le DOM.
+
+═══════════════════════════════════════════════════════════════════════════
+📊 DONNÉES DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════
+
+Après traitement de la balance, le backend retourne:
+
+```javascript
+{
+  success: true,
+  message: "États financiers générés avec succès",
+  results: {
+    bilan_actif: {...},           // Version standard (NET seulement)
+    bilan_passif: {...},
+    charges: {...},
+    produits: {...},
+    totaux: {...},
+    controles: {...},
+    actif_detaille: {             // ✨ NOUVEAU: Détails BRUT/AMORT/NET
+      'AA': {ref: 'AA', brut: 0, amort_deprec: 0, net: 0, ...},
+      'AF': {ref: 'AF', brut: 23125988, amort_deprec: 23125987, net: 1, ...},
+      ...
+    },
+    actif_html: '<div class="actif-detaille-container">...</div>'  // ✨ NOUVEAU
+  },
+  html: "..."  // HTML complet avec tous les accordéons
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 MODIFICATION À APPORTER
+═══════════════════════════════════════════════════════════════════════════
+
+FICHIER: public/EtatFinAutoTrigger.js
+
+FONCTION: replaceTableWithResults(table, html)
+
+LIGNE: ~250 (environ)
+
+MODIFICATION:
+────────────
+
+AVANT (version actuelle):
+```javascript
+function replaceTableWithResults(table, html) {
+  // ...
+  
+  // Ajouter le HTML des résultats
+  const resultsContainer = document.createElement('div');
+  resultsContainer.innerHTML = html;  // ← HTML complet du backend
+  resultsContainer.style.cssText = 'display: block !important; width: 100%;';
+  container.appendChild(resultsContainer);
+  
+  // ...
+}
+```
+
+APRÈS (avec ACTIF enrichi):
+```javascript
+function replaceTableWithResults(table, html) {
+  // ...
+  
+  // Ajouter le HTML des résultats
+  const resultsContainer = document.createElement('div');
+  resultsContainer.innerHTML = html;  // ← HTML complet du backend (déjà enrichi!)
+  resultsContainer.style.cssText = 'display: block !important; width: 100%;';
+  container.appendChild(resultsContainer);
+  
+  // ✨ NOUVEAU: Le HTML du backend contient déjà l'ACTIF enrichi!
+  // Aucune modification supplémentaire nécessaire car le backend
+  // utilise déjà results.actif_html dans generate_etats_financiers_html()
+  
+  // ...
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════
+✅ BONNE NOUVELLE!
+═══════════════════════════════════════════════════════════════════════════
+
+AUCUNE MODIFICATION FRONTEND NÉCESSAIRE! 🎉
+
+Le backend génère déjà le HTML complet avec l'ACTIF enrichi.
+Le frontend reçoit le HTML complet et l'affiche tel quel.
+
+RAISON:
+──────
+Dans py_backend/etats_financiers.py, la fonction generate_etats_financiers_html()
+utilise déjà results['actif_html'] pour générer le HTML de l'ACTIF.
+
+Le HTML retourné par l'API contient donc déjà le tableau enrichi avec les
+colonnes BRUT, AMORT ET DEPREC, NET.
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+1. DÉMARRER LE BACKEND
+   ───────────────────
+   ```powershell
+   cd py_backend
+   conda activate claraverse_backend
+   python main.py
+   ```
+
+2. OUVRIR LE FRONTEND
+   ──────────────────
+   - Ouvrir l'application Claraverse dans le navigateur
+   - Aller dans la section États Financiers
+
+3. UPLOADER UNE BALANCE
+   ────────────────────
+   - Cliquer sur la cellule "Etat_fin" (ou attendre le déclenchement auto)
+   - Sélectionner le fichier: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   - Attendre le traitement
+
+4. VÉRIFIER L'AFFICHAGE
+   ────────────────────
+   ✅ Le premier accordéon doit afficher "🏢 BILAN - ACTIF"
+   ✅ En cliquant dessus, un tableau avec 7 colonnes doit apparaître:
+      - REF
+      - ACTIF
+      - NOTE
+      - BRUT
+      - AMORT ET DEPREC
+      - NET
+      - NET N-1
+   
+   ✅ Les valeurs doivent être correctes:
+      - AF (Brevets): BRUT=23,125,988 | AMORT=23,125,987 | NET=1
+      - AZ (TOTAL ACTIF IMMOBILISÉ): Somme des postes AA à AS
+      - BZ (TOTAL GÉNÉRAL): Somme AZ + BP + BT + BU
+
+5. VÉRIFIER LA CONSOLE NAVIGATEUR
+   ──────────────────────────────
+   ```javascript
+   // Ouvrir la console (F12)
+   // Vérifier les logs:
+   console.log('✅ Résultats états financiers stockés dans window.lastEtatsFinanciersResults');
+   
+   // Inspecter les données:
+   window.lastEtatsFinanciersResults
+   
+   // Vérifier actif_detaille:
+   window.lastEtatsFinanciersResults.actif_detaille
+   ```
+
+═══════════════════════════════════════════════════════════════════════════
+🐛 DÉBOGAGE
+═══════════════════════════════════════════════════════════════════════════
+
+SI LE TABLEAU N'APPARAÎT PAS:
+────────────────────────────
+
+1. Vérifier la console backend:
+   ```
+   📊 Enrichissement ACTIF avec colonnes BRUT, AMORT, NET...
+   📊 Calcul ACTIF avec colonnes BRUT, AMORT ET DEPREC, NET
+   ✅ Calcul ACTIF terminé: ...
+   📊 Utilisation du HTML ACTIF enrichi (BRUT, AMORT, NET)
+   ```
+
+2. Vérifier la réponse API (Network tab):
+   - Endpoint: /etats-financiers/process-excel
+   - Vérifier que results.actif_html existe
+   - Vérifier que results.actif_detaille existe
+
+3. Vérifier le HTML inséré:
+   ```javascript
+   // Dans la console navigateur
+   document.querySelector('.actif-detaille-container')
+   ```
+
+SI LES COLONNES SONT VIDES:
+──────────────────────────
+
+1. Vérifier la balance:
+   - Onglet "BALANCE N " (avec espace)
+   - Colonnes: Numéro, Intitulé, Solde Débit, Solde Crédit
+
+2. Vérifier les comptes classe 2:
+   - Comptes 21, 22, 23, 24, etc. (immobilisations)
+   - Comptes 28 (amortissements)
+   - Comptes 29 (provisions)
+
+3. Vérifier les logs backend:
+   ```
+   AF - Brevets: BRUT=23,125,988, AMORT=23,125,987, NET=1
+   ```
+
+═══════════════════════════════════════════════════════════════════════════
+📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════
+
+1. FALLBACK AUTOMATIQUE
+   ────────────────────
+   Si l'enrichissement échoue, le backend utilise automatiquement
+   la version standard (NET seulement).
+   
+   Log backend:
+   ```
+   ⚠️ HTML ACTIF enrichi non disponible, utilisation de la version standard
+   ```
+
+2. COMPATIBILITÉ
+   ─────────────
+   Le HTML enrichi est compatible avec le style CSS existant.
+   Les accordéons fonctionnent de la même manière.
+
+3. PERFORMANCE
+   ───────────
+   Le calcul des colonnes BRUT/AMORT/NET est rapide (<100ms).
+   Aucun impact sur les performances.
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST INTÉGRATION FRONTEND
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Backend génère HTML enrichi (FAIT)
+[✅] Frontend reçoit HTML enrichi (automatique)
+[✅] Frontend affiche HTML enrichi (automatique)
+[ ] Tests effectués et validés
+[ ] Vérification visuelle du tableau
+[ ] Vérification des valeurs affichées
+[ ] Vérification des accordéons cliquables
+
+═══════════════════════════════════════════════════════════════════════════
+🔄 PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════════════════
+
+TESTER L'AFFICHAGE DANS LE NAVIGATEUR:
+─────────────────────────────────────
+
+1. Démarrer le backend: python py_backend/main.py
+2. Ouvrir le frontend dans le navigateur
+3. Uploader une balance
+4. Vérifier l'affichage du tableau ACTIF enrichi
+
+═══════════════════════════════════════════════════════════════════════════

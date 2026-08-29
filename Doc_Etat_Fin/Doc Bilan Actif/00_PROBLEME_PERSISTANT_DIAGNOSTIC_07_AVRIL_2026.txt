@@ -1,0 +1,261 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚠️ PROBLÈME PERSISTANT: AFFICHAGE ACTIF BRUT/AMORT/NET
+  Date: 07 Avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 SITUATION ACTUELLE
+─────────────────────────────────────────────────────────────────────────────
+L'utilisateur signale que le problème d'affichage des colonnes BRUT, AMORT ET 
+DEPREC, NET persiste malgré les corrections apportées au code.
+
+✅ VÉRIFICATIONS EFFECTUÉES
+─────────────────────────────────────────────────────────────────────────────
+
+1. ✅ Backend Python (py_backend/calculer_actif_brut_amort.py)
+   - Module créé et fonctionnel
+   - Fonction generer_html_actif_detaille() génère le HTML correct
+   - Test automatique: PASSE
+
+2. ✅ Backend Python (py_backend/etats_financiers.py)
+   - Import du module calculer_actif_brut_amort
+   - Appel de enrichir_actif_avec_brut_amort()
+   - Retour de actif_html dans les résultats
+   - Utilisation de actif_html dans generate_etats_financiers_html()
+   - Test automatique: PASSE
+
+3. ✅ Frontend JavaScript (public/menu.js)
+   - Fonction insertEtatsFinanciersResults() vérifie result.html
+   - Utilisation directe de result.html si présent
+   - Fallback vers construction manuelle si absent
+   - Test automatique: PASSE
+
+4. ✅ Flux de données complet
+   Backend Python → FastAPI → Frontend JavaScript → Affichage HTML
+   Tous les points de passage vérifiés: CORRECT
+
+🔍 DIAGNOSTIC APPROFONDI
+─────────────────────────────────────────────────────────────────────────────
+
+Le code est CORRECT et FONCTIONNEL. Le problème est probablement lié à:
+
+### Hypothèse 1: Cache du navigateur ⭐⭐⭐⭐⭐ (Très probable)
+   Le navigateur affiche une ancienne version du code JavaScript.
+   
+   SOLUTION:
+   1. Vider le cache: Ctrl+Shift+Delete
+   2. Cocher "Images et fichiers en cache"
+   3. Effacer les données
+   4. Fermer complètement le navigateur
+   5. Rouvrir et réessayer
+
+### Hypothèse 2: Serveurs non redémarrés ⭐⭐⭐⭐ (Probable)
+   Le backend ou le frontend n'a pas été redémarré après les modifications.
+   
+   SOLUTION:
+   1. Arrêter tous les serveurs (backend et frontend)
+   2. Redémarrer le backend: cd py_backend && python main.py
+   3. Redémarrer le frontend: npm run dev
+   4. Réessayer
+
+### Hypothèse 3: Fichier Balance sans amortissements ⭐⭐⭐ (Possible)
+   Le fichier Balance ne contient pas de comptes 28 et 29.
+   
+   VÉRIFICATION:
+   1. Ouvrir P000 -BALANCE DEMO N_N-1_N-2.xls
+   2. Chercher les comptes commençant par 28 (amortissements)
+   3. Chercher les comptes commençant par 29 (provisions)
+   
+   Si absents:
+   - Les colonnes BRUT, AMORT ET DEPREC, NET seront affichées
+   - Mais AMORT ET DEPREC sera à zéro
+   - C'est NORMAL si l'entreprise n'a pas d'immobilisations
+
+### Hypothèse 4: Erreur JavaScript silencieuse ⭐⭐ (Peu probable)
+   Une erreur JavaScript empêche l'affichage du HTML enrichi.
+   
+   VÉRIFICATION:
+   1. Ouvrir la console développeur (F12)
+   2. Onglet "Console"
+   3. Chercher des erreurs en rouge
+   4. Noter l'erreur exacte
+
+### Hypothèse 5: Composant React non mis à jour ⭐ (Très peu probable)
+   Le composant React EtatsControleAccordionRenderer.tsx n'est PAS utilisé
+   pour les états financiers. Il est utilisé uniquement pour les états de
+   contrôle (16 états exhaustifs).
+   
+   Les états financiers utilisent directement le HTML généré par le backend
+   via menu.js, donc ce n'est PAS la cause du problème.
+
+📝 PROCÉDURE DE TEST COMPLÈTE
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1: ARRÊTER TOUS LES SERVEURS
+   1. Fermer tous les terminaux backend et frontend
+   2. Vérifier qu'aucun processus Python ou Node ne tourne
+   3. Tâche Manager (Ctrl+Shift+Esc) → Terminer python.exe et node.exe
+
+ÉTAPE 2: VIDER LE CACHE DU NAVIGATEUR
+   1. Ouvrir le navigateur
+   2. Appuyer sur Ctrl+Shift+Delete
+   3. Cocher "Images et fichiers en cache"
+   4. Cliquer sur "Effacer les données"
+   5. Fermer complètement le navigateur (Alt+F4)
+
+ÉTAPE 3: REDÉMARRER LE BACKEND
+   Terminal 1:
+   cd py_backend
+   python main.py
+   
+   Attendre le message:
+   "✅ Backend démarré sur http://localhost:8000"
+
+ÉTAPE 4: REDÉMARRER LE FRONTEND
+   Terminal 2:
+   npm run dev
+   
+   Attendre le message:
+   "Local: http://localhost:5173/"
+
+ÉTAPE 5: TESTER DANS LE NAVIGATEUR
+   1. Ouvrir http://localhost:5173/
+   2. Ouvrir la console développeur (F12)
+   3. Onglet "Console"
+   4. Envoyer le message: "Etat fin"
+   5. Uploader le fichier: P000 -BALANCE DEMO N_N-1_N-2.xls
+   6. Attendre le traitement (30-60 secondes)
+
+ÉTAPE 6: VÉRIFIER DANS LA CONSOLE
+   Chercher ce message:
+   
+   ✅ Message attendu:
+      "✅ [États Financiers] Utilisation du HTML généré par le backend"
+   
+   ❌ Message d'erreur:
+      "⚠️ [États Financiers] Pas de HTML backend, construction manuelle"
+   
+   Si vous voyez le message d'erreur:
+   → Le backend ne retourne pas result.html
+   → Vérifier les logs du backend Python
+   → Chercher des erreurs dans py_backend/etats_financiers.py
+
+ÉTAPE 7: VÉRIFIER VISUELLEMENT
+   1. Chercher l'accordéon "🏢 BILAN - ACTIF"
+   2. Cliquer pour l'ouvrir
+   3. Compter les colonnes:
+      
+      ✅ Attendu (7 colonnes):
+         REF | ACTIF | NOTE | BRUT | AMORT ET DEPREC | NET | NET N-1
+      
+      ❌ Ancien format (4 colonnes):
+         REF | LIBELLÉS | EXERCICE N | EXERCICE N-1
+
+ÉTAPE 8: INSPECTER L'ÉLÉMENT HTML
+   1. Clic droit sur le tableau ACTIF
+   2. Sélectionner "Inspecter"
+   3. Chercher la balise <table>
+   4. Vérifier la classe CSS:
+      
+      ✅ Correct:
+         <table class="actif-table">
+      
+      ❌ Incorrect:
+         <table class="etats-controle-table">
+
+🔧 SOLUTIONS SELON LE RÉSULTAT
+─────────────────────────────────────────────────────────────────────────────
+
+CAS 1: Message "construction manuelle" dans la console
+   → Le backend ne retourne pas result.html
+   
+   ACTIONS:
+   1. Vérifier les logs du backend Python
+   2. Chercher des erreurs dans py_backend/etats_financiers.py
+   3. Exécuter: python test_actif_frontend_integration.py
+   4. Vérifier que le fichier Balance est valide
+
+CAS 2: Ancien format (4 colonnes) affiché
+   → Le cache du navigateur n'a pas été vidé
+   
+   ACTIONS:
+   1. Forcer le rechargement: Ctrl+Shift+R
+   2. Vider le cache et réessayer
+   3. Essayer un autre navigateur (Chrome, Firefox, Edge)
+   4. Mode navigation privée (Ctrl+Shift+N)
+
+CAS 3: Nouveau format (7 colonnes) mais colonnes vides
+   → Le fichier Balance ne contient pas de comptes 28/29
+   
+   ACTIONS:
+   1. Ouvrir P000 -BALANCE DEMO N_N-1_N-2.xls
+   2. Vérifier la présence de comptes 28 et 29
+   3. Si absents, c'est NORMAL (pas d'immobilisations)
+   4. Tester avec un autre fichier Balance
+
+CAS 4: Erreur JavaScript dans la console
+   → Problème technique
+   
+   ACTIONS:
+   1. Noter l'erreur exacte
+   2. Capturer une capture d'écran
+   3. Vérifier public/menu.js ligne indiquée
+   4. Consulter la documentation technique
+
+📊 TESTS AUTOMATIQUES DISPONIBLES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Test complet du flux:
+   python test_actif_frontend_integration.py
+
+2. Test backend seul:
+   python test_actif_brut_amort.py
+
+3. Test PowerShell:
+   ./test-actif-brut-amort.ps1
+
+📚 DOCUMENTATION DISPONIBLE
+─────────────────────────────────────────────────────────────────────────────
+
+1. 00_LIRE_MAINTENANT_DIAGNOSTIC_ACTIF_07_AVRIL_2026.txt
+   → Instructions immédiates
+
+2. 00_DIAGNOSTIC_PROBLEME_AFFICHAGE_07_AVRIL_2026.txt
+   → Diagnostic détaillé
+
+3. Documentation/GUIDE_VISUEL_DIAGNOSTIC_07_AVRIL_2026.md
+   → Guide visuel avec captures d'écran
+
+4. 00_INDEX_SOLUTION_COMPLETE_07_AVRIL_2026.md
+   → Index complet de la solution
+
+📞 SI LE PROBLÈME PERSISTE TOUJOURS
+─────────────────────────────────────────────────────────────────────────────
+
+1. Exécuter le test automatique:
+   python test_actif_frontend_integration.py
+
+2. Capturer des captures d'écran:
+   - Tableau ACTIF ouvert (montrer les colonnes)
+   - Console développeur (F12) (montrer les messages)
+   - Logs du backend Python (montrer les erreurs)
+
+3. Vérifier les versions:
+   - Navigateur: Chrome/Firefox/Edge + version
+   - Python: python --version
+   - Node: node --version
+   - npm: npm --version
+
+4. Vérifier les fichiers modifiés:
+   - py_backend/calculer_actif_brut_amort.py (doit exister)
+   - py_backend/etats_financiers.py (doit importer calculer_actif_brut_amort)
+   - public/menu.js (doit vérifier result.html)
+
+5. Consulter les logs détaillés:
+   - Backend: Terminal où python main.py tourne
+   - Frontend: Console du navigateur (F12)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ACTION IMMÉDIATE: VIDER LE CACHE ET REDÉMARRER LES SERVEURS
+
+═══════════════════════════════════════════════════════════════════════════════

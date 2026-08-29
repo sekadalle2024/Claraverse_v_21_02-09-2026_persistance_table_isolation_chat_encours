@@ -1,0 +1,39 @@
+fix(export): Utiliser Liasse_officielle_revise.xlsx comme template prioritaire
+
+PROBLÈME:
+Le script d'export de la liasse officielle (export_liasse.py) utilisait
+le mauvais fichier template Excel. Il cherchait en priorité "LIASSE.xlsx"
+et "Liasse officielle.xlsm", mais n'utilisait JAMAIS le fichier correct
+"Liasse_officielle_revise.xlsx" qui contient 84 onglets conformes au
+référentiel SYSCOHADA Révisé.
+
+SOLUTION:
+- Changé la priorité du template vers Liasse_officielle_revise.xlsx
+- Conservé le fallback vers les anciens templates pour compatibilité
+- Amélioré le message d'erreur pour lister tous les templates recherchés
+
+IMPACT:
+- L'export utilise maintenant le bon template (84 onglets SYSCOHADA Révisé)
+- Structure compatible avec les données générées par etats_financiers_v2.py
+- Meilleure chance de remplissage correct des onglets
+
+FICHIERS MODIFIÉS:
+- py_backend/export_liasse.py (ligne ~205-215)
+
+FICHIERS CRÉÉS:
+- test-template-liasse-revise.ps1 (script de test)
+- 00_SOLUTION_TEMPLATE_LIASSE_REVISE_08_AVRIL_2026.txt (documentation)
+- QUICK_START_CORRECTION_TEMPLATE_LIASSE.txt (guide rapide)
+- 00_COMMENCER_ICI_SOLUTION_ACTIF_08_AVRIL_2026.txt (point d'entrée)
+- COMMIT_MESSAGE_CORRECTION_TEMPLATE_LIASSE.txt (ce fichier)
+
+TESTS:
+- Script de test automatique créé: test-template-liasse-revise.ps1
+- Test manuel à effectuer dans l'interface web
+
+RÉFÉRENCE:
+- Issue: Problème export liasse (05 Avril 2026)
+- Mémo: 00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+- Tâche: [Liasse_officielle_revise] - Changer fichier export
+
+Date: 08 Avril 2026

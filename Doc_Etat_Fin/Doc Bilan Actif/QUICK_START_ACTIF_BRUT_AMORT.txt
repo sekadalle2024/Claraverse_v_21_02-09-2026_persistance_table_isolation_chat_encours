@@ -1,0 +1,62 @@
+================================================================================
+⚡ QUICK START - Test ACTIF BRUT, AMORT, NET
+================================================================================
+
+🎯 OBJECTIF
+-----------
+Tester le calcul et l'affichage des colonnes BRUT, AMORT ET DEPREC, NET
+pour la section ACTIF du bilan SYSCOHADA Révisé
+
+📋 PREREQUIS
+------------
+✓ Fichier: P000 -BALANCE DEMO N_N-1_N-2.xls (dans le répertoire courant)
+✓ Environnement conda: claraverse_backend
+✓ Python 3.11+
+
+⚡ EXECUTION RAPIDE
+-------------------
+
+Windows PowerShell:
+  .\test-actif-brut-amort.ps1
+
+Python Direct:
+  conda activate claraverse_backend
+  python test_actif_brut_amort.py
+
+📊 RESULTAT ATTENDU
+-------------------
+1. Affichage console:
+   - Statistiques de chargement
+   - Détails des calculs par poste
+   - Totalisations (AZ, BP, BT, BZ)
+
+2. Fichier HTML généré:
+   - test_actif_brut_amort.html
+   - Ouverture automatique dans navigateur
+   - Tableau avec 7 colonnes
+
+3. Validation:
+   - BRUT = Comptes classe 2 (hors 28/29)
+   - AMORT = Comptes 28 et 29
+   - NET = BRUT - AMORT
+
+📁 FICHIERS CLES
+----------------
+Module:        py_backend/calculer_actif_brut_amort.py
+Test:          test_actif_brut_amort.py
+Script:        test-actif-brut-amort.ps1
+Documentation: Doc_Etat_Fin/Documentation/00_SOLUTION_ACTIF_BRUT_AMORT_07_AVRIL_2026.md
+
+🔍 VERIFICATION
+---------------
+Vérifier que:
+- Les valeurs BRUT correspondent aux comptes d'immobilisation
+- Les valeurs AMORT correspondent aux comptes 28x et 29x
+- NET = BRUT - AMORT pour chaque poste
+- Les totalisations sont correctes
+
+📚 DOCUMENTATION COMPLETE
+-------------------------
+Voir: 00_SOLUTION_ACTIF_BRUT_AMORT_07_AVRIL_2026.txt
+
+================================================================================

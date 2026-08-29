@@ -1,0 +1,164 @@
+═══════════════════════════════════════════════════════════════════════════════
+📐 SCHÉMA DE CALCUL - INTÉGRATION PAPIER DE TRAVAIL
+═══════════════════════════════════════════════════════════════════════════════
+Date: 24 avril 2026
+Version: 1.0
+Statut: ✅ INTÉGRATION COMPLÈTE
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 OBJECTIF
+═══════════════════════════════════════════════════════════════════════════════
+
+Ajouter automatiquement une table "Schéma de calcul" au-dessus des tables 
+principales de test (Modelised_table) dans le chat, avec:
+
+✅ Détection automatique de la "Nature de test"
+✅ Génération du schéma approprié selon la nature
+✅ Positionnement au-dessus de la table principale
+✅ Sauvegarde persistante avec localStorage
+✅ Édition des cellules du schéma
+
+═══════════════════════════════════════════════════════════════════════════════
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+SCRIPTS DANS public/:
+  ✅ papier-travail-schema-calcul.js       - Module principal (auto-détection)
+  ✅ menu-papier-travail-integration.js    - Intégration menu contextuel
+  ✅ menu-papier-travail-extension.js      - (vide, réservé pour extensions)
+
+DOCUMENTATION:
+  ✅ Doc papier de travail javascript/
+     - 00_LIRE_EN_PREMIER.txt              - Ce fichier
+     - ARCHITECTURE.md                      - Architecture complète
+     - GUIDE_INTEGRATION.md                 - Guide d'intégration
+     - EXEMPLES_UTILISATION.md              - Exemples pratiques
+     - TROUBLESHOOTING.md                   - Dépannage
+
+═══════════════════════════════════════════════════════════════════════════════
+🚀 DÉMARRAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VÉRIFIER L'INTÉGRATION
+   - Les scripts sont déjà dans public/
+   - Le service TypeScript est configuré
+   - Le module se charge automatiquement
+
+2. UTILISER LE SCHÉMA DE CALCUL
+   
+   A) AUTOMATIQUE (recommandé):
+      - Le module détecte automatiquement les tables
+      - Génère le schéma selon la "Nature de test"
+      - Positionne au-dessus de la table principale
+   
+   B) MANUEL (via menu contextuel):
+      - Clic droit sur une table
+      - Menu "Papier de travail"
+      - "📐 Ajouter Schéma de calcul" (Ctrl+Shift+S)
+
+3. ÉDITER LE SCHÉMA
+   - Cliquer sur une cellule du schéma
+   - Modifier le texte
+   - Appuyer sur Entrée ou cliquer ailleurs
+   - Sauvegarde automatique dans localStorage
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 NATURES DE TEST SUPPORTÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Validation          → (A), (B), (C) = (A) + (B), (D), (E) = (C) - (D)
+✅ Mouvement           → (A), (B), (C), (D) = (A) + (B) - (C), (E), (F) = (D) - (E)
+✅ Rapprochement       → (A), (B), (C) = (A) - (B)
+✅ Séparation          → (A), (B), (C) = (A) - (B)
+✅ Estimation          → (A), (B), (C) = (A) * (B), (D), (E) = (C) - (D)
+✅ Revue analytique    → (A), (B), (C) = (A) - (B)
+✅ Cadrage TVA         → (A), (B) = (A) * 18%, (C), (D), (E), (F) = (B) - (C) - (D) - (E)
+✅ Cotisations sociales → (A), (B), (C), (D)
+✅ Modélisation        → Détection automatique des variables (X), (Y), (Z)...
+✅ Vierge              → Aucune colonne (pour personnalisation)
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 COMMANDES DE DEBUG
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans la console du navigateur:
+
+// Traiter toutes les tables
+schemaCalculCommands.processAll()
+
+// Afficher le contenu du localStorage
+schemaCalculCommands.showStorage()
+
+// Restaurer tous les schémas
+schemaCalculCommands.restoreAll()
+
+// Effacer tous les schémas sauvegardés
+schemaCalculCommands.clearStorage()
+
+═══════════════════════════════════════════════════════════════════════════════
+📖 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ARCHITECTURE.md
+   - Structure des modules
+   - Flux de données
+   - Interactions entre composants
+
+2. GUIDE_INTEGRATION.md
+   - Intégration dans menu.js
+   - Configuration du service TypeScript
+   - Tests d'intégration
+
+3. EXEMPLES_UTILISATION.md
+   - Cas d'usage pratiques
+   - Personnalisation des schémas
+   - Gestion des données
+
+4. TROUBLESHOOTING.md
+   - Problèmes courants
+   - Solutions
+   - FAQ
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ STATUT DE L'INTÉGRATION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Module principal créé et fonctionnel
+✅ Détection automatique des tables
+✅ Génération des schémas selon nature de test
+✅ Sauvegarde persistante (localStorage)
+✅ Édition des cellules
+✅ Intégration menu contextuel préparée
+✅ Service TypeScript configuré
+✅ Documentation complète
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TESTER L'INTÉGRATION
+   - Ouvrir l'application
+   - Créer un papier de travail avec n8n
+   - Vérifier la génération automatique du schéma
+
+2. INTÉGRER DANS MENU.JS (optionnel)
+   - Suivre GUIDE_INTEGRATION.md
+   - Ajouter les méthodes du menu contextuel
+   - Tester les raccourcis clavier
+
+3. PERSONNALISER (si nécessaire)
+   - Modifier les modèles de schémas
+   - Ajouter de nouvelles natures de test
+   - Adapter le style CSS
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+En cas de problème:
+1. Consulter TROUBLESHOOTING.md
+2. Vérifier la console du navigateur
+3. Utiliser les commandes de debug
+4. Consulter les exemples dans EXEMPLES_UTILISATION.md
+
+═══════════════════════════════════════════════════════════════════════════════

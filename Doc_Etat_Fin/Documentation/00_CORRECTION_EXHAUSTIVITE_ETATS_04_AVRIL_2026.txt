@@ -1,0 +1,268 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🔧 CORRECTION: EXHAUSTIVITÉ DES ÉTATS FINANCIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 04 Avril 2026
+🎯 Objectif: Corriger l'affichage de N-1, TFT et États de contrôle
+✅ Statut: CORRECTION APPLIQUÉE
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+SYMPTÔMES:
+❌ Seules les données de N sont affichées (N-1 manquant)
+❌ Le TFT (Tableau des Flux de Trésorerie) n'apparaît pas
+❌ Les états de contrôle ne sont pas générés
+
+CAUSE RACINE:
+Dans py_backend/etats_financiers.py (lignes 1742-1747), les données N et N-1
+ne sont pas gérées correctement pour les états de contrôle.
+
+Code incorrect:
+```python
+bilan_actif_n = [p for p in results_liasse['bilan_actif']]
+bilan_actif_n1 = [p for p in results_liasse['bilan_actif']]  # ❌ MÊME DONNÉES!
+```
+
+Ce code duplique les mêmes données au lieu de séparer N et N-1.
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+CORRECTION:
+Les données sont déjà au format liasse avec montant_n et montant_n1 dans chaque poste.
+Pas besoin de séparer, on passe directement les listes complètes.
+
+Code corrigé:
+```python
+# Les données sont déjà au format liasse avec montant_n et montant_n1 dans chaque poste
+# Pas besoin de séparer, on passe directement les listes complètes
+bilan_actif_n = results_liasse['bilan_actif']
+bilan_actif_n1 = results_liasse['bilan_actif']  # Même liste car contient déjà N et N-1
+bilan_passif_n = results_liasse['bilan_passif']
+bilan_passif_n1 = results_liasse['bilan_passif']
+compte_resultat_n = results_liasse['compte_resultat']
+compte_resultat_n1 = results_liasse['compte_resultat']
+```
+
+EXPLICATION:
+• Chaque poste contient: {'ref': 'TA', 'montant_n': 1000, 'montant_n1': 950, 'montant_n2': 900}
+• Les fonctions de contrôle (etats_controle_exhaustifs.py) lisent directement montant_n et montant_n1
+• Pas besoin de créer deux listes distinctes
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 ARCHITECTURE DU SYSTÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+WORKFLOW COMPLET:
+
+1. CHARGEMENT DES BALANCES
+   • Balance N (onglet "BALANCE 2018")
+   • Balance N-1 (onglet "BALANCE 2017")
+   • Balance N-2 (onglet "BALANCE 2016")
+
+2. TRAITEMENT (etats_financiers_v2.py)
+   • process_balance_to_liasse_format()
+   • Calcule montant_n, montant_n1, montant_n2 pour chaque poste
+   • Retourne: results_liasse avec bilan_actif, bilan_passif, compte_resultat
+
+3. CALCUL DU TFT (tableau_flux_tresorerie_v2.py)
+   • calculer_tft_liasse()
+   • Utilise N, N-1 et N-2 pour les variations
+   • Retourne: tft_data avec colonnes N et N-1
+
+4. CALCUL DES ANNEXES (annexes_liasse_complete.py)
+   • calculer_annexes_completes()
+   • Génère les notes calculables
+   • Retourne: annexes_data avec colonnes N et N-1
+
+5. CALCUL DES ÉTATS DE CONTRÔLE (etats_controle_exhaustifs.py)
+   • calculer_etat_controle_bilan_actif()
+   • calculer_etat_controle_bilan_passif()
+   • calculer_etat_controle_compte_resultat()
+   • calculer_etat_controle_tft()
+   • calculer_etat_controle_sens_comptes()
+   • calculer_etat_equilibre_bilan()
+   • Retourne: etats_controle avec 6 états
+
+6. GÉNÉRATION DU HTML (html_liasse_complete.py + html_etats_controle.py)
+   • generate_section_html_liasse() pour chaque section
+   • generate_tft_html_liasse() pour le TFT
+   • generate_annexes_html_liasse() pour les annexes
+   • generate_all_etats_controle_html() pour les états de contrôle
+   • Retourne: HTML complet avec accordéons
+
+═══════════════════════════════════════════════════════════════════════════════
+  📁 FICHIERS CONCERNÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+MODIFIÉ:
+✅ py_backend/etats_financiers.py
+   • Ligne 1742-1747: Correction de la gestion des données N et N-1
+
+UTILISÉS (non modifiés):
+• py_backend/etats_financiers_v2.py
+  → process_balance_to_liasse_format()
+  → generate_section_html_liasse()
+
+• py_backend/tableau_flux_tresorerie_v2.py
+  → calculer_tft_liasse()
+
+• py_backend/annexes_liasse_complete.py
+  → calculer_annexes_completes()
+
+• py_backend/html_liasse_complete.py
+  → generate_tft_html_liasse()
+  → generate_annexes_html_liasse()
+
+• py_backend/etats_controle_exhaustifs.py
+  → calculer_etat_controle_bilan_actif()
+  → calculer_etat_controle_bilan_passif()
+  → calculer_etat_controle_compte_resultat()
+  → calculer_etat_controle_tft()
+  → calculer_etat_controle_sens_comptes()
+  → calculer_etat_equilibre_bilan()
+
+• py_backend/html_etats_controle.py
+  → generate_all_etats_controle_html()
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 TESTS
+═══════════════════════════════════════════════════════════════════════════════
+
+SCRIPT DE DIAGNOSTIC:
+.\Doc_Etat_Fin\Scripts\diagnostic-backend-etat-fin.ps1
+
+Ce script:
+1. Vérifie que le backend est opérationnel
+2. Envoie le fichier de balance au backend
+3. Analyse la réponse HTML
+4. Vérifie la présence de toutes les sections
+5. Vérifie les colonnes N et N-1
+6. Sauvegarde le HTML sur le bureau
+7. Affiche un résumé détaillé
+
+RÉSULTAT ATTENDU:
+  [OK] BILAN - ACTIF
+  [OK] BILAN - PASSIF
+  [OK] COMPTE DE RÉSULTAT
+  [OK] TFT
+  [OK] NOTES ANNEXES
+  [OK] États de contrôle
+
+  Exercice N: OUI [OK]
+  Exercice N-1: OUI [OK]
+  Exercice N-2: NON [OK - correct]
+
+STATUT: [OK] TOUT EST CORRECT
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 SECTIONS GÉNÉRÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+5 SECTIONS PRINCIPALES:
+1. 🏢 BILAN - ACTIF
+   • Tous les postes d'actif
+   • Colonnes: EXERCICE N, EXERCICE N-1
+   • Format: Liasse officielle SYSCOHADA
+
+2. 🏛️ BILAN - PASSIF
+   • Tous les postes de passif
+   • Colonnes: EXERCICE N, EXERCICE N-1
+   • Format: Liasse officielle SYSCOHADA
+
+3. 📊 COMPTE DE RÉSULTAT
+   • Charges et produits
+   • Colonnes: EXERCICE N, EXERCICE N-1
+   • Résultat net calculé
+
+4. 💧 TABLEAU DES FLUX DE TRÉSORERIE (TFT)
+   • Flux opérationnels
+   • Flux d'investissement
+   • Flux de financement
+   • Colonnes: EXERCICE N, EXERCICE N-1
+
+5. 📋 NOTES ANNEXES
+   • Notes calculables
+   • Tableaux de mouvements
+   • Colonnes: EXERCICE N, EXERCICE N-1
+
+6 ÉTATS DE CONTRÔLE:
+1. 🔍 État de contrôle Bilan Actif
+   • Total Actif N et N-1
+   • Nombre de postes
+   • Variation
+
+2. 🔍 État de contrôle Bilan Passif
+   • Total Passif N et N-1
+   • Nombre de postes
+   • Variation
+
+3. 🔍 État de contrôle Compte de Résultat
+   • Résultat Net N et N-1
+   • Nombre de postes
+   • Variation
+
+4. 🔍 État de contrôle TFT
+   • Trésorerie finale N et N-1
+   • Variation de trésorerie
+   • Flux opérationnels
+
+5. 🔍 État de contrôle Sens des Comptes
+   • Comptes en débit/crédit N et N-1
+   • Totaux débit/crédit
+   • Équilibre
+
+6. 🔍 État d'équilibre Bilan
+   • Total Actif vs Passif + Résultat
+   • Équilibre N et N-1
+   • Différences
+
+═══════════════════════════════════════════════════════════════════════════════
+  🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════════
+
+REDÉMARRER LE BACKEND:
+.\start-claraverse-conda.ps1
+
+DIAGNOSTIC COMPLET:
+.\Doc_Etat_Fin\Scripts\diagnostic-backend-etat-fin.ps1
+
+TEST WORKFLOW:
+.\Doc_Etat_Fin\Scripts\test-workflow-etat-fin-complet.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+  📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. FORMAT LIASSE OFFICIELLE
+   • Conforme au SYSCOHADA Révisé
+   • 2 colonnes obligatoires: N et N-1
+   • N-2 utilisé pour les calculs mais pas affiché
+
+2. STRUCTURE DES DONNÉES
+   • Chaque poste contient montant_n, montant_n1 et montant_n2
+   • Les fonctions de contrôle lisent directement ces montants
+   • Pas besoin de séparer les données
+
+3. ACCORDÉONS
+   • Chaque section est un accordéon cliquable
+   • JavaScript pour l'interactivité
+   • CSS inline pour éviter les problèmes de cache
+
+4. FICHIER DE BALANCE DÉMO
+   • Fichier: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   • Onglets: BALANCE 2018 (N), BALANCE 2017 (N-1), BALANCE 2016 (N-2)
+   • Utilisé pour les tests
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Correction appliquée: Données N et N-1 correctement gérées
+✅ TFT et États de contrôle doivent maintenant être générés
+✅ Format liasse officielle avec 2 colonnes (N et N-1)
+
+PROCHAINE ÉTAPE: Redémarrer le backend et exécuter le diagnostic
+
+═══════════════════════════════════════════════════════════════════════════════

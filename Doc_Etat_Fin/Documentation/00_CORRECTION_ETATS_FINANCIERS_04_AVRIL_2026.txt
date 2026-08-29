@@ -1,0 +1,132 @@
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ CORRECTION ÉTATS FINANCIERS - 04 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date : 04 Avril 2026 - 18h42
+
+═══════════════════════════════════════════════════════════════════════════════
+   PROBLÈMES RÉSOLUS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ COLONNE N-2 RETIRÉE
+   - Avant : 3 colonnes (N, N-1, N-2)
+   - Après : 2 colonnes (N, N-1) uniquement
+   - Fichier modifié : py_backend/etats_financiers_v2.py
+
+2. ✅ TFT AFFICHÉ EN ACCORDÉON
+   - Avant : TFT non affiché ou en format simple
+   - Après : TFT affiché en format accordéon avec toutes les sections
+   - Sections : Flux opérationnels, Flux d'investissement, Flux de financement
+   - Détails : CAFG, Variation de trésorerie, Trésorerie de clôture
+   - Fichier modifié : py_backend/generer_etats_liasse.py
+
+3. ✅ NOTES ANNEXES AFFICHÉES EN ACCORDÉON
+   - Avant : Annexes non affichées
+   - Après : Annexes affichées en format accordéon
+   - Notes : Note 3A, Note 6, Note 7, Note 10, Note 13, Note 21, Note 22
+   - Fichier modifié : py_backend/generer_etats_liasse.py
+
+4. ✅ SECTIONS OUVERTES PAR DÉFAUT
+   - Classe 'active' ajoutée aux sections
+   - Les sections s'affichent ouvertes au chargement
+
+═══════════════════════════════════════════════════════════════════════════════
+   FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. py_backend/etats_financiers_v2.py
+   - Fonction generate_section_html_liasse() modifiée
+   - Retrait de la colonne N-2
+   - Ajout de la classe 'active' aux sections
+
+2. py_backend/generer_etats_liasse.py
+   - Fonction generate_tft_html_accordeon() créée
+   - Fonction generate_annexes_html_accordeon() créée
+   - Fonction format_montant_liasse() créée
+   - Appels modifiés pour utiliser les nouvelles fonctions
+
+═══════════════════════════════════════════════════════════════════════════════
+   RÉSULTATS DES TESTS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Colonne N-2 absente (correct)
+✅ Colonne N-1 présente
+✅ Section TFT présente
+✅ CAFG présent
+✅ Section ANNEXES présente
+✅ 11 sections accordéon créées
+✅ Taille fichier : 67.46 KB
+
+📄 Fichier généré : Etats_Financiers_Liasse_20260404_184151.html
+
+═══════════════════════════════════════════════════════════════════════════════
+   STRUCTURE DU FICHIER HTML
+═══════════════════════════════════════════════════════════════════════════════
+
+1. BILAN
+   - 🏢 ACTIF (avec Total général DZ)
+   - 🏛️ PASSIF (avec Total général DZ)
+
+2. COMPTE DE RÉSULTAT
+   - 📊 COMPTE DE RÉSULTAT
+
+3. TABLEAU DES FLUX DE TRÉSORERIE
+   - 💰 TFT avec :
+     * Trésorerie d'ouverture (ZA)
+     * Flux opérationnels (FA-FE, ZB)
+     * Flux d'investissement (FF-FJ, ZC)
+     * Flux de financement (FK-FQ, ZD-ZF)
+     * Variation de trésorerie (ZG)
+     * Trésorerie de clôture (ZH)
+
+4. NOTES ANNEXES
+   - 📋 NOTES ANNEXES avec :
+     * Note 3A - Immobilisations incorporelles
+     * Note 6 - État des stocks
+     * Note 7 - État des créances
+     * Note 10 - Capital social
+     * Note 13 - Résultat net
+     * Note 21 - Chiffre d'affaires
+     * Note 22 - Achats consommés
+
+═══════════════════════════════════════════════════════════════════════════════
+   TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 MÉTHODE 1 : Génération complète
+
+   cd py_backend
+   conda run -n claraverse_backend python generer_etats_liasse.py
+
+---
+
+🚀 MÉTHODE 2 : Test HTML
+
+   .\test-html-simple.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+   PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ TERMINÉ :
+   - Retrait colonne N-2
+   - TFT en accordéon
+   - Annexes en accordéon
+   - Sections ouvertes par défaut
+
+📋 OPTIONNEL (si besoin) :
+   - Ajouter les états de contrôle
+   - Personnaliser les styles CSS
+   - Ajouter plus de notes annexes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CORRECTIONS APPLIQUÉES AVEC SUCCÈS !
+
+Les états financiers affichent maintenant :
+- 2 colonnes (N et N-1)
+- TFT complet en accordéon
+- Notes annexes en accordéon
+- Totaux généraux (DZ)
+
+═══════════════════════════════════════════════════════════════════════════════

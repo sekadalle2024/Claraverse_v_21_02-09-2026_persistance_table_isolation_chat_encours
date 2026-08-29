@@ -1,0 +1,183 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📝 INTÉGRATION DANS INDEX.HTML
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF: Charger le module papier-travail-totalisation.js dans l'application
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 1 : LOCALISER LA SECTION SCRIPTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Ouvrir le fichier: index.html
+
+Chercher la section où sont chargés les scripts JavaScript, généralement
+avant la fermeture de la balise </body>
+
+Exemple:
+```html
+  <!-- Scripts JavaScript -->
+  <script src="/papier-travail-schema-calcul.js"></script>
+  <script src="/papier-travail-cross-ref-horizontale.js"></script>
+  <script src="/menu.js"></script>
+</body>
+</html>
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 2 : AJOUTER LE SCRIPT
+═══════════════════════════════════════════════════════════════════════════════
+
+AJOUTER cette ligne APRÈS papier-travail-cross-ref-horizontale.js
+et AVANT menu.js:
+
+```html
+<script src="/papier-travail-totalisation.js"></script>
+```
+
+RÉSULTAT FINAL:
+```html
+  <!-- Scripts JavaScript -->
+  <script src="/papier-travail-schema-calcul.js"></script>
+  <script src="/papier-travail-cross-ref-horizontale.js"></script>
+  <script src="/papier-travail-totalisation.js"></script>  ← NOUVEAU
+  <script src="/menu.js"></script>
+</body>
+</html>
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+  ⚠️ ORDRE DE CHARGEMENT IMPORTANT
+═══════════════════════════════════════════════════════════════════════════════
+
+L'ORDRE EST CRUCIAL:
+
+1. papier-travail-schema-calcul.js
+2. papier-travail-cross-ref-horizontale.js
+3. papier-travail-totalisation.js          ← NOUVEAU
+4. menu.js                                  ← DOIT ÊTRE EN DERNIER
+
+POURQUOI?
+- menu.js appelle window.PapierTravailTotalisation
+- Ce module doit être chargé AVANT menu.js
+- Sinon, les méthodes ne seront pas disponibles
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Après avoir ajouté le script:
+
+1. Ouvrir l'application dans le navigateur
+2. Ouvrir la console (F12)
+3. Taper: window.PapierTravailTotalisation
+4. Vérifier que l'objet est défini
+
+RÉSULTAT ATTENDU:
+```javascript
+{
+  ajouterTotalisation: ƒ (table),
+  actualiserTotalisation: ƒ (table),
+  supprimerTotalisation: ƒ (table),
+  restoreAll: ƒ ()
+}
+```
+
+Si vous voyez "undefined", le module n'est pas chargé correctement.
+
+═══════════════════════════════════════════════════════════════════════════════
+  🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Module non chargé (undefined)
+
+SOLUTIONS:
+1. Vérifier le chemin du fichier: /papier-travail-totalisation.js
+2. Vérifier que le fichier existe dans public/
+3. Vérifier l'ordre de chargement (avant menu.js)
+4. Actualiser la page avec Ctrl+F5 (vider le cache)
+5. Vérifier la console pour les erreurs de chargement
+
+PROBLÈME: Erreur "Cannot read property 'ajouterTotalisation' of undefined"
+
+CAUSE: menu.js est chargé avant papier-travail-totalisation.js
+
+SOLUTION: Inverser l'ordre des scripts
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 MESSAGES DE DEBUG
+═══════════════════════════════════════════════════════════════════════════════
+
+Après le chargement, vous devriez voir dans la console:
+
+```
+📊 [Totalisation] Module chargé
+📊 [Totalisation] Initialisation du gestionnaire
+📊 [Totalisation] Commandes disponibles: totalisationCommands
+✅ [Totalisation] Module prêt - window.PapierTravailTotalisation disponible
+```
+
+Si vous ne voyez pas ces messages, le module n'est pas chargé.
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 TEST RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Après avoir chargé le module:
+
+1. Ouvrir une table de test
+2. Clic droit sur la table
+3. Menu "Papier de travail" → "Ajouter Totalisation"
+4. Vérifier qu'une ligne de totalisation apparaît
+
+OU
+
+1. Cliquer sur une cellule de la table
+2. Appuyer sur Ctrl+Shift+T
+3. Vérifier qu'une ligne de totalisation apparaît
+
+═══════════════════════════════════════════════════════════════════════════════
+  📁 STRUCTURE FINALE DES FICHIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+public/
+├── papier-travail-schema-calcul.js
+├── papier-travail-cross-ref-horizontale.js
+├── papier-travail-totalisation.js          ← NOUVEAU
+└── menu.js
+
+index.html
+└── <script src="/papier-travail-totalisation.js"></script>  ← NOUVEAU
+
+Doc papier de travail javascript/
+├── ARCHITECTURE_FINALE_24_AVRIL_2026.md
+├── CROSS_REFERENCE_HORIZONTALE.md
+├── TOTALISATION.md                          ← NOUVEAU
+├── QUICK_TEST_TOTALISATION.txt              ← NOUVEAU
+├── SYNTHESE_VISUELLE_TOTALISATION.txt       ← NOUVEAU
+└── INTEGRATION_INDEX_HTML.txt               ← CE FICHIER
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Fichier papier-travail-totalisation.js créé dans public/
+□ Script ajouté dans index.html
+□ Script placé AVANT menu.js
+□ Page actualisée avec Ctrl+F5
+□ Console affiche les messages de debug
+□ window.PapierTravailTotalisation est défini
+□ Menu contextuel affiche les 3 actions
+□ Raccourci Ctrl+Shift+T fonctionne
+□ Totalisation s'ajoute correctement
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎉 PRÊT À UTILISER !
+═══════════════════════════════════════════════════════════════════════════════
+
+Si toutes les cases sont cochées, la fonctionnalité Totalisation est
+opérationnelle et prête à être utilisée !
+
+PROCHAINE ÉTAPE:
+→ Suivre le guide: QUICK_TEST_TOTALISATION.txt
+
+═══════════════════════════════════════════════════════════════════════════════

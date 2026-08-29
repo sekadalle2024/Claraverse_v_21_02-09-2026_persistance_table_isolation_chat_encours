@@ -1,0 +1,202 @@
+═══════════════════════════════════════════════════════════════════════════════
+   DIAGNOSTIC : AFFICHAGE ÉTATS FINANCIERS N-1 vs N-2
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date : 04 Avril 2026
+🎯 Objectif : Résoudre le problème d'affichage des états financiers N-1 vs N-2
+
+═══════════════════════════════════════════════════════════════════════════════
+   PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ SYMPTÔMES :
+1. Dans le menu accordéon, seuls les états financiers de l'exercice N par rapport à N-1 sont affichés
+2. Les états financiers de l'exercice N-1 par rapport à N-2 ne sont PAS affichés
+3. Dans la liasse Excel exportée, les valeurs N-1 vs N-2 s'affichent correctement
+4. Le TFT n'est pas affiché dans le menu accordéon
+5. Les totaux généraux (DZ) ne sont pas affichés dans le menu accordéon
+
+═══════════════════════════════════════════════════════════════════════════════
+   ANALYSE TECHNIQUE
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CE QUI FONCTIONNE :
+
+1. Backend Python (py_backend/etats_financiers.py) :
+   - Lit correctement les 3 onglets : Balance N, Balance N-1, Balance N-2
+   - Calcule correctement les états financiers pour N vs N-1
+   - Calcule correctement les états financiers pour N-1 vs N-2
+   - Export Excel affiche correctement toutes les données
+
+2. Module etats_financiers_v2.py :
+   - Fonction process_balance_to_liasse_format() traite N et N-1
+   - Génère correctement les colonnes montant_n et montant_n1
+
+3. Module tableau_flux_tresorerie_v2.py :
+   - Fonction calculer_tft_liasse() accepte balance_n2
+   - Calcule le TFT pour N et N-1
+
+❌ CE QUI NE FONCTIONNE PAS :
+
+1. Affichage Frontend (menu accordéon) :
+   - Seules 2 colonnes affichées : "EXERCICE N" et "EXERCICE N-1"
+   - Pas de colonne pour "EXERCICE N-2"
+   - Le format liasse officielle n'affiche que 2 colonnes
+
+2. Structure des données :
+   - Le format liasse officielle est conçu pour 2 colonnes seulement
+   - Pas de structure pour afficher 3 colonnes (N, N-1, N-2)
+
+3. TFT et Totaux :
+   - Le TFT n'est pas intégré dans le menu accordéon
+   - Les totaux généraux (DZ) ne sont pas calculés/affichés
+
+═══════════════════════════════════════════════════════════════════════════════
+   CAUSE RACINE
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 ANALYSE :
+
+Le problème n'est PAS un bug de calcul, mais une LIMITATION DE CONCEPTION :
+
+1. Le format liasse officielle SYSCOHADA est conçu pour afficher 2 colonnes :
+   - Exercice N
+   - Exercice N-1
+
+2. Pour afficher N-1 vs N-2, il faudrait :
+   - Soit ajouter une 3ème colonne (N-2)
+   - Soit créer un 2ème menu accordéon avec N-1 vs N-2
+
+3. Le backend calcule bien les données, mais le frontend ne les affiche pas
+
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTIONS POSSIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 SOLUTION 1 : AJOUTER UNE 3ÈME COLONNE (RECOMMANDÉE)
+
+Modifier le format liasse pour afficher 3 colonnes :
+- REF | LIBELLÉS | NOTE | EXERCICE N | EXERCICE N-1 | EXERCICE N-2
+
+Avantages :
+✅ Toutes les données visibles en un coup d'œil
+✅ Conforme à la demande utilisateur
+✅ Facilite la comparaison sur 3 exercices
+
+Inconvénients :
+❌ S'écarte du format liasse officielle (qui n'a que 2 colonnes)
+❌ Nécessite des modifications dans plusieurs fichiers
+
+Fichiers à modifier :
+- py_backend/etats_financiers_v2.py
+- py_backend/etats_financiers.py
+- py_backend/tableau_flux_tresorerie_v2.py
+
+---
+
+🎯 SOLUTION 2 : CRÉER UN 2ÈME MENU ACCORDÉON
+
+Créer un 2ème menu accordéon "États Financiers N-1 vs N-2" :
+- Menu 1 : États Financiers N vs N-1
+- Menu 2 : États Financiers N-1 vs N-2
+
+Avantages :
+✅ Respecte le format liasse officielle (2 colonnes)
+✅ Séparation claire des périodes
+✅ Moins de modifications de code
+
+Inconvénients :
+❌ Nécessite de scroller pour voir les 2 menus
+❌ Moins pratique pour comparer les 3 exercices
+
+---
+
+🎯 SOLUTION 3 : AJOUTER UN ONGLET "COMPARATIF 3 EXERCICES"
+
+Créer un nouvel onglet dans le menu accordéon :
+- Onglet 1 : Bilan N vs N-1
+- Onglet 2 : Compte de Résultat N vs N-1
+- Onglet 3 : Comparatif 3 exercices (N, N-1, N-2)
+
+Avantages :
+✅ Flexibilité maximale
+✅ Respecte le format liasse pour les 2 premiers onglets
+✅ Ajoute une vue comparative
+
+Inconvénients :
+❌ Plus complexe à implémenter
+❌ Nécessite une nouvelle interface
+
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTION RECOMMANDÉE : SOLUTION 1 (3 COLONNES)
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PLAN D'ACTION :
+
+ÉTAPE 1 : Modifier etats_financiers_v2.py
+- Ajouter le traitement de balance_n2
+- Ajouter montant_n2 dans la structure des postes
+- Modifier generate_section_html_liasse() pour 3 colonnes
+
+ÉTAPE 2 : Modifier etats_financiers.py
+- Détecter et charger Balance N-2
+- Passer balance_n2 à process_balance_to_liasse_format()
+- Modifier le HTML généré pour 3 colonnes
+
+ÉTAPE 3 : Modifier tableau_flux_tresorerie_v2.py
+- Calculer le TFT pour N-1 vs N-2
+- Ajouter une 3ème colonne dans le TFT
+
+ÉTAPE 4 : Ajouter les totaux généraux (DZ)
+- Calculer les totaux généraux pour le Bilan
+- Les afficher dans le menu accordéon
+
+ÉTAPE 5 : Intégrer le TFT dans le menu accordéon
+- Ajouter une section "Tableau des Flux de Trésorerie"
+- Afficher le TFT avec 3 colonnes
+
+═══════════════════════════════════════════════════════════════════════════════
+   FICHIERS À MODIFIER
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 Backend Python :
+1. py_backend/etats_financiers_v2.py
+   - process_balance_to_liasse_format()
+   - generate_section_html_liasse()
+   - Ajouter montant_n2
+
+2. py_backend/etats_financiers.py
+   - Ligne 1526-1534 : Détecter Balance N-2
+   - Ligne 1518 : Passer balance_n2 à process_balance_to_liasse_format()
+   - generate_etats_financiers_html() : Modifier pour 3 colonnes
+
+3. py_backend/tableau_flux_tresorerie_v2.py
+   - calculer_tft_liasse() : Ajouter calcul N-1 vs N-2
+   - Ajouter colonne N-2 dans le HTML
+
+4. py_backend/structure_liasse_complete.json
+   - Ajouter les postes de totalisation DZ
+
+═══════════════════════════════════════════════════════════════════════════════
+   ESTIMATION
+═══════════════════════════════════════════════════════════════════════════════
+
+⏱️ TEMPS ESTIMÉ : 2-3 heures
+
+📊 COMPLEXITÉ : Moyenne
+
+🎯 PRIORITÉ : Haute (demande utilisateur explicite)
+
+═══════════════════════════════════════════════════════════════════════════════
+   PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Diagnostic terminé
+2. ⏳ Validation de la solution avec l'utilisateur
+3. ⏳ Implémentation de la solution
+4. ⏳ Tests avec le fichier "P000 -BALANCE DEMO N_N-1_N-2.xls"
+5. ⏳ Validation finale
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 Note : Ce diagnostic a été créé le 04 Avril 2026 par Kiro AI Assistant

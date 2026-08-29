@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test États de Contrôle - États Financiers SYSCOHADA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .section-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .section-header .arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.5em;
+        }
+        
+        .section.active .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .section.active .section-content {
+            max-height: 2000px;
+        }
+        
+        .section-body {
+            padding: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .total-row {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            border-top: 2px solid #667eea;
+        }
+        
+        .ref-cell {
+            font-weight: bold;
+            color: #667eea;
+            width: 80px;
+        }
+        
+        .montant-cell {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background-color: #4caf50;
+            color: white;
+        }
+        
+        .badge-warning {
+            background-color: #ff9800;
+            color: white;
+        }
+        
+        .badge-danger {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .badge-info {
+            background-color: #2196f3;
+            color: white;
+        }
+        
+        .badge-critical {
+            background-color: #d32f2f;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .danger-box {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Test États de Contrôle</h1>
+            <p>États Financiers SYSCOHADA Révisé - Module de Contrôle Exhaustif</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">📅 Date: 04 Avril 2026</p>
+        </div>
+        
+        <div class="content">
+            <!-- Vue d'ensemble -->
+            <div class="info-box">
+                <h2 style="margin-bottom: 15px;">📊 Vue d'Ensemble</h2>
+                <p>Ce module génère automatiquement <strong>8 états de contrôle exhaustifs</strong> pour garantir la fiabilité et la cohérence des états financiers SYSCOHADA Révisé.</p>
+                <p style="margin-top: 10px;">Les contrôles couvrent : la couverture des comptes, l'équilibre du bilan, la cohérence du résultat, les comptes non intégrés, les sens inversés, les déséquilibres, l'affectation du résultat et les sens anormaux par nature.</p>
+            </div>
+            
+            <!-- Statistiques globales -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>16</h3>
+                    <p>États de Contrôle</p>
+                </div>
+                <div class="stat-card">
+                    <h3>4</h3>
+                    <p>Niveaux de Gravité</p>
+                </div>
+                <div class="stat-card">
+                    <h3>100%</h3>
+                    <p>Automatisation</p>
+                </div>
+                <div class="stat-card">
+                    <h3>✓</h3>
+                    <p>Conformité SYSCOHADA</p>
+                </div>
+            </div>
+            
+            <!-- Contrôles -->
+            <div class="controls">
+                <button class="btn" onclick="expandAll()">📂 Tout Ouvrir</button>
+                <button class="btn" onclick="collapseAll()">📁 Tout Fermer</button>
+                <button class="btn" onclick="window.print()">🖨️ Imprimer</button>
+            </div>
+            
+            <!-- 1. Statistiques de Couverture -->
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>📊 1. Statistiques de Couverture (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Taux de Couverture: <span class="badge badge-success">95.5%</span></h3>
+                            <p style="margin-top: 10px;">Excellent - La majorité des comptes sont intégrés dans les états financiers</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Indicateur</th>
+                                    <th style="text-align: right;">Valeur</th>
+                                    <th style="text-align: center;">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Comptes dans la balance</td>
+                                    <td class="montant-cell">150</td>
+                                    <td style="text-align: center;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Comptes intégrés</td>
+                                    <td class="montant-cell">143</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Comptes non intégrés</td>
+                                    <td class="montant-cell">7</td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">⚠</span></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Taux de couverture</td>
+                                    <td class="montant-cell">95.5%</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">Excellent</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Interprétation</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>≥ 95%</strong> : ✅ Excellent (badge vert)</li>
+                                <li><strong>80-94%</strong> : ⚠️ Acceptable (badge orange)</li>
+                                <li><strong>&lt; 80%</strong> : ❌ Insuffisant (badge rouge)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 2. Équilibre du Bilan -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>⚖️ 2. Équilibre du Bilan (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Bilan Équilibré <span class="badge badge-success">Différence &lt; 0.01</span></h3>
+                            <p style="margin-top: 10px;">Le bilan est parfaitement équilibré (Actif = Passif)</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Élément</th>
+                                    <th style="text-align: right;">Montant (FCFA)</th>
+                                    <th style="text-align: center;">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Actif</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                    <td style="text-align: center;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Passif</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                    <td style="text-align: center;">-</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence (Actif - Passif)</td>
+                                    <td class="montant-cell">0.00</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓ Équilibré</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Pourcentage d'écart</td>
+                                    <td class="montant-cell">0.00%</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">Parfait</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Seuil de Tolérance</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>&lt; 0.01</strong> : ✅ Équilibré</li>
+                                <li><strong>≥ 0.01</strong> : ❌ Déséquilibré</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3. Cohérence Résultat -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>💰 3. Cohérence Résultat (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Résultats Cohérents <span class="badge badge-success">Différence &lt; 0.01</span></h3>
+                            <p style="margin-top: 10px;">Le résultat du compte de résultat correspond au résultat du bilan</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th style="text-align: right;">Résultat (FCFA)</th>
+                                    <th style="text-align: center;">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Résultat Compte de Résultat (Produits - Charges)</td>
+                                    <td class="montant-cell">-189 540 500</td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Perte</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Résultat Bilan (Actif - Passif)</td>
+                                    <td class="montant-cell">-189 540 500</td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Perte</span></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence</td>
+                                    <td class="montant-cell">0.00</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓ Cohérent</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Formule</h4>
+                            <p style="margin-top: 10px;"><strong>Résultat CR</strong> = Produits - Charges</p>
+                            <p><strong>Résultat Bilan</strong> = Actif - Passif</p>
+                            <p><strong>Cohérence</strong> = |Résultat CR - Résultat Bilan| &lt; 0.01</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4. Comptes Non Intégrés -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>⚠️ 4. Comptes Non Intégrés (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="warning-box">
+                            <h3>⚠️ 7 Comptes Non Intégrés <span class="badge badge-warning">À Vérifier</span></h3>
+                            <p style="margin-top: 10px;">Certains comptes de la balance n'ont pas été intégrés dans les états financiers</p>
+                            <p style="margin-top: 5px;"><strong>Impact:</strong> 2 450 000 FCFA (1.35% de l'actif)</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N° Compte</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Classe</th>
+                                    <th style="text-align: right;">Solde Débit</th>
+                                    <th style="text-align: right;">Solde Crédit</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                    <th>Raison</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ref-cell">2154000</td>
+                                    <td>Matériel informatique spécifique</td>
+                                    <td style="text-align: center;">2</td>
+                                    <td class="montant-cell">850 000</td>
+                                    <td class="montant-cell">-</td>
+                                    <td class="montant-cell">850 000</td>
+                                    <td>Racine 2154 non définie</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">4098000</td>
+                                    <td>Fournisseurs - Autres</td>
+                                    <td style="text-align: center;">4</td>
+                                    <td class="montant-cell">-</td>
+                                    <td class="montant-cell">450 000</td>
+                                    <td class="montant-cell">-450 000</td>
+                                    <td>Racine 4098 non définie</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">6589000</td>
+                                    <td>Charges diverses</td>
+                                    <td style="text-align: center;">6</td>
+                                    <td class="montant-cell">320 000</td>
+                                    <td class="montant-cell">-</td>
+                                    <td class="montant-cell">320 000</td>
+                                    <td>Racine 6589 non définie</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="5">Total Comptes Non Intégrés</td>
+                                    <td class="montant-cell">2 450 000</td>
+                                    <td>7 comptes</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Actions Correctives</h4>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li>Vérifier la codification du compte</li>
+                                <li>Ajouter la racine dans <code>correspondances_syscohada.json</code></li>
+                                <li>Vérifier si le compte doit être intégré</li>
+                                <li>Contrôler la cohérence avec le plan comptable SYSCOHADA</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 5. Comptes avec Sens Inversé -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔄 5. Comptes avec Sens Inversé (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="warning-box">
+                            <h3>⚠️ 5 Comptes avec Sens Inversé <span class="badge badge-warning">À Analyser</span></h3>
+                            <p style="margin-top: 10px;">Ces comptes ont un solde contraire au sens normal de leur classe</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N° Compte</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Classe</th>
+                                    <th style="text-align: center;">Sens Attendu</th>
+                                    <th style="text-align: center;">Sens Réel</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ref-cell">401000</td>
+                                    <td>Fournisseurs</td>
+                                    <td style="text-align: center;">4</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Variable</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Débit</span></td>
+                                    <td class="montant-cell">125 000</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">121000</td>
+                                    <td>Report à nouveau</td>
+                                    <td style="text-align: center;">1</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Crédit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Débit</span></td>
+                                    <td class="montant-cell">-50 000</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">701000</td>
+                                    <td>Ventes de marchandises</td>
+                                    <td style="text-align: center;">7</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Crédit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Débit</span></td>
+                                    <td class="montant-cell">15 000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Sens Normal par Classe</h4>
+                            <table style="width: 100%; margin-top: 10px;">
+                                <tr>
+                                    <td><strong>Classe 1:</strong> Crédit (Capitaux)</td>
+                                    <td><strong>Classe 2:</strong> Débit (Immobilisations)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Classe 3:</strong> Débit (Stocks)</td>
+                                    <td><strong>Classe 4:</strong> Variable (Tiers)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Classe 5:</strong> Débit (Trésorerie)</td>
+                                    <td><strong>Classe 6:</strong> Débit (Charges)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Classe 7:</strong> Crédit (Produits)</td>
+                                    <td><strong>Classe 8:</strong> Variable (Spéciaux)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 6. Comptes Créant un Déséquilibre -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>⚠️ 6. Comptes Créant un Déséquilibre (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Aucun Compte en Déséquilibre <span class="badge badge-success">Parfait</span></h3>
+                            <p style="margin-top: 10px;">Tous les comptes ont le sens correct pour leur section</p>
+                        </div>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Règles de Sens par Section</h4>
+                            <table style="width: 100%; margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Section</th>
+                                        <th>Sens Attendu</th>
+                                        <th>Problème si...</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Bilan Actif</strong></td>
+                                        <td>Débit (positif)</td>
+                                        <td>Solde créditeur</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Bilan Passif</strong></td>
+                                        <td>Crédit (négatif)</td>
+                                        <td>Solde débiteur</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Charges</strong></td>
+                                        <td>Débit (positif)</td>
+                                        <td>Solde créditeur</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Produits</strong></td>
+                                        <td>Crédit (négatif)</td>
+                                        <td>Solde débiteur</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. Hypothèse d'Affectation du Résultat -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>💡  7. Hypothèse d'Affectation du Résultat (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Le Bilan S'Équilibrerait <span class="badge badge-success">Hypothèse Validée</span></h3>
+                            <p style="margin-top: 10px;">L'affectation du résultat au passif (compte 13) équilibrerait le bilan</p>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">Type de Résultat</h3>
+                        <div class="danger-box">
+                            <h3><span class="badge badge-danger">PERTE</span> -189 540 500 FCFA</h3>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">Situation Actuelle (sans affectation)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Élément</th>
+                                    <th style="text-align: right;">Montant (FCFA)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Actif</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                </tr>
+                                <tr>
+                                    <td>Passif (sans résultat)</td>
+                                    <td class="montant-cell">370 703 030</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence (Actif - Passif)</td>
+                                    <td class="montant-cell" style="color: #f44336;">-189 540 500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">Hypothèse (si résultat affecté au passif)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Élément</th>
+                                    <th style="text-align: right;">Montant (FCFA)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Résultat Net</td>
+                                    <td class="montant-cell" style="color: #f44336;">-189 540 500</td>
+                                </tr>
+                                <tr>
+                                    <td>Passif + Résultat</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence (Actif - (Passif + Résultat))</td>
+                                    <td class="montant-cell" style="color: #4caf50;">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bilan Équilibré</strong></td>
+                                    <td class="montant-cell"><span class="badge badge-success">OUI ✓</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="success-box" style="margin-top: 20px;">
+                            <h4>📌 Recommandation</h4>
+                            <p style="margin-top: 10px;"><strong>Affecter le résultat au passif (compte 13 - Résultat de l'exercice)</strong></p>
+                            <p style="margin-top: 5px;">Cette affectation permettra d'équilibrer parfaitement le bilan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 8. Comptes avec Sens Anormal par Nature -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🚨 8. Comptes avec Sens Anormal par Nature (Exercice N)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="danger-box">
+                            <h3>🚨 3 Comptes CRITIQUES Détectés <span class="badge badge-critical">Action Immédiate</span></h3>
+                            <p style="margin-top: 10px;">Ces comptes ont un sens contraire à leur nature comptable spécifique</p>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">🔴 Comptes CRITIQUES (Action Immédiate)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Gravité</th>
+                                    <th>N° Compte</th>
+                                    <th>Nature</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Sens Attendu</th>
+                                    <th style="text-align: center;">Sens Réel</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                    <td class="ref-cell">101000</td>
+                                    <td>Capital social</td>
+                                    <td>Capital social</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Crédit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Débit</span></td>
+                                    <td class="montant-cell">50 000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                    <td class="ref-cell">541000</td>
+                                    <td>Caisse</td>
+                                    <td>Caisse principale</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Crédit</span></td>
+                                    <td class="montant-cell">-5 000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                    <td class="ref-cell">521100</td>
+                                    <td>Banques</td>
+                                    <td>Banque SGCI</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Crédit</span></td>
+                                    <td class="montant-cell">-15 000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">🟠 Comptes ÉLEVÉS (Vérification Prioritaire)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Gravité</th>
+                                    <th>N° Compte</th>
+                                    <th>Nature</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Sens Attendu</th>
+                                    <th style="text-align: center;">Sens Réel</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-warning">ÉLEVÉ</span></td>
+                                    <td class="ref-cell">211000</td>
+                                    <td>Immobilisations incorporelles</td>
+                                    <td>Frais de développement</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Crédit</span></td>
+                                    <td class="montant-cell">-25 000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-warning">ÉLEVÉ</span></td>
+                                    <td class="ref-cell">411000</td>
+                                    <td>Clients</td>
+                                    <td>Clients divers</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Crédit</span></td>
+                                    <td class="montant-cell">-8 500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 30px;">
+                            <h4>📌 Niveaux de Gravité</h4>
+                            <table style="width: 100%; margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Niveau</th>
+                                        <th>Impact</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                        <td>Déséquilibre majeur</td>
+                                        <td>Correction immédiate requise</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-warning">ÉLEVÉ</span></td>
+                                        <td>Anomalie comptable</td>
+                                        <td>Vérification et correction prioritaire</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-info">MOYEN</span></td>
+                                        <td>À vérifier</td>
+                                        <td>Analyse et justification nécessaire</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge" style="background: #9e9e9e; color: white;">FAIBLE</span></td>
+                                        <td>Situation exceptionnelle possible</td>
+                                        <td>Vérification de routine</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="danger-box" style="margin-top: 20px;">
+                            <h4>🚨 Actions Correctives pour Comptes CRITIQUES</h4>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>Capital social débiteur (101000)</strong> : Le capital ne peut pas être débiteur - Vérifier les écritures de constitution</li>
+                                <li><strong>Caisse négative (541000)</strong> : La caisse ne peut pas être négative - Corriger les écritures de caisse</li>
+                                <li><strong>Banque créditrice (521100)</strong> : Découvert bancaire - Reclasser en dettes financières (compte 56)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 1. Statistiques de Couverture -->
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>📊 9. Statistiques de Couverture (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Taux de Couverture: <span class="badge badge-success">95.5%</span></h3>
+                            <p style="margin-top: 10px;">Excellent - La majorité des comptes sont intégrés dans les états financiers</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Indicateur</th>
+                                    <th style="text-align: right;">Valeur</th>
+                                    <th style="text-align: center;">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Comptes dans la balance</td>
+                                    <td class="montant-cell">150</td>
+                                    <td style="text-align: center;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Comptes intégrés</td>
+                                    <td class="montant-cell">143</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Comptes non intégrés</td>
+                                    <td class="montant-cell">7</td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">⚠</span></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Taux de couverture</td>
+                                    <td class="montant-cell">95.5%</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">Excellent</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Interprétation</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>≥ 95%</strong> : ✅ Excellent (badge vert)</li>
+                                <li><strong>80-94%</strong> : ⚠️ Acceptable (badge orange)</li>
+                                <li><strong>&lt; 80%</strong> : ❌ Insuffisant (badge rouge)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 2. Équilibre du Bilan -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>⚖️ 10. Équilibre du Bilan (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Bilan Équilibré <span class="badge badge-success">Différence &lt; 0.01</span></h3>
+                            <p style="margin-top: 10px;">Le bilan est parfaitement équilibré (Actif = Passif)</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Élément</th>
+                                    <th style="text-align: right;">Montant (FCFA)</th>
+                                    <th style="text-align: center;">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Actif</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                    <td style="text-align: center;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Passif</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                    <td style="text-align: center;">-</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence (Actif - Passif)</td>
+                                    <td class="montant-cell">0.00</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓ Équilibré</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Pourcentage d'écart</td>
+                                    <td class="montant-cell">0.00%</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">Parfait</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Seuil de Tolérance</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>&lt; 0.01</strong> : ✅ Équilibré</li>
+                                <li><strong>≥ 0.01</strong> : ❌ Déséquilibré</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3. Cohérence Résultat -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>💰 11. Cohérence Résultat (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Résultats Cohérents <span class="badge badge-success">Différence &lt; 0.01</span></h3>
+                            <p style="margin-top: 10px;">Le résultat du compte de résultat correspond au résultat du bilan</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Source</th>
+                                    <th style="text-align: right;">Résultat (FCFA)</th>
+                                    <th style="text-align: center;">Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Résultat Compte de Résultat (Produits - Charges)</td>
+                                    <td class="montant-cell">-189 540 500</td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Perte</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Résultat Bilan (Actif - Passif)</td>
+                                    <td class="montant-cell">-189 540 500</td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Perte</span></td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence</td>
+                                    <td class="montant-cell">0.00</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓ Cohérent</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Formule</h4>
+                            <p style="margin-top: 10px;"><strong>Résultat CR</strong> = Produits - Charges</p>
+                            <p><strong>Résultat Bilan</strong> = Actif - Passif</p>
+                            <p><strong>Cohérence</strong> = |Résultat CR - Résultat Bilan| &lt; 0.01</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 4. Comptes Non Intégrés -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>⚠️ 12. Comptes Non Intégrés (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="warning-box">
+                            <h3>⚠️ 7 Comptes Non Intégrés <span class="badge badge-warning">À Vérifier</span></h3>
+                            <p style="margin-top: 10px;">Certains comptes de la balance n'ont pas été intégrés dans les états financiers</p>
+                            <p style="margin-top: 5px;"><strong>Impact:</strong> 2 450 000 FCFA (1.35% de l'actif)</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N° Compte</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Classe</th>
+                                    <th style="text-align: right;">Solde Débit</th>
+                                    <th style="text-align: right;">Solde Crédit</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                    <th>Raison</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ref-cell">2154000</td>
+                                    <td>Matériel informatique spécifique</td>
+                                    <td style="text-align: center;">2</td>
+                                    <td class="montant-cell">850 000</td>
+                                    <td class="montant-cell">-</td>
+                                    <td class="montant-cell">850 000</td>
+                                    <td>Racine 2154 non définie</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">4098000</td>
+                                    <td>Fournisseurs - Autres</td>
+                                    <td style="text-align: center;">4</td>
+                                    <td class="montant-cell">-</td>
+                                    <td class="montant-cell">450 000</td>
+                                    <td class="montant-cell">-450 000</td>
+                                    <td>Racine 4098 non définie</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">6589000</td>
+                                    <td>Charges diverses</td>
+                                    <td style="text-align: center;">6</td>
+                                    <td class="montant-cell">320 000</td>
+                                    <td class="montant-cell">-</td>
+                                    <td class="montant-cell">320 000</td>
+                                    <td>Racine 6589 non définie</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td colspan="5">Total Comptes Non Intégrés</td>
+                                    <td class="montant-cell">2 450 000</td>
+                                    <td>7 comptes</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Actions Correctives</h4>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li>Vérifier la codification du compte</li>
+                                <li>Ajouter la racine dans <code>correspondances_syscohada.json</code></li>
+                                <li>Vérifier si le compte doit être intégré</li>
+                                <li>Contrôler la cohérence avec le plan comptable SYSCOHADA</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 5. Comptes avec Sens Inversé -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔄 13. Comptes avec Sens Inversé (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="warning-box">
+                            <h3>⚠️ 5 Comptes avec Sens Inversé <span class="badge badge-warning">À Analyser</span></h3>
+                            <p style="margin-top: 10px;">Ces comptes ont un solde contraire au sens normal de leur classe</p>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N° Compte</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Classe</th>
+                                    <th style="text-align: center;">Sens Attendu</th>
+                                    <th style="text-align: center;">Sens Réel</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ref-cell">401000</td>
+                                    <td>Fournisseurs</td>
+                                    <td style="text-align: center;">4</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Variable</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Débit</span></td>
+                                    <td class="montant-cell">125 000</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">121000</td>
+                                    <td>Report à nouveau</td>
+                                    <td style="text-align: center;">1</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Crédit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Débit</span></td>
+                                    <td class="montant-cell">-50 000</td>
+                                </tr>
+                                <tr>
+                                    <td class="ref-cell">701000</td>
+                                    <td>Ventes de marchandises</td>
+                                    <td style="text-align: center;">7</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Crédit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Débit</span></td>
+                                    <td class="montant-cell">15 000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Sens Normal par Classe</h4>
+                            <table style="width: 100%; margin-top: 10px;">
+                                <tr>
+                                    <td><strong>Classe 1:</strong> Crédit (Capitaux)</td>
+                                    <td><strong>Classe 2:</strong> Débit (Immobilisations)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Classe 3:</strong> Débit (Stocks)</td>
+                                    <td><strong>Classe 4:</strong> Variable (Tiers)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Classe 5:</strong> Débit (Trésorerie)</td>
+                                    <td><strong>Classe 6:</strong> Débit (Charges)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Classe 7:</strong> Crédit (Produits)</td>
+                                    <td><strong>Classe 8:</strong> Variable (Spéciaux)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 6. Comptes Créant un Déséquilibre -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>⚠️ 14. Comptes Créant un Déséquilibre (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Aucun Compte en Déséquilibre <span class="badge badge-success">Parfait</span></h3>
+                            <p style="margin-top: 10px;">Tous les comptes ont le sens correct pour leur section</p>
+                        </div>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <h4>📌 Règles de Sens par Section</h4>
+                            <table style="width: 100%; margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Section</th>
+                                        <th>Sens Attendu</th>
+                                        <th>Problème si...</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Bilan Actif</strong></td>
+                                        <td>Débit (positif)</td>
+                                        <td>Solde créditeur</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Bilan Passif</strong></td>
+                                        <td>Crédit (négatif)</td>
+                                        <td>Solde débiteur</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Charges</strong></td>
+                                        <td>Débit (positif)</td>
+                                        <td>Solde créditeur</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Produits</strong></td>
+                                        <td>Crédit (négatif)</td>
+                                        <td>Solde débiteur</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 15. Hypothèse d'Affectation du Résultat -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>💡  15. Hypothèse d'Affectation du Résultat (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="success-box">
+                            <h3>✅ Le Bilan S'Équilibrerait <span class="badge badge-success">Hypothèse Validée</span></h3>
+                            <p style="margin-top: 10px;">L'affectation du résultat au passif (compte 13) équilibrerait le bilan</p>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">Type de Résultat</h3>
+                        <div class="danger-box">
+                            <h3><span class="badge badge-danger">PERTE</span> -189 540 500 FCFA</h3>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">Situation Actuelle (sans affectation)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Élément</th>
+                                    <th style="text-align: right;">Montant (FCFA)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Actif</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                </tr>
+                                <tr>
+                                    <td>Passif (sans résultat)</td>
+                                    <td class="montant-cell">370 703 030</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence (Actif - Passif)</td>
+                                    <td class="montant-cell" style="color: #f44336;">-189 540 500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">Hypothèse (si résultat affecté au passif)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Élément</th>
+                                    <th style="text-align: right;">Montant (FCFA)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Résultat Net</td>
+                                    <td class="montant-cell" style="color: #f44336;">-189 540 500</td>
+                                </tr>
+                                <tr>
+                                    <td>Passif + Résultat</td>
+                                    <td class="montant-cell">181 162 530</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Différence (Actif - (Passif + Résultat))</td>
+                                    <td class="montant-cell" style="color: #4caf50;">0.00</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bilan Équilibré</strong></td>
+                                    <td class="montant-cell"><span class="badge badge-success">OUI ✓</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="success-box" style="margin-top: 20px;">
+                            <h4>📌 Recommandation</h4>
+                            <p style="margin-top: 10px;"><strong>Affecter le résultat au passif (compte 13 - Résultat de l'exercice)</strong></p>
+                            <p style="margin-top: 5px;">Cette affectation permettra d'équilibrer parfaitement le bilan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 8. Comptes avec Sens Anormal par Nature -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🚨 16. Comptes avec Sens Anormal par Nature (Exercice N-1)</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <div class="danger-box">
+                            <h3>🚨 3 Comptes CRITIQUES Détectés <span class="badge badge-critical">Action Immédiate</span></h3>
+                            <p style="margin-top: 10px;">Ces comptes ont un sens contraire à leur nature comptable spécifique</p>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">🔴 Comptes CRITIQUES (Action Immédiate)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Gravité</th>
+                                    <th>N° Compte</th>
+                                    <th>Nature</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Sens Attendu</th>
+                                    <th style="text-align: center;">Sens Réel</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                    <td class="ref-cell">101000</td>
+                                    <td>Capital social</td>
+                                    <td>Capital social</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Crédit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Débit</span></td>
+                                    <td class="montant-cell">50 000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                    <td class="ref-cell">541000</td>
+                                    <td>Caisse</td>
+                                    <td>Caisse principale</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Crédit</span></td>
+                                    <td class="montant-cell">-5 000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                    <td class="ref-cell">521100</td>
+                                    <td>Banques</td>
+                                    <td>Banque SGCI</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">Crédit</span></td>
+                                    <td class="montant-cell">-15 000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h3 style="margin-top: 30px; margin-bottom: 15px;">🟠 Comptes ÉLEVÉS (Vérification Prioritaire)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Gravité</th>
+                                    <th>N° Compte</th>
+                                    <th>Nature</th>
+                                    <th>Intitulé</th>
+                                    <th style="text-align: center;">Sens Attendu</th>
+                                    <th style="text-align: center;">Sens Réel</th>
+                                    <th style="text-align: right;">Solde Net</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-warning">ÉLEVÉ</span></td>
+                                    <td class="ref-cell">211000</td>
+                                    <td>Immobilisations incorporelles</td>
+                                    <td>Frais de développement</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Crédit</span></td>
+                                    <td class="montant-cell">-25 000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-warning">ÉLEVÉ</span></td>
+                                    <td class="ref-cell">411000</td>
+                                    <td>Clients</td>
+                                    <td>Clients divers</td>
+                                    <td style="text-align: center;"><span class="badge badge-info">Débit</span></td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">Crédit</span></td>
+                                    <td class="montant-cell">-8 500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="info-box" style="margin-top: 30px;">
+                            <h4>📌 Niveaux de Gravité</h4>
+                            <table style="width: 100%; margin-top: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th>Niveau</th>
+                                        <th>Impact</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-critical">CRITIQUE</span></td>
+                                        <td>Déséquilibre majeur</td>
+                                        <td>Correction immédiate requise</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-warning">ÉLEVÉ</span></td>
+                                        <td>Anomalie comptable</td>
+                                        <td>Vérification et correction prioritaire</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-info">MOYEN</span></td>
+                                        <td>À vérifier</td>
+                                        <td>Analyse et justification nécessaire</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge" style="background: #9e9e9e; color: white;">FAIBLE</span></td>
+                                        <td>Situation exceptionnelle possible</td>
+                                        <td>Vérification de routine</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="danger-box" style="margin-top: 20px;">
+                            <h4>🚨 Actions Correctives pour Comptes CRITIQUES</h4>
+                            <ol style="margin-left: 20px; margin-top: 10px;">
+                                <li><strong>Capital social débiteur (101000)</strong> : Le capital ne peut pas être débiteur - Vérifier les écritures de constitution</li>
+                                <li><strong>Caisse négative (541000)</strong> : La caisse ne peut pas être négative - Corriger les écritures de caisse</li>
+                                <li><strong>Banque créditrice (521100)</strong> : Découvert bancaire - Reclasser en dettes financières (compte 56)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Synthèse Finale -->
+            <div class="section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>📋 Synthèse Finale des Contrôles</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <h3 style="margin-bottom: 20px;">Tableau Récapitulatif</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>N°</th>
+                                    <th>Contrôle</th>
+                                    <th style="text-align: center;">Résultat</th>
+                                    <th style="text-align: center;">Statut</th>
+                                    <th>Commentaire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Statistiques de Couverture</td>
+                                    <td style="text-align: center;">95.5%</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                    <td>Excellent taux de couverture</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Équilibre du Bilan</td>
+                                    <td style="text-align: center;">0.00</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                    <td>Bilan parfaitement équilibré</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Cohérence Résultat</td>
+                                    <td style="text-align: center;">0.00</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                    <td>Résultats cohérents</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Comptes Non Intégrés</td>
+                                    <td style="text-align: center;">7</td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">⚠</span></td>
+                                    <td>À vérifier et corriger</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Comptes Sens Inversé</td>
+                                    <td style="text-align: center;">5</td>
+                                    <td style="text-align: center;"><span class="badge badge-warning">⚠</span></td>
+                                    <td>À analyser</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>Comptes en Déséquilibre</td>
+                                    <td style="text-align: center;">0</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                    <td>Aucun déséquilibre</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>Hypothèse Affectation</td>
+                                    <td style="text-align: center;">OUI</td>
+                                    <td style="text-align: center;"><span class="badge badge-success">✓</span></td>
+                                    <td>Équilibrerait le bilan</td>
+                                </tr>
+                                <tr>
+                                    <td>8</td>
+                                    <td>Sens Anormal par Nature</td>
+                                    <td style="text-align: center;">3 CRITIQUES</td>
+                                    <td style="text-align: center;"><span class="badge badge-danger">✗</span></td>
+                                    <td>Action immédiate requise</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h3 style="margin-top: 40px; margin-bottom: 20px;">Priorités d'Action</h3>
+                        <div class="danger-box">
+                            <h4>🔴 PRIORITÉ 1 - CRITIQUE</h4>
+                            <p style="margin-top: 10px;">3 comptes avec sens anormal par nature (CRITIQUE) - Action immédiate requise</p>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <h4>🟠 PRIORITÉ 2 - ÉLEVÉE</h4>
+                            <p style="margin-top: 10px;">7 comptes non intégrés + 5 comptes avec sens inversé - Vérification et correction</p>
+                        </div>
+                        
+                        <div class="success-box">
+                            <h4>🟢 POINTS POSITIFS</h4>
+                            <ul style="margin-left: 20px; margin-top: 10px;">
+                                <li>Bilan parfaitement équilibré</li>
+                                <li>Résultats cohérents entre CR et Bilan</li>
+                                <li>Excellent taux de couverture (95.5%)</li>
+                                <li>Aucun compte créant un déséquilibre</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>États de Contrôle - États Financiers SYSCOHADA Révisé</strong></p>
+            <p style="margin-top: 10px;">Module développé pour ClaraVerse - Projet Open Source</p>
+            <p style="margin-top: 5px;">📅 Date de génération: 04 Avril 2026</p>
+            <p style="margin-top: 10px;">
+                <strong>Fichiers concernés:</strong><br>
+                <code>py_backend/etats_financiers.py</code> | 
+                <code>py_backend/controles_exhaustifs.py</code> | 
+                <code>py_backend/etats_controle_exhaustifs.py</code> | 
+                <code>py_backend/html_etats_controle.py</code>
+            </p>
+            <p style="margin-top: 15px;">
+                <a href="Doc_Etat_Fin/GUIDE_ETATS_CONTROLE.md" class="btn">📖 Documentation Complète</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle section
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('active');
+        }
+        
+        // Expand all sections
+        function expandAll() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.add('active');
+            });
+        }
+        
+        // Collapse all sections
+        function collapseAll() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+        
+        // Auto-open first section on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Test États de Contrôle chargé avec succès');
+            console.log('📊 8 états de contrôle disponibles');
+            console.log('🎯 Module prêt pour les tests');
+        });
+    </script>
+</body>
+</html>

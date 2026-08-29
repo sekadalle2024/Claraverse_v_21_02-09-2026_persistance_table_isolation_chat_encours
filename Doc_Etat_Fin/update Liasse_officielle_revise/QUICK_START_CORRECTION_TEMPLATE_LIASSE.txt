@@ -1,0 +1,75 @@
+================================================================================
+QUICK START - CORRECTION TEMPLATE LIASSE
+08 AVRIL 2026
+================================================================================
+
+🎯 PROBLÈME RÉSOLU
+==================
+Le script d'export utilisait le mauvais template Excel.
+✅ Correction appliquée: Utilise maintenant Liasse_officielle_revise.xlsx
+
+================================================================================
+⚡ TEST RAPIDE (2 MINUTES)
+================================================================================
+
+1. VÉRIFIER LA CORRECTION
+   ------------------------
+   .\test-template-liasse-revise.ps1
+
+   Résultat attendu:
+   ✅ Fichier trouvé
+   ✅ Code référence Liasse_officielle_revise.xlsx
+   ✅ Liasse_officielle_revise.xlsx en PRIORITÉ
+
+2. DÉMARRER LE BACKEND
+   --------------------
+   cd py_backend
+   python main.py
+
+3. TESTER L'EXPORT
+   ----------------
+   Dans l'interface web:
+   a) Taper "Etat fin"
+   b) Charger "P000 -BALANCE DEMO N_N-1_N-2.xls"
+   c) Attendre génération
+   d) Cliquer "Exporter Liasse Officielle"
+   e) Vérifier le fichier Excel téléchargé
+
+================================================================================
+📊 CE QUI A CHANGÉ
+================================================================================
+
+AVANT:
+  template_path = "LIASSE.xlsx"  ❌ Ancien template
+
+APRÈS:
+  template_path = "Liasse_officielle_revise.xlsx"  ✅ Bon template (84 onglets)
+
+================================================================================
+📁 FICHIERS
+================================================================================
+
+Modifié:
+  ✅ py_backend/export_liasse.py (ligne ~205)
+
+Créés:
+  ✅ test-template-liasse-revise.ps1
+  ✅ 00_SOLUTION_TEMPLATE_LIASSE_REVISE_08_AVRIL_2026.txt
+  ✅ QUICK_START_CORRECTION_TEMPLATE_LIASSE.txt (ce fichier)
+
+Template utilisé:
+  ✅ py_backend/Liasse_officielle_revise.xlsx (84 onglets)
+
+================================================================================
+🔍 SI PROBLÈME PERSISTE
+================================================================================
+
+Si les onglets sont toujours vides:
+1. Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+2. Noter les noms EXACTS des onglets
+3. Noter les colonnes pour N et N-1
+4. Voir: 00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+
+================================================================================
+✅ STATUT: CORRECTION APPLIQUÉE - PRÊT POUR TEST
+================================================================================

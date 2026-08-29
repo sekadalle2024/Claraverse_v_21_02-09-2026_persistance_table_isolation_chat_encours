@@ -1,0 +1,47 @@
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ RÉCAPITULATIF : CORRECTION ÉTATS FINANCIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date : 04 Avril 2026 - 18h42
+
+═══════════════════════════════════════════════════════════════════════════════
+   TRAVAIL ACCOMPLI
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Retrait de la colonne N-2 (affichage 2 colonnes : N et N-1)
+✅ TFT affiché en accordéon avec tous les flux
+✅ Notes Annexes affichées en accordéon (7 notes)
+✅ Sections ouvertes par défaut (classe 'active')
+✅ Tests HTML réussis
+
+═══════════════════════════════════════════════════════════════════════════════
+   FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. py_backend/etats_financiers_v2.py
+   - Retrait colonne N-2 dans generate_section_html_liasse()
+   - Ajout classe 'active' aux sections
+
+2. py_backend/generer_etats_liasse.py
+   - Création generate_tft_html_accordeon()
+   - Création generate_annexes_html_accordeon()
+   - Création format_montant_liasse()
+
+═══════════════════════════════════════════════════════════════════════════════
+   RÉSULTAT
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Fichier généré : Etats_Financiers_Liasse_20260404_184151.html (67.46 KB)
+✅ 11 sections accordéon
+✅ 2 colonnes (N et N-1)
+✅ TFT complet avec CAFG = -141,285,351 FCFA
+✅ 7 notes annexes
+
+═══════════════════════════════════════════════════════════════════════════════
+   TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+cd py_backend
+conda run -n claraverse_backend python generer_etats_liasse.py
+
+═══════════════════════════════════════════════════════════════════════════════

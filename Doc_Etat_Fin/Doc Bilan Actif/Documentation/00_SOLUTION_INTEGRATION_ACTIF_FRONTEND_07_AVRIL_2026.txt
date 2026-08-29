@@ -1,0 +1,246 @@
+================================================================================
+🎯 SOLUTION: Intégration Frontend ACTIF (BRUT, AMORT, NET)
+================================================================================
+
+Date: 07 Avril 2026
+Statut: ✅ Solution appliquée
+Objectif: Afficher les colonnes BRUT, AMORT ET DEPREC, NET dans le menu accordéon
+
+================================================================================
+📋 PROBLÈME IDENTIFIÉ
+================================================================================
+
+Le backend générait correctement le HTML enrichi avec les colonnes BRUT, AMORT 
+ET DEPREC, NET, mais le frontend l'ignorait et reconstruisait son propre HTML 
+simplifié avec seulement la colonne NET.
+
+Symptômes:
+- Backend: ✅ Module calculer_actif_brut_amort.py fonctionnel
+- Backend: ✅ Génération de result.html et result.actif_detaille
+- Frontend: ❌ Utilisation de result.bilan_actif au lieu de result.html
+- Frontend: ❌ Reconstruction manuelle du HTML sans les colonnes BRUT/AMORT
+
+================================================================================
+🔧 SOLUTION APPLIQUÉE
+================================================================================
+
+Modification du fichier: public/menu.js
+
+1. Fonction insertEtatsFinanciersResults()
+   ----------------------------------------
+   AVANT:
+   - Construisait toujours le HTML manuellement
+   - Utilisait buildEtatsFinanciersAccordions()
+   - Ignorait result.html du backend
+
+   APRÈS:
+   - Détecte si result.html existe
+   - Si oui: utilise directement le HTML du backend
+   - Si non: fallback vers la construction manuelle
+   - Compatible avec les deux formats
+
+2. Fonction setupEtatsFinanciersAccordions()
+   ------------------------------------------
+   AVANT:
+   - Gérait uniquement les accordéons frontend (.ef-accordion-header)
+
+   APRÈS:
+   - Gère les accordéons frontend (.ef-accordion-header)
+   - Gère les accordéons backend (.section-header-ef)
+   - Compatible avec les deux formats
+
+================================================================================
+📁 FICHIERS MODIFIÉS
+================================================================================
+
+1. public/menu.js
+   - insertEtatsFinanciersResults(): Utilisation de result.html
+   - setupEtatsFinanciersAccordions(): Support des deux formats d'accordéons
+
+2. py_backend/etats_financiers.py (déjà modifié)
+   - Import de enrichir_actif_avec_brut_amort
+   - Appel de la fonction d'enrichissement
+   - Retour de actif_detaille et actif_html
+
+3. py_backend/calculer_actif_brut_amort.py (déjà créé)
+   - Module complet de calcul BRUT, AMORT, NET
+   - Génération du HTML conforme SYSCOHADA
+
+================================================================================
+✅ AVANTAGES DE LA SOLUTION
+================================================================================
+
+1. Rétrocompatibilité
+   - Si le backend ne génère pas de HTML, le frontend utilise l'ancien format
+   - Pas de régression pour les autres fonctionnalités
+
+2. Séparation des responsabilités
+   - Backend: Calculs et génération HTML
+   - Frontend: Affichage et interactions
+
+3. Conformité SYSCOHADA
+   - Format liasse officielle respecté
+   - 7 colonnes affichées correctement
+   - Calculs conformes aux normes
+
+4. Maintenabilité
+   - Code modulaire et documenté
+   - Tests disponibles
+   - Logs détaillés
+
+================================================================================
+🧪 TESTS À EFFECTUER
+================================================================================
+
+1. Test automatique des fichiers:
+   .\test-actif-frontend-integration.ps1
+
+2. Test manuel dans le navigateur:
+   a) Démarrer le backend: python py_backend/main.py
+   b) Démarrer le frontend: npm run dev
+   c) Envoyer "Etat fin" dans le chat
+   d) Uploader P000 -BALANCE DEMO N_N-1_N-2.xls
+   e) Vérifier l'affichage du menu accordéon
+
+3. Vérifications visuelles:
+   ✓ 7 colonnes dans la section BILAN ACTIF
+   ✓ Colonnes BRUT et AMORT ET DEPREC renseignées
+   ✓ NET = BRUT - AMORT ET DEPREC
+   ✓ Totalisations correctes
+   ✓ Accordéons cliquables
+
+4. Vérifications console navigateur:
+   ✓ "✅ [États Financiers] Utilisation du HTML généré par le backend"
+   ✓ "✅ [États Financiers] Accordéons activés (formats frontend et backend)"
+   ✓ Pas d'erreurs JavaScript
+
+5. Vérifications logs backend:
+   ✓ "📊 Enrichissement ACTIF avec colonnes BRUT, AMORT, NET..."
+   ✓ "✅ États financiers calculés:"
+   ✓ Pas d'erreurs Python
+
+================================================================================
+🐛 DIAGNOSTIC EN CAS DE PROBLÈME
+================================================================================
+
+Problème: Les colonnes BRUT et AMORT ne s'affichent pas
+--------------------------------------------------------
+
+1. Vérifier la console du navigateur (F12):
+   - Y a-t-il des erreurs JavaScript?
+   - Le message "Utilisation du HTML généré par le backend" apparaît-il?
+   - Si non, vérifier que result.html existe dans la réponse
+
+2. Vérifier la réponse du backend (Network tab):
+   - Ouvrir l'onglet Network dans les DevTools
+   - Chercher la requête vers /etats-financiers/calculate
+   - Vérifier que la réponse contient:
+     * "html": "<div class='etats-fin-container'>..."
+     * "actif_detaille": {...}
+   - Si absent, le backend n'a pas généré le HTML enrichi
+
+3. Vérifier les logs du backend:
+   - Le message "📊 Enrichissement ACTIF..." apparaît-il?
+   - Y a-t-il des erreurs lors de l'import de calculer_actif_brut_amort?
+   - Y a-t-il des erreurs lors de l'appel de enrichir_actif_avec_brut_amort?
+
+4. Tester le module isolément:
+   .\test-actif-brut-amort.ps1
+   - Vérifie que le module fonctionne correctement
+   - Génère un fichier HTML de test
+
+5. Vérifier les imports Python:
+   cd py_backend
+   conda activate claraverse_backend
+   python -c "from calculer_actif_brut_amort import enrichir_actif_avec_brut_amort; print('OK')"
+
+Problème: Les accordéons ne s'ouvrent pas
+------------------------------------------
+
+1. Vérifier la console du navigateur:
+   - Y a-t-il des erreurs lors du clic?
+   - Les event listeners sont-ils attachés?
+
+2. Vérifier le HTML généré:
+   - Inspecter l'élément dans les DevTools
+   - Vérifier que les classes sont correctes:
+     * .section-header-ef pour les en-têtes
+     * .section-content-ef pour le contenu
+     * .arrow pour la flèche
+
+3. Vérifier le CSS:
+   - Les styles sont-ils appliqués?
+   - Les transitions fonctionnent-elles?
+
+================================================================================
+📚 DOCUMENTATION DE RÉFÉRENCE
+================================================================================
+
+Dossier principal:
+  Doc_Etat_Fin/Doc Bilan Actif/
+
+Fichiers clés:
+  - 00_COMMENCER_ICI.txt: Point de départ
+  - README.md: Vue d'ensemble complète
+  - 00_SOLUTION_ACTIF_BRUT_AMORT_07_AVRIL_2026.md: Documentation technique
+
+Scripts de test:
+  - test-actif-brut-amort.ps1: Test du module backend
+  - test-actif-frontend-integration.ps1: Test de l'intégration frontend
+
+Fichiers modifiés:
+  - public/menu.js: Affichage frontend
+  - py_backend/etats_financiers.py: Génération backend
+  - py_backend/calculer_actif_brut_amort.py: Calculs BRUT/AMORT/NET
+
+================================================================================
+🔄 PROCHAINES ÉTAPES
+================================================================================
+
+1. Tests manuels dans le navigateur
+   - Vérifier l'affichage complet
+   - Tester les interactions (accordéons)
+   - Valider les calculs
+
+2. Export Excel
+   - Modifier py_backend/export_liasse.py
+   - Ajouter les colonnes BRUT et AMORT
+   - Tester l'export
+
+3. Documentation utilisateur
+   - Mettre à jour les guides
+   - Créer des captures d'écran
+   - Ajouter des exemples
+
+4. Intégration N-1
+   - Calculer BRUT, AMORT, NET pour N-1
+   - Afficher dans la colonne NET N-1
+   - Tester avec balance N-1
+
+================================================================================
+✅ STATUT FINAL
+================================================================================
+
+[✓] Backend: Module calculer_actif_brut_amort.py créé
+[✓] Backend: Intégration dans etats_financiers.py
+[✓] Backend: Génération HTML enrichi
+[✓] Frontend: Utilisation du HTML backend
+[✓] Frontend: Support des accordéons backend
+[✓] Tests: Scripts de test créés
+[✓] Documentation: Complète et à jour
+[ ] Tests manuels: À effectuer dans le navigateur
+[ ] Export Excel: À implémenter
+[ ] Intégration N-1: À implémenter
+
+================================================================================
+📞 BESOIN D'AIDE?
+================================================================================
+
+Consultez:
+- Doc_Etat_Fin/Doc Bilan Actif/00_COMMENCER_ICI.txt
+- Doc_Etat_Fin/Doc Bilan Actif/README.md
+- test-actif-frontend-integration.ps1 (instructions détaillées)
+
+================================================================================
+
+Dernière mise à jour: 07 Avril 2026

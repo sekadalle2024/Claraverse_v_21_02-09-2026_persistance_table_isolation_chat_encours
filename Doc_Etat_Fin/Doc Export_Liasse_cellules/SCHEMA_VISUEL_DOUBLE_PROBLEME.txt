@@ -1,0 +1,173 @@
+================================================================================
+SCHÉMA VISUEL - DOUBLE PROBLÈME EXPORT LIASSE
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         PROBLÈME 1: ÉTATS DE CONTRÔLE                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+FRONTEND (Menu Accordéon)                    EXPORT EXCEL
+┌──────────────────────────┐                 ┌──────────────────────────┐
+│ etats_controle_          │                 │ generer_onglet_          │
+│ exhaustifs.py            │                 │ controle_coherence.py    │
+│                          │                 │                          │
+│ generer_controles_       │    ❌ PAS       │ generer_etats_controle_  │
+│ exhaustifs()             │    LA MÊME      │ pour_export()            │
+│                          │    SOURCE       │                          │
+│ → 16 états exhaustifs    │                 │ → 8 états simplifiés     │
+│   (8 pour N, 8 pour N-1) │                 │   (9-16 vides)           │
+└──────────────────────────┘                 └──────────────────────────┘
+         ✅ CORRECT                                  ❌ INCORRECT
+
+SOLUTION: Utiliser la MÊME SOURCE (generer_controles_exhaustifs)
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    PROBLÈME 2: VALEURS NON RENSEIGNÉES                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+GÉNÉRATION DES ÉTATS                         EXPORT EXCEL
+┌──────────────────────────┐                 ┌──────────────────────────┐
+│ etats_financiers_v2.py   │                 │ export_liasse.py         │
+│                          │                 │                          │
+│ process_balance_to_      │                 │ MAPPING_BILAN_ACTIF = {  │
+│ liasse_format()          │                 │   'AD': 'C10',           │
+│                          │                 │   'AE': 'C11',           │
+│ Génère des postes avec   │    ❌ MAPPINGS  │   ...                    │
+│ références SYSCOHADA:    │    INCORRECTS   │ }                        │
+│ - 'AA', 'AB', 'AC'...    │                 │                          │
+│ - 'TA', 'TB', 'TC'...    │                 │ Les références ne        │
+│ - 'RA', 'RB', 'RC'...    │                 │ correspondent pas!       │
+└──────────────────────────┘                 └──────────────────────────┘
+         ✅ CORRECT                                  ❌ INCORRECT
+
+SOLUTION: Corriger les mappings pour qu'ils correspondent aux vraies références
+
+
+================================================================================
+FLUX DE DONNÉES ACTUEL (PROBLÉMATIQUE)
+================================================================================
+
+Balance Excel
+     │
+     ▼
+etats_financiers_v2.py
+     │
+     ├─► Bilan Actif (liste de postes avec refs AA, AB, AC...)
+     ├─► Bilan Passif (liste de postes avec refs DA, DB, DC...)
+     └─► Compte Résultat (liste de postes avec refs TA, TB, TC...)
+     │
+     ▼
+export_liasse.py
+     │
+     ├─► Conversion LIST → DICT ✅
+     │
+     ├─► Mappings de cellules ❌ (références incorrectes)
+     │   MAPPING_BILAN_ACTIF = {'AD': 'C10', ...}
+     │   Mais les postes ont des refs AA, AB, AC...
+     │
+     └─► Résultat: Aucune valeur renseignée ❌
+
+
+================================================================================
+FLUX DE DONNÉES CORRIGÉ (SOLUTION)
+================================================================================
+
+Balance Excel
+     │
+     ▼
+etats_financiers_v2.py
+     │
+     ├─► Bilan Actif (liste de postes avec refs AA, AB, AC...)
+     ├─► Bilan Passif (liste de postes avec refs DA, DB, DC...)
+     └─► Compte Résultat (liste de postes avec refs TA, TB, TC...)
+     │
+     ▼
+export_liasse.py (CORRIGÉ)
+     │
+     ├─► Conversion LIST → DICT ✅
+     │
+     ├─► Mappings de cellules ✅ (références correctes)
+     │   MAPPING_BILAN_ACTIF = {'AA': 'C10', 'AB': 'C11', ...}
+     │   Les références correspondent aux postes réels
+     │
+     └─► Résultat: Toutes les valeurs renseignées ✅
+
+
+================================================================================
+ÉTATS DE CONTRÔLE - FLUX ACTUEL (PROBLÉMATIQUE)
+================================================================================
+
+Balance N + Balance N-1
+     │
+     ▼
+generer_controles_exhaustifs() (etats_controle_exhaustifs.py)
+     │
+     ├─► FRONTEND: 16 états exhaustifs ✅
+     │   (utilisé par etats_controle_exhaustifs_html.py)
+     │
+     └─► EXPORT: generer_etats_controle_pour_export() ❌
+         (génère seulement 8 états simplifiés)
+
+
+================================================================================
+ÉTATS DE CONTRÔLE - FLUX CORRIGÉ (SOLUTION)
+================================================================================
+
+Balance N + Balance N-1
+     │
+     ▼
+generer_controles_exhaustifs() (etats_controle_exhaustifs.py)
+     │
+     ├─► FRONTEND: 16 états exhaustifs ✅
+     │   (utilisé par etats_controle_exhaustifs_html.py)
+     │
+     └─► EXPORT: generer_etats_controle_pour_export() ✅
+         (utilise la MÊME SOURCE → 16 états exhaustifs)
+
+
+================================================================================
+PRINCIPE FONDAMENTAL
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│  "Utiliser strictement nos propres formules et valeurs qui en          │
+│   découlent pour TOUTES les cellules concernées"                       │
+│                                                                         │
+│  ✅ Même source pour frontend et export                                │
+│  ✅ Pas de formules Excel du template                                  │
+│  ✅ Toutes les valeurs calculées et renseignées                        │
+│  ✅ Cohérence totale frontend ↔ export                                 │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+CHECKLIST DE VALIDATION
+================================================================================
+
+Après corrections:
+
+ÉTATS DE CONTRÔLE:
+  [ ] Les 16 états sont présents dans l'export Excel
+  [ ] Les états correspondent au menu accordéon frontend
+  [ ] Même structure, mêmes titres, mêmes postes
+  [ ] États 1-8: Exercice N
+  [ ] États 9-16: Exercice N-1
+
+VALEURS ÉTATS FINANCIERS:
+  [ ] Toutes les valeurs sont renseignées dans ACTIF
+  [ ] Toutes les valeurs sont renseignées dans PASSIF
+  [ ] Toutes les valeurs sont renseignées dans RESULTAT
+  [ ] Les valeurs correspondent au menu accordéon frontend
+  [ ] Aucune cellule vide (sauf si montant = 0)
+
+COHÉRENCE:
+  [ ] L'export fonctionne sans erreur
+  [ ] Le fichier Excel s'ouvre correctement
+  [ ] Les formules ne sont PAS utilisées (nos valeurs uniquement)
+  [ ] Test avec de vraies données réussi
+
+
+================================================================================

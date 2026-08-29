@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════════
+📊 DIAGNOSTIC - EXPORT ÉTATS FINANCIERS SYSCOHADA
+═══════════════════════════════════════════════════════════════════════════════
+Date: 04 Avril 2026
+Statut: 🔍 DIAGNOSTIC COMPLET
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+SYMPTÔMES:
+----------
+1. Les états financiers sont affichés dans un menu accordéon ✅
+2. Le clic droit au-dessus du menu accordéon affiche le menu contextuel ✅
+3. La feature d'export des états financiers en Excel n'existe plus ou est désactivée ❌
+4. Dans la section "États financiers Syscohada", il n'y a AUCUN bouton d'export ❌
+
+CONTEXTE:
+---------
+- Feature: [Etat fin] - Génération des états financiers SYSCOHADA
+- Déclenchement: Message "Etat fin" dans le chat
+- Processus: Upload balance Excel → Traitement backend → Affichage accordéon
+- Scripts d'export existants: generer_etats_liasse.py, ExportLiasseHandler.js
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 ANALYSE DÉTAILLÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. MENU CONTEXTUEL (public/menu.js)
+------------------------------------
+✅ Section "Modélisation Pandas" contient:
+   - "📊 États Financiers SYSCOHADA" → executeEtatsFinanciers() [Ctrl+F]
+   - "📥 Export États Financiers" → exportEtatsFinanciersToExcel() [Ctrl+Shift+F]
+   - "📋 Exporter Liasse Officielle" → exporterLiasseOfficielle() [Ctrl+Shift+O]
+
+✅ Section "États Financiers SYSCOHADA" contient:
+   - "📊 Calculer États Financiers" → executeEtatsFinanciers() [Ctrl+F]
+   - "📥 Importer Balance Excel" → importBalanceExcel()
+   - "📋 Afficher Bilan" → showBilan()
+   - "📋 Afficher Compte de Résultat" → showCompteResultat()
+
+❌ PROBLÈME: Aucune option d'export dans la section "États Financiers SYSCOHADA"
+
+2. MÉTHODE exporterLiasseOfficielle() (ligne 8628)
+---------------------------------------------------
+✅ Fonction existe dans menu.js
+✅ Cherche le conteneur '.etats-fin-container'
+✅ Vérifie que ExportLiasseHandler est chargé
+✅ Appelle window.ExportLiasseHandler.exportFromContextMenu(container)
+
+3. HANDLER D'EXPORT (public/ExportLiasseHandler.js)
+----------------------------------------------------
+✅ Fichier existe et est fonctionnel
+✅ API globale: window.ExportLiasseHandler
+✅ Méthode: exportFromContextMenu(container)
+✅ Endpoint backend: http://127.0.0.1:5000/export-liasse/generer
+
+4. SCRIPT PYTHON (py_backend/generer_etats_liasse.py)
+------------------------------------------------------
+✅ Script existe et fonctionne
+✅ Génère les états au format liasse officielle
+✅ Utilise BALANCES_N_N1_N2.xlsx
+✅ Sauvegarde sur le Bureau en HTML
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 CAUSE RACINE
+═══════════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE PRINCIPALE:
+---------------------
+La fonctionnalité d'export existe MAIS elle est mal placée dans le menu contextuel.
+
+PROBLÈMES IDENTIFIÉS:
+---------------------
+1. ❌ La section "États Financiers SYSCOHADA" ne contient PAS d'option d'export
+2. ❌ Les options d'export sont dans la section "Modélisation Pandas" (peu intuitif)
+3. ❌ L'utilisateur ne trouve pas facilement l'option d'export
+4. ⚠️ Possible que ExportLiasseHandler.js ne soit pas chargé dans index.html
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ SOLUTION PROPOSÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+ACTIONS À RÉALISER:
+-------------------
+
+1. VÉRIFIER LE CHARGEMENT DE ExportLiasseHandler.js
+   → Vérifier que le script est bien inclus dans index.html
+   → Ligne attendue: <script src="/ExportLiasseHandler.js"></script>
+
+2. AJOUTER LES OPTIONS D'EXPORT DANS LA BONNE SECTION
+   → Modifier public/menu.js
+   → Ajouter dans la section "États Financiers SYSCOHADA":
+     * "📥 Export États Financiers Excel" → exportEtatsFinanciersToExcel()
+     * "📋 Exporter Liasse Officielle" → exporterLiasseOfficielle()
+
+3. VÉRIFIER L'ENDPOINT BACKEND
+   → Vérifier que py_backend/export_liasse.py existe
+   → Vérifier que l'endpoint /export-liasse/generer est actif
+   → Vérifier que main.py inclut le router
+
+4. TESTER LE WORKFLOW COMPLET
+   → Générer des états financiers avec "Etat fin"
+   → Clic droit sur le menu accordéon
+   → Sélectionner "Exporter Liasse Officielle"
+   → Vérifier le téléchargement du fichier Excel
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 FICHIERS À VÉRIFIER/MODIFIER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. index.html
+   → Vérifier: <script src="/ExportLiasseHandler.js"></script>
+
+2. public/menu.js
+   → Modifier: Section "États Financiers SYSCOHADA" (ligne ~139)
+   → Ajouter: Options d'export manquantes
+
+3. py_backend/export_liasse.py
+   → Vérifier: Endpoint /export-liasse/generer existe
+
+4. py_backend/main.py
+   → Vérifier: Router export_liasse est inclus
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Vérifier index.html
+ÉTAPE 2: Modifier menu.js pour ajouter les options d'export
+ÉTAPE 3: Vérifier le backend Python
+ÉTAPE 4: Tester le workflow complet
+
+═══════════════════════════════════════════════════════════════════════════════

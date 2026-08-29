@@ -1,0 +1,127 @@
+═══════════════════════════════════════════════════════════════════════════════
+   🚀 QUICK TEST : AFFICHAGE 3 COLONNES (N, N-1, N-2)
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date : 04 Avril 2026
+
+═══════════════════════════════════════════════════════════════════════════════
+   MÉTHODE 1 : TEST AUTOMATIQUE (RECOMMANDÉ)
+═══════════════════════════════════════════════════════════════════════════════
+
+Ouvrir PowerShell et exécuter :
+
+   .\test-affichage-3-colonnes.ps1
+
+Le script va :
+   ✅ Vérifier les fichiers modifiés
+   ✅ Générer les états financiers
+   ✅ Vérifier la présence des 3 colonnes
+   ✅ Proposer d'ouvrir le fichier HTML
+
+═══════════════════════════════════════════════════════════════════════════════
+   MÉTHODE 2 : TEST MANUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir PowerShell
+
+2. Aller dans le dossier py_backend :
+   cd py_backend
+
+3. Exécuter le script de génération :
+   conda run -n claraverse_backend python generer_etats_liasse.py
+
+4. Le fichier HTML sera généré sur le Bureau :
+   📄 etats_financiers_liasse.html
+
+5. Ouvrir le fichier dans un navigateur
+
+═══════════════════════════════════════════════════════════════════════════════
+   CE QU'IL FAUT VÉRIFIER
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ VÉRIFICATION 1 : Les 3 colonnes sont affichées
+   - EXERCICE N (2024)
+   - EXERCICE N-1 (2023)
+   - EXERCICE N-2 (2022)
+
+✅ VÉRIFICATION 2 : Les valeurs sont différentes
+   - N ≠ N-1 ≠ N-2
+   - Pas de duplication des données
+
+✅ VÉRIFICATION 3 : Les totaux généraux (DZ) sont affichés
+   - TOTAL GÉNÉRAL ACTIF (DZ)
+   - TOTAL GÉNÉRAL PASSIF (DZ)
+
+✅ VÉRIFICATION 4 : Le menu accordéon fonctionne
+   - Cliquer sur les sections pour les ouvrir/fermer
+   - Bilan Actif
+   - Bilan Passif
+   - Compte de Résultat
+
+✅ VÉRIFICATION 5 : Pas d'erreur dans la console
+   - Ouvrir la console du navigateur (F12)
+   - Vérifier qu'il n'y a pas d'erreur JavaScript
+
+═══════════════════════════════════════════════════════════════════════════════
+   RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+Vous devriez voir un tableau comme celui-ci :
+
+┌─────┬──────────────────────────┬──────┬─────────────┬─────────────┬─────────────┐
+│ REF │ LIBELLÉS                 │ NOTE │ EXERCICE N  │ EXERCICE N-1│ EXERCICE N-2│
+├─────┼──────────────────────────┼──────┼─────────────┼─────────────┼─────────────┤
+│ TA  │ Ventes de marchandises   │  21  │ 1 000 000   │   950 000   │   900 000   │
+│ TB  │ Ventes de produits       │  21  │   500 000   │   475 000   │   450 000   │
+│ ... │ ...                      │  ... │     ...     │     ...     │     ...     │
+│ DZ  │ TOTAL GÉNÉRAL ACTIF      │      │ 5 000 000   │ 4 750 000   │ 4 500 000   │
+└─────┴──────────────────────────┴──────┴─────────────┴─────────────┴─────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+   EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ PROBLÈME 1 : Seules 2 colonnes sont affichées
+
+Solution :
+   - Vérifier que les modifications ont bien été appliquées
+   - Relancer le script de génération
+   - Vider le cache du navigateur (Ctrl+F5)
+
+---
+
+❌ PROBLÈME 2 : Colonne N-2 affiche "-" partout
+
+Cause : Le fichier Excel n'a pas d'onglet "Balance N-2"
+
+Solution :
+   - C'est normal si le fichier n'a que 2 onglets
+   - Utiliser le fichier "P000 -BALANCE DEMO N_N-1_N-2.xls" pour tester
+
+---
+
+❌ PROBLÈME 3 : Erreur Python lors de la génération
+
+Solution :
+   - Vérifier que l'environnement conda est activé
+   - Vérifier que les fichiers ont bien été modifiés
+   - Consulter le message d'erreur complet
+
+═══════════════════════════════════════════════════════════════════════════════
+   FICHIERS DE RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+📄 Diagnostic complet :
+   00_DIAGNOSTIC_AFFICHAGE_N1_VS_N2_04_AVRIL_2026.txt
+
+📄 Solution détaillée :
+   SOLUTION_AFFICHAGE_3_COLONNES_N_N1_N2_04_AVRIL_2026.md
+
+📄 Implémentation :
+   00_IMPLEMENTATION_3_COLONNES_TERMINEE_04_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PRÊT POUR LES TESTS !
+
+Exécutez : .\test-affichage-3-colonnes.ps1

@@ -1,0 +1,131 @@
+═══════════════════════════════════════════════════════════════════════════════
+🧪 QUICK TEST - EXPORT ÉTATS FINANCIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF: Tester rapidement la correction de l'export des états financiers
+
+═══════════════════════════════════════════════════════════════════════════════
+⚡ TEST RAPIDE (5 MINUTES)
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Recharger la Page
+---------------------------
+Action: Appuyer sur Ctrl+F5
+Résultat attendu: Page rechargée complètement
+
+ÉTAPE 2: Générer les États Financiers
+--------------------------------------
+Action: Taper "Etat fin" dans le chat
+Résultat attendu: Dialogue de sélection de fichier s'ouvre
+
+Action: Sélectionner "P000 -BALANCE DEMO N_N-1_N-2.xls"
+Résultat attendu: États financiers affichés dans des accordéons
+
+ÉTAPE 3: Vérifier le Menu Contextuel
+-------------------------------------
+Action: Clic droit sur le menu accordéon
+Résultat attendu: Menu contextuel s'affiche
+
+Action: Chercher la section "📈 États Financiers SYSCOHADA"
+Résultat attendu: Section visible avec 8 options
+
+Vérifier les options:
+✅ 📊 Calculer États Financiers (Ctrl+F)
+✅ 📥 Importer Balance Excel
+✅ ─────────────────────
+✅ 📋 Afficher Bilan
+✅ 📋 Afficher Compte de Résultat
+✅ ─────────────────────
+✅ 📥 Export États Financiers Excel (Ctrl+Shift+F)  ← NOUVEAU
+✅ 📋 Exporter Liasse Officielle (Ctrl+Shift+O)     ← NOUVEAU
+
+ÉTAPE 4: Tester l'Export Excel Simple
+--------------------------------------
+Action: Cliquer sur "📥 Export États Financiers Excel"
+Résultat attendu:
+  ✅ Notification "Préparation de l'export Excel..."
+  ✅ Fichier téléchargé: Etats_Financiers_YYYYMMDD_HHMMSS.xlsx
+  ✅ Notification "Export réussi: X sections exportées"
+
+Action: Ouvrir le fichier Excel téléchargé
+Résultat attendu:
+  ✅ 5 onglets: Bilan Actif, Bilan Passif, Compte de Résultat, TFT, Annexes
+  ✅ Données présentes et formatées
+
+ÉTAPE 5: Tester le Raccourci Clavier
+-------------------------------------
+Action: Appuyer sur Ctrl+Shift+F
+Résultat attendu: Export Excel se déclenche automatiquement
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME 1: Menu contextuel ne s'affiche pas
+---------------------------------------------
+Solution:
+1. Vérifier que le clic droit est bien sur le menu accordéon
+2. Recharger la page (Ctrl+F5)
+3. Vérifier la console (F12) pour les erreurs
+
+PROBLÈME 2: Options d'export non visibles
+------------------------------------------
+Solution:
+1. Vérifier que le fichier menu.js a bien été modifié
+2. Vider le cache du navigateur (Ctrl+Shift+Delete)
+3. Recharger la page (Ctrl+F5)
+
+PROBLÈME 3: "Aucun état financier trouvé"
+------------------------------------------
+Solution:
+1. Vérifier que les états financiers sont affichés
+2. Vérifier que le conteneur '.etats-fin-container' existe
+3. Inspecter le DOM (F12) et chercher '.etats-fin-container'
+
+PROBLÈME 4: "Erreur lors de l'export"
+--------------------------------------
+Solution:
+1. Ouvrir la console (F12) et vérifier les erreurs
+2. Vérifier que XLSX est chargé: typeof XLSX
+3. Vérifier que les données sont présentes
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Menu contextuel affiche la section "États Financiers SYSCOHADA"
+✅ Section contient 8 options (au lieu de 4)
+✅ Option "Export États Financiers Excel" est visible
+✅ Option "Exporter Liasse Officielle" est visible
+✅ Clic sur "Export États Financiers Excel" télécharge un fichier
+✅ Fichier Excel contient 5 onglets avec les données
+✅ Raccourci Ctrl+Shift+F fonctionne
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+CONSOLE JAVASCRIPT (F12):
+--------------------------
+// Vérifier que XLSX est chargé
+typeof XLSX
+
+// Vérifier le conteneur des états financiers
+document.querySelector('.etats-fin-container')
+
+// Vérifier le handler d'export
+window.ExportLiasseHandler
+
+// Vérifier les résultats
+window.lastEtatsFinanciersResults
+
+BACKEND:
+--------
+# Démarrer le backend
+cd py_backend
+python main.py
+
+# Vérifier l'endpoint
+curl http://localhost:5000/export-liasse/generer
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,169 @@
+═══════════════════════════════════════════════════════════════════════════════
+  DIAGNOSTIC: PROBLÈME D'AFFICHAGE COLONNES BRUT, AMORT ET DEPREC, NET
+  Date: 07 Avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ DU PROBLÈME
+─────────────────────────────────────────────────────────────────────────────
+L'utilisateur signale que le menu accordéon des états financiers affiche 
+uniquement la colonne NET pour l'ACTIF du bilan, alors que le format 
+SYSCOHADA Révisé exige 3 colonnes: BRUT, AMORT ET DEPREC, NET.
+
+🔍 DIAGNOSTIC EFFECTUÉ
+─────────────────────────────────────────────────────────────────────────────
+
+✅ BACKEND (PYTHON)
+   - Module calculer_actif_brut_amort.py: FONCTIONNEL
+   - Fonction generer_html_actif_detaille(): GÉNÈRE LE HTML CORRECT
+   - Module etats_financiers.py: RETOURNE actif_html CORRECTEMENT
+   - Test automatique: TOUS LES TESTS PASSENT
+
+✅ FRONTEND (JAVASCRIPT)
+   - Fichier public/menu.js: VÉRIFIE result.html CORRECTEMENT
+   - Logique d'affichage: UTILISE result.html DIRECTEMENT
+   - Test automatique: TOUS LES TESTS PASSENT
+
+✅ FLUX DE DONNÉES
+   Backend Python → FastAPI → Frontend JavaScript → Affichage HTML
+   Tous les points de passage sont corrects.
+
+🎯 HYPOTHÈSES SUR LA CAUSE
+─────────────────────────────────────────────────────────────────────────────
+
+1. CACHE DU NAVIGATEUR
+   Le navigateur pourrait afficher une ancienne version du code JavaScript.
+   
+2. SERVEUR NON REDÉMARRÉ
+   Le backend Python ou le frontend npm pourrait ne pas avoir été redémarré
+   après les modifications.
+   
+3. FICHIER BALANCE INCORRECT
+   Le fichier Balance Excel pourrait ne pas contenir les comptes 28 et 29
+   (amortissements et provisions), ce qui donnerait des colonnes vides.
+
+4. ERREUR SILENCIEUSE
+   Une erreur JavaScript pourrait empêcher l'affichage du HTML enrichi
+   sans message d'erreur visible.
+
+📝 PROCÉDURE DE TEST COMPLÈTE
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1: ARRÊTER TOUS LES SERVEURS
+   1. Fermer tous les terminaux backend et frontend
+   2. Vérifier qu'aucun processus Python ou Node ne tourne
+
+ÉTAPE 2: VIDER LE CACHE DU NAVIGATEUR
+   1. Ouvrir le navigateur
+   2. Appuyer sur Ctrl+Shift+Delete
+   3. Cocher "Images et fichiers en cache"
+   4. Cliquer sur "Effacer les données"
+   5. Fermer complètement le navigateur
+
+ÉTAPE 3: REDÉMARRER LE BACKEND
+   1. Ouvrir un terminal
+   2. cd py_backend
+   3. python main.py
+   4. Attendre le message: "✅ Backend démarré sur http://localhost:8000"
+
+ÉTAPE 4: REDÉMARRER LE FRONTEND
+   1. Ouvrir un nouveau terminal
+   2. npm run dev
+   3. Attendre le message: "Local: http://localhost:5173/"
+
+ÉTAPE 5: TESTER DANS LE NAVIGATEUR
+   1. Ouvrir http://localhost:5173/
+   2. Ouvrir la console développeur (F12)
+   3. Onglet "Console"
+   4. Envoyer le message: "Etat fin"
+   5. Uploader le fichier: P000 -BALANCE DEMO N_N-1_N-2.xls
+   6. Attendre le traitement (peut prendre 30-60 secondes)
+
+ÉTAPE 6: VÉRIFIER DANS LA CONSOLE
+   Rechercher ces messages dans la console:
+   
+   ✅ Message attendu:
+      "✅ [États Financiers] Utilisation du HTML généré par le backend"
+   
+   ❌ Message d'erreur:
+      "⚠️ [États Financiers] Pas de HTML backend, construction manuelle"
+   
+   Si vous voyez le message d'erreur, cela signifie que result.html n'est
+   pas présent dans la réponse du backend.
+
+ÉTAPE 7: VÉRIFIER VISUELLEMENT
+   1. Chercher l'accordéon "🏢 BILAN - ACTIF"
+   2. Cliquer pour l'ouvrir
+   3. Vérifier les en-têtes de colonnes:
+      
+      ✅ Attendu (7 colonnes):
+         REF | ACTIF | NOTE | BRUT | AMORT ET DEPREC | NET | NET N-1
+      
+      ❌ Ancien format (4 colonnes):
+         REF | LIBELLÉS | EXERCICE N | EXERCICE N-1
+
+ÉTAPE 8: VÉRIFIER LES DONNÉES
+   Si les colonnes sont présentes mais vides:
+   1. Vérifier que le fichier Balance contient des comptes 28 et 29
+   2. Ouvrir P000 -BALANCE DEMO N_N-1_N-2.xls
+   3. Chercher les comptes commençant par 28 (amortissements)
+   4. Chercher les comptes commençant par 29 (provisions)
+   5. Si absents, les colonnes AMORT ET DEPREC seront à zéro
+
+🔧 SOLUTIONS SELON LE RÉSULTAT
+─────────────────────────────────────────────────────────────────────────────
+
+CAS 1: Message "construction manuelle" dans la console
+   → Le backend ne retourne pas result.html
+   → Vérifier les logs du backend Python
+   → Chercher des erreurs dans py_backend/etats_financiers.py
+
+CAS 2: Ancien format (4 colonnes) affiché
+   → Le cache du navigateur n'a pas été vidé
+   → Forcer le rechargement: Ctrl+Shift+R
+   → Vider le cache et réessayer
+
+CAS 3: Nouveau format (7 colonnes) mais colonnes vides
+   → Le fichier Balance ne contient pas de comptes 28/29
+   → C'est normal si l'entreprise n'a pas d'immobilisations
+   → Tester avec un autre fichier Balance
+
+CAS 4: Erreur JavaScript dans la console
+   → Noter l'erreur exacte
+   → Vérifier public/menu.js ligne indiquée
+   → Contacter le support technique
+
+📊 FICHIERS DE TEST DISPONIBLES
+─────────────────────────────────────────────────────────────────────────────
+
+1. test_actif_frontend_integration.py
+   Test automatique du flux complet
+   Commande: python test_actif_frontend_integration.py
+
+2. test-actif-brut-amort.ps1
+   Test backend seul
+   Commande: ./test-actif-brut-amort.ps1
+
+3. test_actif_brut_amort.py
+   Test Python backend
+   Commande: python test_actif_brut_amort.py
+
+📞 SUPPORT
+─────────────────────────────────────────────────────────────────────────────
+
+Si le problème persiste après avoir suivi toutes les étapes:
+
+1. Capturer une capture d'écran de:
+   - L'accordéon BILAN - ACTIF ouvert
+   - La console développeur (F12)
+   - Les logs du backend Python
+
+2. Noter:
+   - Navigateur utilisé (Chrome, Firefox, Edge, etc.)
+   - Version du navigateur
+   - Système d'exploitation
+
+3. Vérifier les fichiers de log:
+   - Backend: Logs dans le terminal py_backend
+   - Frontend: Console du navigateur (F12)
+
+═══════════════════════════════════════════════════════════════════════════════

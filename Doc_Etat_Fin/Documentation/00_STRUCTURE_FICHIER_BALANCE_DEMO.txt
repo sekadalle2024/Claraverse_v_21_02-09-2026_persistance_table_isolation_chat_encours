@@ -1,0 +1,159 @@
+═══════════════════════════════════════════════════════════════════════════════
+  STRUCTURE FICHIER BALANCE DÉMO - STANDARD
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 05 Avril 2026
+📁 FICHIER : py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+═══════════════════════════════════════════════════════════════════════════════
+STRUCTURE STANDARD DES ONGLETS
+═══════════════════════════════════════════════════════════════════════════════
+
+Le fichier "P000 -BALANCE DEMO N_N-1_N-2.xls" est le fichier de référence pour:
+- Les tests
+- Les scripts de production
+- La génération des états financiers
+
+ONGLETS (dans l'ordre):
+1. "BALANCE N"     → Balance de l'exercice N (le plus récent)
+2. "BALANCE N-1"   → Balance de l'exercice N-1 (année précédente)
+3. "BALANCE N-2"   → Balance de l'exercice N-2 (il y a 2 ans)
+
+⚠️ IMPORTANT:
+- Les onglets s'appellent exactement "BALANCE N", "BALANCE N-1", "BALANCE N-2"
+- PAS d'années dans les noms (pas "BALANCE 2018", "BALANCE 2017", etc.)
+- PAS d'espaces à la fin des noms
+- Cette structure est STANDARD et doit être utilisée partout
+
+═══════════════════════════════════════════════════════════════════════════════
+FORMAT DES COLONNES (8 colonnes)
+═══════════════════════════════════════════════════════════════════════════════
+
+Chaque onglet contient 8 colonnes avec les en-têtes suivants:
+
+1. Numéro           → Numéro de compte (ex: 101, 211, 601)
+2. Intitulé         → Libellé du compte
+3. Ant Débit        → Mouvements antérieurs débit
+4. Ant Crédit       → Mouvements antérieurs crédit
+5. Débit            → Mouvements de la période débit
+6. Crédit           → Mouvements de la période crédit
+7. Solde Débit      → Solde final débit
+8. Solde Crédit     → Solde final crédit
+
+═══════════════════════════════════════════════════════════════════════════════
+UTILISATION DE N-2
+═══════════════════════════════════════════════════════════════════════════════
+
+N-2 EST UTILISÉ POUR LES CALCULS MAIS PAS AFFICHÉ:
+
+✓ N-2 est chargé depuis le fichier Excel
+✓ N-2 est utilisé pour calculer les variations de N-1
+✓ Seules 2 colonnes sont affichées dans les états financiers: N et N-1
+✓ Format conforme au SYSCOHADA Révisé (2 colonnes obligatoires)
+
+Exemple de calcul:
+- Variation N-1 = N-1 - N-2
+- Cette variation est calculée mais N-2 n'apparaît pas dans l'affichage
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIER OBSOLÈTE À NE PLUS UTILISER
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ NE PLUS UTILISER: "BALANCES_N_N1_N2.xlsx"
+
+Raisons:
+- Onglets avec années: "BALANCE 2018 ", "BALANCE 2017 " (avec espaces)
+- Données imaginaires (pas de vraies données d'entité)
+- Structure non standard
+
+✅ UTILISER: "P000 -BALANCE DEMO N_N-1_N-2.xls"
+
+Raisons:
+- Onglets standard: "BALANCE N", "BALANCE N-1", "BALANCE N-2"
+- Vraies données d'une entité réelle
+- Structure standard pour tous les tests et la production
+
+═══════════════════════════════════════════════════════════════════════════════
+SCRIPTS UTILISANT CE FICHIER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. py_backend/generer_test_etats_controle_html.py
+   → Génère le HTML de test des états de contrôle
+
+2. py_backend/etats_financiers.py
+   → Endpoint principal /etats-financiers/process-excel
+
+3. Doc_Etat_Fin/Scripts/test-backend-simple.ps1
+   → Script de test du backend
+
+4. Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+   → Vérifie que N-2 est utilisé pour les calculs
+
+5. Doc_Etat_Fin/Scripts/test-etats-controle-html.ps1
+   → Teste la génération des états de contrôle
+
+═══════════════════════════════════════════════════════════════════════════════
+EXEMPLE DE CODE POUR CHARGER LE FICHIER
+═══════════════════════════════════════════════════════════════════════════════
+
+```python
+import pandas as pd
+import os
+
+# Chemin relatif depuis la racine du projet
+fichier = os.path.join("py_backend", "P000 -BALANCE DEMO N_N-1_N-2.xls")
+
+# Charger les onglets standard
+balance_n = pd.read_excel(fichier, sheet_name="BALANCE N")
+balance_n1 = pd.read_excel(fichier, sheet_name="BALANCE N-1")
+balance_n2 = pd.read_excel(fichier, sheet_name="BALANCE N-2")
+
+print(f"✅ Balance N chargée: {len(balance_n)} comptes")
+print(f"✅ Balance N-1 chargée: {len(balance_n1)} comptes")
+print(f"✅ Balance N-2 chargée: {len(balance_n2)} comptes")
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+VÉRIFICATION DES ONGLETS
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour vérifier les noms des onglets dans un fichier Excel:
+
+```python
+import pandas as pd
+
+fichier = "py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls"
+xls = pd.ExcelFile(fichier)
+
+print("Onglets disponibles:")
+for i, sheet_name in enumerate(xls.sheet_names, 1):
+    print(f"   {i}. '{sheet_name}'")
+```
+
+Résultat attendu:
+   1. 'BALANCE N'
+   2. 'BALANCE N-1'
+   3. 'BALANCE N-2'
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ COHÉRENCE DES DONNÉES:
+- Les balances N, N-1 et N-2 doivent être cohérentes
+- Le solde final de N-1 doit correspondre au solde initial de N
+- Le solde final de N-2 doit correspondre au solde initial de N-1
+
+⚠️ FORMAT LIASSE OFFICIELLE:
+- La liasse SYSCOHADA Révisé prévoit 2 colonnes: N et N-1
+- N-2 est utilisé en interne pour les calculs mais pas affiché
+- Les états de contrôle comparent N vs N-1
+
+⚠️ DÉTECTION AUTOMATIQUE:
+- Le backend détecte automatiquement les onglets par leur nom
+- Pas besoin de spécifier les années dans les noms d'onglets
+- La structure standard facilite la maintenance et les tests
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,80 @@
+================================================================================
+QUICK START - CORRECTION DOUBLE PROBLÈME
+================================================================================
+
+📋 RÉSUMÉ DES PROBLÈMES:
+
+1. États de contrôle ≠ frontend (8 états au lieu de 16)
+2. Aucune valeur dans ACTIF, PASSIF, RESULTAT
+
+================================================================================
+🚀 ACTIONS IMMÉDIATES
+================================================================================
+
+ÉTAPE 1: DIAGNOSTIC
+-------------------
+cd py_backend
+python test_export_double_probleme.py
+
+→ Ce script va montrer:
+  - Les états financiers générés (avec valeurs)
+  - Les états de contrôle générés (8 au lieu de 16)
+  - Le résultat de l'export
+
+
+ÉTAPE 2: LIRE LA DOCUMENTATION
+-------------------------------
+1. Lire: 00_DIAGNOSTIC_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+2. Lire: py_backend/CORRECTION_ETATS_CONTROLE_05_AVRIL_2026.md
+3. Lire: py_backend/CORRECTION_VALEURS_ETATS_FINANCIERS_05_AVRIL_2026.md
+
+
+ÉTAPE 3: CORRECTIONS À APPLIQUER
+---------------------------------
+
+CORRECTION 1: États de contrôle
+Fichier: py_backend/generer_onglet_controle_coherence.py
+Fonction: generer_etats_controle_pour_export()
+
+→ Remplacer pour générer les 16 états exhaustifs
+→ Utiliser la même source que le frontend
+
+CORRECTION 2: Valeurs états financiers
+Fichier: py_backend/export_liasse.py
+Fonction: remplir_liasse_officielle()
+
+→ Vérifier les mappings de cellules
+→ Utiliser les vraies références des postes
+
+================================================================================
+📁 FICHIERS CRÉÉS
+================================================================================
+
+✅ 00_DIAGNOSTIC_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   → Diagnostic complet et détaillé
+
+✅ py_backend/test_export_double_probleme.py
+   → Script de test pour reproduire les problèmes
+
+✅ py_backend/CORRECTION_ETATS_CONTROLE_05_AVRIL_2026.md
+   → Guide de correction des états de contrôle
+
+✅ py_backend/CORRECTION_VALEURS_ETATS_FINANCIERS_05_AVRIL_2026.md
+   → Guide de correction des valeurs
+
+✅ QUICK_START_CORRECTION_DOUBLE_PROBLEME.txt
+   → Ce fichier (guide rapide)
+
+================================================================================
+🎯 PRINCIPE FONDAMENTAL
+================================================================================
+
+"Utiliser strictement nos propres formules et valeurs qui en découlent 
+pour TOUTES les cellules concernées"
+
+- NE PAS utiliser les formules Excel du template
+- Les états de contrôle doivent être EXACTEMENT les mêmes qu'en frontend
+- Utiliser etats_financiers_v2.py comme source unique de vérité
+- Remplir TOUS les onglets avec NOS propres valeurs calculées
+
+================================================================================

@@ -1,0 +1,82 @@
+═══════════════════════════════════════════════════════════════════
+  QUICK START - EXPORT LIASSE OFFICIELLE EXCEL
+═══════════════════════════════════════════════════════════════════
+
+📋 UTILISATION RAPIDE
+═══════════════════════════════════════════════════════════════════
+
+1. Générer les états financiers:
+   - Uploader une balance Excel
+   - Attendre la génération complète
+
+2. Exporter la liasse:
+   - Clic droit sur la table
+   - Menu > Traitement Comptable
+   - Sélectionner "📋 Exporter Liasse Officielle"
+   - OU raccourci: Ctrl+Shift+O
+
+3. Saisir le nom de l'entreprise:
+   - Popup s'affiche
+   - Entrer le nom (ex: "ENTREPRISE SA")
+   - Valider
+
+4. Fichier téléchargé:
+   - Nom: Liasse_Officielle_[ENTREPRISE]_[ANNEE].xlsx
+   - Emplacement: Dossier Téléchargements
+   - Contenu: Liasse remplie avec les valeurs
+
+═══════════════════════════════════════════════════════════════════
+  FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════
+
+Backend:
+  ✅ py_backend/export_liasse.py (400 lignes)
+
+Frontend:
+  ✅ public/ExportLiasseHandler.js (200 lignes)
+
+Modifiés:
+  ✅ py_backend/main.py
+  ✅ py_backend/etats_financiers.py
+  ✅ public/menu.js
+  ✅ index.html
+
+═══════════════════════════════════════════════════════════════════
+  POINTS CLÉS
+═══════════════════════════════════════════════════════════════════
+
+✅ Template vierge préservé (py_backend/LIASSE.xlsx)
+✅ Export automatique avec copie
+✅ Nom personnalisé (entreprise + exercice)
+✅ Téléchargement direct
+✅ Accessible via menu contextuel
+✅ Raccourci clavier: Ctrl+Shift+O
+
+═══════════════════════════════════════════════════════════════════
+  MAPPING POSTES → CELLULES
+═══════════════════════════════════════════════════════════════════
+
+Bilan Actif:    30+ postes mappés (AD→C10, AI→C15, etc.)
+Bilan Passif:   25+ postes mappés (DA→E10, DH→E17, etc.)
+CR Charges:     15+ postes mappés (TA→C10, TK→C20, etc.)
+CR Produits:    15+ postes mappés (RA→E10, RB→E11, etc.)
+
+═══════════════════════════════════════════════════════════════════
+  TESTS À FAIRE
+═══════════════════════════════════════════════════════════════════
+
+1. Générer états financiers
+2. Exporter liasse
+3. Ouvrir fichier Excel téléchargé
+4. Vérifier que les valeurs sont présentes
+5. Ajuster mappings si nécessaire
+
+═══════════════════════════════════════════════════════════════════
+  DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════
+
+Voir: RECAPITULATIF_EXPORT_LIASSE.md
+
+═══════════════════════════════════════════════════════════════════
+  STATUT: ✅ PRÊT POUR TESTS
+═══════════════════════════════════════════════════════════════════

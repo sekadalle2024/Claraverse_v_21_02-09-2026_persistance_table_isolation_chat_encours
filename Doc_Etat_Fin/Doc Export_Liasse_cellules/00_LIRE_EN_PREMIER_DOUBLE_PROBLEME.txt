@@ -1,0 +1,96 @@
+================================================================================
+⚠️  LIRE EN PREMIER - DOUBLE PROBLÈME EXPORT LIASSE
+================================================================================
+
+📋 RÉSUMÉ ULTRA-RAPIDE:
+
+Vous avez signalé 2 problèmes dans l'export de la liasse fiscale:
+
+1. ❌ États de contrôle ≠ frontend (mauvais états affichés)
+2. ❌ Aucune valeur dans ACTIF, PASSIF, RESULTAT (même bilan actif vide)
+
+✅ J'ai analysé les fichiers et identifié les causes:
+
+PROBLÈME 1: generer_onglet_controle_coherence.py génère 8 états au lieu de 16
+PROBLÈME 2: export_liasse.py utilise des mappings de cellules incorrects
+
+================================================================================
+🚀 DÉMARRAGE RAPIDE (3 ÉTAPES)
+================================================================================
+
+ÉTAPE 1: LIRE LE DIAGNOSTIC (5 min)
+------------------------------------
+Ouvrir: 00_DIAGNOSTIC_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+
+→ Diagnostic complet avec analyse détaillée
+
+
+ÉTAPE 2: TESTER (1 min)
+------------------------
+Exécuter: .\test-double-probleme.ps1
+
+→ Script qui reproduit les problèmes et affiche le diagnostic
+
+
+ÉTAPE 3: LIRE LES CORRECTIONS (6 min)
+--------------------------------------
+1. py_backend/CORRECTION_ETATS_CONTROLE_05_AVRIL_2026.md
+2. py_backend/CORRECTION_VALEURS_ETATS_FINANCIERS_05_AVRIL_2026.md
+
+→ Guides détaillés pour corriger chaque problème
+
+================================================================================
+📁 TOUS LES FICHIERS CRÉÉS
+================================================================================
+
+✅ 00_INDEX_DOUBLE_PROBLEME_05_AVRIL_2026.md
+   → Index complet de tous les documents
+
+✅ 00_DIAGNOSTIC_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   → Diagnostic détaillé
+
+✅ 00_RECAP_ANALYSE_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   → Récapitulatif de l'analyse
+
+✅ QUICK_START_CORRECTION_DOUBLE_PROBLEME.txt
+   → Guide rapide
+
+✅ py_backend/test_export_double_probleme.py
+   → Script de test Python
+
+✅ test-double-probleme.ps1
+   → Script de test PowerShell
+
+✅ py_backend/CORRECTION_ETATS_CONTROLE_05_AVRIL_2026.md
+   → Guide correction états de contrôle
+
+✅ py_backend/CORRECTION_VALEURS_ETATS_FINANCIERS_05_AVRIL_2026.md
+   → Guide correction valeurs
+
+✅ 00_LIRE_EN_PREMIER_DOUBLE_PROBLEME.txt
+   → Ce fichier
+
+================================================================================
+💡 PRINCIPE CLÉ
+================================================================================
+
+"Utiliser strictement nos propres formules et valeurs qui en découlent 
+pour TOUTES les cellules concernées"
+
+→ Même source pour frontend et export: etats_financiers_v2.py
+→ 16 états de contrôle exhaustifs (pas 8)
+→ Toutes les valeurs renseignées (pas de cellules vides)
+
+================================================================================
+📞 BESOIN D'AIDE?
+================================================================================
+
+1. Lire: 00_INDEX_DOUBLE_PROBLEME_05_AVRIL_2026.md
+   → Organisation complète de tous les documents
+
+2. Exécuter: .\test-double-probleme.ps1
+   → Diagnostic automatique
+
+3. Lire les guides de correction dans py_backend/
+
+================================================================================

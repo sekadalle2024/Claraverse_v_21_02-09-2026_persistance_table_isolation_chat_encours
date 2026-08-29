@@ -1,0 +1,53 @@
+feat(etats-financiers): Ajout calcul colonnes BRUT, AMORT, NET pour ACTIF bilan
+
+Résolution du problème d'affichage des colonnes BRUT et AMORT ET DEPREC
+dans la section ACTIF du bilan SYSCOHADA Révisé.
+
+## Problème résolu
+- Menu accordéon affichait seulement la colonne NET
+- Colonnes BRUT et AMORT ET DEPREC manquantes
+- Non conforme au format liasse officielle SYSCOHADA
+
+## Solution implémentée
+- Module Python complet pour calcul automatique des 3 colonnes
+- Respect des normes SYSCOHADA Révisé
+- Format conforme liasse officielle
+
+## Fichiers créés
+- py_backend/calculer_actif_brut_amort.py (~400 lignes)
+  * calculer_actif_avec_brut_amort()
+  * calculer_totalisations_actif()
+  * generer_html_actif_detaille()
+  * enrichir_actif_avec_brut_amort()
+
+- test_actif_brut_amort.py (~250 lignes)
+- test-actif-brut-amort.ps1 (~50 lignes)
+
+## Documentation
+- Doc_Etat_Fin/Doc Bilan Actif/ (nouveau dossier)
+  * README.md
+  * 00_SOLUTION_ACTIF_BRUT_AMORT_07_AVRIL_2026.md
+  * QUICK_START_ACTIF_BRUT_AMORT.txt
+  * 00_INDEX_SOLUTION_ACTIF_BRUT_AMORT_07_AVRIL_2026.md
+  * 00_TESTS_REUSSIS_07_AVRIL_2026.txt
+
+## Principe de calcul
+- BRUT = Comptes classe 2 (hors 28 et 29)
+- AMORT ET DEPREC = Comptes 28 (amortissements) + 29 (provisions)
+- NET = BRUT - AMORT ET DEPREC
+
+## Tests
+✅ Tests exécutés avec succès
+✅ 11 postes calculés correctement
+✅ Totalisations validées (AZ, BP, BT, BZ)
+✅ HTML généré conforme SYSCOHADA
+
+## Prochaines étapes
+- Intégration dans py_backend/etats_financiers.py
+- Modification frontend (menu accordéon)
+- Intégration dans export Excel
+
+## Références
+- Balance: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+- Correspondances: py_backend/correspondances_syscohada.json
+- Architecture: Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md

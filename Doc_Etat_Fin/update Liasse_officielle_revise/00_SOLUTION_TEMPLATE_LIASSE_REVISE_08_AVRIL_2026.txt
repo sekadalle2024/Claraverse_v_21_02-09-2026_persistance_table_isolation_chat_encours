@@ -1,0 +1,274 @@
+================================================================================
+SOLUTION APPLIQUÉE - UTILISATION DU BON TEMPLATE LIASSE
+08 AVRIL 2026
+================================================================================
+
+📋 PROBLÈME IDENTIFIÉ
+================================================================================
+
+Le script d'export de la liasse officielle (py_backend/export_liasse.py) 
+utilisait le MAUVAIS fichier template.
+
+AVANT:
+------
+Ordre de priorité:
+  1. LIASSE.xlsx (ancien template)
+  2. Liasse officielle.xlsm (ancien template)
+  3. ❌ Liasse_officielle_revise.xlsx (JAMAIS utilisé)
+
+CONSÉQUENCE:
+- Le fichier Liasse_officielle_revise.xlsx (84 onglets SYSCOHADA Révisé) 
+  n'était JAMAIS utilisé
+- L'export utilisait un ancien template avec une structure différente
+- Les onglets et colonnes ne correspondaient pas aux données générées
+
+================================================================================
+✅ SOLUTION APPLIQUÉE
+================================================================================
+
+MODIFICATION: py_backend/export_liasse.py
+-----------------------------------------
+
+Ligne ~205-215 (fonction remplir_liasse_officielle):
+
+AVANT:
+```python
+# Chemin du template (fichier vierge)
+template_path = "LIASSE.xlsx"
+if not os.path.exists(template_path):
+    # Essayer avec l'autre nom
+    template_path = "Liasse officielle.xlsm"
+    if not os.path.exists(template_path):
+        raise FileNotFoundError("Fichier template de liasse non trouvé")
+```
+
+APRÈS:
+```python
+# Chemin du template (fichier vierge)
+# PRIORITÉ: Utiliser Liasse_officielle_revise.xlsx (84 onglets SYSCOHADA Révisé)
+template_path = "Liasse_officielle_revise.xlsx"
+if not os.path.exists(template_path):
+    # Fallback vers anciens templates
+    template_path = "LIASSE.xlsx"
+    if not os.path.exists(template_path):
+        template_path = "Liasse officielle.xlsm"
+        if not os.path.exists(template_path):
+            raise FileNotFoundError("Fichier template de liasse non trouvé (Liasse_officielle_revise.xlsx, LIASSE.xlsx ou Liasse officielle.xlsm)")
+```
+
+CHANGEMENTS:
+1. ✅ Liasse_officielle_revise.xlsx est maintenant en PRIORITÉ
+2. ✅ Fallback vers anciens templates conservé (compatibilité)
+3. ✅ Message d'erreur amélioré avec tous les noms de fichiers
+
+================================================================================
+📊 CARACTÉRISTIQUES DU TEMPLATE CORRECT
+================================================================================
+
+Fichier: py_backend/Liasse_officielle_revise.xlsx
+-------------------------------------------------
+
+Caractéristiques:
+- 📋 84 onglets (conforme SYSCOHADA Révisé)
+- 📄 Structure officielle complète
+- ✅ Tous les états financiers
+- ✅ Toutes les annexes
+- ✅ Onglets de contrôle
+
+Onglets principaux:
+- BILAN-ACTIF (ou variante)
+- BILAN-PASSIF (ou variante)
+- COMPTE-RESULTAT (ou variante)
+- TABLEAU-FLUX-TRESORERIE
+- ANNEXES (multiples)
+- Onglets de contrôle
+
+Format:
+- Colonnes pour N et N-1
+- Colonnes BRUT, AMORTISSEMENT, NET (pour ACTIF)
+- Références de postes SYSCOHADA
+- Formules de totalisation
+
+================================================================================
+🧪 TESTS DE VÉRIFICATION
+================================================================================
+
+TEST 1: Vérifier que le fichier existe
+---------------------------------------
+Commande PowerShell:
+```powershell
+Test-Path "py_backend/Liasse_officielle_revise.xlsx"
+```
+
+Résultat attendu: True
+
+TEST 2: Vérifier le nombre d'onglets
+-------------------------------------
+Commande Python:
+```python
+cd py_backend
+python -c "from openpyxl import load_workbook; wb = load_workbook('Liasse_officielle_revise.xlsx'); print(f'Onglets: {len(wb.sheetnames)}')"
+```
+
+Résultat attendu: Onglets: 84 (ou nombre similaire)
+
+TEST 3: Vérifier que le code utilise le bon fichier
+----------------------------------------------------
+Commande PowerShell:
+```powershell
+Select-String -Path "py_backend/export_liasse.py" -Pattern "Liasse_officielle_revise"
+```
+
+Résultat attendu: Ligne trouvée avec template_path = "Liasse_officielle_revise.xlsx"
+
+TEST 4: Script de test automatique
+-----------------------------------
+Commande:
+```powershell
+.\test-template-liasse-revise.ps1
+```
+
+Résultat attendu:
+- ✅ Fichier trouvé
+- ✅ Code référence le bon fichier
+- ✅ Liasse_officielle_revise.xlsx en priorité
+- ✅ Onglets chargés avec succès
+
+================================================================================
+🎯 IMPACT DE LA CORRECTION
+================================================================================
+
+AVANT LA CORRECTION:
+--------------------
+❌ Mauvais template utilisé (LIASSE.xlsx)
+❌ Structure incompatible avec les données générées
+❌ Onglets vides ou mal remplis
+❌ Erreurs de génération des états de contrôle
+
+APRÈS LA CORRECTION:
+--------------------
+✅ Bon template utilisé (Liasse_officielle_revise.xlsx)
+✅ Structure compatible avec les données générées
+✅ 84 onglets conformes SYSCOHADA Révisé
+✅ Meilleure chance de remplissage correct
+
+ATTENTION:
+----------
+Cette correction résout le problème du TEMPLATE, mais il peut rester des 
+problèmes de REMPLISSAGE si:
+- Les noms d'onglets ne correspondent pas exactement
+- Les numéros de lignes/colonnes sont différents
+- Les mappings MAPPING_BILAN_ACTIF, etc. ne correspondent pas
+
+Si le problème persiste après cette correction, il faudra:
+1. Ouvrir Liasse_officielle_revise.xlsx
+2. Noter les noms EXACTS des onglets
+3. Noter les colonnes EXACTES pour N et N-1
+4. Mettre à jour les mappings dans export_liasse.py
+
+================================================================================
+📁 FICHIERS MODIFIÉS
+================================================================================
+
+1. py_backend/export_liasse.py
+   Modification: Ligne ~205-215
+   Changement: Priorité du template vers Liasse_officielle_revise.xlsx
+
+2. test-template-liasse-revise.ps1 (NOUVEAU)
+   Rôle: Script de test automatique
+   Vérifie: Fichier, code, onglets
+
+3. 00_SOLUTION_TEMPLATE_LIASSE_REVISE_08_AVRIL_2026.txt (ce fichier)
+   Rôle: Documentation de la solution
+
+================================================================================
+🚀 PROCHAINES ÉTAPES
+================================================================================
+
+ÉTAPE 1: TESTER LA CORRECTION (5 min)
+--------------------------------------
+```powershell
+# Vérifier que tout est en place
+.\test-template-liasse-revise.ps1
+```
+
+ÉTAPE 2: DÉMARRER LE BACKEND (1 min)
+-------------------------------------
+```powershell
+cd py_backend
+python main.py
+```
+
+ÉTAPE 3: TEST COMPLET DANS L'INTERFACE (10 min)
+------------------------------------------------
+1. Ouvrir l'interface web (http://localhost:5000)
+2. Taper "Etat fin" dans le chat
+3. Charger le fichier "P000 -BALANCE DEMO N_N-1_N-2.xls"
+4. Attendre la génération des états financiers
+5. Cliquer sur "Exporter Liasse Officielle" dans le menu contextuel
+6. Vérifier le fichier Excel téléchargé:
+   - Onglets présents?
+   - Données remplies?
+   - Onglet "Contrôle de cohérence" présent?
+
+ÉTAPE 4: SI PROBLÈME PERSISTE
+------------------------------
+Si les onglets sont toujours vides après cette correction:
+
+1. Ouvrir manuellement: py_backend/Liasse_officielle_revise.xlsx
+2. Noter les noms EXACTS des onglets (ex: "BILAN-ACTIF" ou "Bilan Actif"?)
+3. Noter les colonnes pour N et N-1 (ex: C et D? E et F?)
+4. Comparer avec le code dans export_liasse.py
+5. Mettre à jour les mappings si nécessaire
+
+Voir: 00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+Section 7: PLAN D'ACTION POUR RÉSOLUTION
+
+================================================================================
+📞 RÉFÉRENCE
+================================================================================
+
+Documents connexes:
+- 00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+- 00_INDEX_PROBLEME_EXPORT_LIASSE_05_AVRIL_2026.txt
+- 00_CORRECTIONS_FINALES_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+- Doc_Etat_Fin/STRUCTURE_LIASSE_OFFICIELLE.md
+
+Fichiers impliqués:
+- py_backend/export_liasse.py (modifié)
+- py_backend/Liasse_officielle_revise.xlsx (template)
+- py_backend/generer_onglet_controle_coherence.py
+- py_backend/etats_controle_exhaustifs.py
+- py_backend/etats_financiers_v2.py
+
+================================================================================
+✅ RÉSUMÉ
+================================================================================
+
+PROBLÈME:
+  ❌ Script utilisait LIASSE.xlsx au lieu de Liasse_officielle_revise.xlsx
+
+SOLUTION:
+  ✅ Changé la priorité du template vers Liasse_officielle_revise.xlsx
+  ✅ Conservé fallback vers anciens templates
+  ✅ Amélioré message d'erreur
+
+IMPACT:
+  ✅ Le bon template (84 onglets SYSCOHADA Révisé) est maintenant utilisé
+  ✅ Structure compatible avec les données générées
+  ⚠️  Peut nécessiter ajustements supplémentaires des mappings
+
+TESTS:
+  ✅ Script de test créé: test-template-liasse-revise.ps1
+  ⏳ Test complet à effectuer dans l'interface web
+
+STATUT:
+  ✅ CORRECTION APPLIQUÉE
+  ⏳ EN ATTENTE DE VALIDATION
+
+================================================================================
+DATE: 08 Avril 2026
+AUTEUR: Kiro AI Assistant
+STATUT: ✅ CORRECTION APPLIQUÉE - EN ATTENTE DE VALIDATION
+================================================================================

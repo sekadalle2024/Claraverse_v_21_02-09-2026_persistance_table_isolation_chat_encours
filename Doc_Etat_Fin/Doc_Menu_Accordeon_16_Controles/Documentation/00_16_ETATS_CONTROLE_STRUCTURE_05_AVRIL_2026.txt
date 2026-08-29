@@ -1,0 +1,123 @@
+═══════════════════════════════════════════════════════════════════════════════
+📊 STRUCTURE DES 16 ÉTATS DE CONTRÔLE - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ STRUCTURE EXTRAITE DU FICHIER HTML DE RÉFÉRENCE
+
+Le fichier test_etats_controle_html.html contient 16 sections d'états de contrôle:
+
+EXERCICE N (8 états):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. 📊 Statistiques de Couverture (Exercice N)
+   - Comptes dans la balance
+   - Comptes intégrés
+   - Comptes non intégrés
+   - Taux de couverture
+
+2. ⚖️ Équilibre du Bilan (Exercice N)
+   - Total Actif
+   - Total Passif
+   - Différence (Actif - Passif)
+   - Pourcentage d'écart
+
+3. 💰 Cohérence Résultat (Exercice N)
+   - Résultat Compte de Résultat
+   - Résultat Bilan
+   - Différence
+
+4. ⚠️ Comptes Non Intégrés (Exercice N)
+   - Liste des comptes non intégrés avec détails
+   - Impact financier
+
+5. 🔄 Comptes avec Sens Inversé (Exercice N)
+   - Liste des comptes avec sens contraire
+   - Comparaison sens attendu vs réel
+
+6. ⚠️ Comptes Créant un Déséquilibre (Exercice N)
+   - Comptes avec sens incorrect pour leur section
+
+7. 💡 Hypothèse d'Affectation du Résultat (Exercice N)
+   - Situation actuelle
+   - Hypothèse avec affectation
+   - Validation équilibre
+
+8. 🚨 Comptes avec Sens Anormal par Nature (Exercice N)
+   - Comptes CRITIQUES
+   - Comptes ÉLEVÉS
+   - Actions correctives
+
+EXERCICE N-1 (8 états identiques):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+9. 📊 Statistiques de Couverture (Exercice N-1)
+10. ⚖️ Équilibre du Bilan (Exercice N-1)
+11. 💰 Cohérence Résultat (Exercice N-1)
+12. ⚠️ Comptes Non Intégrés (Exercice N-1)
+13. 🔄 Comptes avec Sens Inversé (Exercice N-1)
+14. ⚠️ Comptes Créant un Déséquilibre (Exercice N-1)
+15. 💡 Hypothèse d'Affectation du Résultat (Exercice N-1)
+16. 🚨 Comptes avec Sens Anormal par Nature (Exercice N-1)
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 STRUCTURE DOM
+═══════════════════════════════════════════════════════════════════════════════
+
+Chaque section suit cette structure:
+
+<div class="section [active]">
+    <div class="section-header" onclick="toggleSection(this)">
+        <span>[ICÔNE] [NUMÉRO]. [TITRE]</span>
+        <span class="arrow">›</span>
+    </div>
+    <div class="section-content">
+        <div class="section-body">
+            <!-- Contenu avec badges, tableaux, info-box, etc. -->
+        </div>
+    </div>
+</div>
+
+═══════════════════════════════════════════════════════════════════════════════
+🎨 ÉLÉMENTS VISUELS
+═══════════════════════════════════════════════════════════════════════════════
+
+BADGES:
+- badge-success (vert): ✓ Validé
+- badge-warning (orange): ⚠ À vérifier
+- badge-danger (rouge): ✗ Erreur
+- badge-info (bleu): ℹ Information
+- badge-critical (rouge clignotant): 🚨 Critique
+
+BOÎTES:
+- info-box (bleu): Informations
+- warning-box (orange): Avertissements
+- success-box (vert): Succès
+- danger-box (rouge): Dangers/Erreurs critiques
+
+TABLEAUX:
+- thead: En-têtes avec gradient violet
+- tbody: Lignes avec hover
+- total-row: Lignes de total en gras
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ TRAVAIL ACCOMPLI
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Extraction de la structure HTML de référence
+2. ✅ Identification des 16 sections d'états de contrôle
+3. ✅ Correction des titres dans py_backend/etats_controle_exhaustifs.py
+4. ✅ Mise à jour de py_backend/html_etats_controle.py pour 16 états
+5. ⏳ EN COURS: Mise à jour du composant React pour 16 états
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Mettre à jour le composant React EtatsControleAccordionRenderer.tsx
+2. Intégrer les 16 états dans le backend py_backend/etats_financiers.py
+3. Tester le workflow complet
+4. Vérifier l'affichage dans le frontend
+
+═══════════════════════════════════════════════════════════════════════════════
+📅 Date: 05 Avril 2026
+═══════════════════════════════════════════════════════════════════════════════

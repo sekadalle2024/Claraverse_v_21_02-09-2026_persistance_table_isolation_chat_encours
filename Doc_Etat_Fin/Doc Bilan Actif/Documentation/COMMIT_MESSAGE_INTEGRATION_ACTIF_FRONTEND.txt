@@ -1,0 +1,47 @@
+feat: Integration frontend ACTIF avec colonnes BRUT, AMORT, NET
+
+Résolution du problème d'affichage des colonnes BRUT, AMORT ET DEPREC, NET
+dans le menu accordéon du bilan ACTIF.
+
+## Problème
+Le backend générait correctement le HTML enrichi avec les 7 colonnes, mais
+le frontend l'ignorait et reconstruisait son propre HTML simplifié avec
+seulement la colonne NET.
+
+## Solution
+Modification de public/menu.js pour utiliser le HTML généré par le backend:
+- insertEtatsFinanciersResults(): Détection et utilisation de result.html
+- setupEtatsFinanciersAccordions(): Support des accordéons backend
+
+## Avantages
+- Rétrocompatibilité: Fallback vers l'ancien format si result.html absent
+- Séparation des responsabilités: Backend calcule, Frontend affiche
+- Conformité SYSCOHADA: 7 colonnes conformes au format liasse officielle
+- Maintenabilité: Code modulaire, tests automatisés, documentation complète
+
+## Fichiers modifiés
+- public/menu.js: Utilisation du HTML backend
+
+## Fichiers créés
+- test-integration-actif-simple.ps1: Test d'intégration
+- START_HERE_SOLUTION_ACTIF.txt: Démarrage rapide
+- 00_LIRE_MAINTENANT_SOLUTION_ACTIF_07_AVRIL_2026.txt: Instructions détaillées
+- SYNTHESE_VISUELLE_SOLUTION_ACTIF_07_AVRIL_2026.md: Synthèse visuelle
+- 00_SOLUTION_INTEGRATION_ACTIF_FRONTEND_07_AVRIL_2026.txt: Solution complète
+- Doc_Etat_Fin/Doc Bilan Actif/00_INDEX_SOLUTION_COMPLETE_07_AVRIL_2026.md
+- 00_MISSION_ACCOMPLIE_INTEGRATION_FRONTEND_07_AVRIL_2026.txt: Récapitulatif
+
+## Tests
+✅ test-integration-actif-simple.ps1: Tous les tests passent
+⏳ Tests manuels: À effectuer dans le navigateur
+
+## Documentation
+Documentation complète disponible dans:
+- Doc_Etat_Fin/Doc Bilan Actif/
+- Fichiers récapitulatifs à la racine du projet
+
+## Prochaines étapes
+- Tests manuels dans le navigateur
+- Validation par l'utilisateur
+- Export Excel (ajouter colonnes BRUT et AMORT)
+- Intégration N-1

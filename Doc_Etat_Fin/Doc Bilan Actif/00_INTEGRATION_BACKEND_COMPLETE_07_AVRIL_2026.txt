@@ -1,0 +1,215 @@
+═══════════════════════════════════════════════════════════════════════════
+  INTÉGRATION BACKEND COMPLÉTÉE - ACTIF BRUT/AMORT/NET
+═══════════════════════════════════════════════════════════════════════════
+
+Date: 07 Avril 2026
+Statut: ✅ INTÉGRATION BACKEND TERMINÉE
+
+═══════════════════════════════════════════════════════════════════════════
+📋 MODIFICATIONS APPORTÉES
+═══════════════════════════════════════════════════════════════════════════
+
+1. IMPORT DU MODULE
+   ─────────────────
+   Fichier: py_backend/etats_financiers.py
+   Ligne: ~18
+   
+   Ajout:
+   ```python
+   # Import du module ACTIF BRUT/AMORT
+   from calculer_actif_brut_amort import enrichir_actif_avec_brut_amort
+   ```
+
+2. ENRICHISSEMENT DANS process_balance_to_etats_financiers()
+   ──────────────────────────────────────────────────────────
+   Fichier: py_backend/etats_financiers.py
+   Ligne: ~450
+   
+   Ajout avant le return:
+   ```python
+   # Enrichir l'actif avec colonnes BRUT, AMORT ET DEPREC, NET
+   logger.info("📊 Enrichissement ACTIF avec colonnes BRUT, AMORT, NET...")
+   actif_enrichi = enrichir_actif_avec_brut_amort(balance_df, correspondances, col_map)
+   ```
+   
+   Modification du return:
+   ```python
+   return {
+       'bilan_actif': results['bilan_actif'],
+       'bilan_passif': results['bilan_passif'],
+       'charges': results['charges'],
+       'produits': results['produits'],
+       'totaux': {...},
+       'controles': controles,
+       'actif_detaille': actif_enrichi['actif_detaille'],  # ← NOUVEAU
+       'actif_html': actif_enrichi['html']                  # ← NOUVEAU
+   }
+   ```
+
+3. AFFICHAGE HTML ENRICHI
+   ───────────────────────
+   Fichier: py_backend/etats_financiers.py
+   Ligne: ~700
+   
+   Remplacement:
+   ```python
+   # Bilan Actif - Version enrichie avec BRUT, AMORT ET DEPREC, NET
+   if 'actif_html' in results and results['actif_html']:
+       logger.info("📊 Utilisation du HTML ACTIF enrichi (BRUT, AMORT, NET)")
+       html += results['actif_html']
+   else:
+       # Fallback vers la version standard
+       logger.warning("⚠️ HTML ACTIF enrichi non disponible, utilisation de la version standard")
+       html += generate_section_html(...)
+   ```
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TESTS À EXÉCUTER
+═══════════════════════════════════════════════════════════════════════════
+
+1. TEST IMPORT MODULE
+   ──────────────────
+   ```powershell
+   conda activate claraverse_backend
+   python -c "from py_backend.calculer_actif_brut_amort import enrichir_actif_avec_brut_amort; print('✅ OK')"
+   ```
+
+2. TEST IMPORT ETATS_FINANCIERS
+   ─────────────────────────────
+   ```powershell
+   python -c "from py_backend.etats_financiers import process_balance_to_etats_financiers; print('✅ OK')"
+   ```
+
+3. TEST COMPLET
+   ────────────
+   ```powershell
+   .\test-integration-actif-backend.ps1
+   ```
+   
+   OU
+   
+   ```powershell
+   python test_actif_brut_amort.py
+   ```
+
+4. TEST ENDPOINT API
+   ──────────────────
+   ```powershell
+   # Démarrer le backend
+   cd py_backend
+   python main.py
+   
+   # Dans un autre terminal, tester avec curl ou Postman
+   # Endpoint: POST http://127.0.0.1:5000/etats-financiers/process-excel
+   ```
+
+═══════════════════════════════════════════════════════════════════════════
+📊 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Après traitement d'une balance:
+
+1. CONSOLE BACKEND
+   ───────────────
+   ```
+   📊 Traitement de la balance pour états financiers
+   🔍 Colonnes détectées: {...}
+   📊 Enrichissement ACTIF avec colonnes BRUT, AMORT, NET...
+   📊 Calcul ACTIF avec colonnes BRUT, AMORT ET DEPREC, NET
+   ✅ Calcul ACTIF terminé:
+      AA - Frais d'établissement: BRUT=0, AMORT=0, NET=0
+      AF - Brevets: BRUT=23,125,988, AMORT=23,125,987, NET=1
+      ...
+   📊 Utilisation du HTML ACTIF enrichi (BRUT, AMORT, NET)
+   ```
+
+2. RÉPONSE API
+   ───────────
+   ```json
+   {
+     "success": true,
+     "message": "États financiers générés avec succès",
+     "results": {
+       "bilan_actif": {...},
+       "actif_detaille": {
+         "AA": {"ref": "AA", "brut": 0, "amort_deprec": 0, "net": 0},
+         "AF": {"ref": "AF", "brut": 23125988, "amort_deprec": 23125987, "net": 1},
+         ...
+       },
+       "actif_html": "<div class='actif-detaille-container'>...</div>"
+     },
+     "html": "..."
+   }
+   ```
+
+3. HTML GÉNÉRÉ
+   ───────────
+   Tableau avec 7 colonnes:
+   - REF
+   - ACTIF (libellé)
+   - NOTE
+   - BRUT
+   - AMORT ET DEPREC
+   - NET
+   - NET N-1
+
+═══════════════════════════════════════════════════════════════════════════
+🔄 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✅ BACKEND INTÉGRÉ (FAIT)
+
+2. ⏳ FRONTEND À INTÉGRER
+   ─────────────────────
+   Fichier: public/EtatFinAutoTrigger.js
+   
+   Modification nécessaire:
+   - Utiliser results.actif_html au lieu de générer le HTML côté client
+   - Insérer le HTML enrichi dans le menu accordéon
+   - Tester l'affichage dans le navigateur
+
+3. ⏳ EXPORT EXCEL
+   ───────────────
+   Fichier: py_backend/export_liasse.py
+   
+   Modification nécessaire:
+   - Ajouter colonnes BRUT et AMORT dans l'export
+   - Mapper vers template Excel liasse officielle
+
+═══════════════════════════════════════════════════════════════════════════
+📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. py_backend/etats_financiers.py
+   - Import du module calculer_actif_brut_amort
+   - Appel de enrichir_actif_avec_brut_amort()
+   - Ajout de actif_detaille et actif_html dans le return
+   - Utilisation du HTML enrichi dans generate_etats_financiers_html()
+
+2. test-integration-actif-backend.ps1 (NOUVEAU)
+   - Script de test automatisé pour l'intégration backend
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST INTÉGRATION BACKEND
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Import du module dans etats_financiers.py
+[✅] Appel de enrichir_actif_avec_brut_amort() dans process_balance_to_etats_financiers()
+[✅] Ajout de actif_detaille et actif_html dans le return
+[✅] Utilisation du HTML enrichi dans generate_etats_financiers_html()
+[✅] Fallback vers version standard si enrichissement non disponible
+[✅] Script de test créé
+[ ] Tests exécutés et validés
+[ ] Intégration frontend
+[ ] Export Excel
+
+═══════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION ASSOCIÉE
+═══════════════════════════════════════════════════════════════════════════
+
+- README.md (ce dossier)
+- 00_SOLUTION_ACTIF_BRUT_AMORT_07_AVRIL_2026.md
+- 00_TESTS_REUSSIS_07_AVRIL_2026.txt
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+
+═══════════════════════════════════════════════════════════════════════════

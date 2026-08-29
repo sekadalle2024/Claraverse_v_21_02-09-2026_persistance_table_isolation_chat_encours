@@ -1,0 +1,110 @@
+================================================================================
+DIAGNOSTIC COMPLET - DOUBLE PROBLÈME EXPORT LIASSE
+05 AVRIL 2026
+================================================================================
+
+PROBLÈMES IDENTIFIÉS:
+
+1. ❌ ÉTATS DE CONTRÔLE INCORRECTS
+   - Les états de contrôle dans l'export Excel ne correspondent PAS au frontend
+   - Cause: generer_onglet_controle_coherence.py génère 8 états simplifiés
+   - Attendu: 16 états exhaustifs (comme le menu accordéon frontend)
+
+2. ❌ AUCUNE VALEUR RENSEIGNÉE DANS LES ÉTATS FINANCIERS
+   - Onglets ACTIF, PASSIF, RESULTAT sont vides
+   - Même le bilan actif n'a aucune valeur
+   - Cause: Les mappings de cellules ne correspondent pas aux références réelles
+
+================================================================================
+ANALYSE DÉTAILLÉE
+================================================================================
+
+PROBLÈME 1: ÉTATS DE CONTRÔLE
+------------------------------
+
+Fichier concerné: py_backend/generer_onglet_controle_coherence.py
+Fonction: generer_etats_controle_pour_export()
+
+ÉTAT ACTUEL:
+- Génère seulement 8 états simplifiés
+- N'utilise pas la même source que le frontend
+- États 9-16 sont des placeholders vides
+
+ÉTAT ATTENDU:
+- 16 états exhaustifs complets
+- Utiliser etats_controle_exhaustifs.py (MÊME SOURCE que frontend)
+- États 1-8: Exercice N
+- États 9-16: Exercice N-1
+
+RÉFÉRENCE FRONTEND:
+- etats_controle_exhaustifs.py → generer_controles_exhaustifs()
+- etats_controle_exhaustifs_html.py → generate_all_16_etats_controle_html()
+
+
+PROBLÈME 2: VALEURS NON RENSEIGNÉES
+------------------------------------
+
+Fichier concerné: py_backend/export_liasse.py
+Fonction: remplir_liasse_officielle()
+
+ÉTAT ACTUEL:
+- Les mappings MAPPING_BILAN_ACTIF, MAPPING_BILAN_PASSIF, etc. utilisent
+  des références qui ne correspondent PAS aux postes générés
+- Exemple: Mapping utilise 'AD', 'AE', 'AF'
+  Mais les postes réels ont d'autres références
+
+ÉTAT ATTENDU:
+- Utiliser les VRAIES références des postes de etats_financiers_v2.py
+- Remplir TOUS les onglets avec NOS propres valeurs
+- NE PAS utiliser les formules Excel du template
+
+PRINCIPE FONDAMENTAL:
+"Utiliser strictement nos propres formules et valeurs qui en découlent 
+pour TOUTES les cellules concernées"
+
+================================================================================
+FICHIERS CRÉÉS POUR DIAGNOSTIC
+================================================================================
+
+1. py_backend/test_export_double_probleme.py
+   → Script de test pour reproduire les problèmes
+
+2. py_backend/CORRECTION_ETATS_CONTROLE_05_AVRIL_2026.md
+   → Documentation détaillée de la correction des états de contrôle
+
+3. py_backend/CORRECTION_VALEURS_ETATS_FINANCIERS_05_AVRIL_2026.md
+   → Documentation détaillée de la correction des valeurs
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+1. Exécuter le script de test:
+   cd py_backend
+   python test_export_double_probleme.py
+
+2. Corriger generer_onglet_controle_coherence.py:
+   - Remplacer generer_etats_controle_pour_export()
+   - Utiliser la même source que le frontend
+
+3. Corriger export_liasse.py:
+   - Vérifier les références réelles des postes
+   - Mettre à jour les mappings de cellules
+   - Ou utiliser un mapping dynamique
+
+4. Tester l'export complet avec de vraies données
+
+================================================================================
+RÉFÉRENCES
+================================================================================
+
+Frontend (source de vérité):
+- py_backend/etats_financiers_v2.py
+- py_backend/etats_controle_exhaustifs.py
+- py_backend/etats_controle_exhaustifs_html.py
+
+Export Excel (à corriger):
+- py_backend/export_liasse.py
+- py_backend/generer_onglet_controle_coherence.py
+
+================================================================================

@@ -1,0 +1,197 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📊 AFFICHAGE N ET N-1 (avec N-2 utilisé en calcul)
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 04 Avril 2026
+🎯 Objectif: Clarifier l'utilisation de N-2 dans les états financiers
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 PRINCIPE DE FONCTIONNEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+N-2 EST UTILISÉ MAIS PAS AFFICHÉ
+
+1. CHARGEMENT
+   ✅ N-2 est chargé depuis le fichier Excel (onglet "BALANCE N-2")
+   ✅ N-2 est stocké en mémoire dans la structure de données
+
+2. CALCULS
+   ✅ N-2 est utilisé pour calculer les variations de N-1
+   ✅ N-2 est utilisé dans le TFT (Tableau des Flux de Trésorerie)
+   ✅ N-2 permet de calculer les évolutions sur 3 exercices
+
+3. AFFICHAGE
+   ✅ Seules 2 colonnes sont affichées: N et N-1
+   ❌ N-2 n'est PAS affiché dans les tableaux
+   ✅ Format conforme au SYSCOHADA Révisé (liasse officielle)
+
+═══════════════════════════════════════════════════════════════════════════════
+  📁 STRUCTURE DES DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+Chaque poste contient 3 montants:
+
+{
+    'ref': 'TA',
+    'libelle': 'Ventes de marchandises',
+    'note': '21',
+    'montant_n': 1000000,      ← Affiché
+    'montant_n1': 950000,      ← Affiché
+    'montant_n2': 900000       ← Utilisé mais PAS affiché
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 UTILISATION DE N-2
+═══════════════════════════════════════════════════════════════════════════════
+
+N-2 est utilisé pour:
+
+1. TABLEAU DES FLUX DE TRÉSORERIE (TFT)
+   • Calcul des variations de trésorerie N-1 vs N-2
+   • Analyse des flux sur 3 exercices
+   • Détection des tendances
+
+2. ÉTATS DE CONTRÔLE
+   • Vérification de la cohérence sur 3 exercices
+   • Détection des anomalies
+   • Analyse des évolutions
+
+3. ANNEXES
+   • Notes explicatives sur les variations
+   • Tableaux de mouvements
+   • Analyses comparatives
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 FORMAT D'AFFICHAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+TABLEAU AFFICHÉ (2 colonnes):
+
+┌─────┬──────────────────────────────┬──────┬─────────────┬─────────────┐
+│ REF │ LIBELLÉS                     │ NOTE │ EXERCICE N  │ EXERCICE N-1│
+├─────┼──────────────────────────────┼──────┼─────────────┼─────────────┤
+│ TA  │ Ventes de marchandises       │  21  │  1 000 000  │    950 000  │
+│ TB  │ Ventes de produits finis     │  21  │    500 000  │    480 000  │
+│ XA  │ CHIFFRE D'AFFAIRES           │      │  1 500 000  │  1 430 000  │
+└─────┴──────────────────────────────┴──────┴─────────────┴─────────────┘
+
+DONNÉES EN MÉMOIRE (3 montants):
+
+{
+    'TA': { n: 1000000, n1: 950000, n2: 900000 },
+    'TB': { n: 500000, n1: 480000, n2: 450000 },
+    'XA': { n: 1500000, n1: 1430000, n2: 1350000 }
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔧 FICHIERS CONCERNÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+BACKEND:
+• py_backend/etats_financiers_v2.py
+  → process_balance_to_liasse_format()
+    Calcule montant_n, montant_n1, montant_n2
+
+  → generate_section_html_liasse()
+    Affiche seulement montant_n et montant_n1
+
+• py_backend/tableau_flux_tresorerie_v2.py
+  → calculer_tft_liasse()
+    Utilise N-2 pour les variations de N-1
+
+• py_backend/etats_controle_exhaustifs.py
+  → Utilise N-2 pour les contrôles
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+SCRIPT DE TEST:
+.\Doc_Etat_Fin\Scripts\test-affichage-n-n1.ps1
+
+Ce script vérifie:
+1. ✅ N-2 est bien chargé depuis le fichier Excel
+2. ✅ N-2 est utilisé dans les calculs
+3. ✅ Seules 2 colonnes sont affichées (N et N-1)
+4. ✅ Format conforme au SYSCOHADA
+
+RÉSULTAT:
+• Rapport HTML généré sur le bureau
+• Nom: test_affichage_n_n1_avec_n2_calcul.html
+
+═══════════════════════════════════════════════════════════════════════════════
+  📚 CONFORMITÉ SYSCOHADA
+═══════════════════════════════════════════════════════════════════════════════
+
+Le format liasse officielle SYSCOHADA Révisé prévoit:
+
+✅ 2 COLONNES OBLIGATOIRES:
+   • Exercice N (année en cours)
+   • Exercice N-1 (année précédente)
+
+❌ N-2 N'EST PAS DANS LA LIASSE OFFICIELLE:
+   • N-2 est utilisé en interne pour les calculs
+   • N-2 n'apparaît pas dans les états publiés
+   • N-2 sert aux analyses et contrôles
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 AVANTAGES DE CETTE APPROCHE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. CONFORMITÉ
+   ✅ Format conforme au SYSCOHADA Révisé
+   ✅ Liasse officielle respectée
+   ✅ Prêt pour dépôt légal
+
+2. RICHESSE DES CALCULS
+   ✅ Analyse sur 3 exercices
+   ✅ Détection des tendances
+   ✅ Contrôles exhaustifs
+
+3. FLEXIBILITÉ
+   ✅ N-2 disponible si besoin
+   ✅ Peut être affiché dans des rapports internes
+   ✅ Utilisé pour les analyses avancées
+
+═══════════════════════════════════════════════════════════════════════════════
+  📝 EXEMPLE CONCRET
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIER EXCEL:
+• Onglet "BALANCE N" → Exercice 2025
+• Onglet "BALANCE N-1" → Exercice 2024
+• Onglet "BALANCE N-2" → Exercice 2023
+
+AFFICHAGE LIASSE:
+┌──────────────────────────────┬─────────────┬─────────────┐
+│ LIBELLÉS                     │ 2025 (N)    │ 2024 (N-1)  │
+├──────────────────────────────┼─────────────┼─────────────┤
+│ Ventes de marchandises       │  1 000 000  │    950 000  │
+└──────────────────────────────┴─────────────┴─────────────┘
+
+CALCULS INTERNES (avec 2023):
+• Variation N vs N-1: +50 000 (+5.3%)
+• Variation N-1 vs N-2: +50 000 (+5.6%)
+• Tendance: Croissance stable
+
+═══════════════════════════════════════════════════════════════════════════════
+  🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST AFFICHAGE:
+.\Doc_Etat_Fin\Scripts\test-affichage-n-n1.ps1
+
+GÉNÉRATION ÉTATS COMPLETS:
+cd py_backend
+conda run -n claraverse_backend python generer_etats_liasse.py
+
+VÉRIFICATION CODE:
+python Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ N-2 est utilisé pour les calculs mais pas affiché
+✅ Format conforme au SYSCOHADA Révisé
+✅ Liasse officielle avec 2 colonnes (N et N-1)
+
+═══════════════════════════════════════════════════════════════════════════════
