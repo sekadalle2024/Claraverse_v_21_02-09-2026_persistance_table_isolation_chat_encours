@@ -1,0 +1,308 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION - EXTRACTION response.body[0].data
+  Date: 29 Mars 2026 - 20h00
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n fonctionne PARFAITEMENT en mode manuel et génère les 6 tables
+avec le contenu correct. MAIS le frontend ne sait pas extraire la réponse
+du format retourné par le webhook n8n.
+
+FORMAT RETOURNÉ PAR N8N
+───────────────────────────────────────────────────────────────────────────
+
+{
+  "response": {
+    "body": [{
+      "data": {
+        "Etape mission - Recos contrôle interne comptable": [
+          {"table 1": {...}},
+          {"table 2": {...}},
+          {"table 3": {...}},
+          {"table 4": {...}},
+          {"table 5": {...}},
+          {"table 6": {...}}
+        ]
+      }
+    }],
+    "headers": {...},
+    "statusCode": 200
+  }
+}
+
+FORMAT ATTENDU PAR LE FRONTEND
+───────────────────────────────────────────────────────────────────────────
+
+[{
+  "data": {
+    "Etape mission - Recos contrôle interne comptable": [...]
+  }
+}]
+
+SOLUTION IMPLÉMENTÉE
+═══════════════════════════════════════════════════════════════════════════
+
+FICHIER: src/services/claraApiService.ts
+FONCTION: normalizeN8nResponse()
+LIGNE: ~743
+
+MODIFICATION 1: EXTRACTION PRÉALABLE
+───────────────────────────────────────────────────────────────────────────
+
+Ajout d'une section AVANT tous les autres formats pour extraire
+response.body[0].data si cette structure existe:
+
+```typescript
+// ========================================================================
+// EXTRACTION PRÉALABLE: Gérer le format response.body[0].data de n8n
+// ========================================================================
+if (result && typeof result === "object" && "response" in result) {
+  console.log("🔧 FORMAT WEBHOOK N8N: Extraction de response.body[0].data");
+  
+  if (result.response && 
+      typeof result.response === "object" && 
+      "body" in result.response &&
+      Array.isArray(result.response.body) &&
+      result.response.body.length > 0) {
+    
+    console.log("✅ Structure response.body détectée");
+    
+    // Extraire le premier élément du body
+    const bodyData = result.response.body[0];
+    
+    if (bodyData && typeof bodyData === "object" && "data" in bodyData) {
+      console.log("✅ Extraction de response.body[0].data réussie");
+      console.log("📊 Données extraites:", JSON.stringify(bodyData.data, null, 2).substring(0, 300));
+      
+      // Remplacer result par les données extraites pour le traitement normal
+      // On enveloppe dans un array avec {data: ...} pour correspondre au FORMAT 4
+      result = [{ data: bodyData.data }];
+      
+      console.log("🔄 Données transformées pour traitement FORMAT 4");
+    } else {
+      console.warn("⚠️ response.body[0] ne contient pas de propriété 'data'");
+    }
+  } else {
+    console.warn("⚠️ response.body n'est pas un array ou est vide");
+  }
+}
+```
+
+MODIFICATION 2: LOGS DÉTAILLÉS MESSAGE ENVOYÉ
+───────────────────────────────────────────────────────────────────────────
+
+Ajout de logs détaillés pour déboguer le message envoyé à n8n:
+
+```typescript
+// 🔍 LOG DÉTAILLÉ: Message envoyé à n8n
+console.log("═══════════════════════════════════════════════════════");
+console.log("📤 MESSAGE ENVOYÉ À N8N");
+console.log("═══════════════════════════════════════════════════════");
+console.log("🌐 Endpoint:", resolvedEndpoint);
+console.log("📦 Request Body:", JSON.stringify(requestBody, null, 2));
+console.log("📝 Message brut:", message);
+console.log("═══════════════════════════════════════════════════════");
+```
+
+MODIFICATION 3: LOGS DÉTAILLÉS RÉPONSE REÇUE
+───────────────────────────────────────────────────────────────────────────
+
+Ajout de logs détaillés pour déboguer la réponse reçue de n8n:
+
+```typescript
+// 🔍 LOG DÉTAILLÉ: Réponse reçue de n8n
+console.log("═══════════════════════════════════════════════════════");
+console.log("📥 RÉPONSE REÇUE DE N8N");
+console.log("═══════════════════════════════════════════════════════");
+console.log("📦 Réponse complète:", JSON.stringify(result, null, 2));
+console.log("🔍 Type de réponse:", typeof result);
+console.log("🔍 Est un Array?", Array.isArray(result));
+console.log("🔍 Clés principales:", result ? Object.keys(result) : "N/A");
+console.log("═══════════════════════════════════════════════════════");
+```
+
+FLUX DE TRAITEMENT
+═══════════════════════════════════════════════════════════════════════════
+
+1. Frontend envoie le message à n8n
+   ↓
+2. N8n traite le message et génère les 6 tables
+   ↓
+3. N8n retourne la réponse dans response.body[0].data
+   ↓
+4. normalizeN8nResponse() détecte la structure response.body[0].data
+   ↓
+5. Extraction de response.body[0].data
+   ↓
+6. Transformation en [{data: {...}}] pour FORMAT 4
+   ↓
+7. Traitement normal par FORMAT 4
+   ↓
+8. convertStructuredDataToMarkdown() génère le Markdown
+   ↓
+9. convertHeaderTableToMarkdown() affiche les 6 tables
+   ↓
+10. Affichage dans le frontend
+
+LOGS ATTENDUS DANS LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: MESSAGE ENVOYÉ
+───────────────────────────────────────────────────────────────────────────
+═══════════════════════════════════════════════════════════════════════════
+📤 MESSAGE ENVOYÉ À N8N
+═══════════════════════════════════════════════════════════════════════════
+🌐 Endpoint: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+📦 Request Body: {
+  "question": "[Command] : Recos contrôle interne comptable\n[Cycle] : RH..."
+}
+📝 Message brut: [Command] : Recos contrôle interne comptable...
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 2: RÉPONSE REÇUE
+───────────────────────────────────────────────────────────────────────────
+═══════════════════════════════════════════════════════════════════════════
+📥 RÉPONSE REÇUE DE N8N
+═══════════════════════════════════════════════════════════════════════════
+📦 Réponse complète: {
+  "response": {
+    "body": [{
+      "data": {
+        "Etape mission - Recos contrôle interne comptable": [...]
+      }
+    }],
+    ...
+  }
+}
+🔍 Type de réponse: object
+🔍 Est un Array? false
+🔍 Clés principales: ["response"]
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 3: EXTRACTION
+───────────────────────────────────────────────────────────────────────────
+🔍 === DEBUT ANALYSE REPONSE N8N ===
+📦 Structure reçue: {"response":{"body":[{"data":...
+🔧 FORMAT WEBHOOK N8N: Extraction de response.body[0].data
+✅ Structure response.body détectée
+✅ Extraction de response.body[0].data réussie
+📊 Données extraites: {"Etape mission - Recos contrôle interne comptable":[...
+🔄 Données transformées pour traitement FORMAT 4
+
+ÉTAPE 4: TRAITEMENT FORMAT 4
+───────────────────────────────────────────────────────────────────────────
+✅ FORMAT 4 DETECTE: Nouveau format "Programme de travail" avec structure data
+📊 Contenu de data: {
+  type: "object",
+  keys: ["Etape mission - Recos contrôle interne comptable"],
+  firstKey: "Etape mission - Recos contrôle interne comptable"
+}
+🔄 Début de la conversion en Markdown...
+✅ Conversion terminée: XXXX caractères générés
+
+ÉTAPE 5: AFFICHAGE
+───────────────────────────────────────────────────────────────────────────
+✅✅✅ Contenu extrait avec succès et prêt à être retourné via la Promise.
+
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 1: REDÉMARRER LE SERVEUR
+───────────────────────────────────────────────────────────────────────────
+.\stop-claraverse.ps1
+.\start-claraverse.ps1
+
+TEST 2: ENVOYER UN MESSAGE CASE 25
+───────────────────────────────────────────────────────────────────────────
+Message:
+[Command] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+TEST 3: VÉRIFIER LES LOGS DANS LA CONSOLE (F12)
+───────────────────────────────────────────────────────────────────────────
+✅ Router détecte Case 25
+✅ Endpoint correct appelé
+✅ Message envoyé visible dans les logs
+✅ Réponse reçue visible dans les logs
+✅ Extraction response.body[0].data réussie
+✅ FORMAT 4 détecté
+✅ Conversion en Markdown réussie
+
+TEST 4: VÉRIFIER L'AFFICHAGE
+───────────────────────────────────────────────────────────────────────────
+✅ Table 1 affichée (en-tête 2 colonnes)
+✅ Table 2 affichée (Intitule)
+✅ Table 3 affichée (Observation)
+✅ Table 4 affichée (Constat)
+✅ Table 5 affichée (Risque)
+✅ Table 6 affichée (Recommendation)
+
+TEST 5: VÉRIFIER LE CONTENU
+───────────────────────────────────────────────────────────────────────────
+✅ Contenu parle de RH (pas Achats)
+✅ Contenu parle de Recrutement (pas BC)
+✅ Contenu parle du DG (pas fournisseurs)
+
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   - Fonction normalizeN8nResponse() (ligne ~743)
+     → Ajout extraction response.body[0].data
+   - Fonction sendChatMessage() (ligne ~1410)
+     → Ajout logs détaillés message envoyé
+   - Fonction sendChatMessage() (ligne ~1470)
+     → Ajout logs détaillés réponse reçue
+
+PROCHAINES ACTIONS
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✅ Redémarrer le serveur ClaraVerse
+2. ✅ Ouvrir la console du navigateur (F12)
+3. ✅ Envoyer un message Case 25 depuis le frontend
+4. ✅ Vérifier les logs dans la console
+5. ✅ Vérifier que les 6 tables s'affichent
+6. ✅ Vérifier que le contenu est correct
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le serveur
+.\stop-claraverse.ps1
+.\start-claraverse.ps1
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+STATUT FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Extraction response.body[0].data: IMPLÉMENTÉE
+✅ Logs détaillés message envoyé: AJOUTÉS
+✅ Logs détaillés réponse reçue: AJOUTÉS
+⏳ Tests: À EFFECTUER
+
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Après redémarrage du serveur, le frontend devrait:
+1. Détecter Case 25 correctement
+2. Envoyer le message à n8n
+3. Recevoir la réponse avec response.body[0].data
+4. Extraire les données correctement
+5. Afficher les 6 tables avec le contenu correct
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 20h00
+Version: 8.0 (extraction response.body[0].data)
+Priorité: CRITIQUE
+Statut: SOLUTION IMPLÉMENTÉE - TESTS À EFFECTUER

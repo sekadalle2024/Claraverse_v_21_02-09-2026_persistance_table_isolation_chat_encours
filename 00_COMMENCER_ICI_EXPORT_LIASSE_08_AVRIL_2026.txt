@@ -1,0 +1,291 @@
+================================================================================
+🎯 VÉRIFICATION EXPORT LIASSE - PROBLÈMES IDENTIFIÉS
+================================================================================
+Date: 08 Avril 2026
+Tâche: [Export liasse verification]
+
+📋 RÉSUMÉ DES PROBLÈMES DÉTECTÉS
+================================================================================
+
+PROBLÈME 1: FICHIER TEMPLATE MANQUANT ❌ CRITIQUE
+────────────────────────────────────────────────────────────────────────────
+Fichier: py_backend/Liasse_officielle_revise.xlsx
+Statut: MANQUANT
+
+Le fichier template principal (84 onglets SYSCOHADA Révisé) n'existe pas dans
+le dossier py_backend, alors que le code export_liasse.py le référence en
+priorité.
+
+Impact:
+- L'export de la liasse ne peut pas fonctionner
+- Le système utilise les anciens templates (LIASSE.xlsx ou Liasse officielle.xlsm)
+- Les 84 onglets SYSCOHADA Révisé ne sont pas disponibles
+
+Solution:
+→ Récupérer le fichier Liasse_officielle_revise.xlsx (84 onglets)
+→ Le placer dans py_backend/
+→ Vérifier qu'il contient bien les onglets: ACTIF, PASSIF, RESULTAT, TFT
+
+
+PROBLÈME 2: TFT NON PRÉVU DANS EXPORT_LIASSE.PY ⚠️ IMPORTANT
+────────────────────────────────────────────────────────────────────────────
+Fichier: py_backend/export_liasse.py
+Statut: TFT non mappé
+
+Le fichier export_liasse.py définit les mappings pour:
+✅ MAPPING_BILAN_ACTIF
+✅ MAPPING_BILAN_PASSIF
+✅ MAPPING_COMPTE_RESULTAT_CHARGES
+✅ MAPPING_COMPTE_RESULTAT_PRODUITS
+❌ MAPPING_TFT (MANQUANT)
+
+Impact:
+- Le TFT est calculé dans etats_financiers.py
+- Mais il n'est PAS exporté dans le fichier Excel de la liasse
+- Les données TFT sont perdues lors de l'export
+
+Solution:
+→ Ajouter MAPPING_TFT dans export_liasse.py
+→ Mapper les références ZA, FA, FB, FC... vers les cellules Excel
+→ Remplir l'onglet TFT du template
+
+
+PROBLÈME 3: CORRESPONDANCES TFT DANS JSON ✅ OK
+────────────────────────────────────────────────────────────────────────────
+Fichier: py_backend/correspondances_syscohada.json
+Statut: TFT présent
+
+Le fichier JSON contient bien la section "tft" avec toutes les références:
+- ZA: Trésorerie ouverture
+- FA à FQ: Flux opérationnels, investissement, financement
+- ZB à ZH: Totaux et variations
+
+Pas d'action nécessaire sur ce fichier.
+
+
+PROBLÈME 4: COHÉRENCE DES ONGLETS ⚠️ À VÉRIFIER
+────────────────────────────────────────────────────────────────────────────
+Une fois le template récupéré, il faudra vérifier que:
+
+1. Les noms d'onglets correspondent aux mappings:
+   - "ACTIF" ou "Bilan" pour MAPPING_BILAN_ACTIF
+   - "PASSIF" ou "Bilan" pour MAPPING_BILAN_PASSIF
+   - "RESULTAT" ou "CR" pour MAPPING_COMPTE_RESULTAT_*
+   - "TFT" ou "TAFIRE" pour le TFT
+
+2. Les cellules mappées existent:
+   - ACTIF: C10, C11, C12... (colonne C pour les montants)
+   - PASSIF: E10, E11, E12... (colonne E pour les montants)
+   - RESULTAT: C10, E10... (colonnes C et E)
+   - TFT: À définir selon le template
+
+
+================================================================================
+📝 SCRIPTS DE TEST CRÉÉS
+================================================================================
+
+1. test_verification_export_liasse.py
+   → Vérifie la cohérence entre tous les fichiers
+   → Détecte les problèmes automatiquement
+   → À exécuter: python test_verification_export_liasse.py
+
+
+================================================================================
+🔧 ACTIONS IMMÉDIATES REQUISES
+================================================================================
+
+PRIORITÉ 1: Récupérer le fichier template (BLOQUANT)
+────────────────────────────────────────────────────────────────────────────
+[ ] Localiser Liasse_officielle_revise.xlsx (84 onglets)
+[ ] Le copier dans py_backend/
+[ ] Vérifier la taille: ~405 KB
+[ ] Vérifier les onglets avec Python:
+
+    python -c "import openpyxl; wb = openpyxl.load_workbook('py_backend/Liasse_officielle_revise.xlsx'); print(wb.sheetnames)"
+
+
+PRIORITÉ 2: Ajouter le mapping TFT (IMPORTANT)
+────────────────────────────────────────────────────────────────────────────
+[ ] Ouvrir py_backend/export_liasse.py
+[ ] Ajouter après MAPPING_COMPTE_RESULTAT_PRODUITS:
+
+MAPPING_TFT = {
+    # Trésorerie
+    'ZA': 'C10',  # Trésorerie ouverture
+    
+    # Flux opérationnels
+    'FA': 'C12',  # CAFG
+    'FB': 'C13',  # Variation actif HAO
+    'FC': 'C14',  # Variation stocks
+    'FD': 'C15',  # Variation créances
+    'FE': 'C16',  # Variation dettes
+    'ZB': 'C17',  # Total flux opérationnels
+    
+    # Flux investissement
+    'FF': 'C19',  # Décaissements immob incorporelles
+    'FG': 'C20',  # Décaissements immob corporelles
+    'FH': 'C21',  # Décaissements immob financières
+    'FI': 'C22',  # Encaissements cessions immob
+    'FJ': 'C23',  # Encaissements cessions fin
+    'ZC': 'C24',  # Total flux investissement
+    
+    # Flux capitaux propres
+    'FK': 'C26',  # Augmentation capital
+    'FL': 'C27',  # Subventions reçues
+    'FM': 'C28',  # Prélèvements capital
+    'FN': 'C29',  # Dividendes versés
+    'ZD': 'C30',  # Total flux capitaux propres
+    
+    # Flux capitaux étrangers
+    'FO': 'C32',  # Nouveaux emprunts
+    'FP': 'C33',  # Autres dettes financières
+    'FQ': 'C34',  # Remboursements
+    'ZE': 'C35',  # Total flux capitaux étrangers
+    
+    # Totaux
+    'ZF': 'C36',  # Total financement
+    'ZG': 'C37',  # Variation trésorerie
+    'ZH': 'C38',  # Trésorerie clôture
+}
+
+[ ] Ajouter le code de remplissage dans remplir_liasse_officielle():
+
+    # Remplir le TFT
+    if 'TFT' in wb.sheetnames or 'TAFIRE' in wb.sheetnames:
+        ws_tft = wb.get('TFT', wb.get('TAFIRE'))
+        if ws_tft:
+            logger.info("📝 Remplissage TFT...")
+            
+            for ref, cellule in MAPPING_TFT.items():
+                if ref in results.get('tft', {}):
+                    montant = results['tft'][ref]['montant']
+                    try:
+                        ws_tft[cellule] = montant
+                        logger.debug(f"   {ref} -> {cellule}: {montant:,.2f}")
+                    except Exception as e:
+                        logger.warning(f"   Erreur {ref} -> {cellule}: {e}")
+
+
+PRIORITÉ 3: Vérifier les cellules du template (IMPORTANT)
+────────────────────────────────────────────────────────────────────────────
+Une fois le template récupéré:
+
+[ ] Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+[ ] Vérifier l'onglet ACTIF:
+    - Colonne des références (A): AD, AE, AF, AG...
+    - Colonne des montants N (C ou H?): à noter
+    - Colonne des montants N-1 (D ou I?): à noter
+
+[ ] Vérifier l'onglet PASSIF:
+    - Colonne des références (A): CA, CB, CD, CE...
+    - Colonne des montants N (E ou H?): à noter
+    - Colonne des montants N-1 (F ou I?): à noter
+
+[ ] Vérifier l'onglet RESULTAT:
+    - Colonne des références (A): RA, RB, RC... TA, TB, TC...
+    - Colonne charges N (C?): à noter
+    - Colonne produits N (E?): à noter
+
+[ ] Vérifier l'onglet TFT:
+    - Colonne des références (A): ZA, FA, FB... ZH
+    - Colonne montants N (C?): à noter
+    - Colonne montants N-1 (D?): à noter
+
+[ ] Ajuster les mappings si nécessaire
+
+
+================================================================================
+🧪 COMMANDES DE TEST
+================================================================================
+
+# Test 1: Vérification complète
+python test_verification_export_liasse.py
+
+# Test 2: Vérifier que le template existe
+Test-Path py_backend/Liasse_officielle_revise.xlsx
+
+# Test 3: Lister les onglets du template (si présent)
+python -c "import openpyxl; wb = openpyxl.load_workbook('py_backend/Liasse_officielle_revise.xlsx'); print('\n'.join(wb.sheetnames))"
+
+# Test 4: Vérifier la taille du fichier
+Get-Item py_backend/Liasse_officielle_revise.xlsx | Select-Object Name, Length
+
+
+================================================================================
+📊 ÉTAT ACTUEL DES FICHIERS
+================================================================================
+
+✅ py_backend/export_liasse.py (12.46 KB)
+   - Mappings BILAN_ACTIF, BILAN_PASSIF, CR définis
+   - TFT non mappé
+   - Référence Liasse_officielle_revise.xlsx en priorité
+
+✅ py_backend/etats_financiers.py (80.29 KB)
+   - Import du module TFT
+   - Calcul du TFT fonctionnel
+   - TFT ajouté aux résultats
+
+✅ py_backend/correspondances_syscohada.json (12.89 KB)
+   - Section "tft" présente avec toutes les références
+   - Sections bilan_actif, bilan_passif, charges, produits OK
+
+✅ py_backend/tableau_flux_tresorerie.py (16.69 KB)
+   - Module de calcul TFT
+
+✅ py_backend/tableau_flux_tresorerie_v2.py (11.60 KB)
+   - Module de calcul TFT version 2
+
+❌ py_backend/Liasse_officielle_revise.xlsx
+   - FICHIER MANQUANT (devrait faire ~405 KB)
+   - 84 onglets SYSCOHADA Révisé attendus
+
+✅ py_backend/LIASSE.xlsx (présent)
+   - Ancien template (fallback)
+
+✅ py_backend/Liasse officielle.xlsm (présent)
+   - Ancien template (fallback)
+
+
+================================================================================
+📚 DOCUMENTATION ASSOCIÉE
+================================================================================
+
+Voir aussi:
+- 00_SUCCES_EXPORT_LIASSE_REVISE_08_AVRIL_2026.txt
+- 00_TESTS_REUSSIS_TEMPLATE_LIASSE_08_AVRIL_2026.txt
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+- Doc_Etat_Fin/update Liasse_officielle_revise/00_COMMENCER_ICI.txt
+
+
+================================================================================
+✅ RÉSULTAT ATTENDU APRÈS CORRECTIONS
+================================================================================
+
+Une fois les corrections appliquées:
+
+1. Le fichier Liasse_officielle_revise.xlsx sera présent
+2. Le TFT sera mappé et exporté dans le fichier Excel
+3. L'export de la liasse sera complet avec:
+   - Bilan Actif (N et N-1)
+   - Bilan Passif (N et N-1)
+   - Compte de Résultat (N et N-1)
+   - TFT (N et N-1)
+   - Annexes (si disponibles)
+
+4. Le fichier généré contiendra les 84 onglets SYSCOHADA Révisé
+
+
+================================================================================
+🎯 PROCHAINES ÉTAPES
+================================================================================
+
+1. Récupérer Liasse_officielle_revise.xlsx
+2. Ajouter le mapping TFT dans export_liasse.py
+3. Tester l'export complet
+4. Vérifier les cellules dans le fichier généré
+5. Créer des scripts de test automatisés
+
+
+================================================================================
+FIN DU DOCUMENT
+================================================================================

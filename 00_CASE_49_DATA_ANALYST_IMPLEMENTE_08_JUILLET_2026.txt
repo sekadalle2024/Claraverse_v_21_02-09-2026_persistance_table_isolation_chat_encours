@@ -1,0 +1,135 @@
+═══════════════════════════════════════════════════════════════════════════════
+✅ CASE 49 DATA ANALYST - DÉJÀ IMPLÉMENTÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 08 Juillet 2026
+🔧 Fichier modifié: src/services/claraApiService.ts
+
+───────────────────────────────────────────────────────────────────────────────
+📋 RÉSUMÉ
+───────────────────────────────────────────────────────────────────────────────
+
+Le Case 49 est DÉJÀ CORRECTEMENT IMPLÉMENTÉ dans claraApiService.ts avec:
+✅ Condition 1: "Programme de travail"
+✅ Condition 2: "Data analyst" ET "Aléatoire simple"
+✅ Endpoint n8n privé: http://127.0.0.1:500
+
+───────────────────────────────────────────────────────────────────────────────
+🎯 CONFIGURATION ACTUELLE
+───────────────────────────────────────────────────────────────────────────────
+
+CASE 49 - DEUX CONDITIONS:
+
+1️⃣ CONDITION PROGRAMME DE TRAVAIL
+   Déclencheur: message contient "Programme de travail" OU "/Programme de travail"
+   Endpoint: https://fpb7ab9h.rpcl.app/webhook-test/integration
+   Route Key: "programme_travail"
+
+2️⃣ CONDITION DATA ANALYST ALÉATOIRE SIMPLE
+   Déclencheur: message contient "Data analyst" ET "Aléatoire simple"
+   Endpoint: http://127.0.0.1:500
+   Route Key: "data_analyst_aleatoire_simple"
+
+───────────────────────────────────────────────────────────────────────────────
+📝 CODE SOURCE (lignes ~200-210)
+───────────────────────────────────────────────────────────────────────────────
+
+```typescript
+// Case 49: Programme de travail OU Data analyst Aléatoire simple
+else if (msg.includes("Programme de travail") || 
+         msg.includes("/Programme de travail") || 
+         msg.includes("programme de travail")) {
+  routeKey = "programme_travail";
+  caseName = "Case 49";
+} else if (msg.includes("Data analyst") && msg.includes("Aléatoire simple")) {
+  routeKey = "data_analyst_aleatoire_simple";
+  caseName = "Case 49";
+}
+```
+
+───────────────────────────────────────────────────────────────────────────────
+🔗 RÉSOLUTION ENDPOINT (dans resolveEndpointFromRouteKey)
+───────────────────────────────────────────────────────────────────────────────
+
+```typescript
+case "programme_travail":
+  return "https://fpb7ab9h.rpcl.app/webhook-test/integration";
+
+case "data_analyst_aleatoire_simple":
+  return "http://127.0.0.1:500";
+```
+
+───────────────────────────────────────────────────────────────────────────────
+🧪 TESTS SUGGÉRÉS
+───────────────────────────────────────────────────────────────────────────────
+
+TEST 1: Programme de travail
+Message: "Programme de travail"
+Résultat attendu: 
+  ✅ Case 49
+  ✅ Route: programme_travail
+  ✅ Endpoint: https://fpb7ab9h.rpcl.app/webhook-test/integration
+
+TEST 2: Data analyst avec Aléatoire simple
+Message: "Data analyst Aléatoire simple"
+Résultat attendu:
+  ✅ Case 49
+  ✅ Route: data_analyst_aleatoire_simple
+  ✅ Endpoint: http://127.0.0.1:500
+
+TEST 3: Data analyst SANS Aléatoire simple
+Message: "Data analyst"
+Résultat attendu:
+  ❌ PAS Case 49 (ne devrait pas correspondre)
+
+───────────────────────────────────────────────────────────────────────────────
+⚠️ POINTS D'ATTENTION
+───────────────────────────────────────────────────────────────────────────────
+
+1. ENDPOINT LOCAL (http://127.0.0.1:500)
+   - Cet endpoint n'est accessible QUE localement
+   - Assurez-vous que le service n8n local tourne sur le port 500
+   - En production, vous devrez peut-être utiliser un endpoint public
+
+2. PRIORITÉ DES CONDITIONS
+   - Si le message contient à la fois "Programme de travail" ET "Data analyst", 
+     c'est "Programme de travail" qui sera détecté en premier
+   - Ceci est normal car les conditions sont évaluées dans l'ordre
+
+3. SENSIBILITÉ À LA CASSE
+   - "Programme de travail" (avec majuscules) ✅
+   - "programme de travail" (minuscules) ✅
+   - "Data analyst" (avec majuscules) ✅ REQUIS
+   - "data analyst" (minuscules) ❌ NE CORRESPONDRA PAS
+
+───────────────────────────────────────────────────────────────────────────────
+📊 STATUT
+───────────────────────────────────────────────────────────────────────────────
+
+✅ IMPLÉMENTATION COMPLÈTE
+✅ ROUTER CONFIGURÉ
+✅ ENDPOINT DÉFINI
+✅ PRÊT À ÊTRE TESTÉ
+
+───────────────────────────────────────────────────────────────────────────────
+📁 FICHIERS CONCERNÉS
+───────────────────────────────────────────────────────────────────────────────
+
+1. src/services/claraApiService.ts
+   - Méthode: getN8nEndpointWithInfo()
+   - Méthode: resolveEndpointFromRouteKey()
+   - Cases 1-48: inchangés
+   - Case 49: implémenté avec 2 conditions
+
+───────────────────────────────────────────────────────────────────────────────
+🎯 PROCHAINES ÉTAPES
+───────────────────────────────────────────────────────────────────────────────
+
+1. ✅ Vérifier que le serveur n8n local tourne sur http://127.0.0.1:500
+2. 🧪 Exécuter les tests (voir test-case49-data-analyst-aleatoire.ps1)
+3. 📝 Documenter le workflow n8n associé
+4. 🚀 Déployer si tests réussis
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ IMPLÉMENTATION CONFIRMÉE - AUCUNE MODIFICATION NÉCESSAIRE
+═══════════════════════════════════════════════════════════════════════════════

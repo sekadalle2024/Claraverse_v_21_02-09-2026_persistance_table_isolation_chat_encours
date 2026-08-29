@@ -1,0 +1,206 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          🎯 DOCKERFILE CORRIGÉ - FIX POSTINSTALL ELECTRON                   ║
+║                        20 AVRIL 2026                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌ PROBLÈME ACTUEL
+══════════════════
+npm install échoue avec:
+> clara-verse@0.1.25 postinstall
+> electron-builder install-app-deps
+sh: electron-builder: not found
+
+🔍 CAUSE
+════════
+Le script postinstall dans package.json exécute "electron-builder install-app-deps"
+Ce script est pour Electron desktop, PAS pour un déploiement web
+electron-builder est dans devDependencies, pas installé en production
+
+✅ SOLUTION
+═══════════
+Utiliser --ignore-scripts pour sauter le postinstall lors du npm install
+
+📋 DOCKERFILE CORRIGÉ À COPIER-COLLER
+══════════════════════════════════════
+
+# ============================================
+# STAGE 1: Build React Application
+# ============================================
+FROM node:18-alpine AS builder
+
+LABEL org.opencontainers.image.title="Claraverse Frontend"
+LABEL org.opencontainers.image.description="Claraverse AI Assistant Frontend"
+LABEL org.opencontainers.image.version="1.0.0"
+
+WORKDIR /app
+
+# Copier les fichiers de configuration npm
+COPY package*.json ./
+COPY npm-shrinkwrap.json* ./
+
+# Copier les fichiers de config TypeScript / Vite
+COPY tsconfig*.json ./
+COPY vite.config.ts ./
+
+# Installer les dépendances en IGNORANT le script postinstall
+# Le postinstall exécute electron-builder qui n'est pas nécessaire pour le web
+RUN npm install --ignore-scripts
+
+# Copier le code source
+COPY src/ ./src/
+COPY public/ ./public/
+COPY index.html ./
+
+# Build de production
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+RUN npm run build
+
+# ============================================
+# STAGE 2: Production avec Nginx
+# ============================================
+FROM nginx:alpine
+
+# Copier les fichiers buildés depuis le stage builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Configuration Nginx optimisée pour React SPA
+RUN printf 'server {\n\
+    listen 80;\n\
+    server_name _;\n\
+    root /usr/share/nginx/html;\n\
+    index index.html;\n\
+\n\
+    gzip on;\n\
+    gzip_vary on;\n\
+    gzip_min_length 1024;\n\
+    gzip_types text/plain text/css text/xml text/javascript application/javascript application/json;\n\
+\n\
+    add_header X-Frame-Options "SAMEORIGIN" always;\n\
+    add_header X-Content-Type-Options "nosniff" always;\n\
+    add_header X-XSS-Protection "1; mode=block" always;\n\
+\n\
+    # React Router - renvoie toujours index.html\n\
+    location / {\n\
+        try_files $uri $uri/ /index.html;\n\
+    }\n\
+\n\
+    # Cache long terme pour les assets statiques\n\
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {\n\
+        expires 1y;\n\
+        add_header Cache-Control "public, immutable";\n\
+    }\n\
+\n\
+    # Health check endpoint\n\
+    location /health {\n\
+        access_log off;\n\
+        return 200 "healthy\n";\n\
+        add_header Content-Type text/plain;\n\
+    }\n\
+}\n' > /etc/nginx/conf.d/default.conf
+
+# Exposer le port 80
+EXPOSE 80
+
+# Démarrer Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+═════════════════════════════════════════════════════════════════════════════
+
+🎯 MARCHE À SUIVRE - ZEABUR DASHBOARD
+══════════════════════════════════════
+
+1. 🌐 Ouvrir Zeabur Dashboard
+2. 📦 Sélectionner votre service Frontend
+3. ⚙️ Aller dans Settings → Dockerfile
+4. 📝 REMPLACER tout le contenu par le Dockerfile ci-dessus
+5. 💾 Cliquer "Save"
+6. 🚀 Cliquer "Redeploy"
+7. ⏳ Attendre 2-3 minutes
+
+✅ CE QUI VA SE PASSER
+══════════════════════
+
+1. npm install --ignore-scripts
+   ✅ Installe toutes les dépendances
+   ✅ SAUTE le postinstall (electron-builder)
+   ✅ Pas d'erreur "electron-builder: not found"
+
+2. npm run build
+   ✅ Compile le frontend React/Vite
+   ✅ Génère le dossier dist/
+
+3. Nginx
+   ✅ Sert les fichiers statiques
+   ✅ CSS chargé correctement
+
+📊 DIFFÉRENCE CLÉ
+═════════════════
+
+AVANT:
+RUN npm install
+❌ Exécute postinstall → electron-builder → ERREUR
+
+APRÈS:
+RUN npm install --ignore-scripts
+✅ Saute postinstall → Pas d'electron-builder → SUCCÈS
+
+💡 POURQUOI --ignore-scripts EST SÛR
+════════════════════════════════════
+
+✅ Le postinstall est UNIQUEMENT pour Electron desktop
+✅ Pour le web, on n'a besoin QUE de npm run build
+✅ Toutes les dépendances nécessaires sont installées
+✅ Le build Vite fonctionne normalement
+
+🔍 VÉRIFICATION APRÈS DÉPLOIEMENT
+═════════════════════════════════
+
+Dans les logs Zeabur, vous devriez voir:
+✅ npm install --ignore-scripts completed
+✅ npm run build completed
+✅ Build completed successfully
+✅ Deployed successfully
+
+🌐 TEST FINAL
+═════════════
+
+1. Ouvrir l'URL de votre frontend Zeabur
+2. Vérifier:
+   ✅ Le CSS est chargé
+   ✅ Le layout est organisé
+   ✅ Les couleurs/styles sont appliqués
+   ✅ L'application fonctionne
+
+🎉 RÉSULTAT ATTENDU
+═══════════════════
+
+✅ Build réussit sans erreur
+✅ Frontend déployé avec succès
+✅ CSS affiché correctement
+✅ Application fonctionnelle
+
+📝 NOTES TECHNIQUES
+═══════════════════
+
+Le flag --ignore-scripts:
+- Saute tous les scripts npm (preinstall, install, postinstall)
+- Installe quand même toutes les dépendances
+- Sûr pour les builds Docker web
+- Évite les problèmes avec electron-builder, node-gyp, etc.
+
+🔗 FICHIERS MODIFIÉS
+════════════════════
+
+✅ Dockerfile.frontend (local) - mis à jour
+✅ À copier dans Zeabur Dashboard
+✅ vite.config.ts - déjà corrigé (base: '/')
+
+═════════════════════════════════════════════════════════════════════════════
+
+🚀 PRÊT À DÉPLOYER !
+════════════════════
+
+Copiez le Dockerfile ci-dessus dans Zeabur et cliquez "Redeploy"
+Le problème postinstall sera résolu !

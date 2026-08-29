@@ -1,0 +1,146 @@
+═══════════════════════════════════════════════════════════════════════════
+🧪 GUIDE DE TEST RAPIDE - NOUVEAU FORMAT CIA
+═══════════════════════════════════════════════════════════════════════════
+
+📅 Date: 29 Juin 2026
+⏱️  Durée: 2-3 minutes
+
+═══════════════════════════════════════════════════════════════════════════
+ÉTAPE 1: OUVRIR CLARAVERSE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Démarrer Claraverse (frontend + backend)
+2. Ouvrir la console du navigateur (F12)
+3. Aller dans l'onglet Console
+
+═══════════════════════════════════════════════════════════════════════════
+ÉTAPE 2: TESTER L'ENDPOINT
+═══════════════════════════════════════════════════════════════════════════
+
+Dans le chat Claraverse, taper EXACTEMENT:
+
+[Command] = /Programme de travail - [Processus] = facturation des ventes
+
+Puis appuyer sur Entrée
+
+═══════════════════════════════════════════════════════════════════════════
+ÉTAPE 3: VÉRIFIER LES LOGS CONSOLE
+═══════════════════════════════════════════════════════════════════════════
+
+✅ LOGS ATTENDUS (dans l'ordre):
+
+1. 🔀 Router → Case 49 : programme_travail
+2. 🔍 === DEBUT ANALYSE REPONSE N8N ===
+3. 📦 Structure reçue: [...]
+4. 🔧 FORMAT CASE 49 DETECTE: output avec JSON dans bloc markdown
+5. 🧹 Backtick simple initial retiré
+6. 📊 Contenu nettoyé (premiers 500 caractères): {...}
+7. ✅ JSON parsé avec succès
+8. 📊 Structure: {...}
+9. 🔄 Données transformées pour traitement FORMAT 4
+10. 🔧 FORMAT 9 NOUVEAU CIA: output avec JSON Sous-section dans bloc markdown
+11. 🧹 Backtick simple initial retiré
+12. 📊 Contenu nettoyé (premiers 500 caractères): {...}
+13. ✅ JSON parsé avec succès
+14. 📊 Structure: {...}
+15. ✅ FORMAT 9 CIA DETECTE: Structure Sous-section/Sub-items trouvée
+16. 🔍 === FIN ANALYSE (FORMAT 9 - CIA COURS / METHODO AUDIT depuis markdown) ===
+
+═══════════════════════════════════════════════════════════════════════════
+ÉTAPE 4: VÉRIFIER L'AFFICHAGE
+═══════════════════════════════════════════════════════════════════════════
+
+✅ AFFICHAGE ATTENDU:
+
+1. PAGE DE COUVERTURE:
+   - Fond dégradé violet
+   - Titre de la section
+   - Badge "CIA — Formation Audit Interne"
+
+2. ACCORDÉON INTERACTIF:
+   - Boutons "+" pour ouvrir les sections
+   - Sections avec fond dégradé violet quand ouvertes
+   - Fond gris/noir (selon mode dark) quand fermées
+
+3. CONTENU DES SECTIONS:
+   - Sous-items avec icônes (📘 par défaut)
+   - Items avec badges colorés par rubrique:
+     * "quoi" → Badge bleu
+     * "pourquoi" → Badge vert
+     * "exemple" → Badge jaune
+     * "norme" → Badge violet
+   - Contenu formaté avec sauts de ligne
+
+═══════════════════════════════════════════════════════════════════════════
+ÉTAPE 5: TESTER L'INTERACTIVITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+✅ ACTIONS À TESTER:
+
+1. Cliquer sur une section fermée → Doit s'ouvrir avec animation
+2. Cliquer sur une section ouverte → Doit se fermer avec animation
+3. Cliquer sur un sous-item → Doit s'ouvrir/fermer
+4. Vérifier les couleurs des badges selon la rubrique
+
+═══════════════════════════════════════════════════════════════════════════
+❌ PROBLÈMES POSSIBLES
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME 1: Erreur "Unexpected token '`'"
+CAUSE: Le FORMAT 9 n'a pas été détecté
+SOLUTION: Vérifier que le code a bien été ajouté dans claraApiService.ts
+
+PROBLÈME 2: Affichage vide ou "Aucune donnée"
+CAUSE: La structure n'a pas été reconnue
+SOLUTION: Vérifier les logs console pour voir quel format a été détecté
+
+PROBLÈME 3: JSON parse error
+CAUSE: Le nettoyage du JSON n'a pas fonctionné
+SOLUTION: Vérifier le contenu brut dans les logs
+
+PROBLÈME 4: Pas de logs dans la console
+CAUSE: Le code n'a pas été exécuté
+SOLUTION: 
+  1. Vérifier que le fichier a été sauvegardé
+  2. Redémarrer le frontend (npm start)
+  3. Vider le cache du navigateur (Ctrl+Shift+Delete)
+
+═══════════════════════════════════════════════════════════════════════════
+📊 DONNÉES DE TEST ALTERNATIVES
+═══════════════════════════════════════════════════════════════════════════
+
+Si le test ci-dessus ne fonctionne pas, tester avec:
+
+Test 1 (CIA Cours):
+[Command] = /Programme de travail - [Processus] = audit interne
+
+Test 2 (Méthodologie):
+[Command] = /Programme de travail - [Processus] = rôles et responsabilités
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════
+
+Le test est RÉUSSI si:
+✓ Les logs console montrent "FORMAT 9 CIA DETECTE"
+✓ Un accordéon CIA s'affiche (pas d'erreur)
+✓ Les sections sont cliquables et s'ouvrent/ferment
+✓ Les badges de rubrique sont colorés
+✓ Le contenu est lisible et formaté
+
+Le test est ÉCHOUÉ si:
+❌ Message d'erreur "Unexpected token"
+❌ Affichage vide ou "Aucune donnée"
+❌ Les sections ne s'ouvrent pas
+❌ Pas de logs "FORMAT 9" dans la console
+
+═══════════════════════════════════════════════════════════════════════════
+📝 NOTES
+═══════════════════════════════════════════════════════════════════════════
+
+- Le test doit être effectué sur un navigateur moderne (Chrome, Firefox, Edge)
+- Le mode dark peut être activé pour tester les deux thèmes
+- Les logs détaillés facilitent le debug en cas de problème
+- La console doit être ouverte AVANT d'envoyer le message
+
+═══════════════════════════════════════════════════════════════════════════

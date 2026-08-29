@@ -1,0 +1,160 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║         GUIDE SAUVEGARDE CLARAVERSE V14 - 22 AVRIL 2026                       ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+📋 SITUATION ACTUELLE
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Projet: ClaraVerse V14 - 22 Avril 2026
+✓ Modifications: Switch Editeur + Tests Notes Annexes
+✓ Repository cible: 
+  https://github.com/sekadalle2024/Claverse_windows__v_14_22-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+
+⚠️  IMPORTANT: Le projet peut être volumineux (> 100 MB)
+
+
+🚀 MÉTHODE 1: PUSH SIMPLE (RECOMMANDÉ EN PREMIER)
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour les projets de taille normale ou si vous avez une bonne connexion:
+
+1. Ouvrir PowerShell dans le dossier du projet
+
+2. Exécuter le script:
+   .\push-claraverse-v14-22-avril-2026.ps1
+
+3. Attendre la fin du push (peut prendre plusieurs minutes)
+
+✓ Le script fait automatiquement:
+  - Configuration Git optimale
+  - Ajout de tous les fichiers
+  - Création du commit
+  - Changement du repository distant
+  - Push avec 3 tentatives automatiques
+
+
+💪 MÉTHODE 2: COMMITS MULTIPLES (SI MÉTHODE 1 ÉCHOUE)
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour les gros projets (> 100 MB) ou si le push simple échoue:
+
+1. Ouvrir PowerShell dans le dossier du projet
+
+2. Exécuter le script:
+   .\push-commits-multiples-v14.ps1
+
+3. Attendre la fin (peut prendre 10-20 minutes)
+
+✓ Le script divise le projet en 7 parties:
+  1. Code Source React/TypeScript (src/)
+  2. Backend Python (py_backend/)
+  3. Fichiers Publics (public/)
+  4. Documentation Backend
+  5. Documentation Déploiement
+  6. Autres Documentations
+  7. Fichiers Restants (configuration, scripts)
+
+✓ Chaque partie est pushée séparément avec retry automatique
+
+
+🎯 MÉTHODE 3: GITHUB DESKTOP (SOLUTION DE SECOURS)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si les deux scripts échouent:
+
+1. Télécharger GitHub Desktop: https://desktop.github.com/
+
+2. Ouvrir GitHub Desktop
+
+3. File > Add Local Repository > Sélectionner le dossier ClaraVerse
+
+4. Repository > Repository Settings > Remote
+   - Changer l'URL vers:
+     https://github.com/sekadalle2024/Claverse_windows__v_14_22-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+
+5. Créer un commit avec tous les fichiers
+
+6. Cliquer sur "Push origin"
+
+✓ GitHub Desktop gère automatiquement les gros fichiers
+
+
+📊 VÉRIFICATION APRÈS PUSH
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vérifier dans PowerShell:
+   git status
+   
+   Résultat attendu: "Your branch is up to date with 'origin/master'"
+
+2. Vérifier sur GitHub:
+   Ouvrir: https://github.com/sekadalle2024/Claverse_windows__v_14_22-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+   
+   ✓ Tous les fichiers doivent être présents
+   ✓ Le dernier commit doit être visible
+
+
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Erreur "HTTP 408 Timeout"
+   → Utiliser la Méthode 2 (Commits Multiples)
+
+❌ Erreur "Connection reset"
+   → Vérifier votre connexion Internet
+   → Réessayer après quelques minutes
+   → Utiliser GitHub Desktop (Méthode 3)
+
+❌ Erreur "Repository not found"
+   → Vérifier que le repository existe sur GitHub
+   → Créer le repository s'il n'existe pas
+
+❌ Le script ne démarre pas
+   → Ouvrir PowerShell en tant qu'administrateur
+   → Exécuter: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ push-claraverse-v14-22-avril-2026.ps1
+  → Script de push simple
+
+✓ push-commits-multiples-v14.ps1
+  → Script de push en commits multiples
+
+✓ 00_COMMENCER_ICI_SAUVEGARDE_V14_22_AVRIL_2026.txt
+  → Ce fichier (guide complet)
+
+
+💡 CONSEILS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Commencer par la Méthode 1 (plus rapide si ça fonctionne)
+✓ Passer à la Méthode 2 si timeout ou erreur de connexion
+✓ Utiliser la Méthode 3 en dernier recours
+✓ Ne pas interrompre le push en cours
+✓ Vérifier toujours après le push que tout est bien sur GitHub
+
+
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+Après la sauvegarde réussie:
+
+1. Vérifier sur GitHub que tous les fichiers sont présents
+
+2. Tester le déploiement si nécessaire
+
+3. Continuer le développement normalement
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Date: 22 Avril 2026
+Projet: ClaraVerse V14
+Repository: Claverse_windows__v_14_22-04-2026_V5_docker_zeabur_ok_switch_editeur
+
+═══════════════════════════════════════════════════════════════════════════════

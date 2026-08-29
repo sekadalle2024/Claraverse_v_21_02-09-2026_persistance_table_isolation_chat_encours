@@ -1,0 +1,210 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║         📝 GUIDE CONFIGURATION RENDER - PARTIE 2 (APRÈS DÉFILEMENT)          ║
+║                    Build, Start, Variables, Plan                             ║
+║                         16 avril 2026                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+⚠️  LISEZ CECI APRÈS AVOIR FAIT DÉFILER LA PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après avoir modifié les 5 premiers champs (Name, Language, Branch, Region, Root Directory),
+faites défiler la page vers le bas pour accéder aux sections suivantes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6️⃣  BUILD COMMAND (Commande de build)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cette commande installe les dépendances Python.
+
+┌─────────────────────────────────────────────────────────────────┐
+│ pip install -r requirements.txt                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+📝 À COPIER-COLLER :
+pip install -r requirements.txt
+
+⚠️  IMPORTANT : 
+- Render devrait détecter automatiquement cette commande
+- Si le champ est vide, copiez-collez la commande ci-dessus
+- Si une autre commande est présente, remplacez-la
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7️⃣  START COMMAND (Commande de démarrage)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Cette commande démarre votre serveur FastAPI.
+
+┌─────────────────────────────────────────────────────────────────┐
+│ python main.py --host 0.0.0.0 --port $PORT                      │
+└─────────────────────────────────────────────────────────────────┘
+
+📝 À COPIER-COLLER :
+python main.py --host 0.0.0.0 --port $PORT
+
+⚠️  IMPORTANT : 
+- $PORT est une variable automatique de Render
+- Ne remplacez PAS $PORT par un nombre
+- Copiez exactement comme indiqué
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+8️⃣  ENVIRONMENT VARIABLES (Variables d'environnement)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Vous devez ajouter 3 variables d'environnement.
+
+Cherchez la section "Environment Variables" et cliquez sur "Add Environment Variable"
+
+VARIABLE 1 :
+┌─────────────────────────────────────────────────────────────────┐
+│ NAME_OF_VARIABLE : PYTHONUNBUFFERED                             │
+│ value            : 1                                            │
+└─────────────────────────────────────────────────────────────────┘
+
+VARIABLE 2 :
+┌─────────────────────────────────────────────────────────────────┐
+│ NAME_OF_VARIABLE : PYTHONDONTWRITEBYTECODE                      │
+│ value            : 1                                            │
+└─────────────────────────────────────────────────────────────────┘
+
+VARIABLE 3 :
+┌─────────────────────────────────────────────────────────────────┐
+│ NAME_OF_VARIABLE : HOST                                         │
+│ value            : 0.0.0.0                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+📝 COMMENT AJOUTER :
+
+1. Cliquez sur "+ Add Environment Variable"
+2. Dans le champ "NAME_OF_VARIABLE", tapez : PYTHONUNBUFFERED
+3. Dans le champ "value", tapez : 1
+4. Cliquez à nouveau sur "+ Add Environment Variable"
+5. Dans le champ "NAME_OF_VARIABLE", tapez : PYTHONDONTWRITEBYTECODE
+6. Dans le champ "value", tapez : 1
+7. Cliquez à nouveau sur "+ Add Environment Variable"
+8. Dans le champ "NAME_OF_VARIABLE", tapez : HOST
+9. Dans le champ "value", tapez : 0.0.0.0
+
+⚠️  IMPORTANT : 
+- Respectez exactement les majuscules/minuscules
+- Les valeurs "1" sont des chiffres, pas des lettres
+- "0.0.0.0" contient 4 zéros séparés par des points
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+9️⃣  INSTANCE TYPE (Plan tarifaire)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Faites défiler encore plus bas pour voir les plans tarifaires.
+
+OPTION 1 : PLAN STARTER ($7/mois) - RECOMMANDÉ
+┌─────────────────────────────────────────────────────────────────┐
+│ Starter                                                         │
+│ $7 / month                                                      │
+│ 512 MB RAM                                                      │
+│ 0.5 CPU                                                         │
+│ ✅ PAS DE COLD START                                            │
+└─────────────────────────────────────────────────────────────────┘
+
+📝 ACTION : Cliquez sur le bouton "Starter"
+
+OPTION 2 : PLAN FREE ($0/mois) - AVEC COLD START
+┌─────────────────────────────────────────────────────────────────┐
+│ Free                                                            │
+│ $0 / month                                                      │
+│ 512 MB RAM                                                      │
+│ 0.1 CPU                                                         │
+│ ⚠️  COLD START après 15 minutes d'inactivité                    │
+└─────────────────────────────────────────────────────────────────┘
+
+📝 ACTION : Cliquez sur le bouton "Free"
+
+💡 CONSEIL : 
+- Si vous voulez tester gratuitement : Choisissez "Free"
+- Si vous voulez un service professionnel : Choisissez "Starter"
+- Vous pouvez toujours changer de plan plus tard
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔟 DÉPLOYER LE SERVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après avoir tout configuré, cherchez le bouton en bas de la page :
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    [Deploy Web Service]                         │
+└─────────────────────────────────────────────────────────────────┘
+
+📝 ACTION : Cliquez sur "Deploy Web Service"
+
+⏱️  Le déploiement prendra 3-5 minutes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ RÉCAPITULATIF COMPLET DE LA CONFIGURATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ CHAMP                      │ VALEUR À REMPLIR                              │
+├────────────────────────────────────────────────────────────────────────────┤
+│ 1. Name                    │ clara-backend-production                      │
+│ 2. Language                │ Python 3                                      │
+│ 3. Branch                  │ main                                          │
+│ 4. Region                  │ Frankfurt (EU Central)                        │
+│ 5. Root Directory          │ py_backend                                    │
+│ 6. Build Command           │ pip install -r requirements.txt               │
+│ 7. Start Command           │ python main.py --host 0.0.0.0 --port $PORT    │
+│ 8. Environment Variables   │ PYTHONUNBUFFERED = 1                          │
+│                            │ PYTHONDONTWRITEBYTECODE = 1                   │
+│                            │ HOST = 0.0.0.0                                │
+│ 9. Instance Type           │ Starter ($7/mois) ou Free ($0/mois)           │
+└────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  CHECKLIST AVANT DE CLIQUER SUR "DEPLOY"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Name changé en "clara-backend-production"
+□ Language changé de "Docker" à "Python 3"
+□ Branch est "main"
+□ Region changée en "Frankfurt (EU Central)"
+□ Root Directory rempli avec "py_backend"
+□ Build Command : "pip install -r requirements.txt"
+□ Start Command : "python main.py --host 0.0.0.0 --port $PORT"
+□ 3 variables d'environnement ajoutées
+□ Plan tarifaire sélectionné (Starter ou Free)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 APRÈS LE DÉPLOIEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Render va construire votre application (3-5 minutes)
+2. Vous verrez les logs de déploiement en temps réel
+3. Une fois terminé, vous obtiendrez une URL comme :
+   https://clara-backend-production.onrender.com
+
+4. Testez votre API :
+   https://clara-backend-production.onrender.com/health
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 EN CAS DE PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si le déploiement échoue :
+1. Vérifiez les logs dans le dashboard Render
+2. Vérifiez que "Language" est bien "Python 3" (pas Docker)
+3. Vérifiez que "Root Directory" est bien "py_backend"
+4. Revenez me voir avec le message d'erreur
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 VOUS ÊTES PRÊT !
+
+Remplissez tous les champs et cliquez sur "Deploy Web Service" ! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

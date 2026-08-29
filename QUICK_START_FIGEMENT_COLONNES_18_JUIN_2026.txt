@@ -1,0 +1,146 @@
+╔═══════════════════════════════════════════════════════════════╗
+║  🚀 QUICK START - CORRECTION FIGEMENT DE COLONNES           ║
+║  Date: 18 juin 2026                                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📋 PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Les actions "Figer colonne" et "Annuler Figer colonne" sont présentes  
+dans le menu, mais rien ne se passe visuellement.
+
+✅ SOLUTION EN 3 ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1: TESTER DANS UN ENVIRONNEMENT ISOLÉ
+───────────────────────────────────────────────────────────────
+1. Ouvrir test-freeze-columns.html dans le navigateur
+2. Cliquer sur une cellule de la colonne 3
+3. Cliquer "Figer jusqu'à cette colonne"
+4. Scroller horizontalement
+5. ✓ Les 3 premières colonnes doivent rester visibles
+
+👉 SI ÇA FONCTIONNE : Passer à l'étape 2
+👉 SI ÇA NE FONCTIONNE PAS : Vérifier la compatibilité du navigateur
+
+
+ÉTAPE 2: APPLIQUER LA CORRECTION DANS menu.js
+───────────────────────────────────────────────────────────────
+1. Ouvrir public/menu.js
+2. Chercher la section "// === ACTIONS FIGER PANES ===" (ligne ~917)
+3. Remplacer TOUT le code jusqu'à la fonction suivante par:
+   Doc menu contextuel menu.js update/CORRECTION_FIGEMENT_COLONNES_18_JUIN_2026.js
+
+COPIER-COLLER : Lignes 15 à 245 du fichier de correction
+
+👉 Sauvegarder le fichier
+
+
+ÉTAPE 3: TESTER DANS CLARAVERSE
+───────────────────────────────────────────────────────────────
+1. Recharger Claraverse (Ctrl+F5)
+2. Ouvrir la console (F12)
+3. Créer ou sélectionner un tableau dans le chat
+4. Cliquer sur une cellule de la colonne 3
+5. Clic droit > Colonnes > Figer colonne
+6. Vérifier dans la console: "✅ Figement terminé avec succès (3 colonnes)"
+7. Scroller horizontalement
+8. ✓ Les 3 premières colonnes doivent rester visibles
+9. ✓ Une bordure rouge doit marquer la dernière colonne figée
+
+
+🔍 DÉBOGAGE SI ÇA NE FONCTIONNE PAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dans la console du navigateur:
+
+// Vérifier qu'une cellule a le sticky
+const table = document.querySelector('table');
+const firstCell = table.querySelector('td');
+console.log('Position:', firstCell.style.position);  // 'sticky' attendu
+console.log('Left:', firstCell.style.left);          // '0px' attendu
+console.log('ZIndex:', firstCell.style.zIndex);      // '100' attendu
+
+// Vérifier les largeurs
+console.log('Cell Width:', firstCell.offsetWidth);   // > 0 attendu
+
+// Vérifier le conteneur
+const container = table.parentElement;
+console.log('Overflow-X:', container.style.overflowX);  // 'auto' attendu
+console.log('Container width:', container.getBoundingClientRect().width);
+console.log('Table width:', table.getBoundingClientRect().width);
+// Table width DOIT être > Container width
+
+
+📊 RÉSULTATS ATTENDUS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ Notification: "❄️ 3 colonne(s) figée(s)"
+✓ Console: "✅ Figement terminé avec succès (3 colonnes)"
+✓ Console: "✓ Col 0: position=sticky, left=0px, bg=#ffffff"
+✓ Console: "✓ Col 1: position=sticky, left=XXpx, bg=#f9fafb"
+✓ Console: "✓ Col 2: position=sticky, left=XXpx, bg=#ffffff"
+✓ Visuel: Bordure rouge épaisse sur la dernière colonne figée
+✓ Visuel: Ombre portée à droite de la dernière colonne figée
+✓ Comportement: Les colonnes figées restent visibles lors du scroll
+
+
+❌ PROBLÈMES COURANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLÈME: Largeurs = 0 dans la console
+SOLUTION: Le tableau est probablement caché ou dans un accordéon fermé
+         → Ouvrir l'accordéon avant de figer
+
+PROBLÈME: Pas de scroll horizontal
+SOLUTION: Le tableau est trop petit pour nécessiter un scroll
+         → Ajouter plus de colonnes ou réduire la largeur de la fenêtre
+
+PROBLÈME: Les colonnes défilent quand même
+SOLUTION: Vérifier que position: sticky est bien appliqué
+         → Voir section DÉBOGAGE ci-dessus
+
+PROBLÈME: Le contenu défile par-dessus
+SOLUTION: Le z-index est insuffisant
+         → Vérifier que z-index = 100 (pas 10)
+
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ test-freeze-columns.html
+  → Page de test isolée
+
+✓ Doc menu contextuel menu.js update/DIAGNOSTIC_FIGEMENT_COLONNES_18_JUIN_2026.md
+  → Documentation complète du diagnostic
+
+✓ Doc menu contextuel menu.js update/CORRECTION_FIGEMENT_COLONNES_18_JUIN_2026.js
+  → Code corrigé à copier dans menu.js
+
+✓ QUICK_START_FIGEMENT_COLONNES_18_JUIN_2026.txt
+  → Ce fichier (guide rapide)
+
+
+📞 SUPPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si le problème persiste après avoir suivi toutes les étapes:
+
+1. Fournir un screenshot de la console avec les valeurs
+2. Copier le HTML du tableau problématique
+3. Indiquer le navigateur et la version
+
+
+🎯 PROCHAINES ÉTAPES (FUTURES AMÉLIORATIONS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 Figer lignes (en-têtes)
+📌 Figer lignes ET colonnes simultanément
+📌 Persister le figement dans localStorage
+📌 Ajuster automatiquement au resize
+📌 Animation de transition lors du figement
+📌 Indicateur visuel des colonnes figées
+
+
+════════════════════════════════════════════════════════════════
+ ✨ Le figement de colonnes devrait maintenant fonctionner ! ✨
+════════════════════════════════════════════════════════════════

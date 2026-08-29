@@ -1,0 +1,78 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🧪 TEST DE PERSISTANCE - CHECKBOXES CIA                   ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+✅ ÉTAPE 1 : Les checkboxes apparaissent
+-----------------------------------------
+FAIT ! 16 tables CIA avec 64 checkboxes détectées.
+
+🧪 ÉTAPE 2 : Tester la Sauvegarde
+----------------------------------
+1. Cochez UNE checkbox dans une table CIA
+2. Attendez 1 seconde
+3. Ouvrez la console (F12)
+4. Exécutez ce code :
+
+   const script = document.createElement('script');
+   script.src = 'public/test-persistance-immediat.js';
+   document.head.appendChild(script);
+
+5. Vérifiez le résultat dans la console
+
+RÉSULTAT ATTENDU :
+✅ "X checkbox(es) cochée(s) dans localStorage"
+
+🔄 ÉTAPE 3 : Tester la Restauration
+------------------------------------
+1. Rechargez la page (F5)
+2. Attendez 3 secondes
+3. Vérifiez si la checkbox est toujours cochée
+
+RÉSULTAT ATTENDU :
+✅ La checkbox doit être toujours cochée
+
+❌ SI LA CHECKBOX N'EST PAS COCHÉE
+-----------------------------------
+Problème : La restauration ne fonctionne pas
+
+Diagnostic dans la console (F12) :
+
+// 1. Vérifier que les données existent
+const data = JSON.parse(localStorage.getItem('claraverse_tables_data'));
+console.log('Tables:', Object.keys(data).length);
+
+// 2. Vérifier les checkboxes sauvegardées
+Object.values(data).forEach(t => {
+  const cb = t.cells ? t.cells.filter(c => c.isCheckboxCell) : [];
+  const checked = cb.filter(c => c.isChecked);
+  if (checked.length > 0) {
+    console.log('✅ Checkbox cochée sauvegardée');
+  }
+});
+
+// 3. Forcer la restauration
+window.claraverseProcessor.restoreAllTablesData();
+
+💡 SOLUTIONS POSSIBLES
+----------------------
+Solution A : Forcer la Sauvegarde
+  claraverseCommands.saveNow();
+
+Solution B : Vider le Cache et Réessayer
+  localStorage.clear();
+  location.reload();
+
+Solution C : Vérifier les Logs
+  Regardez dans la console si vous voyez :
+  - "💾 Auto-sauvegarde: X table(s) CIA sauvegardée(s)"
+  - "✅ X table(s) restaurée(s)"
+
+📞 BESOIN D'AIDE ?
+------------------
+Consultez : DEPANNAGE_CHECKBOXES_CIA.md
+
+═══════════════════════════════════════════════════════════════
+Date : 26 novembre 2025
+═══════════════════════════════════════════════════════════════

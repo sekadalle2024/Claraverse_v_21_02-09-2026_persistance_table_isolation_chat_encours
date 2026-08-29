@@ -1,0 +1,63 @@
+╔══════════════════════════════════════════════════════════════╗
+║   RÉSUMÉ - Correction Workflow N8N Recos Revision           ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 OBJECTIF
+-----------
+Corriger l'erreur "Bad escaped character in JSON" en adaptant
+le workflow n8n au FORMAT 4 attendu par claraApiService.ts
+
+📋 PROBLÈME
+-----------
+Le workflow retournait du JSON mal échappé qui ne correspondait
+pas au format attendu par le frontend.
+
+✅ SOLUTION
+-----------
+Modifier 2 nodes pour retourner : [{ "data": { "Etape...": [...] } }]
+
+🔧 MODIFICATIONS
+----------------
+1. Node "node clean" → n8n_node_clean_corrected.js
+   - Nettoie les échappements
+   - Enveloppe dans FORMAT 4
+
+2. Node "Markdown Generator" → n8n_markdown_generator_simplified.js
+   - Passthrough simple
+   - Frontend gère la conversion Markdown
+
+⏱️ TEMPS D'IMPLÉMENTATION
+--------------------------
+5 minutes
+
+📁 FICHIERS CRÉÉS
+-----------------
+1. QUICK_START_CORRECTION_N8N_RECOS.txt (guide rapide)
+2. CORRECTION_WORKFLOW_N8N_RECOS_REVISION.md (doc complète)
+3. n8n_node_clean_corrected.js (code node 1)
+4. n8n_markdown_generator_simplified.js (code node 2)
+5. exemple_reponse_n8n_format4.json (référence)
+6. test_transformation_n8n_format4.js (test)
+7. INDEX_CORRECTION_N8N_RECOS_REVISION.md (index)
+8. RESUME_CORRECTION_N8N_RECOS.txt (ce fichier)
+
+🚀 DÉMARRAGE RAPIDE
+--------------------
+1. Ouvrir : QUICK_START_CORRECTION_N8N_RECOS.txt
+2. Suivre les 5 étapes
+3. Tester avec "Recos_revision [test]"
+
+📚 DOCUMENTATION COMPLÈTE
+--------------------------
+Ouvrir : INDEX_CORRECTION_N8N_RECOS_REVISION.md
+
+✅ RÉSULTAT ATTENDU
+-------------------
+- Pas d'erreur JSON
+- Affichage de 6 tables Markdown formatées
+- Conversion automatique par le frontend
+
+═══════════════════════════════════════════════════════════════
+Date : 24 Mars 2026
+Statut : ✅ Prêt pour implémentation
+═══════════════════════════════════════════════════════════════

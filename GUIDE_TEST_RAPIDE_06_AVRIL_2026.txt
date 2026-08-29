@@ -1,0 +1,242 @@
+================================================================================
+GUIDE TEST RAPIDE - PROBLEMES 1 ET 3 (06 AVRIL 2026)
+================================================================================
+
+TEMPS ESTIME: 15 minutes
+
+================================================================================
+ETAPE 1: DEMARRER LE BACKEND (2 min)
+================================================================================
+
+Commande:
+   .\start-claraverse.ps1
+
+Attendre:
+   - Backend demarre sur http://127.0.0.1:5000
+   - Frontend demarre sur http://localhost:5173
+   - Attendre 10-15 secondes
+
+Verification:
+   - Ouvrir http://localhost:5173
+   - La page doit s'afficher
+
+================================================================================
+ETAPE 2: IMPORTER LA BALANCE (1 min)
+================================================================================
+
+Dans le chat:
+   1. Taper: Lead_balance
+   2. Appuyer sur Entree
+   3. Le dialogue de selection de fichier s'ouvre
+
+Selectionner:
+   py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+Attendre:
+   - L'import se fait automatiquement
+   - Un message de confirmation s'affiche
+
+================================================================================
+ETAPE 3: GENERER LES ETATS FINANCIERS (1 min)
+================================================================================
+
+Dans le chat:
+   1. Taper: Etat fin
+   2. Appuyer sur Entree
+
+Attendre:
+   - La generation des etats
+   - L'affichage du menu accordeon avec les etats
+
+Verifier:
+   - Le menu accordeon s'affiche
+   - Les etats sont presents (Bilan, Compte de resultat, etc.)
+
+================================================================================
+ETAPE 4: EXPORTER LA LIASSE (1 min)
+================================================================================
+
+Dans l'interface:
+   1. Chercher le bouton "Export liasse officielle"
+      (ou commande equivalente dans le menu)
+   2. Cliquer dessus
+
+Attendre:
+   - Le telechargement du fichier Excel
+
+Sauvegarder:
+   - Nom suggere: test_export_liasse_06_avril_2026.xlsx
+   - Emplacement: Bureau ou dossier de travail
+
+================================================================================
+ETAPE 5: VERIFICATION PROBLEME 1 - BRUT/AMORTISSEMENT (5 min)
+================================================================================
+
+Ouvrir:
+   test_export_liasse_06_avril_2026.xlsx
+
+Aller a l'onglet:
+   ACTIF
+
+Chercher la ligne:
+   AI (Terrains)
+
+Verifier les colonnes:
+   - Colonne E: BRUT N
+     * Doit contenir une valeur (ex: 5000000)
+     * Si vide ou 0: PROBLEME 1 PERSISTE
+   
+   - Colonne F: AMORTISSEMENT N
+     * Doit contenir une valeur (ex: 500000)
+     * Si vide ou 0: PROBLEME 1 PERSISTE
+   
+   - Colonne G: NET N
+     * Doit contenir une valeur (ex: 4500000)
+     * Doit etre egal a: BRUT - AMORTISSEMENT
+   
+   - Colonne H: NET N-1
+     * Doit contenir une valeur (ex: 4200000)
+
+Verifier aussi:
+   - Ligne AJ (Batiments)
+   - Ligne AK (Installations)
+   - Ligne AZ (TOTAL ACTIF IMMOBILISE)
+   - Ligne DZ (TOTAL GENERAL ACTIF)
+
+RESULTAT:
+   [ ] PROBLEME 1 RESOLU: Colonnes E, F, G, H remplies
+   [ ] PROBLEME 1 PERSISTE: Colonnes E, F vides
+
+================================================================================
+ETAPE 6: VERIFICATION PROBLEME 3 - TFT (5 min)
+================================================================================
+
+Dans le meme fichier:
+   test_export_liasse_06_avril_2026.xlsx
+
+Aller a l'onglet:
+   TFT (Tableau des Flux de Tresorerie)
+
+Chercher la ligne:
+   ZA (Tresorerie ouverture)
+
+Verifier les colonnes:
+   - Colonne I: Exercice N
+     * Doit contenir une valeur (ex: 1800000)
+     * Si vide ou 0: PROBLEME 3 PERSISTE
+   
+   - Colonne K: Exercice N-1
+     * Doit contenir une valeur (ex: 1500000)
+     * Si vide ou 0: PROBLEME 3 PERSISTE
+
+Verifier aussi:
+   - Ligne ZB (Flux operationnels)
+   - Ligne ZC (Flux investissement)
+   - Ligne ZH (Tresorerie cloture)
+   - Lignes FA a FK (Details des flux)
+
+RESULTAT:
+   [ ] PROBLEME 3 RESOLU: Colonnes I, K remplies
+   [ ] PROBLEME 3 PERSISTE: Colonnes I, K vides
+
+================================================================================
+ETAPE 7: DOCUMENTER LES RESULTATS (1 min)
+================================================================================
+
+Creer un fichier:
+   00_RESULTATS_TEST_06_AVRIL_2026.txt
+
+Contenu:
+   ================================================================================
+   RESULTATS TEST - PROBLEMES 1 ET 3 (06 AVRIL 2026)
+   ================================================================================
+   
+   Date: 06 AVRIL 2026
+   Heure: [HEURE DU TEST]
+   Fichier teste: test_export_liasse_06_avril_2026.xlsx
+   
+   PROBLEME 1 - BRUT/AMORTISSEMENT:
+      Statut: [ ] RESOLU / [ ] PERSISTE
+      
+      Details:
+         - Colonne E (BRUT N): [ ] Remplie / [ ] Vide
+         - Colonne F (AMORT N): [ ] Remplie / [ ] Vide
+         - Colonne G (NET N): [ ] Remplie / [ ] Vide
+         - Colonne H (NET N-1): [ ] Remplie / [ ] Vide
+      
+      Observations:
+         [VOS OBSERVATIONS]
+   
+   PROBLEME 3 - TFT:
+      Statut: [ ] RESOLU / [ ] PERSISTE
+      
+      Details:
+         - Colonne I (N): [ ] Remplie / [ ] Vide
+         - Colonne K (N-1): [ ] Remplie / [ ] Vide
+      
+      Observations:
+         [VOS OBSERVATIONS]
+   
+   CONCLUSION:
+      [VOTRE CONCLUSION]
+   
+   ================================================================================
+
+================================================================================
+QUE FAIRE SI LES PROBLEMES PERSISTENT?
+================================================================================
+
+SI PROBLEME 1 PERSISTE:
+   1. Consulter: 00_RECAP_TESTS_ET_PROCHAINES_ETAPES_06_AVRIL_2026.txt
+   2. Section: "PROCHAINES ETAPES - PRIORITE 2"
+   3. Suivre les instructions pour modifier etats_financiers_v2.py
+
+SI PROBLEME 3 PERSISTE:
+   1. Consulter: 00_RECAP_TESTS_ET_PROCHAINES_ETAPES_06_AVRIL_2026.txt
+   2. Section: "PROCHAINES ETAPES - PRIORITE 2"
+   3. Verifier les logs du backend
+
+SI LES COLONNES SONT DECALEES:
+   1. Consulter: 00_RECAP_TESTS_ET_PROCHAINES_ETAPES_06_AVRIL_2026.txt
+   2. Section: "PROCHAINES ETAPES - PRIORITE 2"
+   3. Verifier le template et ajuster le code
+
+================================================================================
+FICHIERS DE REFERENCE
+================================================================================
+
+Documentation:
+   - 00_RECAP_TESTS_ET_PROCHAINES_ETAPES_06_AVRIL_2026.txt
+   - 00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+   - QUICK_START_PROBLEMES_1_ET_3.txt
+
+Analyse:
+   - Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+     02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+Code:
+   - py_backend/export_liasse.py (corrections implementees)
+   - py_backend/etats_financiers_v2.py (a verifier si problemes)
+
+================================================================================
+CHECKLIST RAPIDE
+================================================================================
+
+[ ] Backend demarre
+[ ] Balance importee
+[ ] Etats financiers generes
+[ ] Liasse exportee
+[ ] Onglet ACTIF verifie
+[ ] Onglet TFT verifie
+[ ] Resultats documentes
+
+================================================================================
+TEMPS TOTAL: 15 minutes
+================================================================================
+
+Bonne chance avec les tests!
+
+================================================================================
+Derniere mise a jour: 06 AVRIL 2026 - 21:00
+Agent: Kiro AI Assistant
+================================================================================

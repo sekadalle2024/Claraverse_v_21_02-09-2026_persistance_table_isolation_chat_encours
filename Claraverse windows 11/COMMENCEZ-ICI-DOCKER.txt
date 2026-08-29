@@ -1,0 +1,183 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║     🐳 DÉPLOIEMENT DOCKER E-AUDIT (CLARAVERSE)               ║
+║        Configuration WSL2 + Docker Compose                    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📋 RÉSUMÉ DE LA CONFIGURATION
+═══════════════════════════════════════════════════════════════
+
+✅ Environnement: Windows 10 + WSL2 Ubuntu 24.04.1
+✅ Docker: 27.5.1 (fonctionnel)
+✅ Docker Compose: v2.32.4 (fonctionnel)
+✅ Frontend: React/Vite + Nginx (port 8080)
+✅ Backend: Python/FastAPI (port 5000)
+✅ Réseau: e-audit-network (bridge)
+✅ Persistance: Volume backend-data
+
+⚠️  IMPORTANT: Port frontend changé de 3000 → 8080
+    (Flowise utilise déjà le port 3000)
+
+
+🚀 DÉMARRAGE EN 3 COMMANDES
+═══════════════════════════════════════════════════════════════
+
+Ouvrez WSL2 Ubuntu et exécutez:
+
+1️⃣  Vérifier l'environnement
+    ./check-docker-setup.sh
+
+2️⃣  Builder les images Docker (5-10 min)
+    ./build-docker.sh
+
+3️⃣  Démarrer l'application
+    ./start-docker.sh
+
+
+🌐 ACCÈS À L'APPLICATION
+═══════════════════════════════════════════════════════════════
+
+Frontend:     http://localhost:8080
+Backend:      http://localhost:5000
+Health Check: http://localhost:5000/health
+
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════
+
+Configuration Docker:
+  ✓ Dockerfile.frontend
+  ✓ Dockerfile.backend
+  ✓ docker-compose.yml
+  ✓ .dockerignore
+
+Scripts:
+  ✓ build-docker.sh
+  ✓ start-docker.sh
+  ✓ stop-docker.sh
+  ✓ check-docker-setup.sh
+
+Documentation:
+  ✓ INSTRUCTIONS-FINALES-DOCKER.md  ← LISEZ CECI EN PREMIER
+  ✓ README-DOCKER.md
+  ✓ DEMARRAGE-RAPIDE-DOCKER.md
+  ✓ COMMANDES-DOCKER-WSL2.txt
+  ✓ DOCKER-SETUP-COMPLET.md
+
+
+🔧 COMMANDES ESSENTIELLES
+═══════════════════════════════════════════════════════════════
+
+Démarrer:
+  docker compose up -d
+
+Arrêter:
+  docker compose down
+
+Logs:
+  docker compose logs -f
+
+État:
+  docker compose ps
+
+Redémarrer:
+  docker compose restart
+
+Rebuild:
+  docker compose build --no-cache
+
+
+⚠️  PORTS UTILISÉS DANS VOTRE ENVIRONNEMENT
+═══════════════════════════════════════════════════════════════
+
+❌ 3000 - Flowise (conflit évité)
+✅ 8080 - E-audit Frontend (nouveau port)
+✅ 5000 - E-audit Backend
+❌ 5001 - Dockge
+❌ 5002 - Lead Balance
+❌ 5432 - PostgreSQL
+❌ 27017 - MongoDB
+
+
+🐛 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════
+
+Docker ne démarre pas:
+  sudo service docker start
+
+Voir les logs:
+  docker compose logs -f backend
+  docker compose logs -f frontend
+
+Rebuild complet:
+  docker compose down
+  docker compose build --no-cache
+  docker compose up -d
+
+Nettoyer l'espace disque (93% utilisé):
+  docker system prune -a
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+Pour plus de détails, consultez:
+
+1. INSTRUCTIONS-FINALES-DOCKER.md  ← Commencez ici
+2. DEMARRAGE-RAPIDE-DOCKER.md      ← Guide rapide
+3. README-DOCKER.md                 ← Documentation complète
+4. COMMANDES-DOCKER-WSL2.txt        ← Référence commandes
+
+
+🎯 WORKFLOW RECOMMANDÉ
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir WSL2 Ubuntu
+   wsl
+
+2. Naviguer vers le projet
+   cd /mnt/c/Users/LEADER/votre-projet
+
+3. Vérifier l'environnement
+   ./check-docker-setup.sh
+
+4. Builder les images
+   ./build-docker.sh
+
+5. Démarrer l'application
+   ./start-docker.sh
+
+6. Ouvrir le navigateur
+   http://localhost:8080
+
+
+✅ CHECKLIST DE DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════
+
+[ ] Docker fonctionne dans WSL2
+[ ] Scripts rendus exécutables (chmod +x *.sh)
+[ ] Vérification réussie (./check-docker-setup.sh)
+[ ] Build réussi (./build-docker.sh)
+[ ] Conteneurs démarrés (./start-docker.sh)
+[ ] Frontend accessible (http://localhost:8080)
+[ ] Backend accessible (http://localhost:5000)
+[ ] Logs sans erreurs (docker compose logs)
+
+
+🆘 BESOIN D'AIDE?
+═══════════════════════════════════════════════════════════════
+
+1. Consultez INSTRUCTIONS-FINALES-DOCKER.md
+2. Vérifiez les logs: docker compose logs -f
+3. Vérifiez l'état: docker compose ps
+4. Redémarrez: docker compose restart
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║              🎉 CONFIGURATION TERMINÉE!                       ║
+║                                                               ║
+║     Exécutez: ./build-docker.sh && ./start-docker.sh        ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝

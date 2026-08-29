@@ -1,0 +1,187 @@
+═══════════════════════════════════════════════════════════════════
+🚨 SOLUTION IMMÉDIATE - DÉPLOIEMENT ZEABUR
+═══════════════════════════════════════════════════════════════════
+Date: 20 avril 2026
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🎯 PROBLÈME IDENTIFIÉ                        │
+└─────────────────────────────────────────────────────────────────┘
+
+BACKEND BUILD LE FRONTEND AU LIEU DU BACKEND !
+
+Preuve dans les logs (capture F2):
+• Upload de dist/assets/*.js
+• Pas de logs Python/pip/uvicorn
+• Le service "backend" build le service "frontend" du docker-compose.yml
+
+═══════════════════════════════════════════════════════════════════
+✅ SOLUTION EN 3 ÉTAPES (5 MINUTES)
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: RECONFIGURER LE SERVICE BACKEND                       │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Aller sur Zeabur Dashboard
+   → https://zeabur.com/dashboard
+
+2. Sélectionner votre projet
+   → "claraverse-production" (ou nom similaire)
+
+3. Cliquer sur le service "Backend"
+   → Celui qui a le domaine pybackend.zeabur.app
+
+4. Aller dans l'onglet "Settings"
+
+5. Trouver la section "Build Configuration"
+   
+6. VÉRIFIER/MODIFIER ces paramètres:
+   ┌──────────────────────────────────────────────────────────────┐
+   │ Build Method:     Docker Compose                             │
+   │ Service Name:     backend          ← ⚠️ DOIT ÊTRE "backend" │
+   │ Root Directory:   /                                          │
+   │ Port:             8080                                       │
+   └──────────────────────────────────────────────────────────────┘
+
+7. Cliquer "Save" ou "Update"
+
+8. Cliquer "Redeploy" pour forcer un nouveau build
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: VÉRIFIER LE SERVICE FRONTEND                          │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Cliquer sur le service "Frontend"
+   → Celui qui a le domaine prclaravi.zeabur.app
+
+2. Aller dans "Settings"
+
+3. VÉRIFIER ces paramètres:
+   ┌──────────────────────────────────────────────────────────────┐
+   │ Build Method:     Docker Compose                             │
+   │ Service Name:     frontend         ← ⚠️ DOIT ÊTRE "frontend"│
+   │ Root Directory:   /                                          │
+   │ Port:             80                                         │
+   └──────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: ATTENDRE ET VÉRIFIER                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Attendre que le build se termine (3-5 minutes)
+
+2. Vérifier les logs du BACKEND:
+   ✅ Vous devez voir:
+      • "Collecting packages..."
+      • "pip install"
+      • "Installing dependencies"
+      • "Uvicorn running on http://0.0.0.0:8080"
+   
+   ❌ Vous NE devez PAS voir:
+      • "dist/assets/*.js"
+      • "npm install"
+      • "vite build"
+
+3. Tester les URLs:
+   
+   Backend:
+   https://pybackend.zeabur.app/health
+   → Doit retourner: {"status": "healthy"}
+   
+   Frontend:
+   https://prclaravi.zeabur.app
+   → Doit afficher l'application
+
+═══════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC VISUEL
+═══════════════════════════════════════════════════════════════════
+
+AVANT (INCORRECT):
+┌─────────────────────────────────────────────────────────────────┐
+│ Service: backend                                                │
+│ ├── Build Method: Docker Compose                               │
+│ ├── Service Name: frontend  ← ❌ ERREUR ICI                    │
+│ └── Logs: dist/assets/*.js  ← Build du frontend                │
+└─────────────────────────────────────────────────────────────────┘
+
+APRÈS (CORRECT):
+┌─────────────────────────────────────────────────────────────────┐
+│ Service: backend                                                │
+│ ├── Build Method: Docker Compose                               │
+│ ├── Service Name: backend   ← ✅ CORRECT                       │
+│ └── Logs: pip install...    ← Build du backend                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+📋 CHECKLIST DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════
+
+CONFIGURATION BACKEND:
+□ Build Method = "Docker Compose"
+□ Service Name = "backend"
+□ Port = 8080
+□ Root Directory = "/"
+
+CONFIGURATION FRONTEND:
+□ Build Method = "Docker Compose"
+□ Service Name = "frontend"
+□ Port = 80
+□ Root Directory = "/"
+
+LOGS BACKEND (après redeploy):
+□ Voir "pip install"
+□ Voir "Uvicorn running"
+□ NE PAS voir "dist/assets"
+
+URLS FONCTIONNELLES:
+□ https://pybackend.zeabur.app/health → JSON
+□ https://prclaravi.zeabur.app → Application
+
+═══════════════════════════════════════════════════════════════════
+🎯 ALTERNATIVE: DÉPLOIEMENT SÉPARÉ
+═══════════════════════════════════════════════════════════════════
+
+Si Docker Compose pose problème, vous pouvez déployer séparément:
+
+OPTION A: Backend seul (py_backend/)
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. Créer nouveau service "Backend"                              │
+│ 2. Build Method: Dockerfile                                     │
+│ 3. Root Directory: py_backend                                   │
+│ 4. Dockerfile Path: Dockerfile                                  │
+│ 5. Port: 8080                                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+OPTION B: Frontend seul (racine)
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. Créer nouveau service "Frontend"                             │
+│ 2. Build Method: Dockerfile                                     │
+│ 3. Root Directory: /                                            │
+│ 4. Dockerfile Path: Dockerfile.frontend                         │
+│ 5. Port: 80                                                     │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+💡 POURQUOI CE PROBLÈME ?
+═══════════════════════════════════════════════════════════════════
+
+Le docker-compose.yml définit 2 services:
+• "backend"  → Build py_backend/Dockerfile
+• "frontend" → Build Dockerfile.frontend
+
+Zeabur doit savoir QUEL service builder pour chaque déploiement.
+
+Si le service Zeabur "backend" a Service Name = "frontend",
+il va builder le mauvais service du docker-compose.yml !
+
+═══════════════════════════════════════════════════════════════════
+📞 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════════
+
+Si le problème persiste après ces corrections:
+
+1. Vérifier les variables d'environnement dans Zeabur
+2. Consulter les logs complets du build
+3. Essayer l'option de déploiement séparé (sans Docker Compose)
+
+═══════════════════════════════════════════════════════════════════

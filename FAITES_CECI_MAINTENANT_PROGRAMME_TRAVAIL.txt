@@ -1,0 +1,152 @@
+═══════════════════════════════════════════════════════════════════
+🚀 FAITES CECI MAINTENANT - Fix Programme de Travail N8N
+═══════════════════════════════════════════════════════════════════
+
+⚡ TEST ULTRA-RAPIDE (30 SECONDES)
+═══════════════════════════════════════════════════════════════════
+
+1. Démarrer le serveur:
+   npm run dev
+
+2. Ouvrir dans le navigateur:
+   http://localhost:5173/test-n8n-programme-travail.html
+
+3. Cliquer sur:
+   "Envoyer Test Programme"
+
+4. Vérifier les logs:
+   ✅ Si vous voyez "FORMAT DÉTECTÉ: Webhook htlm_processor" → C'EST BON !
+   ❌ Si vous voyez "OUTPUT VIDE" → Voir ci-dessous
+
+
+═══════════════════════════════════════════════════════════════════
+📋 CE QUI A ÉTÉ CORRIGÉ
+═══════════════════════════════════════════════════════════════════
+
+✅ Fichier modifié: public/Flowise.js
+✅ Fonction: normalizeN8nResponse
+✅ Support du format: response.body[0].output
+✅ Logs détaillés ajoutés
+
+
+═══════════════════════════════════════════════════════════════════
+🧪 TESTS DISPONIBLES
+═══════════════════════════════════════════════════════════════════
+
+1. Page HTML:
+   http://localhost:5173/test-n8n-programme-travail.html
+
+2. Console du navigateur (F12):
+   await window.ClaraverseN8nV17.testN8nConnection();
+
+3. Test réel:
+   Créer une table avec colonne "Flowise" contenant "Programme de travail"
+
+
+═══════════════════════════════════════════════════════════════════
+📊 LOGS ATTENDUS
+═══════════════════════════════════════════════════════════════════
+
+✅ SUCCÈS:
+   ✅ ✅ ✅ FORMAT DÉTECTÉ: Webhook htlm_processor
+   📊 Status: success
+   📋 Content length: 19372
+
+❌ ERREUR:
+   ❌ ========== ERREUR: OUTPUT VIDE ==========
+
+
+═══════════════════════════════════════════════════════════════════
+🔧 EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════
+
+PROBLÈME: "Output vide ou null"
+
+SOLUTION:
+1. Tester l'endpoint:
+   curl -X POST "https://xomava4845.app.n8n.cloud/webhook/htlm_processor" \
+     -H "Content-Type: application/json" \
+     -d '{"question":"<table><tr><th>Test</th></tr></table>"}'
+
+2. Vérifier que le workflow n8n fonctionne
+
+3. Appliquer le patch de secours:
+   // Dans la console (F12)
+   const script = document.createElement('script');
+   script.src = '/patch-flowise-n8n-response.js';
+   document.head.appendChild(script);
+
+
+═══════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════
+
+COMMENCEZ PAR:
+→ COMMENCEZ_ICI_FIX_PROGRAMME_TRAVAIL.md
+
+PUIS:
+→ INDEX_FIX_PROGRAMME_TRAVAIL.md (vue d'ensemble)
+→ TESTEZ_MAINTENANT_PROGRAMME_TRAVAIL.md (guide de test)
+→ SOLUTION_PROGRAMME_TRAVAIL_N8N.md (technique)
+
+
+═══════════════════════════════════════════════════════════════════
+🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════
+
+// Console du navigateur (F12)
+
+// Vérifier la version
+console.log(window.ClaraverseN8nV17.version);
+
+// Tester la connexion
+await window.ClaraverseN8nV17.testN8nConnection();
+
+// Forcer un scan
+window.ClaraverseN8nV17.scanAndProcess();
+
+// Voir le cache
+window.ClaraverseN8nV17.getCacheInfo();
+
+// Effacer le cache
+window.ClaraverseN8nV17.clearAllCache();
+
+
+═══════════════════════════════════════════════════════════════════
+✅ CHECKLIST
+═══════════════════════════════════════════════════════════════════
+
+[ ] Serveur démarré
+[ ] Page de test ouverte
+[ ] Test effectué
+[ ] Logs vérifiés
+[ ] Format détecté
+[ ] Test réel OK
+
+
+═══════════════════════════════════════════════════════════════════
+🎉 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════
+
+Après le test:
+✅ Tables "Programme de travail" détectées
+✅ Données envoyées à n8n
+✅ Réponse normalisée
+✅ Tables affichées dans le chat
+✅ Aucune erreur
+
+
+═══════════════════════════════════════════════════════════════════
+📞 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════════
+
+Partagez:
+1. Tous les logs de la console
+2. Structure de la réponse n8n
+3. Capture d'écran de la table
+4. Résultat du test curl
+
+
+═══════════════════════════════════════════════════════════════════
+Version: 17.1.0 | Date: 2025-12-03 | Statut: ✅ Prêt à tester
+═══════════════════════════════════════════════════════════════════

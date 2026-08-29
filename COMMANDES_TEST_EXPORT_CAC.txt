@@ -1,0 +1,36 @@
+# COMMANDES RAPIDES - TEST EXPORT SYNTHÈSE CAC
+
+# 1. Redémarrer le backend
+.\stop-claraverse.ps1
+.\start-claraverse.ps1
+
+# 2. Tester l'export avec le script PowerShell
+.\test-export-synthese-cac-final.ps1
+
+# 3. Vérifier les logs backend
+# (dans le terminal où le backend tourne, chercher les lignes avec "Export Synthèse CAC FINAL")
+
+# 4. Test manuel dans l'interface
+# - Ouvrir le chat Claraverse
+# - Générer des tables FRAP, Recos révision, Recos CI
+# - Clic droit → "Rapports CAC" → "Export Synthèse CAC"
+# - Vérifier le fichier Word téléchargé
+
+# 5. Vérifier que le nouveau router est chargé
+# Chercher dans les logs au démarrage:
+# "✅ Export Synthèse CAC FINAL router loaded successfully"
+
+# 6. Tester l'endpoint directement avec curl (Windows)
+curl -X POST http://localhost:5000/api/word/export-synthese-cac-final `
+  -H "Content-Type: application/json" `
+  -d '{\"frap_points\":[],\"recos_revision_points\":[],\"recos_controle_interne_points\":[],\"date_rapport\":\"2026-03-25\"}' `
+  --output test.docx
+
+# 7. Vérifier les fichiers modifiés
+Get-ChildItem py_backend/export_synthese_cac*.py
+Get-Content public/menu.js | Select-String "export-synthese-cac"
+
+# 8. Voir la documentation
+Get-Content 00_CORRECTION_EXPORT_CAC.txt
+Get-Content CORRECTION_FINALE_EXPORT_CAC.md
+Get-Content RECAP_CORRECTION_CAC.txt

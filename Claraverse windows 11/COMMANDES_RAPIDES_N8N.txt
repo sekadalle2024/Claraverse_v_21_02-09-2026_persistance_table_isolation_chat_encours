@@ -1,0 +1,171 @@
+═══════════════════════════════════════════════════════
+🚀 COMMANDES RAPIDES - TEST N8N
+═══════════════════════════════════════════════════════
+
+📋 FICHIER DE TEST
+------------------
+Ouvrez dans votre navigateur:
+  public/test-n8n-connection.html
+
+Puis ouvrez la console (F12) pour voir les logs détaillés !
+
+
+🔍 TEST DANS LA CONSOLE DU NAVIGATEUR
+--------------------------------------
+Copiez-collez ce code dans la console (F12):
+
+fetch('https://xomava4845.app.n8n.cloud/webhook/htlm_processor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ question: '<table><tr><td>Test</td></tr></table>' })
+})
+.then(r => {
+  console.log('📊 Statut:', r.status, r.statusText);
+  return r.text();
+})
+.then(text => {
+  console.log('📏 Taille:', text.length, 'caractères');
+  console.log('📄 Contenu:', text);
+  if (text.length === 0) {
+    console.error('❌ PROBLÈME: Réponse vide !');
+    console.log('👉 Solution: Ajoutez un node "Respond to Webhook" dans n8n');
+  } else {
+    try {
+      const json = JSON.parse(text);
+      console.log('✅ JSON valide:', json);
+    } catch (e) {
+      console.error('❌ PROBLÈME: Pas du JSON !');
+      console.log('👉 Solution: Configurez le node pour retourner du JSON');
+    }
+  }
+})
+.catch(e => {
+  console.error('❌ ERREUR:', e.message);
+  console.log('👉 Vérifiez l\'URL et les permissions CORS');
+});
+
+
+📊 CE QUE VOUS DEVEZ VOIR
+--------------------------
+
+✅ SI ÇA MARCHE:
+  📊 Statut: 200 OK
+  📏 Taille: XXX caractères (> 0)
+  📄 Contenu: {"output":"..."}
+  ✅ JSON valide: {output: "..."}
+
+❌ SI RÉPONSE VIDE:
+  📊 Statut: 200 OK
+  📏 Taille: 0 caractères  ← PROBLÈME ICI !
+  ❌ PROBLÈME: Réponse vide !
+  👉 Solution: Ajoutez un node "Respond to Webhook" dans n8n
+
+❌ SI PAS DU JSON:
+  📊 Statut: 200 OK
+  📏 Taille: XXX caractères
+  📄 Contenu: du texte brut
+  ❌ PROBLÈME: Pas du JSON !
+  👉 Solution: Configurez le node pour retourner du JSON
+
+
+🔧 LOGS DÉTAILLÉS DANS LA CONSOLE
+----------------------------------
+Quand vous utilisez le fichier test-n8n-connection.html,
+vous verrez dans la console:
+
+═══════════════════════════════════════════════════════
+🚀 DÉBUT DU TEST N8N
+═══════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: PRÉPARATION
+  ├─ Endpoint: https://...
+  ├─ Méthode: POST
+  ├─ Content-Type: application/json
+  └─ Taille payload: XXX caractères
+
+📡 ÉTAPE 2: ENVOI DE LA REQUÊTE
+  └─ Timestamp: 2024-...
+
+📥 ÉTAPE 3: RÉCEPTION DE LA RÉPONSE
+  ├─ Statut HTTP: 200 OK
+  ├─ Durée: XXXms
+  └─ Headers reçus:
+      ├─ content-type: application/json
+      ├─ ...
+
+📄 ÉTAPE 4: LECTURE DU BODY
+  ├─ Taille reçue: XXX caractères  ← REGARDEZ ICI !
+  ├─ Est vide? ✅ NON (ou ❌ OUI)
+  ├─ Premiers 200 caractères:
+  │   {"output":"..."}
+
+🔍 ÉTAPE 5: PARSING JSON
+  ├─ Parsing: ✅ SUCCÈS (ou ❌ ÉCHEC)
+  ├─ Type: Object
+  ├─ Clés: output
+  └─ Contenu: {...}
+
+📊 ÉTAPE 6: RÉSUMÉ
+  ├─ HTTP OK? ✅ OUI
+  ├─ Données reçues? ✅ OUI (XXX car.)  ← IMPORTANT !
+  ├─ JSON valide? ✅ OUI
+  └─ Durée totale: XXXms
+
+✅ RÉSULTAT: SUCCÈS COMPLET
+
+═══════════════════════════════════════════════════════
+🏁 FIN DU TEST
+═══════════════════════════════════════════════════════
+
+
+🎯 INDICATEURS CLÉS À VÉRIFIER
+-------------------------------
+
+1. TAILLE REÇUE:
+   ✅ > 0 caractères = Données reçues
+   ❌ 0 caractères = Réponse vide (problème n8n)
+
+2. PARSING JSON:
+   ✅ SUCCÈS = Format correct
+   ❌ ÉCHEC = Pas du JSON (problème format)
+
+3. STATUT HTTP:
+   ✅ 200 OK = Connexion réussie
+   ❌ 404/500 = Problème serveur
+
+
+💡 ASTUCE
+---------
+Le nombre de caractères est l'indicateur le plus important !
+Si vous voyez "0 caractères", c'est que n8n ne renvoie rien.
+
+
+🆘 PROBLÈMES FRÉQUENTS
+----------------------
+
+PROBLÈME: "Taille reçue: 0 caractères"
+CAUSE: Pas de node "Respond to Webhook" dans n8n
+SOLUTION: Ajoutez ce node à la fin de votre workflow
+
+PROBLÈME: "Parsing: ❌ ÉCHEC"
+CAUSE: n8n retourne du texte brut, pas du JSON
+SOLUTION: Dans "Respond to Webhook", sélectionnez "JSON"
+
+PROBLÈME: "Erreur CORS"
+CAUSE: n8n bloque les requêtes depuis votre domaine
+SOLUTION: Configurez CORS dans les settings n8n
+
+
+📞 COMMANDE CURL (ALTERNATIVE)
+-------------------------------
+curl -X POST https://xomava4845.app.n8n.cloud/webhook/htlm_processor \
+  -H "Content-Type: application/json" \
+  -d '{"question":"test"}'
+
+
+📞 COMMANDE POWERSHELL (WINDOWS)
+---------------------------------
+Invoke-RestMethod -Uri "https://xomava4845.app.n8n.cloud/webhook/htlm_processor" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{"question":"test"}'

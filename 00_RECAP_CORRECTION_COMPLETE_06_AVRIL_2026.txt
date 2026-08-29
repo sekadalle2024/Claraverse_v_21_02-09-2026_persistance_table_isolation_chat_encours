@@ -1,0 +1,201 @@
+================================================================================
+RÉCAPITULATIF COMPLET - SESSION 06 AVRIL 2026
+================================================================================
+
+🎯 MISSION: Corriger les problèmes d'export de la liasse officielle
+
+================================================================================
+PROBLÈMES TRAITÉS
+================================================================================
+
+1️⃣  COLONNES BRUT ET AMORTISSEMENT VIDES
+    Statut: ✅ CORRIGÉ (avec ajustement)
+    
+2️⃣  TOTALISATIONS MANQUANTES
+    Statut: ✅ VÉRIFIÉ
+    
+3️⃣  MENU ACCORDÉON FRONTEND
+    Statut: ⚠️ À FAIRE
+    
+4️⃣  ERREUR "FAILED TO FETCH"
+    Statut: ✅ CORRIGÉ
+
+================================================================================
+CHRONOLOGIE DES CORRECTIONS
+================================================================================
+
+CORRECTION INITIALE (Problèmes 1 et 2):
+---------------------------------------
+- Ajout des balances à results_liasse
+- Vérification des totalisations
+- Documentation créée
+
+PROBLÈME DÉCOUVERT:
+-------------------
+- Erreur "failed to fetch" lors du traitement de la balance
+- Cause: DataFrames pandas non sérialisables en JSON
+
+CORRECTION FINALE:
+------------------
+- Utilisation d'un cache global pour les balances
+- Récupération du cache dans export_liasse.py
+- Problème résolu
+
+================================================================================
+SOLUTION TECHNIQUE FINALE
+================================================================================
+
+ARCHITECTURE:
+-------------
+
+┌─────────────────────────────────────────────────────────────────┐
+│ etats_financiers.py                                             │
+│                                                                 │
+│ 1. Charge les balances (balance_df, balance_n1_df)            │
+│ 2. Génère results_liasse (sérialisable JSON)                  │
+│ 3. Stocke les balances dans _balance_cache (global)           │
+│ 4. Retourne results_liasse au frontend ✅                      │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ↓ (JSON via HTTP)
+┌─────────────────────────────────────────────────────────────────┐
+│ Frontend                                                        │
+│                                                                 │
+│ - Reçoit results_liasse correctement ✅                        │
+│ - Affiche les états financiers                                 │
+│ - Demande l'export de la liasse                                │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ↓ (Requête export)
+┌─────────────────────────────────────────────────────────────────┐
+│ export_liasse.py                                                │
+│                                                                 │
+│ 1. Reçoit results_liasse                                       │
+│ 2. Récupère les balances depuis _balance_cache ✅              │
+│ 3. Enrichit avec BRUT et AMORTISSEMENT ✅                      │
+│ 4. Remplit le template Excel ✅                                │
+│ 5. Retourne le fichier Excel ✅                                │
+└─────────────────────────────────────────────────────────────────┘
+
+================================================================================
+FICHIERS MODIFIÉS
+================================================================================
+
+1. py_backend/etats_financiers.py
+   ✅ Import datetime (ligne ~7)
+   ✅ Déclaration _balance_cache (ligne ~25)
+   ✅ Stockage dans le cache (ligne ~1553)
+
+2. py_backend/export_liasse.py
+   ✅ Récupération depuis le cache (ligne ~450)
+
+================================================================================
+DOCUMENTATION CRÉÉE
+================================================================================
+
+SESSION INITIALE (Problèmes 1 et 2):
+------------------------------------
+1. 00_RECAP_FINAL_CORRECTIONS_06_AVRIL_2026.txt
+2. 00_CORRECTIONS_APPLIQUEES_PROBLEMES_PERSISTANTS_06_AVRIL_2026.txt
+3. QUICK_START_CORRECTIONS_EXPORT_LIASSE.txt
+4. test-corrections-export-liasse.ps1
+5. Doc_Etat_Fin/.../03_CORRECTIONS_FINALES_06_AVRIL_2026.md
+6. Doc_Etat_Fin/.../00_INDEX_CORRECTIONS_06_AVRIL_2026.md
+7. 00_TRAVAIL_ACCOMPLI_CORRECTIONS_06_AVRIL_2026.txt
+
+CORRECTION "FAILED TO FETCH":
+-----------------------------
+8. 00_ERREUR_FAILED_TO_FETCH_06_AVRIL_2026.txt
+9. 00_CORRECTION_FAILED_TO_FETCH_06_AVRIL_2026.txt
+10. QUICK_TEST_CORRECTION_FAILED_TO_FETCH.txt
+11. 00_RECAP_CORRECTION_COMPLETE_06_AVRIL_2026.txt (ce fichier)
+
+================================================================================
+TESTS À EFFECTUER
+================================================================================
+
+⚠️  IMPORTANT: Le backend DOIT être redémarré pour prendre en compte les
+    modifications du cache global.
+
+ÉTAPES:
+-------
+1. ✅ Redémarrer le backend: .\start-claraverse.ps1
+2. ⏳ Importer la balance (doit fonctionner sans erreur)
+3. ⏳ Générer les états financiers
+4. ⏳ Exporter la liasse officielle
+5. ⏳ Vérifier les colonnes BRUT et AMORT dans Excel
+
+LOGS À VÉRIFIER:
+----------------
+Dans etats_financiers.py:
+  ✓ "📊 Stockage des balances dans le cache global pour l'export..."
+  ✓ "✅ Balances stockées dans le cache: N=XXX lignes"
+
+Dans export_liasse.py:
+  ✓ "📊 Récupération des balances depuis le cache global..."
+  ✓ "✅ Balance N récupérée: XXX lignes"
+  ✓ "📊 Enrichissement du Bilan ACTIF avec BRUT et AMORTISSEMENT..."
+
+================================================================================
+STATUT FINAL
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────┐
+│ PROBLÈME                          │ STATUT                      │
+├───────────────────────────────────┼─────────────────────────────┤
+│ 1. Colonnes BRUT/AMORT vides      │ ✅ CORRIGÉ (cache global)  │
+│ 2. Totalisations manquantes       │ ✅ VÉRIFIÉ                 │
+│ 3. Menu accordéon frontend        │ ⚠️  À FAIRE                │
+│ 4. Erreur "failed to fetch"       │ ✅ CORRIGÉ                 │
+└─────────────────────────────────────────────────────────────────┘
+
+TESTS REQUIS: OUI (backend doit être redémarré)
+VALIDATION UTILISATEUR: EN ATTENTE
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+IMMÉDIAT:
+1. Redémarrer le backend
+2. Tester l'import de balance
+3. Tester la génération des états financiers
+4. Tester l'export de la liasse
+5. Vérifier les colonnes BRUT et AMORT
+
+COURT TERME:
+6. Modifier le menu accordéon frontend (problème 3)
+7. Tester l'affichage frontend complet
+8. Valider avec l'utilisateur
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Redémarrer le backend (OBLIGATOIRE)
+.\start-claraverse.ps1
+
+# Test rapide
+cat QUICK_TEST_CORRECTION_FAILED_TO_FETCH.txt
+
+# Voir la correction
+cat 00_CORRECTION_FAILED_TO_FETCH_06_AVRIL_2026.txt
+
+# Voir le récapitulatif initial
+cat 00_RECAP_FINAL_CORRECTIONS_06_AVRIL_2026.txt
+
+================================================================================
+RÉSUMÉ EXÉCUTIF
+================================================================================
+
+✅ 3 problèmes sur 4 résolus
+✅ Solution de cache global implémentée
+✅ Documentation complète créée
+⚠️  Backend doit être redémarré
+⏳ Tests utilisateur en attente
+
+La solution est prête pour les tests!
+
+================================================================================
+FIN DU RÉCAPITULATIF
+================================================================================

@@ -1,0 +1,188 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    ⚡ QUICK START - CORRECTION RENDER                        ║
+║                                                                              ║
+║                  Résoudre l'erreur "Root directory not found"                ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+⏰ Temps: 2 MINUTES
+📅 Date: 16 Avril 2026
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Erreur Render:
+  "Root directory 'py_backend' does not exist"
+
+Cause:
+  Votre repository GitHub a les fichiers à la RACINE, pas dans py_backend/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ SOLUTION (2 MINUTES)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Ouvrir Render Dashboard
+  → https://dashboard.render.com
+
+ÉTAPE 2: Sélectionner le service
+  → Cliquer sur "clara-backend-production"
+
+ÉTAPE 3: Aller dans Settings
+  → Menu de gauche → "Settings"
+
+ÉTAPE 4: Trouver "Root Directory"
+  → Section "Build & Deploy"
+  → Champ "Root Directory"
+  → Valeur actuelle: "py_backend"
+
+ÉTAPE 5: SUPPRIMER "py_backend"
+  → Cliquer sur "Edit" (icône crayon)
+  → EFFACER le texte "py_backend"
+  → Laisser le champ COMPLÈTEMENT VIDE
+  → Cliquer sur "Save Changes"
+
+ÉTAPE 6: Attendre le redéploiement
+  → Render redéploie automatiquement (5-10 min)
+  → Suivre les logs en temps réel
+  → Attendre "Deploy succeeded"
+
+ÉTAPE 7: Vérifier
+  → Tester: https://clara-backend-production.onrender.com/health
+  → Réponse attendue: {"status": "healthy"}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 AVANT / APRÈS
+
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT (Configuration incorrecte):
+  Root Directory: py_backend
+  → Render cherche: Back-end-python-V0_03_03_2026/py_backend/Dockerfile
+  → Erreur: Dossier py_backend/ n'existe pas
+
+APRÈS (Configuration correcte):
+  Root Directory: (vide)
+  → Render cherche: Back-end-python-V0_03_03_2026/Dockerfile
+  → Succès: Dockerfile trouvé à la racine
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 VÉRIFICATION GITHUB
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Aller sur:
+  https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+Vérifier la structure:
+
+SI vous voyez:
+  ✅ Dockerfile (à la racine)
+  ✅ main.py (à la racine)
+  ✅ requirements.txt (à la racine)
+  → Root Directory doit être VIDE
+
+SI vous voyez:
+  📁 py_backend/
+    ├── Dockerfile
+    ├── main.py
+    └── requirements.txt
+  → Root Directory doit être "py_backend"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 CONFIGURATION COMPLÈTE
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Name:                clara-backend-production
+Repository:          Back-end-python-V0_03_03_2026
+Branch:              main
+Region:              Frankfurt (EU Central)
+Root Directory:      (VIDE)
+Build Command:       (vide - Docker gère)
+Start Command:       (vide - Docker gère)
+
+Variables d'environnement:
+  HOST=0.0.0.0
+  PORT=5000
+  PYTHONDONTWRITEBYTECODE=1
+  PYTHONUNBUFFERED=1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🐛 DÉPANNAGE
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Erreur persiste après suppression de Root Directory?
+
+1. Vérifier que le champ est vraiment vide
+2. Vérifier que vous avez cliqué sur "Save Changes"
+3. Forcer un redéploiement manuel:
+   → Dashboard → Service → "Manual Deploy" → "Deploy latest commit"
+
+Nouvelle erreur "Dockerfile not found"?
+
+1. Vérifier sur GitHub que Dockerfile existe à la racine
+2. Vérifier que le nom est exact: "Dockerfile" (avec D majuscule)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Guide complet:
+  Doc Koyeb deploy/SOLUTION_ERREUR_ROOT_DIRECTORY_RENDER_16_AVRIL_2026.md
+
+Valeurs à copier-coller:
+  VALEURS_A_COPIER_COLLER_RENDER.txt
+
+Action immédiate:
+  00_ACTION_IMMEDIATE_ROOT_DIRECTORY_16_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CHECKLIST
+
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] Ouvert Render Dashboard
+[ ] Sélectionné clara-backend-production
+[ ] Allé dans Settings
+[ ] Trouvé "Root Directory"
+[ ] Supprimé "py_backend"
+[ ] Laissé le champ VIDE
+[ ] Cliqué sur "Save Changes"
+[ ] Redéploiement démarré
+[ ] Logs vérifiés
+[ ] Déploiement réussi
+[ ] Endpoint /health testé
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 SUCCÈS
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre backend est maintenant déployé sur:
+  https://clara-backend-production.onrender.com
+
+Prochaine étape:
+  Mettre à jour le frontend avec cette URL
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Créé le: 16 Avril 2026
+Auteur: Clara Team
+Version: 1.0.0
+
+═══════════════════════════════════════════════════════════════════════════════

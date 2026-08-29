@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════════
+   SOLUTION IMMÉDIATE - 26 MARS 2026
+═══════════════════════════════════════════════════════════════
+
+✅ PROBLÈME IDENTIFIÉ ET CORRIGÉ
+
+Le sélecteur CSS cherchait les tables dans le mauvais conteneur.
+
+═══════════════════════════════════════════════════════════════
+CORRECTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════
+
+Fichier: public/menu.js (ligne ~7350)
+
+AVANT (incorrect):
+------------------
+chatContainer = document.querySelector('div.prose');
+allTables = chatContainer.querySelectorAll('table');
+→ Résultat: 0 tables trouvées ❌
+
+APRÈS (correct):
+----------------
+allTables = document.querySelectorAll('div.prose table');
+→ Résultat: 24 tables trouvées ✅
+
+═══════════════════════════════════════════════════════════════
+ÉTAPES À SUIVRE (5 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+1. VÉRIFIER LES DÉPENDANCES PYTHON
+   → .\verifier-dependances-python.ps1
+   → Attendre la fin de l'installation
+
+2. REDÉMARRER LE BACKEND
+   → .\stop-claraverse.ps1
+   → .\start-claraverse-conda.ps1
+
+3. RAFRAÎCHIR LE FRONTEND
+   → Ctrl+F5 dans le navigateur
+
+4. TESTER L'EXPORT
+   → Clic droit sur une table
+   → "Export Synthèse CAC"
+   → Vérifier les logs (F12)
+
+═══════════════════════════════════════════════════════════════
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+Console (F12):
+--------------
+✅ [Export CAC] Utilisation du sélecteur global: div.prose table
+🔍 [Export CAC] 24 table(s) Claraverse trouvée(s)
+📊 [Export CAC] Points collectés:
+   - FRAP: X
+   - Recos Révision: X
+   - Recos Contrôle Interne: X
+✅ Synthèse CAC exportée! (X points)
+
+Fichier Word:
+-------------
+✅ Téléchargement automatique
+✅ Contenu complet
+✅ Tous les points présents
+
+═══════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+✅ public/menu.js
+   - exportSyntheseCAC() (ligne ~7350)
+   - Utilisation du sélecteur global
+
+✅ verifier-dependances-python.ps1 (NOUVEAU)
+   - Vérification et installation des dépendances
+
+═══════════════════════════════════════════════════════════════
+DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+📄 SOLUTION_FINALE_DETECTION_TABLES_26_MARS_2026.md
+   → Documentation complète
+
+📄 verifier-dependances-python.ps1
+   → Script de vérification
+
+📄 00_SOLUTION_IMMEDIATE_26_MARS_2026.txt
+   → Ce fichier (guide rapide)
+
+═══════════════════════════════════════════════════════════════
+PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════
+
+→ Exécuter: .\verifier-dependances-python.ps1
+
+═══════════════════════════════════════════════════════════════
+
+Date: 26 Mars 2026
+Statut: ✅ CORRIGÉ - Prêt pour tests

@@ -1,0 +1,68 @@
+═══════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC COLLECTE TABLES - LISEZ-MOI
+═══════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME
+───────────────────────────────────────────────────────────────────
+HTTP REQUEST → n8n ✅ Fonctionne
+Claraverse → n8n ❌ Données vides
+
+HYPOTHÈSE : Les tables ne sont pas collectées dans Claraverse
+
+🧪 SOLUTION
+───────────────────────────────────────────────────────────────────
+Outil de diagnostic créé pour identifier le problème
+
+🚀 UTILISATION (5 min)
+───────────────────────────────────────────────────────────────────
+1. Démarrer Claraverse :
+    npm run dev
+
+2. Créer des tables de test :
+    | Rubrique | Description |
+    |----------|-------------|
+    | Etape    | Programme   |
+
+    | Flowise |
+    |---------|
+    | CIA     |
+
+3. Ouvrir l'outil :
+    http://localhost:5173/diagnostic-collecte-tables-claraverse.html
+
+4. Cliquer sur "Analyser le DOM"
+
+5. Vérifier les statistiques :
+    - Divs Prose : > 0 ?
+    - Tables Totales : > 0 ?
+    - Avec En-têtes Requis : > 0 ?
+    - Correspondantes : > 0 ?
+
+📊 RÉSULTATS
+───────────────────────────────────────────────────────────────────
+Si Correspondantes = 0 :
+    → Les tables ne sont pas collectées
+    → Voir DIAGNOSTIC_COLLECTE_TABLES_GUIDE.md
+
+Si Correspondantes > 0 :
+    → Les tables sont collectées
+    → Le problème est dans l'envoi à n8n
+    → Voir FIX_N8N_REPONSE_VIDE_V17.2_SOLUTION.md
+
+📚 DOCUMENTATION
+───────────────────────────────────────────────────────────────────
+Outil :
+    → public/diagnostic-collecte-tables-claraverse.html
+
+Guide :
+    → DIAGNOSTIC_COLLECTE_TABLES_GUIDE.md
+
+Actions :
+    → ACTION_IMMEDIATE_COLLECTE_TABLES.txt
+
+Résumé :
+    → RESUME_PROBLEME_COLLECTE_TABLES.md
+
+═══════════════════════════════════════════════════════════════════
+Version: 1.0 | Date: 2025-12-06 | Status: Outil Créé
+═══════════════════════════════════════════════════════════════════

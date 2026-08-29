@@ -1,0 +1,253 @@
+═══════════════════════════════════════════════════════════════
+  🧪 TEST N8N V6 - DÉTECTION CHECKBOXES
+═══════════════════════════════════════════════════════════════
+
+📍 OBJECTIF
+───────────────────────────────────────────────────────────────
+Vérifier que le code n8n V6 détecte correctement l'état des
+checkboxes et retourne true/false dans le JSON.
+
+
+📍 FICHIER À UTILISER
+───────────────────────────────────────────────────────────────
+n8n-code-javascript3-V6-CHECKBOX.js
+
+
+📍 TEST 1: CHECKBOX COCHÉE
+───────────────────────────────────────────────────────────────
+
+HTML INPUT:
+<td data-checked="true">
+  <input type="checkbox" checked="checked">
+</td>
+
+JSON OUTPUT ATTENDU:
+{
+  "Reponse User": true
+}
+
+✅ RÉSULTAT: true (booléen)
+
+
+📍 TEST 2: CHECKBOX NON COCHÉE
+───────────────────────────────────────────────────────────────
+
+HTML INPUT:
+<td data-checked="false">
+  <input type="checkbox">
+</td>
+
+JSON OUTPUT ATTENDU:
+{
+  "Reponse User": false
+}
+
+✅ RÉSULTAT: false (booléen)
+
+
+📍 TEST 3: TABLE COMPLÈTE CIA
+───────────────────────────────────────────────────────────────
+
+HTML INPUT:
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Question</th>
+      <th>Reponse User</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Option A</td>
+      <td>Question test</td>
+      <td data-checked="false">
+        <input type="checkbox">
+      </td>
+    </tr>
+    <tr>
+      <td>Option B</td>
+      <td>Question test</td>
+      <td data-checked="true">
+        <input type="checkbox" checked="checked">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+JSON OUTPUT ATTENDU:
+{
+  "Processus - étape Question test": [
+    {
+      "table 1": [
+        {
+          "Option": "Option A",
+          "Question": "Question test",
+          "Reponse User": false
+        },
+        {
+          "Option": "Option B",
+          "Question": "Question test",
+          "Reponse User": true
+        }
+      ]
+    }
+  ]
+}
+
+
+📍 TEST 4: VÉRIFIER LE TYPE
+───────────────────────────────────────────────────────────────
+
+Dans n8n, après exécution:
+
+// Vérifier le type de la valeur
+typeof $json["Processus - étape ..."][0]["table 1"][0]["Reponse User"]
+// → "boolean" ✅
+
+// Vérifier la valeur
+$json["Processus - étape ..."][0]["table 1"][0]["Reponse User"] === true
+// → true ou false ✅
+
+
+📍 TEST 5: COMPATIBILITÉ V5
+───────────────────────────────────────────────────────────────
+
+HTML avec seulement data-checked (sans checked attribute):
+<td data-checked="true">
+  <input type="checkbox">
+</td>
+
+JSON OUTPUT:
+{
+  "Reponse User": true
+}
+
+✅ Fonctionne avec V5
+
+
+📍 TEST 6: COMPATIBILITÉ V6
+───────────────────────────────────────────────────────────────
+
+HTML avec checked attribute (sans data-checked):
+<td>
+  <input type="checkbox" checked="checked">
+</td>
+
+JSON OUTPUT:
+{
+  "Reponse User": true
+}
+
+✅ Fonctionne avec V6
+
+
+📍 TEST 7: CELLULE SANS CHECKBOX
+───────────────────────────────────────────────────────────────
+
+HTML INPUT:
+<td>Texte normal</td>
+
+JSON OUTPUT:
+{
+  "Colonne": "Texte normal"
+}
+
+✅ Pas d'impact sur les cellules normales
+
+
+📍 TEST 8: DEBUG MODE
+───────────────────────────────────────────────────────────────
+
+Activer le debug dans le code:
+const DEBUG = true;
+
+Logs attendus:
+📥 HTML récupéré: XXX caractères
+📊 X tables extraites
+  ☑️ Table 1: X checkbox(es) détectée(s)
+  📋 data-checked="true" → true
+✅ Conversion réussie en XXms
+
+
+📍 INTÉGRATION N8N
+───────────────────────────────────────────────────────────────
+
+1. Ouvrir le workflow n8n
+2. Sélectionner le node "HTML PROCESSOR"
+3. Remplacer le code par n8n-code-javascript3-V6-CHECKBOX.js
+4. Sauvegarder
+5. Tester avec une table CIA
+
+
+📍 VÉRIFICATION RÉSULTAT
+───────────────────────────────────────────────────────────────
+
+Dans n8n, vérifier:
+
+1. Le JSON contient "Reponse User"
+2. La valeur est true ou false (pas "")
+3. Le type est boolean (pas string)
+4. Les autres colonnes sont intactes
+
+
+📍 EXEMPLE RÉEL
+───────────────────────────────────────────────────────────────
+
+Table CIA avec 4 options, Option 3 cochée:
+
+INPUT:
+- Option 1: data-checked="false"
+- Option 2: data-checked="false"
+- Option 3: data-checked="true"  ← Cochée
+- Option 4: data-checked="false"
+
+OUTPUT:
+[
+  { "Option": "Option 1", "Reponse User": false },
+  { "Option": "Option 2", "Reponse User": false },
+  { "Option": "Option 3", "Reponse User": true },  ← true
+  { "Option": "Option 4", "Reponse User": false }
+]
+
+
+📍 TRAITEMENT ULTÉRIEUR
+───────────────────────────────────────────────────────────────
+
+Dans n8n, vous pouvez maintenant:
+
+// Filtrer les réponses cochées
+$json["table 1"].filter(row => row["Reponse User"] === true)
+
+// Compter les réponses cochées
+$json["table 1"].filter(row => row["Reponse User"]).length
+
+// Trouver la réponse cochée
+$json["table 1"].find(row => row["Reponse User"])?.Option
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+Checkbox cochée:
+{
+  "Reponse User": true  ← Booléen, pas string
+}
+
+Checkbox non cochée:
+{
+  "Reponse User": false  ← Booléen, pas string
+}
+
+
+═══════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+Code source:  n8n-code-javascript3-V6-CHECKBOX.js
+Guide:        FIX_N8N_V6_CHECKBOX_DETECTION.md
+Tests:        TEST_N8N_V6_CHECKBOX.txt
+
+
+═══════════════════════════════════════════════════════════════

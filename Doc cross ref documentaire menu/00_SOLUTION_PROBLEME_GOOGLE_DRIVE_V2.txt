@@ -1,0 +1,132 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║           SOLUTION - GOOGLE DRIVE V2 vs V3 - 12 AVRIL 2026                  ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌ PROBLÈME IDENTIFIÉ
+
+Vous utilisez Google Drive NODE V2, pas V3 !
+
+Le stacktrace montre :
+  GoogleDriveV2.node.ts:25:23
+  router.ts:35:62
+
+Cela signifie que vous avez le node Google Drive VERSION 2 dans votre workflow.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ SOLUTION IMMÉDIATE
+
+Il y a 2 options :
+
+OPTION 1 : METTRE À JOUR VERS GOOGLE DRIVE V3 (RECOMMANDÉ)
+OPTION 2 : UTILISER UNE APPROCHE ALTERNATIVE
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 OPTION 1 : METTRE À JOUR VERS GOOGLE DRIVE V3
+
+Dans n8n :
+
+1. Supprimer tous les nodes Google Drive v2
+2. Ajouter de nouveaux nodes Google Drive v3
+3. Reconfigurer chaque node avec les mêmes paramètres
+4. Utiliser le workflow corrigé (WORKFLOW_N8N_XREF_CORRIGE.json)
+
+Avantage : Solution propre et pérenne
+Inconvénient : Nécessite de recréer tous les nodes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 OPTION 2 : APPROCHE ALTERNATIVE AVEC HTTP REQUEST
+
+Au lieu d'utiliser les nodes Google Drive, utiliser des nodes HTTP Request
+pour appeler directement l'API Google Drive.
+
+Avantages :
+  • Fonctionne avec n'importe quelle version
+  • Plus de contrôle
+  • Pas de problème de compatibilité
+
+Inconvénient : Plus complexe à configurer
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 RECOMMANDATION
+
+Je recommande FORTEMENT l'OPTION 1 : Mettre à jour vers Google Drive v3
+
+Pourquoi ?
+  • Les nodes v3 sont plus stables
+  • Meilleure gestion des erreurs
+  • Plus de fonctionnalités
+  • Support à long terme
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPES POUR METTRE À JOUR VERS V3
+
+1. Ouvrir le workflow dans n8n
+
+2. Pour chaque node Google Drive v2 :
+   a. Noter les paramètres configurés
+   b. Supprimer le node
+   c. Ajouter un nouveau node "Google Drive"
+   d. Vérifier que c'est bien la version 3 (en bas à droite du node)
+   e. Reconfigurer avec les mêmes paramètres
+
+3. Sauvegarder le workflow
+
+4. Tester
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 COMMENT VÉRIFIER LA VERSION DU NODE
+
+Dans n8n, quand vous ouvrez un node Google Drive :
+  • En bas à droite, vous verrez "Version X"
+  • Si c'est "Version 2" → C'est v2 (problème)
+  • Si c'est "Version 3" → C'est v3 (OK)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ POURQUOI LE WORKFLOW CORRIGÉ NE FONCTIONNE PAS
+
+Le workflow WORKFLOW_N8N_XREF_CORRIGE.json que j'ai créé utilise
+la syntaxe de Google Drive v3.
+
+Si vous l'importez dans n8n qui a Google Drive v2, il y aura un conflit.
+
+n8n va essayer de convertir les nodes v3 en v2, mais cela ne fonctionne pas
+correctement, d'où l'erreur.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ACTION IMMÉDIATE
+
+1. Vérifier la version de n8n :
+   • Aller dans Settings > About
+   • Noter la version de n8n
+
+2. Vérifier la version du node Google Drive :
+   • Ouvrir un node Google Drive
+   • Regarder en bas à droite
+
+3. Si c'est v2 :
+   • Mettre à jour n8n vers la dernière version
+   • OU utiliser l'approche HTTP Request
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 BESOIN D'AIDE ?
+
+Si vous voulez que je crée :
+  • Un workflow avec HTTP Request (Option 2)
+  • Un guide détaillé pour mettre à jour vers v3
+  • Un script de migration
+
+Dites-le moi !
+
+═══════════════════════════════════════════════════════════════════════════════
+

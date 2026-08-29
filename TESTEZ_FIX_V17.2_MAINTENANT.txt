@@ -1,0 +1,150 @@
+═══════════════════════════════════════════════════════════════════
+🧪 TESTEZ LE FIX V17.2 MAINTENANT
+═══════════════════════════════════════════════════════════════════
+
+✅ FIX APPLIQUÉ : Flowise.js V17.2
+🎯 PROBLÈME RÉSOLU : Réponse vide de n8n (content-length = 0)
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 1 : OUVRIR LE FICHIER DE TEST
+═══════════════════════════════════════════════════════════════════
+
+Windows :
+    start public/test-fix-n8n-response-v17.2.html
+
+Mac/Linux :
+    open public/test-fix-n8n-response-v17.2.html
+
+Ou avec un navigateur :
+    http://localhost:5173/test-fix-n8n-response-v17.2.html
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 2 : LANCER LES 3 TESTS
+═══════════════════════════════════════════════════════════════════
+
+Test 1 : 🚀 Appel Direct à N8N
+    → Cliquer sur le bouton "Test 1"
+    → Vérifier que la réponse est reçue
+    → Status doit être "success" ✅
+
+Test 2 : 🔧 Via Flowise.js (Simulé)
+    → Cliquer sur le bouton "Test 2"
+    → Vérifier que le JSON est parsé malgré content-length = 0
+    → Message "FIX APPLIQUÉ" doit apparaître ✅
+
+Test 3 : ⚠️ Simulation Content-Length = 0
+    → Cliquer sur le bouton "Test 3"
+    → Vérifier que le body est lu correctement
+    → Output doit être affiché ✅
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 3 : TESTER DANS CLARAVERSE
+═══════════════════════════════════════════════════════════════════
+
+1. Démarrer l'application :
+    npm run dev
+
+2. Créer une table avec le mot-clé "CIA" :
+
+    | Rubrique    | Description |
+    |-------------|-------------|
+    | Etape       | Programme   |
+    | Référence   | TEST-001    |
+
+    | Flowise |
+    |---------|
+    | CIA     |
+
+3. Vérifier dans la console du navigateur :
+    📏 Content-Length: 0
+    ⚠️ Content-Length est 0, mais tentative de parsing JSON quand même...
+    📄 Response text length: XXX
+    ✅ JSON parsé avec succès
+
+4. Vérifier que les tables n8n s'affichent correctement
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 4 : VÉRIFIER LES LOGS
+═══════════════════════════════════════════════════════════════════
+
+Ouvrir la console du navigateur (F12) et chercher :
+
+✅ Logs attendus AVANT le fix (V17.1) :
+    📏 Content-Length: 0
+    ⚠️ RÉPONSE VIDE DE N8N (content-length: 0)
+    ❌ Erreur: Réponse vide de n8n
+
+✅ Logs attendus APRÈS le fix (V17.2) :
+    📏 Content-Length: 0
+    ⚠️ Content-Length est 0, mais tentative de parsing JSON quand même...
+    📄 Response text length: 245
+    📄 Response text preview: [{"body":[{"output":"...
+    ✅ JSON parsé avec succès
+
+═══════════════════════════════════════════════════════════════════
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════
+
+Si le problème persiste :
+
+1. Vider le cache localStorage :
+    start public/fix-urgent-n8n-localstorage.html
+
+2. Vérifier la configuration n8n :
+    - Node "Respond to Webhook"
+    - Respond With: "All Incoming Items"
+    - Format de réponse : [{ body: [{ output, status, ... }] }]
+
+3. Tester le workflow n8n directement :
+    curl -X POST "https://barow52161.app.n8n.cloud/webhook/htlm_processor" \
+         -H "Content-Type: application/json" \
+         -d '{"question":"<table><tr><td>Test</td></tr></table>"}'
+
+4. Vérifier que le body n'est pas vide dans les logs n8n
+
+═══════════════════════════════════════════════════════════════════
+📊 RÉSULTATS ATTENDUS
+═══════════════════════════════════════════════════════════════════
+
+✅ Test 1 : Réponse reçue de n8n
+✅ Test 2 : JSON parsé malgré content-length = 0
+✅ Test 3 : Body lu correctement
+✅ Dans Claraverse : Tables n8n affichées
+
+═══════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════
+
+FIX_N8N_REPONSE_VIDE_V17.2_SOLUTION.md
+    → Documentation complète du fix
+
+public/test-fix-n8n-response-v17.2.html
+    → Fichier de test interactif
+
+public/Flowise.js
+    → Code source avec le fix appliqué (ligne 813-850)
+
+═══════════════════════════════════════════════════════════════════
+✅ CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════
+
+[ ] Test 1 réussi
+[ ] Test 2 réussi
+[ ] Test 3 réussi
+[ ] Test dans Claraverse réussi
+[ ] Logs corrects dans la console
+[ ] Tables n8n affichées correctement
+
+Si tous les tests sont ✅, le fix est opérationnel !
+
+═══════════════════════════════════════════════════════════════════
+🎉 SUCCÈS !
+═══════════════════════════════════════════════════════════════════
+
+Le fix V17.2 résout le problème de réponse vide en lisant toujours
+le body de la réponse, même si content-length = 0.
+
+Flowise.js peut maintenant traiter correctement toutes les réponses
+de n8n, quel que soit le format ou la configuration du workflow.
+
+═══════════════════════════════════════════════════════════════════

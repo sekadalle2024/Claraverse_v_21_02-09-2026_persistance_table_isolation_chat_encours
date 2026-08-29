@@ -1,0 +1,141 @@
+═══════════════════════════════════════════════════════════════════
+🔍 ANALYSE ERREUR BACKEND - ZEABUR
+═══════════════════════════════════════════════════════════════════
+Date: 20 avril 2026
+
+═══════════════════════════════════════════════════════════════════
+📋 LOGS BACKEND FOURNIS
+═══════════════════════════════════════════════════════════════════
+
+Les logs s'arrêtent à:
+```
+#12 41.35 dist/assets/systemverilog-B9Xyijhd.js 7.85 kB │ gzip: 2.91 kB
+```
+
+OBSERVATION:
+• Les logs montrent le BUILD du FRONTEND (dist/assets/*.js)
+• Pas de logs du backend Python
+• Le service backend semble builder le mauvais service
+
+═══════════════════════════════════════════════════════════════════
+🔍 HYPOTHÈSE PRINCIPALE
+═══════════════════════════════════════════════════════════════════
+
+PROBLÈME PROBABLE:
+Le service "backend" dans Zeabur est configuré pour builder le frontend
+au lieu du backend Python.
+
+INDICES:
+1. Les fichiers buildés sont des assets JavaScript/TypeScript
+   • dist/assets/hcl-*.js
+   • dist/assets/markdown-*.js
+   • dist/assets/python-*.js
+   → Ce sont les fichiers du build Vite (frontend)
+
+2. Aucun log Python visible
+   • Pas de "pip install"
+   • Pas de "uvicorn"
+   • Pas de logs FastAPI
+
+═══════════════════════════════════════════════════════════════════
+✅ SOLUTION
+═══════════════════════════════════════════════════════════════════
+
+DANS ZEABUR - CONFIGURATION SERVICE BACKEND:
+
+1. VÉRIFIER LE SERVICE
+   • Aller dans le service "backend"
+   • Onglet "Settings" ou "Configuration"
+
+2. VÉRIFIER BUILD METHOD
+   ✓ Build Method: Docker Compose
+   ✓ Service Name: backend (PAS frontend)
+
+3. VÉRIFIER ROOT DIRECTORY
+   ✓ Root Directory: / (racine du projet)
+   ✓ Dockerfile: py_backend/Dockerfile
+
+4. SI CONFIGURATION INCORRECTE
+   Option A: Reconfigurer le service existant
+   Option B: Supprimer et recréer le service
+
+═══════════════════════════════════════════════════════════════════
+📋 CONFIGURATION CORRECTE ATTENDUE
+═══════════════════════════════════════════════════════════════════
+
+SERVICE BACKEND:
+├── Build Method: Docker Compose
+├── Service: backend
+├── Port: 8080
+├── Domain: pybackend.zeabur.app (ou similaire)
+└── Dockerfile: Utilise py_backend/Dockerfile
+
+LOGS ATTENDUS (backend correct):
+```
+Step 1/X : FROM python:3.11-slim
+Step 2/X : WORKDIR /app
+Step 3/X : COPY requirements.txt .
+Step 4/X : RUN pip install --no-cache-dir -r requirements.txt
+...
+INFO:     Uvicorn running on http://0.0.0.0:8080
+```
+
+SERVICE FRONTEND:
+├── Build Method: Docker Compose
+├── Service: frontend
+├── Port: 80
+├── Domain: prclaravi.zeabur.app (ou similaire)
+└── Dockerfile: Utilise Dockerfile.frontend
+
+LOGS ATTENDUS (frontend correct):
+```
+Step 1/X : FROM node:18-alpine AS builder
+...
+dist/assets/*.js
+...
+nginx: [notice] start worker processes
+```
+
+═══════════════════════════════════════════════════════════════════
+🎯 ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════
+
+1. DANS ZEABUR DASHBOARD
+   • Ouvrir le service "backend"
+   • Vérifier la configuration
+   • S'assurer que "Service" = "backend" (pas "frontend")
+
+2. SI MAUVAISE CONFIGURATION
+   • Modifier le service
+   • Ou supprimer et recréer avec la bonne config
+
+3. APRÈS CORRECTION
+   • Redéployer le service backend
+   • Vérifier les logs montrent Python/FastAPI
+
+═══════════════════════════════════════════════════════════════════
+📸 CAPTURES ÉCRAN À VÉRIFIER
+═══════════════════════════════════════════════════════════════════
+
+BACKEND (capture F1):
+• Vérifier que "Service" indique "backend"
+• Vérifier que le port est 8080
+• Vérifier le Dockerfile utilisé
+
+FRONTEND (capture B1):
+• Vérifier que "Service" indique "frontend"
+• Vérifier que le port est 80
+
+═══════════════════════════════════════════════════════════════════
+✅ RÉSUMÉ
+═══════════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ:
+Le service backend build le frontend au lieu du backend Python
+
+SOLUTION:
+Reconfigurer le service backend dans Zeabur pour utiliser le bon
+service du docker-compose.yml
+
+PROCHAINE ÉTAPE:
+Vérifier la configuration dans Zeabur Dashboard

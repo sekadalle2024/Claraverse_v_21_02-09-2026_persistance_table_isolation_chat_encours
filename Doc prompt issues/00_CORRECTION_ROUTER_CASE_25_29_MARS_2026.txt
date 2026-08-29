@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════
+  CORRECTION ROUTER CASE 25 - CONTRÔLE INTERNE COMPTABLE
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+🔍 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+SYMPTÔME:
+- Notification affichée: Case 25 (Recos contrôle interne comptable) ✅ CORRECT
+- Endpoint exécuté: Case 1 (Standard/Default) ❌ INCORRECT
+- Résultat: Le workflow n8n exécuté ne correspond pas au case détecté
+
+MESSAGE TEST:
+[Command] : Frap
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation des procedure RH
+[Assertion] = validité
+[Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+ANALYSE:
+Le message contient:
+1. ✅ "Recos contrôle interne comptable" → Case 25 détecté
+2. ❌ "Command" → Condition du Case 8 (!msg.includes("Command")) est FAUSSE
+3. ❌ Donc on tombe dans le else final → Case 1 (default)
+
+CAUSE RACINE:
+La logique du router utilisait des if-else if en cascade avec les cases par 
+défaut (Case 1 et Case 8) AVANT la fin de toutes les vérifications spécifiques.
+
+Le Case 8 vérifie l'ABSENCE de "Command", mais les messages de Case 25 
+CONTIENNENT souvent "Command" dans leur structure.
+
+═══════════════════════════════════════════════════════════════════════════
+✅ SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════════════
+
+PRINCIPE:
+Réorganisation de la logique du router en 2 PRIORITÉS distinctes:
+
+PRIORITÉ 1: CASES SPÉCIFIQUES (Cases 2-33)
+- Toutes les cases avec des mots-clés spécifiques
+- Ces cases ont la priorité ABSOLUE
+- Organisées par groupes logiques:
+  * Cases 11-13: CIA (Cours, QCM, Synthèse)
+  * Cases 28-33: Méthodologies et Guides
+  * Cases 25-27: Recommandations et Rapports
+  * Cases 16-22: Implémentation et Programmes
+  * Cases 2-10: Autres fonctionnalités spécifiques
+
+PRIORITÉ 2: CASES PAR DÉFAUT (Cases 1 et 8)
+- Case 8: Notification (messages sans Command/command et sans /)
+- Case 1: Default (tous les autres messages)
+- Ces cases ne s'appliquent QUE si aucune case spécifique n'a été détectée
+
+AVANTAGES:
+✅ Les cases spécifiques ont toujours la priorité
+✅ Plus de conflit entre Case 25 et Case 1
+✅ Code plus lisible et maintenable
+✅ Logique claire et prévisible
+
+═══════════════════════════════════════════════════════════════════════════
+📝 FICHIER MODIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Fichier: src/services/claraApiService.ts
+Fonction: getN8nEndpointWithInfo()
+
+Changements:
+1. Réorganisation complète de la cascade if-else if
+2. Ajout de commentaires de section pour les priorités
+3. Regroupement logique des cases par thématique
+4. Cases par défaut (1 et 8) déplacées à la fin
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TEST À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+MESSAGE TEST CASE 25:
+[Command] : Frap
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation des procedure RH
+[Assertion] = validité
+[Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+RÉSULTAT ATTENDU:
+✅ Notification: Case 25 : recos_controle_interne
+✅ Endpoint: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+✅ Réponse: Format avec tables HTML (Intitule, Observation, Constat, Risque, Recommendation)
+
+MESSAGE TEST CASE 1:
+[Command] : Frap
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation des procedure RH
+[Assertion] = validité
+[Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+RÉSULTAT ATTENDU:
+✅ Notification: Case 1 : default
+✅ Endpoint: https://t22wtwxl.rpcld.app/webhook/template
+✅ Réponse: Format standard avec tableau markdown
+
+═══════════════════════════════════════════════════════════════════════════
+📊 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════
+
+CONSOLE LOGS À SURVEILLER:
+🔀 Router → Case 25 : recos_controle_interne
+📍 URL: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+
+NOTIFICATION FRONT-END:
+🔀 Router N8N
+Case 25 : recos_controle_interne
+🌐 https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+
+═══════════════════════════════════════════════════════════════════════════
+✅ STATUT
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Problème identifié et analysé
+[✅] Solution implémentée dans claraApiService.ts
+[⏳] Test en attente (redémarrage de l'application requis)
+[⏳] Validation avec message réel
+
+PROCHAINES ÉTAPES:
+1. Redémarrer l'application front-end
+2. Tester avec le message Case 25
+3. Vérifier la notification ET l'endpoint exécuté
+4. Valider que la réponse correspond au format Case 25
+
+═══════════════════════════════════════════════════════════════════════════

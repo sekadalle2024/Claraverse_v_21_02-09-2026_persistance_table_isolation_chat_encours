@@ -1,0 +1,81 @@
+═══════════════════════════════════════════════════════════════════════════════
+  QUICK START - ÉVALUATION DES RISQUES - MENU CONTEXTUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE RAPIDE
+
+1. Ouvrir public/menu.js
+2. Copier le contenu de public/menu_risk_evaluation_extension.js
+3. Coller après la méthode addRiskColumns() dans menu.js
+4. Mettre à jour la section "risques" dans getMenuSections() (voir détails ci-dessous)
+5. Sauvegarder et tester
+
+═══════════════════════════════════════════════════════════════════════════════
+SECTION À REMPLACER DANS getMenuSections()
+═══════════════════════════════════════════════════════════════════════════════
+
+Chercher:
+  id: "risques", title: "Évaluation des risques"
+
+Remplacer toute la section par:
+
+{
+  id: "risques", title: "Évaluation des risques", icon: "⚠️",
+  items: [
+    { text: "Calculer criticité (matrice)", action: () => this.executeRiskEvaluation(), shortcut: "Ctrl+R" },
+    { text: "Appliquer couleurs risques", action: () => this.applyRiskColors() },
+    { text: "Ajouter colonnes risques", action: () => this.addRiskColumns() },
+    { text: "─────────────────────", action: null },
+    { text: "📊 Matrice Alpha 3 niveaux", action: () => this.convertToMatrixAlpha3() },
+    { text: "📊 Matrice Alpha 5 niveaux", action: () => this.convertToMatrixAlpha5() },
+    { text: "📊 Matrice Alpha 4 niveaux", action: () => this.convertToMatrixAlpha4() },
+    { text: "─────────────────────", action: null },
+    { text: "🔢 Matrice Num 3 niveaux", action: () => this.convertToMatrixNum3() },
+    { text: "🔢 Matrice Num 4 niveaux", action: () => this.convertToMatrixNum4() },
+    { text: "🔢 Matrice Num 5 niveaux", action: () => this.convertToMatrixNum5() }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+TEST RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Créer une table dans le chat avec ces colonnes:
+   | Risque | Probabilité | Impact | Criticité |
+
+2. Remplir quelques lignes:
+   | Risque 1 | F | M | |
+   | Risque 2 | M | E | |
+   | Risque 3 | E | E | |
+
+3. Clic droit sur la table → Évaluation des risques → Matrice Alpha 3 niveaux
+
+4. Vérifier:
+   ✅ Les valeurs F/M/E sont normalisées en Faible/Moyen/Eleve
+   ✅ La colonne Criticité est calculée automatiquement
+   ✅ Les couleurs sont appliquées (Vert/Jaune/Rouge)
+
+═══════════════════════════════════════════════════════════════════════════════
+CONVERSIONS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 MATRICES ALPHABÉTIQUES:
+   • Alpha 3: Faible / Moyen / Elevé
+   • Alpha 5: Très faible / Faible / Modéré / Élevé / Très élevé
+   • Alpha 4: Mineur / Significatif / Majeur / Critique
+
+🔢 MATRICES NUMÉRIQUES:
+   • Num 3: 1-3 (criticité 1-9)
+   • Num 4: 1-4 (criticité 1-16)
+   • Num 5: 1-5 (criticité 1-25)
+
+═══════════════════════════════════════════════════════════════════════════════
+COULEURS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+🟢 VERT: Risque faible / mineur
+🟡 JAUNE: Risque moyen / modéré
+🟠 ORANGE: Risque élevé / majeur
+🔴 ROUGE: Risque très élevé / critique
+
+═══════════════════════════════════════════════════════════════════════════════

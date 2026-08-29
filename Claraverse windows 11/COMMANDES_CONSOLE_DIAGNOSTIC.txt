@@ -1,0 +1,78 @@
+🔍 COMMANDES À EXÉCUTER DANS LA CONSOLE DE VOTRE APPLICATION
+================================================================
+
+1. OUVREZ VOTRE APPLICATION CLARAVERSE
+   - Allez sur http://localhost:5173 (ou votre URL)
+   - Ouvrez la console (F12)
+
+2. VÉRIFIEZ LE CHARGEMENT DU SCRIPT
+   Copiez-collez cette commande:
+   
+   console.log('Script Flowise chargé?', typeof window !== 'undefined');
+
+3. VÉRIFIEZ LES ERREURS DE CHARGEMENT
+   Regardez dans l'onglet "Console" s'il y a des erreurs en rouge
+
+4. FORCEZ LE RECHARGEMENT DU SCRIPT
+   Copiez-collez:
+   
+   const script = document.createElement('script');
+   script.src = '/Flowise.js?v=' + Date.now();
+   script.onload = () => console.log('✅ Flowise.js chargé');
+   script.onerror = () => console.error('❌ Erreur de chargement');
+   document.head.appendChild(script);
+
+5. VÉRIFIEZ LES TABLES DANS VOTRE APPLICATION
+   Copiez-collez:
+   
+   const tables = document.querySelectorAll('table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg');
+   console.log('📊 Tables trouvées:', tables.length);
+   tables.forEach((t, i) => {
+       const headers = Array.from(t.querySelectorAll('th')).map(th => th.textContent.trim());
+       console.log(`Table ${i+1}:`, headers);
+   });
+
+6. ACTIVEZ LES LOGS DE DEBUG
+   Copiez-collez:
+   
+   console.log('🔍 Surveillance des logs Flowise activée');
+   console.log('Attendez quelques secondes...');
+
+7. ENVOYEZ UN MESSAGE DE TEST
+   Dans votre chat, envoyez un message avec une table contenant "Flowise"
+
+8. VÉRIFIEZ LES LOGS
+   Vous devriez voir:
+   - 🚀 Initialisation du script
+   - 🔍 Scan des tables
+   - ✅ Table Flowise détectée
+   - 📦 Collecte des tables
+   - 📡 Envoi vers n8n
+
+================================================================
+SI VOUS NE VOYEZ AUCUN LOG:
+================================================================
+
+Le script n'est pas chargé ou il y a une erreur JavaScript.
+
+SOLUTION:
+1. Vérifiez l'onglet "Network" (Réseau) dans F12
+2. Cherchez "Flowise.js"
+3. Vérifiez le status (doit être 200)
+4. Si 404: Le fichier n'est pas au bon endroit
+5. Si erreur: Regardez le message d'erreur
+
+================================================================
+NETTOYAGE DU CACHE (SI NÉCESSAIRE):
+================================================================
+
+Copiez-collez:
+
+// Nettoyer le localStorage
+localStorage.removeItem('clara-notifications');
+localStorage.removeItem('notifications');
+
+// Vider le cache du navigateur
+console.log('✅ Cache nettoyé - Rechargez avec Ctrl+F5');
+
+================================================================

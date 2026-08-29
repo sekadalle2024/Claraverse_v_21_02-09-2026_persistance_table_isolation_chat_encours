@@ -1,0 +1,200 @@
+================================================================================
+DIAGNOSTIC EXPORT LIASSE VIDE - COMMENCER ICI
+================================================================================
+
+Date: 05 Avril 2026
+Problème: La liasse exportée est au bon format mais ne contient aucune donnée
+
+================================================================================
+ÉTAPE 1: EXÉCUTER LE DIAGNOSTIC
+================================================================================
+
+Ouvrir PowerShell dans le répertoire du projet et exécuter:
+
+    .\test-diagnostic-export-liasse.ps1
+
+Ce script va:
+  ✅ Vérifier l'environnement conda claraverse_backend
+  ✅ Vérifier les dépendances (openpyxl, pandas, xlrd)
+  ✅ Analyser le fichier template Liasse_officielle_revise.xlsx
+  ✅ Lister tous les onglets du template
+  ✅ Créer des données de test
+  ✅ Tester le remplissage avec des valeurs fictives
+
+================================================================================
+ÉTAPE 2: ANALYSER LES RÉSULTATS
+================================================================================
+
+Le script génère 2 fichiers dans py_backend/:
+
+1. test_data_export_liasse.json
+   → Données de test au format attendu par export_liasse.py
+
+2. test_liasse_remplie.xlsx
+   → Fichier Excel avec des valeurs de test dans les cellules
+   → OUVRIR CE FICHIER pour vérifier si les valeurs apparaissent
+
+================================================================================
+ÉTAPE 3: IDENTIFIER LE PROBLÈME
+================================================================================
+
+Cas 1: Les valeurs apparaissent dans test_liasse_remplie.xlsx
+--------------------------------------------------------------
+✅ Le template fonctionne
+✅ Les bibliothèques sont OK
+❌ Le problème vient du format des données results
+
+→ Solution: Vérifier la structure de results dans etats_financiers_v2.py
+→ Les données doivent être au format:
+   results['bilan_actif'] = {
+       'AD': {'ref': 'AD', 'libelle': '...', 'montant': 123456},
+       'AE': {'ref': 'AE', 'libelle': '...', 'montant': 789012},
+       ...
+   }
+
+Cas 2: Les valeurs n'apparaissent PAS dans test_liasse_remplie.xlsx
+--------------------------------------------------------------------
+❌ Problème avec le template ou les mappings de cellules
+
+→ Solution: Vérifier les noms d'onglets dans le diagnostic
+→ Comparer avec les noms utilisés dans export_liasse.py:
+   - 'Bilan' vs 'BILAN'
+   - 'Compte de résultat' vs 'RESULTAT' vs 'CR'
+
+→ Ajuster les mappings de cellules (MAPPING_BILAN_ACTIF, etc.)
+
+Cas 3: Erreur lors de l'exécution du diagnostic
+------------------------------------------------
+❌ Problème avec les dépendances ou l'environnement
+
+→ Solution: Réinstaller les dépendances:
+   conda activate claraverse_backend
+   conda install -y openpyxl pandas xlrd
+
+================================================================================
+ÉTAPE 4: CORRIGER LE PROBLÈME
+================================================================================
+
+Selon le cas identifié:
+
+CAS 1 - Format des données:
+---------------------------
+Modifier py_backend/etats_financiers_v2.py
+Fonction: process_balance_to_liasse_format()
+
+Vérifier que le retour est au format:
+{
+    'bilan_actif': {
+        'AD': {'ref': 'AD', 'libelle': '...', 'montant': 123},
+        ...
+    },
+    'bilan_passif': {...},
+    'charges': {...},
+    'produits': {...}
+}
+
+CAS 2 - Noms d'onglets:
+-----------------------
+Modifier py_backend/export_liasse.py
+Fonction: remplir_liasse_officielle()
+
+Remplacer:
+    if 'Bilan' in wb.sheetnames:
+        ws_bilan = wb['Bilan']
+
+Par le nom exact trouvé dans le diagnostic
+
+CAS 3 - Mappings de cellules:
+------------------------------
+Modifier py_backend/export_liasse.py
+Constantes: MAPPING_BILAN_ACTIF, MAPPING_BILAN_PASSIF, etc.
+
+Ouvrir Liasse_officielle_revise.xlsx
+Identifier les cellules exactes pour chaque poste
+Mettre à jour les mappings
+
+================================================================================
+ÉTAPE 5: TESTER LA CORRECTION
+================================================================================
+
+Après correction, tester avec:
+
+    cd py_backend
+    python generer_etats_liasse.py
+
+Vérifier que:
+  ✅ Le fichier HTML est généré
+  ✅ Les données apparaissent dans le HTML
+  ✅ L'export Excel contient les données
+
+================================================================================
+FICHIERS IMPORTANTS
+================================================================================
+
+Diagnostic:
+  📄 test-diagnostic-export-liasse.ps1 (script de diagnostic)
+  📄 py_backend/diagnostic_export_liasse.py (script Python)
+
+Code à vérifier:
+  📄 py_backend/export_liasse.py (fonction de remplissage)
+  📄 py_backend/etats_financiers_v2.py (format des données)
+  📄 py_backend/generer_etats_liasse.py (script de test)
+
+Template:
+  📄 py_backend/Liasse_officielle_revise.xlsx (template Excel)
+
+Documentation:
+  📄 Doc_Etat_Fin/00_CORRECTION_EXPORT_LIASSE_REVISE_05_AVRIL_2026.txt
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Diagnostic complet
+.\test-diagnostic-export-liasse.ps1
+
+# Test manuel du template
+cd py_backend
+python -c "import openpyxl; wb = openpyxl.load_workbook('Liasse_officielle_revise.xlsx'); print('Onglets:', wb.sheetnames)"
+
+# Test de génération
+cd py_backend
+python generer_etats_liasse.py
+
+# Vérifier les dépendances
+conda activate claraverse_backend
+python -c "import openpyxl, pandas, xlrd; print('OK')"
+
+================================================================================
+AIDE SUPPLÉMENTAIRE
+================================================================================
+
+Si le problème persiste après le diagnostic:
+
+1. Vérifier les logs du backend:
+   - Chercher les messages "Remplissage Bilan Actif..."
+   - Vérifier si des erreurs sont loggées
+
+2. Ajouter des logs de debug dans export_liasse.py:
+   logger.info(f"Données reçues: {results.keys()}")
+   logger.info(f"Bilan actif: {len(results.get('bilan_actif', {}))}")
+
+3. Tester avec des données minimales:
+   results_test = {
+       'bilan_actif': {'AD': {'montant': 123456}},
+       'bilan_passif': {},
+       'charges': {},
+       'produits': {}
+   }
+
+================================================================================
+RÉSUMÉ
+================================================================================
+
+1. ✅ Exécuter: .\test-diagnostic-export-liasse.ps1
+2. ✅ Analyser: test_liasse_remplie.xlsx
+3. ✅ Identifier: Format données vs Noms onglets vs Mappings cellules
+4. ✅ Corriger: Le fichier approprié
+5. ✅ Tester: python generer_etats_liasse.py
+
+================================================================================

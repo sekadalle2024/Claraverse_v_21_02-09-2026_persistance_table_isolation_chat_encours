@@ -1,0 +1,229 @@
+================================================================================
+INDEX - PROBLÈME PERSISTANT EXPORT LIASSE
+05 AVRIL 2026
+================================================================================
+
+📋 FICHIER PRINCIPAL À LIRE EN PREMIER
+---------------------------------------
+00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+
+Ce fichier contient:
+- Description complète du problème
+- Architecture du système
+- Format des données
+- Corrections déjà appliquées
+- Hypothèses sur les causes
+- Plan d'action détaillé
+- Checklist de résolution
+
+================================================================================
+📁 FICHIERS IMPLIQUÉS (PAR ORDRE D'IMPORTANCE)
+================================================================================
+
+BACKEND - EXPORT
+----------------
+1. py_backend/export_liasse.py
+   Rôle: Endpoint API et remplissage de la liasse
+   Statut: ✅ Corrigé mais problème persiste
+   Fonctions clés: remplir_liasse_officielle(), remplir_onglet_dynamique()
+
+2. py_backend/generer_onglet_controle_coherence.py
+   Rôle: Génération de l'onglet "Contrôle de cohérence"
+   Statut: ✅ Corrigé mais problème persiste
+   Fonctions clés: generer_etats_controle_pour_export()
+
+3. py_backend/etats_controle_exhaustifs.py
+   Rôle: Calculs des 16 états de contrôle
+   Statut: ✅ Code correct
+   Contenu: 16 fonctions calculer_etat_controle_*()
+
+BACKEND - ÉTATS FINANCIERS
+---------------------------
+4. py_backend/etats_financiers_v2.py
+   Rôle: Génération des états financiers au format liasse
+   Statut: ✅ Code correct
+   Fonctions clés: process_balance_to_liasse_format()
+
+FRONTEND
+--------
+5. public/ExportLiasseHandler.js
+   Rôle: Déclenchement de l'export depuis le frontend
+   Statut: ✅ Code correct
+   Fonction: handleExportLiasse()
+
+CONFIGURATION
+-------------
+6. py_backend/structure_liasse_complete.json
+   Rôle: Structure complète de la liasse officielle
+   Statut: ✅ Fichier correct
+
+7. py_backend/correspondances_syscohada.json
+   Rôle: Correspondances comptes → postes
+   Statut: ✅ Fichier correct
+
+TEMPLATE
+--------
+8. Liasse_officielle_revise.xlsx (ou LIASSE.xlsx)
+   Rôle: Template Excel vierge
+   Statut: ⚠️ À vérifier (noms onglets, lignes, colonnes)
+
+================================================================================
+📝 DOCUMENTATION
+================================================================================
+
+DOCUMENTATION PRINCIPALE
+------------------------
+00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+   → Mémo complet pour reprise par un agent
+
+00_CORRECTIONS_FINALES_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   → Détails des corrections appliquées
+
+QUICK_TEST_CORRECTIONS_FINALES.txt
+   → Guide rapide de test
+
+DOCUMENTATION TECHNIQUE
+-----------------------
+Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+   → Architecture globale
+
+Doc_Etat_Fin/STRUCTURE_LIASSE_OFFICIELLE.md
+   → Structure de la liasse SYSCOHADA
+
+Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/README.md
+   → Documentation complète du problème
+
+MÉMOS CONNEXES
+--------------
+00_PROBLEME_PERSISTANT_LIASSE_VIDE_05_AVRIL_2026.txt
+00_DIAGNOSTIC_LIASSE_VIDE_05_AVRIL_2026.txt
+00_SOLUTION_LIASSE_VIDE_05_AVRIL_2026.txt
+00_CORRECTION_EXPORT_LIASSE_REUSSIE_05_AVRIL_2026.txt
+
+SESSIONS PRÉCÉDENTES
+--------------------
+00_CONFIRMATION_CORRECTIONS_APPLIQUEES_05_AVRIL_2026.txt
+00_RECAP_SESSION_VERIFICATION_05_AVRIL_2026.txt
+GUIDE_TEST_RAPIDE_CORRECTIONS.txt
+
+================================================================================
+🧪 FICHIERS DE TEST
+================================================================================
+
+TESTS EXISTANTS
+---------------
+py_backend/test_corrections_export.py
+   → Vérification que les corrections sont appliquées
+   Commande: cd py_backend && python test_corrections_export.py
+
+py_backend/test_export_double_probleme.py
+   → Test complet de l'export (nécessite FastAPI)
+
+TESTS À CRÉER (RECOMMANDÉS)
+----------------------------
+py_backend/test_etats_controle_isole.py
+   → Test unitaire de chaque fonction calculer_etat_*()
+
+py_backend/test_remplissage_excel_isole.py
+   → Test du remplissage Excel avec template réel
+
+py_backend/test_chaine_complete_export.py
+   → Test de la chaîne complète avec données minimales
+
+================================================================================
+🔍 COMMANDES UTILES
+================================================================================
+
+VÉRIFIER LES CORRECTIONS
+-------------------------
+cd py_backend
+python test_corrections_export.py
+
+DÉMARRER LE BACKEND
+-------------------
+cd py_backend
+python main.py
+
+TESTER L'EXPORT
+---------------
+# Dans l'interface web:
+1. Charger balance N et N-1
+2. Générer états financiers
+3. Cliquer "Exporter Liasse Officielle"
+4. Vérifier le fichier téléchargé
+
+CONSULTER LES LOGS
+------------------
+# Les logs s'affichent dans la console du backend
+# Chercher: 📊, 📋, ✅, ❌
+
+================================================================================
+📊 STATUT ACTUEL
+================================================================================
+
+PROBLÈME 1: États de contrôle - "Erreur de génération"
+   Statut: ❌ NON RÉSOLU
+   Corrections appliquées: ✅ OUI
+   Problème persiste: ✅ OUI
+
+PROBLÈME 2: Onglets vides - Aucune donnée remplie
+   Statut: ❌ NON RÉSOLU
+   Corrections appliquées: ✅ OUI
+   Problème persiste: ✅ OUI
+
+CODE:
+   Statut: ✅ CORRIGÉ
+   Tests unitaires: ✅ PASSENT
+   Problème à l'exécution: ❌ PERSISTE
+
+================================================================================
+🎯 PROCHAINES ÉTAPES
+================================================================================
+
+1. Lire 00_MEMO_PROBLEME_PERSISTANT_EXPORT_LIASSE_05_AVRIL_2026.txt
+2. Suivre la checklist de résolution (Section 11 du mémo)
+3. Créer les tests unitaires recommandés
+4. Activer les logs détaillés
+5. Identifier le point exact de défaillance
+6. Appliquer la correction ciblée
+7. Valider avec données réelles
+8. Documenter la solution
+
+================================================================================
+📞 POUR REPRISE
+================================================================================
+
+Si vous reprenez ce problème:
+
+1. COMMENCEZ PAR:
+   - Lire ce fichier d'index
+   - Lire le mémo principal (00_MEMO_PROBLEME_PERSISTANT_*.txt)
+   - Comprendre l'architecture (Section 2 du mémo)
+
+2. ENSUITE:
+   - Vérifier que les corrections sont appliquées
+   - Créer les tests unitaires
+   - Activer les logs détaillés
+
+3. ENFIN:
+   - Identifier la cause exacte
+   - Appliquer la correction
+   - Valider et documenter
+
+================================================================================
+📅 HISTORIQUE
+================================================================================
+
+05 Avril 2026 (matin):
+- Corrections appliquées dans le code
+- Tests unitaires créés et passent
+- Problème persiste à l'exécution
+
+05 Avril 2026 (après-midi):
+- Création de ce mémo pour reprise
+- Documentation complète du problème
+- Plan d'action détaillé
+
+================================================================================
+FIN DE L'INDEX
+================================================================================

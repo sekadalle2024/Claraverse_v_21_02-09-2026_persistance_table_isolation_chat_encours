@@ -1,0 +1,223 @@
+=================================================================
+🔍 DIAGNOSTIC N8N_DOC - LOGS DÉTAILLÉS
+=================================================================
+
+✅ LOGS ULTRA-DÉTAILLÉS ACTIVÉS !
+
+Le script google-drive-downloader.js a été amélioré avec des logs
+très détaillés pour diagnostiquer le problème de chargement.
+
+=================================================================
+📋 LOGS À SURVEILLER DANS LA CONSOLE
+=================================================================
+
+Au chargement de la page, vous devriez voir :
+
+1. CHARGEMENT DU SCRIPT
+   🎯 ========================================
+   🎯 Google Drive Downloader - CHARGÉ
+   🎯 ========================================
+   📋 Configuration:
+      - Doc ID: 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+      - Proxy: https://api.allorigins.win/raw?url=
+      - Debug: true
+
+2. INITIALISATION
+   ⏰ [N8N_DOC] Planification de la recherche initiale dans 2.5s...
+   👁️ [N8N_DOC] Initialisation MutationObserver...
+   ✅ [N8N_DOC] MutationObserver activé et en écoute
+
+3. RECHERCHE INITIALE (après 2.5s)
+   🚀 [N8N_DOC] Lancement de la recherche initiale...
+   🔍 [N8N_DOC] === DÉBUT DÉTECTION ===
+   🔍 [N8N_DOC] Timestamp: 2025-12-13T...
+   🔍 [N8N_DOC] Nombre total de tables trouvées: X
+
+4. ANALYSE DE CHAQUE TABLE
+   📋 [N8N_DOC] --- Analyse Table 1/X ---
+   📋 [N8N_DOC] Contenu texte (100 premiers caractères): ...
+   📋 [N8N_DOC] Contient "Template"? ✅ OUI / ❌ NON
+   📋 [N8N_DOC] Contient "n8n_doc"? ✅ OUI / ❌ NON
+
+5. SI TABLE TROUVÉE
+   ✅ [N8N_DOC] 🎯 TABLE CIBLE TROUVÉE ! (index X)
+   ✅ [N8N_DOC] Déjà traitée? ✅ NON (traitement)
+   ✅ [N8N_DOC] 🚀 Génération du viewer...
+   ✅ [N8N_DOC] Doc ID: 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+   ✅ [N8N_DOC] HTML généré: XXXX caractères
+   ✅ [N8N_DOC] Conteneur créé
+   ✅ [N8N_DOC] 📄 Viewer injecté dans le DOM
+
+6. TÉLÉCHARGEMENT DU DOCUMENT
+   📥 [N8N_DOC_DOWNLOAD] === DÉBUT TÉLÉCHARGEMENT ===
+   📥 [N8N_DOC_DOWNLOAD] Timestamp: 2025-12-13T...
+   📥 [N8N_DOC_DOWNLOAD] Doc ID: 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+   📥 [N8N_DOC_DOWNLOAD] Export URL: https://docs.google.com/...
+   📥 [N8N_DOC_DOWNLOAD] Proxy URL: https://api.allorigins.win/raw?url=
+   📥 [N8N_DOC_DOWNLOAD] Fetch URL complète: ...
+   📥 [N8N_DOC_DOWNLOAD] Lancement de fetch()...
+
+7. RÉPONSE DU SERVEUR
+   📥 [N8N_DOC_DOWNLOAD] Réponse reçue après XXXms
+   📥 [N8N_DOC_DOWNLOAD] Status: 200 OK
+   📥 [N8N_DOC_DOWNLOAD] OK? true
+   📥 [N8N_DOC_DOWNLOAD] Headers: [...]
+   📥 [N8N_DOC_DOWNLOAD] Lecture du texte...
+
+8. AFFICHAGE DU DOCUMENT
+   ✅ [N8N_DOC_DOWNLOAD] Document téléchargé après XXXms
+   ✅ [N8N_DOC_DOWNLOAD] Taille: XXXX caractères
+   ✅ [N8N_DOC_DOWNLOAD] Aperçu (200 premiers caractères): ...
+   ✅ [N8N_DOC_DOWNLOAD] Conteneur trouvé? true
+   ✅ [N8N_DOC_DOWNLOAD] Nettoyage du HTML...
+   ✅ [N8N_DOC_DOWNLOAD] HTML nettoyé: XXXX caractères
+   ✅ [N8N_DOC_DOWNLOAD] Injection dans le DOM...
+   ✅ [N8N_DOC_DOWNLOAD] 🎉 Document affiché avec succès!
+   ✅ [N8N_DOC_DOWNLOAD] === FIN TÉLÉCHARGEMENT ===
+
+=================================================================
+❌ LOGS D'ERREUR POSSIBLES
+=================================================================
+
+SI AUCUNE TABLE TROUVÉE :
+   ⚠️ [N8N_DOC] Aucune table n8n_doc détectée sur X tables
+   💡 [N8N_DOC] Vérifiez que la table contient bien "Template" ET "n8n_doc"
+
+SI ERREUR DE TÉLÉCHARGEMENT :
+   ❌ [N8N_DOC_DOWNLOAD] Erreur après XXXms
+   ❌ [N8N_DOC_DOWNLOAD] Type: TypeError / NetworkError / ...
+   ❌ [N8N_DOC_DOWNLOAD] Message: ...
+   ❌ [N8N_DOC_DOWNLOAD] Stack: ...
+
+SI ERREUR CORS :
+   ❌ Failed to fetch
+   ❌ CORS policy: No 'Access-Control-Allow-Origin' header
+
+SI ERREUR 403/404 :
+   ❌ Erreur HTTP: 403 Forbidden
+   ❌ Erreur HTTP: 404 Not Found
+
+=================================================================
+🧪 COMMENT TESTER
+=================================================================
+
+1. Ouvrez la page :
+   http://localhost:5173/test-modelisation-template-v2.html
+
+2. Ouvrez la console (F12)
+
+3. Cherchez les logs avec le préfixe [N8N_DOC]
+
+4. Suivez le flux des logs pour identifier où ça bloque
+
+=================================================================
+🔍 POINTS DE VÉRIFICATION
+=================================================================
+
+ÉTAPE 1 : Script chargé ?
+   Cherchez : "🎯 Google Drive Downloader - CHARGÉ"
+   Si absent → Le script n'est pas chargé
+
+ÉTAPE 2 : Recherche lancée ?
+   Cherchez : "🚀 [N8N_DOC] Lancement de la recherche initiale..."
+   Si absent → Le setTimeout ne s'exécute pas
+
+ÉTAPE 3 : Tables trouvées ?
+   Cherchez : "🔍 [N8N_DOC] Nombre total de tables trouvées: X"
+   Si X = 0 → Aucune table dans la page
+
+ÉTAPE 4 : Table n8n_doc détectée ?
+   Cherchez : "✅ [N8N_DOC] 🎯 TABLE CIBLE TROUVÉE !"
+   Si absent → La table ne contient pas "Template" ET "n8n_doc"
+
+ÉTAPE 5 : Viewer injecté ?
+   Cherchez : "✅ [N8N_DOC] 📄 Viewer injecté dans le DOM"
+   Si absent → Problème d'injection
+
+ÉTAPE 6 : Téléchargement lancé ?
+   Cherchez : "📥 [N8N_DOC_DOWNLOAD] === DÉBUT TÉLÉCHARGEMENT ==="
+   Si absent → Le script inline ne s'exécute pas
+
+ÉTAPE 7 : Réponse reçue ?
+   Cherchez : "📥 [N8N_DOC_DOWNLOAD] Réponse reçue après XXXms"
+   Si absent → Problème réseau ou CORS
+
+ÉTAPE 8 : Document affiché ?
+   Cherchez : "✅ [N8N_DOC_DOWNLOAD] 🎉 Document affiché avec succès!"
+   Si absent → Problème d'affichage
+
+=================================================================
+💻 COMMANDES CONSOLE UTILES
+=================================================================
+
+# Forcer l'exécution manuelle
+window.googleDriveDownloader.execute();
+
+# Voir la configuration
+console.log(window.googleDriveDownloader.config);
+
+# Compter les tables
+console.log('Tables:', document.querySelectorAll('table').length);
+
+# Voir le contenu des tables
+document.querySelectorAll('table').forEach((t, i) => {
+    console.log(`Table ${i+1}:`, t.textContent.substring(0, 100));
+});
+
+# Chercher "n8n_doc" dans toutes les tables
+document.querySelectorAll('table').forEach((t, i) => {
+    if (t.textContent.includes('n8n_doc')) {
+        console.log(`Table ${i+1} contient n8n_doc`);
+    }
+});
+
+# Tester le téléchargement direct
+fetch('https://api.allorigins.win/raw?url=' + 
+      encodeURIComponent('https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=html'))
+    .then(r => r.text())
+    .then(html => console.log('Téléchargé:', html.length, 'caractères'))
+    .catch(e => console.error('Erreur:', e));
+
+=================================================================
+🎯 ACTIONS SELON LES LOGS
+=================================================================
+
+SI "Aucune table n8n_doc détectée" :
+   → Vérifiez que la table contient bien "Template" ET "n8n_doc"
+   → Utilisez les commandes console pour inspecter les tables
+
+SI "Erreur de téléchargement" :
+   → Vérifiez que le document est partagé publiquement
+   → Testez l'URL d'export manuellement
+   → Vérifiez que le proxy CORS fonctionne
+
+SI "Chargement en cours" pendant 3 minutes :
+   → Le fetch() est bloqué
+   → Vérifiez la console Network (F12 → Network)
+   → Cherchez la requête vers api.allorigins.win
+   → Vérifiez son statut (pending, failed, completed)
+
+SI Rien ne se passe :
+   → Le script n'est peut-être pas chargé
+   → Vérifiez index.html
+   → Rechargez la page avec Ctrl+F5
+
+=================================================================
+📊 INFORMATIONS SUPPLÉMENTAIRES
+=================================================================
+
+Document ID actuel :
+1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+
+URL d'export :
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=html
+
+Proxy CORS :
+https://api.allorigins.win/raw?url=
+
+Délai avant recherche initiale : 2500ms (2.5 secondes)
+
+=================================================================
+Date : 13 décembre 2025
+Statut : ✅ LOGS DÉTAILLÉS ACTIVÉS
+=================================================================

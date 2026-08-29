@@ -1,0 +1,58 @@
+================================================================
+   CORRECTION SÉLECTION FICHIER - 28 AVRIL 2026
+================================================================
+
+PROBLÈME IDENTIFIÉ
+------------------
+Le workflow retournait [I10]-Norme cripp.pdf au lieu de [I30]-AFRILAND.pdf
+
+CAUSE
+-----
+1. La requête Google Drive utilisait "name = 'X' or name contains 'X'"
+   → Trop permissive, matchait plusieurs fichiers
+   
+2. La logique de sélection ne gérait pas bien les priorités
+   → Prenait le premier fichier trouvé sans vérifier la correspondance exacte
+
+CORRECTIONS APPLIQUÉES
+----------------------
+
+1. REQUÊTE GOOGLE DRIVE SIMPLIFIÉE
+   Avant: (name = '[I30]-AFRILAND' or name contains '[I30]-AFRILAND')
+   Après: name contains '[I30]-AFRILAND'
+   
+   → Plus simple, laisse le tri au code JavaScript
+
+2. LOGIQUE DE SÉLECTION AMÉLIORÉE
+   
+   Priorité 1: Nom exact (sans extension)
+   - [I30]-AFRILAND.pdf → match parfait
+   
+   Priorité 2: Nom qui commence par l'index
+   - [I30]-AFRILAND quelque chose.pdf → bon match
+   
+   Priorité 3: Premier fichier trouvé
+   - Fallback si aucun match parfait
+
+3. AJOUT D'UN INDICATEUR DE PRIORITÉ
+   La réponse inclut maintenant "matchPriority" (1, 2 ou 3)
+   → Permet de voir la qualité du match
+
+COMMENT TESTER
+--------------
+1. Réimporter le workflow dans n8n
+2. Exécuter: .\test-workflow-xref-afriland.ps1
+3. Vérifier que le fichier retourné est [I30]-AFRILAND.pdf
+
+RÉSULTAT ATTENDU
+----------------
+{
+  "success": true,
+  "file": {
+    "name": "[I30]-AFRILAND.pdf",
+    ...
+  },
+  "matchPriority": 1 ou 2
+}
+
+================================================================

@@ -1,0 +1,289 @@
+═══════════════════════════════════════════════════════════════════════════
+  STATUT FINAL - CORRECTION CASE 25
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+📊 RÉSUMÉ EXÉCUTIF
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME INITIAL:
+Router front-end détectait "Recos contrôle interne comptable" mais 
+exécutait Case 1 au lieu de Case 25
+
+STATUT ACTUEL:
+✅ Router front-end: CORRIGÉ et FONCTIONNEL
+❌ Workflow n8n: PROBLÈME IDENTIFIÉ - LLM ignore le message utilisateur
+
+═══════════════════════════════════════════════════════════════════════════
+✅ TRAVAIL ACCOMPLI
+═══════════════════════════════════════════════════════════════════════════
+
+1. CORRECTION ROUTER FRONT-END
+───────────────────────────────────────────────────────────────────────────
+Fichier: src/services/claraApiService.ts
+Fonction: getN8nEndpointWithInfo()
+
+Problème résolu:
+- Cases spécifiques (2-33) vérifiées EN PREMIER
+- Cases par défaut (1, 8) vérifiées EN DERNIER
+- Case 25 détecté correctement même avec [Command] dans le message
+
+Résultat:
+✅ Notification: "Case 25 : recos_controle_interne"
+✅ Endpoint: .../webhook/recos_contrôle_interne_comptable
+✅ Message envoyé au workflow n8n
+
+2. DIAGNOSTIC WORKFLOW N8N
+───────────────────────────────────────────────────────────────────────────
+Workflow: recos_contrôle_interne_comptable
+
+Problèmes identifiés (chronologique):
+1. ❌ Contenu hardcodé sur "caisse" → Identifié
+2. ❌ Placeholders littéraux retournés → Identifié
+3. ❌ LLM ignore message utilisateur → PROBLÈME ACTUEL
+
+Symptôme actuel:
+- Message: Cycle RH - Recrutement DG
+- Réponse: Cycle Achats - Bons de Commande
+→ Le LLM génère du contenu mais ignore le message utilisateur
+
+3. SOLUTIONS FOURNIES
+───────────────────────────────────────────────────────────────────────────
+✅ Prompt système corrigé (sans placeholders)
+✅ Guide de débogage complet
+✅ Code pour extraire et vérifier le message utilisateur
+✅ Prompt ultra-simple pour forcer le LLM à lire le message
+✅ Code complet pour node clean1 (NODE_CLEAN1_CORRIGE_CASE_25.js)
+✅ Code complet pour Markdown Generator (MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js)
+✅ Guide d'implémentation étape par étape (GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md)
+
+═══════════════════════════════════════════════════════════════════════════
+📁 FICHIERS CRÉÉS (24 fichiers)
+═══════════════════════════════════════════════════════════════════════════
+
+CORRECTION ROUTER (RÉSOLU):
+1. 00_CORRECTION_ROUTER_CASE_25_29_MARS_2026.txt
+2. DIAGNOSTIC_TECHNIQUE_ROUTER_CASE_25.md
+3. QUICK_TEST_CORRECTION_CASE_25.txt
+4. INDEX_CORRECTION_ROUTER_CASE_25_29_MARS_2026.md
+5. LISTE_FICHIERS_CORRECTION_CASE_25_29_MARS_2026.md
+6. SYNTHESE_FINALE_CORRECTION_CASE_25_29_MARS_2026.txt
+7. COMMANDES_RAPIDES_TEST_CASE_25.txt
+8. 00_LIRE_EN_PREMIER_CORRECTION_CASE_25.txt
+9. RECAP_ULTRA_RAPIDE_CASE_25.txt
+10. COMMIT_MESSAGE_CORRECTION_CASE_25.txt
+
+PROBLÈME WORKFLOW N8N (EN COURS):
+11. 00_PROBLEME_WORKFLOW_N8N_CASE_25_29_MARS_2026.txt
+12. GUIDE_CORRECTION_WORKFLOW_N8N_CASE_25.md
+13. RECAP_FINAL_PROBLEME_CASE_25_29_MARS_2026.txt
+
+CORRECTION PLACEHOLDERS:
+14. PROMPT_SYSTEME_CORRIGE_CASE_25_FINAL.md
+15. 00_ACTION_IMMEDIATE_CASE_25_PLACEHOLDERS.txt
+
+DIAGNOSTIC LLM IGNORE MESSAGE:
+16. DIAGNOSTIC_FINAL_CASE_25_LLM_IGNORE_MESSAGE.md
+17. 00_URGENT_CASE_25_LLM_IGNORE_MESSAGE.txt
+
+SOLUTION STRUCTURED OUTPUT PARSER:
+18. NODE_CLEAN1_CORRIGE_CASE_25.js (code pour node clean1)
+19. MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js (code pour Markdown Generator)
+20. GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md (guide complet)
+21. 00_ACTION_IMMEDIATE_STRUCTURED_OUTPUT_CASE_25.txt (action rapide)
+
+STATUT FINAL:
+22. STATUT_FINAL_CASE_25_29_MARS_2026.txt (ce fichier)
+23. INDEX_COMPLET_CASE_25_29_MARS_2026.md
+24. 00_COMMENCER_ICI_CASE_25.txt
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: OUVRIR N8N
+───────────────────────────────────────────────────────────────────────────
+URL: https://t22wtwxl.rpcld.app
+Workflow: recos_contrôle_interne_comptable
+
+ÉTAPE 2: SUIVRE LE GUIDE D'IMPLÉMENTATION
+───────────────────────────────────────────────────────────────────────────
+Fichier: GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+
+Actions:
+1. Ajouter node "Debug Message Reception"
+2. Ajouter node "Extract User Message"
+3. Modifier node "Prepare Prompt" (prompt minimal)
+4. Configurer node "OpenAI Chat Model" (temp 0.3)
+5. Vérifier node "Structured Output Parser"
+6. Modifier node "node clean1" (copier NODE_CLEAN1_CORRIGE_CASE_25.js)
+7. Ajouter node "Markdown Generator1 corrige29" (copier MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js)
+
+ÉTAPE 3: TESTER
+───────────────────────────────────────────────────────────────────────────
+Message:
+[VAE] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Nature de test] = [Rapprochement]
+[Assertion] = validité
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+Résultat attendu:
+✅ Parle de RH (pas Achats)
+✅ Parle de Recrutement (pas BC)
+✅ Parle du DG (pas fournisseurs)
+
+═══════════════════════════════════════════════════════════════════════════
+📖 GUIDE DE LECTURE
+═══════════════════════════════════════════════════════════════════════════
+
+POUR COMPRENDRE LE PROBLÈME:
+→ 00_ACTION_IMMEDIATE_STRUCTURED_OUTPUT_CASE_25.txt (action rapide)
+→ 00_URGENT_CASE_25_LLM_IGNORE_MESSAGE.txt (guide rapide)
+→ DIAGNOSTIC_FINAL_CASE_25_LLM_IGNORE_MESSAGE.md (analyse complète)
+
+POUR CORRIGER LE WORKFLOW:
+→ GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md (guide complet étape par étape)
+→ NODE_CLEAN1_CORRIGE_CASE_25.js (code pour node clean1)
+→ MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js (code pour Markdown Generator)
+
+POUR COMPRENDRE LA CORRECTION DU ROUTER:
+→ 00_LIRE_EN_PREMIER_CORRECTION_CASE_25.txt
+→ DIAGNOSTIC_TECHNIQUE_ROUTER_CASE_25.md
+
+HISTORIQUE COMPLET:
+→ RECAP_FINAL_PROBLEME_CASE_25_29_MARS_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC TECHNIQUE
+═══════════════════════════════════════════════════════════════════════════
+
+ÉVOLUTION DU PROBLÈME:
+
+1. PROBLÈME ROUTER (RÉSOLU)
+   Symptôme: Case 25 détecté mais Case 1 exécuté
+   Cause: Logique if-else avec cases par défaut en premier
+   Solution: Réorganisation en 2 priorités (spécifiques puis défaut)
+   Statut: ✅ RÉSOLU
+
+2. PROBLÈME CONTENU CAISSE (IDENTIFIÉ)
+   Symptôme: Workflow retourne contenu sur caisse au lieu de RH
+   Cause: Exemple hardcodé dans le prompt système
+   Solution: Prompt système générique fourni
+   Statut: ⏳ À TESTER
+
+3. PROBLÈME PLACEHOLDERS (IDENTIFIÉ)
+   Symptôme: Workflow retourne "[Titre de l'anomalie...]"
+   Cause: Prompt système montre des placeholders
+   Solution: Prompt sans placeholders fourni
+   Statut: ⏳ À TESTER
+
+4. PROBLÈME LLM IGNORE MESSAGE (ACTUEL)
+   Symptôme: Contenu réel mais sur mauvais cycle (Achats vs RH)
+   Cause: Message utilisateur non passé au LLM
+   Solution: Guide de débogage fourni
+   Statut: 🔴 EN COURS
+
+═══════════════════════════════════════════════════════════════════════════
+💡 HYPOTHÈSES SUR LA CAUSE
+═══════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE 1: Message non extrait du webhook
+→ Le message est dans un champ non vérifié (body, message, etc.)
+
+HYPOTHÈSE 2: Message non inclus dans le prompt
+→ Le prompt envoyé au LLM ne contient que le prompt système
+
+HYPOTHÈSE 3: Prompt système trop directif
+→ Le prompt contient un exemple détaillé sur Achats/BC qui force le LLM
+
+HYPOTHÈSE 4: Mauvaise configuration du LLM
+→ Le LLM ignore le message utilisateur par défaut
+
+SOLUTION: Débugger avec des logs à chaque étape
+
+═══════════════════════════════════════════════════════════════════════════
+🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir le diagnostic complet:
+   code DIAGNOSTIC_FINAL_CASE_25_LLM_IGNORE_MESSAGE.md
+
+2. Ouvrir le guide urgent:
+   code 00_URGENT_CASE_25_LLM_IGNORE_MESSAGE.txt
+
+3. Ouvrir n8n:
+   start https://t22wtwxl.rpcld.app
+
+4. Voir le router corrigé:
+   code src/services/claraApiService.ts
+
+═══════════════════════════════════════════════════════════════════════════
+📊 CHECKLIST COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════
+
+FRONT-END CLARAVERSE:
+[✅] Router réorganisé (priorités correctes)
+[✅] Case 25 détecté correctement
+[✅] Endpoint correct appelé
+[✅] Notification affichée
+[✅] Message envoyé au workflow
+
+WORKFLOW N8N:
+[⏳] Node debug ajouté
+[⏳] Logs vérifiés (où est le message?)
+[⏳] Message utilisateur extrait
+[⏳] Prompt système simplifié
+[⏳] Message inclus dans le prompt
+[⏳] Workflow testé
+[⏳] Réponse correspond au message
+
+═══════════════════════════════════════════════════════════════════════════
+🎓 LEÇONS APPRISES
+═══════════════════════════════════════════════════════════════════════════
+
+1. ROUTER FRONT-END
+   → Toujours vérifier les cases spécifiques AVANT les cases par défaut
+   → Utiliser des conditions explicites plutôt que des else if imbriqués
+
+2. WORKFLOW N8N
+   → Ne jamais mettre d'exemples hardcodés dans les prompts système
+   → Ne jamais montrer de placeholders au LLM (il les copie)
+   → Toujours débugger avec des logs pour voir ce qui est passé au LLM
+   → S'assurer que le message utilisateur est INCLUS dans le prompt
+
+3. DÉBOGAGE
+   → Isoler chaque composant (router, webhook, prompt, LLM, réponse)
+   → Vérifier les logs à chaque étape
+   → Tester avec des messages simples d'abord
+
+═══════════════════════════════════════════════════════════════════════════
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════
+
+Si le problème persiste après avoir suivi le guide:
+
+1. Vérifier les logs du workflow n8n (chaque node)
+2. Vérifier que le message utilisateur est bien dans le webhook
+3. Vérifier que le prompt complet contient le message utilisateur
+4. Tester avec un prompt ultra-simple (voir diagnostic)
+5. Vérifier la configuration du modèle LLM (température, etc.)
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CONCLUSION
+═══════════════════════════════════════════════════════════════════════════
+
+FRONT-END: ✅ CORRIGÉ ET FONCTIONNEL
+WORKFLOW N8N: 🔴 PROBLÈME IDENTIFIÉ - SOLUTION FOURNIE
+
+Le router front-end fonctionne parfaitement. Le problème est maintenant 
+isolé dans le workflow n8n qui ne passe pas le message utilisateur au LLM.
+
+Un guide complet de débogage et de correction a été fourni avec le code 
+exact à copier dans n8n.
+
+Prochaine étape: Suivre le guide dans DIAGNOSTIC_FINAL_CASE_25_LLM_IGNORE_MESSAGE.md
+
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,139 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║           🎯 SOLUTION IMMÉDIATE - 2 MINUTES                   ║
+║                                                                ║
+║           Figement de colonnes dans Claraverse                ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+⚡ PROBLÈME
+════════════════════════════════════════════════════════════════
+
+Menu > Colonnes > Figer colonne → Ne fait rien visuellement
+
+
+✅ SOLUTION EN 3 ÉTAPES
+════════════════════════════════════════════════════════════════
+
+1️⃣  OUVRIR
+    └─ public/menu.js
+
+2️⃣  CHERCHER (ligne ~917)
+    └─ // === ACTIONS FIGER PANES ===
+
+3️⃣  REMPLACER PAR
+    └─ Le code de:
+       Doc menu contextuel menu.js update/
+       CORRECTION_FIGEMENT_COLONNES_18_JUIN_2026.js
+       (lignes 15 à 245)
+
+
+🎯 OÙ COPIER LE CODE
+════════════════════════════════════════════════════════════════
+
+Dans menu.js, remplacer EXACTEMENT de:
+
+┌─────────────────────────────────────────────────────┐
+│ // === ACTIONS FIGER PANES ===                      │
+│ freezeColumns() {                                    │
+│   ...                                                │
+│ }                                                    │
+│                                                      │
+│ unfreezeColumns() {                                  │
+│   ...                                                │
+│ }                                                    │
+│                                                      │
+│ applyFreezePanes(table, freezeRows, freezeCols) {  │
+│   ...                                                │
+│ }                                                    │
+└─────────────────────────────────────────────────────┘
+
+PAR:
+
+Le code complet du fichier de correction
+
+
+✅ RÉSULTAT ATTENDU
+════════════════════════════════════════════════════════════════
+
+AVANT scroll:
+┌────┬─────┬────────┬─────────┬──────┬──────┐
+│ ID │ Nom │ Compte │    N    │ N-1  │ ... │
+├────┼─────┼────────┼─────────┼──────┼──────┤
+│ 1  │ A   │ 401000 │ 15 000€ │...   │ ... │
+└────┴─────┴────────┴─────────┴──────┴──────┘
+
+APRÈS figement + scroll →
+╔════╦═════╦════════╗─────────────────┐
+║ ID ║ Nom ║ Compte ║ N    │ N-1  ... │ ← Scroll
+╠════╬═════╬════════╣─────────────────┤
+║ 1  ║ A   ║ 401000 ║15000 │12000 ... │
+╚════╩═════╩════════╝─────────────────┘
+ ↑    ↑      ↑       ↑
+Figé Figé   Figé    Bordure rouge
+
+
+🔍 COMMENT TESTER
+════════════════════════════════════════════════════════════════
+
+1. Recharger Claraverse (Ctrl+F5)
+2. Ouvrir une table dans le chat
+3. Cliquer sur une cellule (ex: colonne 3)
+4. Clic droit > Colonnes > Figer colonne
+5. Scroller horizontalement
+6. ✅ Les 3 premières colonnes restent visibles
+
+
+📊 CONSOLE (F12)
+════════════════════════════════════════════════════════════════
+
+Vous devriez voir:
+🔧 Application figement: 3 colonnes
+✓ Conteneur scroll configuré
+✓ Styles CSS injectés
+✓ Col 0: position=sticky, left=0px, bg=#ffffff
+✓ Col 1: position=sticky, left=XXpx, bg=#f9fafb
+✓ Col 2: position=sticky, left=XXpx, bg=#ffffff
+✅ Figement terminé avec succès (3 colonnes)
+
+
+❌ SI ÇA NE MARCHE PAS
+════════════════════════════════════════════════════════════════
+
+Vérifier dans la console:
+const table = document.querySelector('table');
+const cell = table.querySelector('td');
+console.log({
+  position: cell.style.position,    // Doit être 'sticky'
+  left: cell.style.left,             // Doit être '0px' ou une valeur
+  zIndex: cell.style.zIndex,         // Doit être '100'
+  width: cell.offsetWidth            // Doit être > 0
+});
+
+
+📁 FICHIERS FOURNIS
+════════════════════════════════════════════════════════════════
+
+⭐ CORRECTION_FIGEMENT_COLONNES_18_JUIN_2026.js
+   └─ CODE À COPIER (ligne 15-245)
+
+🧪 test-freeze-columns.html
+   └─ Pour tester l'algorithme isolé
+
+📖 00_COMMENCER_ICI_FIGEMENT_COLONNES_18_JUIN_2026.txt
+   └─ Documentation complète
+
+📋 QUICK_START_FIGEMENT_COLONNES_18_JUIN_2026.txt
+   └─ Guide détaillé en 3 étapes
+
+
+💡 BESOIN DE PLUS D'AIDE ?
+════════════════════════════════════════════════════════════════
+
+Lire: QUICK_START_FIGEMENT_COLONNES_18_JUIN_2026.txt
+
+
+════════════════════════════════════════════════════════════════
+✨ C'EST TOUT ! La solution est prête en 2 minutes ✨
+════════════════════════════════════════════════════════════════

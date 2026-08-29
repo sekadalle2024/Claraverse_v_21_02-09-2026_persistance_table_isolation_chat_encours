@@ -1,0 +1,123 @@
+================================================================================
+                    COMMANDES RAPIDES - COMMIT
+        SUPPRESSION TESTS TRÉSORERIE AA02/AA03/AA04
+                    16 Mai 2026
+================================================================================
+
+📋 FICHIERS À COMMITER : 10 fichiers
+
+================================================================================
+🚀 COMMANDES GIT
+================================================================================
+
+# 1. AJOUTER TOUS LES FICHIERS
+git add "Doc menu demarrer/Scripts/remove_tresorerie_tests_aa02_aa03_aa04_e_revision.py"
+git add "test-suppression-tresorerie-aa02-aa03-aa04.ps1"
+git add "Doc menu demarrer/Documentation/SUPPRESSION_TESTS_TRESORERIE_AA02_AA03_AA04_E_REVISION_16_MAI_2026.md"
+git add "QUICK_START_SUPPRESSION_TRESORERIE_AA02_AA03_AA04.txt"
+git add "00_INDEX_SUPPRESSION_TRESORERIE_AA02_AA03_AA04_16_MAI_2026.md"
+git add "00_RECAP_FINAL_SUPPRESSION_TRESORERIE_AA02_AA03_AA04_16_MAI_2026.txt"
+git add "LISTE_FICHIERS_SUPPRESSION_TRESORERIE_16_MAI_2026.md"
+git add "SYNTHESE_VISUELLE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt"
+git add "00_COMMENCER_ICI_SUPPRESSION_TRESORERIE_16_MAI_2026.txt"
+git add "COMMIT_MESSAGE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt"
+git add "00_MISSION_ACCOMPLIE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt"
+git add "COMMANDES_RAPIDES_COMMIT_TRESORERIE.txt"
+git add "src/components/Clara_Components/DemarrerMenu.tsx"
+
+# 2. VÉRIFIER LES FICHIERS AJOUTÉS
+git status
+
+# 3. COMMIT AVEC MESSAGE
+git commit -F COMMIT_MESSAGE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt
+
+# 4. PUSH VERS LE REPOSITORY
+git push
+
+================================================================================
+⚡ VERSION COURTE (TOUT EN UNE FOIS)
+================================================================================
+
+git add "Doc menu demarrer/Scripts/remove_tresorerie_tests_aa02_aa03_aa04_e_revision.py" "test-suppression-tresorerie-aa02-aa03-aa04.ps1" "Doc menu demarrer/Documentation/SUPPRESSION_TESTS_TRESORERIE_AA02_AA03_AA04_E_REVISION_16_MAI_2026.md" "QUICK_START_SUPPRESSION_TRESORERIE_AA02_AA03_AA04.txt" "00_INDEX_SUPPRESSION_TRESORERIE_AA02_AA03_AA04_16_MAI_2026.md" "00_RECAP_FINAL_SUPPRESSION_TRESORERIE_AA02_AA03_AA04_16_MAI_2026.txt" "LISTE_FICHIERS_SUPPRESSION_TRESORERIE_16_MAI_2026.md" "SYNTHESE_VISUELLE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt" "00_COMMENCER_ICI_SUPPRESSION_TRESORERIE_16_MAI_2026.txt" "COMMIT_MESSAGE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt" "00_MISSION_ACCOMPLIE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt" "COMMANDES_RAPIDES_COMMIT_TRESORERIE.txt" "src/components/Clara_Components/DemarrerMenu.tsx" && git commit -F COMMIT_MESSAGE_SUPPRESSION_TRESORERIE_16_MAI_2026.txt && git push
+
+================================================================================
+🔍 VÉRIFICATIONS AVANT COMMIT
+================================================================================
+
+# Vérifier que les tests ont été supprimés
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "tresorerie-aa0[234]"
+
+# Compter les occurrences (devrait être 0)
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "tresorerie-aa0[234]").Count
+
+# Vérifier la syntaxe TypeScript
+npx tsc --noEmit src/components/Clara_Components/DemarrerMenu.tsx
+
+# Vérifier les fichiers modifiés
+git diff src/components/Clara_Components/DemarrerMenu.tsx
+
+================================================================================
+📝 FICHIERS À NE PAS COMMITER
+================================================================================
+
+❌ src/components/Clara_Components/DemarrerMenu.tsx.backup_tresorerie_*
+   (Sauvegarde locale uniquement)
+
+================================================================================
+✅ CHECKLIST AVANT COMMIT
+================================================================================
+
+- [ ] Tous les fichiers créés sont ajoutés
+- [ ] Le fichier DemarrerMenu.tsx est modifié correctement
+- [ ] Les tests ont été supprimés (vérification)
+- [ ] Aucune erreur de compilation TypeScript
+- [ ] Le message de commit est prêt
+- [ ] La sauvegarde est conservée localement
+
+================================================================================
+🎯 APRÈS LE COMMIT
+================================================================================
+
+1. Vérifier que le push a réussi
+   git log --oneline -1
+
+2. Tester l'application
+   npm run dev
+
+3. Vérifier le menu Démarrer E-revision
+   - Section Trésorerie
+   - Tests AA02, AA03, AA04 absents
+
+4. Vérifier la console du navigateur
+   - Aucune erreur
+
+================================================================================
+💾 RESTAURATION EN CAS DE PROBLÈME
+================================================================================
+
+# Annuler le dernier commit (avant push)
+git reset --soft HEAD~1
+
+# Restaurer le fichier depuis la sauvegarde
+Copy-Item "src/components/Clara_Components/DemarrerMenu.tsx.backup_tresorerie_*" "src/components/Clara_Components/DemarrerMenu.tsx" -Force
+
+# Annuler les modifications (après avoir restauré)
+git checkout src/components/Clara_Components/DemarrerMenu.tsx
+
+================================================================================
+📊 RÉSUMÉ
+================================================================================
+
+Fichiers à commiter : 12
+- Scripts : 2
+- Documentation : 9
+- Code modifié : 1
+
+Taille totale : ~50 KB
+Tests supprimés : 4
+Modes supprimés : 24
+Lignes supprimées : ~340
+
+================================================================================
+✨ PRÊT POUR LE COMMIT
+================================================================================

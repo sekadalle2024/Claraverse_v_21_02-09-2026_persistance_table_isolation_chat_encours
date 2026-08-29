@@ -1,0 +1,104 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    COMMANDES A COPIER-COLLER                             ║
+║    17 AVRIL 2026                                         ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🎯 COPIER-COLLER CES COMMANDES DANS POWERSHELL
+
+═══════════════════════════════════════════════════════════
+
+COMMANDE 1: NAVIGUER VERS LE PROJET
+────────────────────────────────────
+
+cd "H:\ClaraVerse"
+
+═══════════════════════════════════════════════════════════
+
+COMMANDE 2: EXECUTER LE SCRIPT DE VERIFICATION
+───────────────────────────────────────────────
+
+& ".\Doc render deploy\verifier-fichiers-github.ps1"
+
+═══════════════════════════════════════════════════════════
+
+✅ C'EST TOUT!
+
+Le script va:
+1. Se connecter à GitHub
+2. Récupérer la liste des fichiers
+3. Vérifier runtime.txt
+4. Vérifier requirements_render.txt
+5. Afficher le résultat en couleur
+
+═══════════════════════════════════════════════════════════
+
+📋 EXEMPLE D'EXECUTION
+
+PS H:\ClaraVerse> cd "H:\ClaraVerse"
+PS H:\ClaraVerse> & ".\Doc render deploy\verifier-fichiers-github.ps1"
+
+========================================
+  VERIFICATION FICHIERS GITHUB
+========================================
+
+Repository: Back-end-python-V0_03_03_2026
+URL API: https://api.github.com/repos/...
+
+Recuperation de la liste des fichiers...
+
+FICHIERS A LA RACINE DU REPOSITORY:
+====================================
+
+[FILE] runtime.txt
+[FILE] requirements_render.txt
+[FILE] main.py
+...
+
+========================================
+  VERIFICATION DES FICHIERS CLES
+========================================
+
+[OK] runtime.txt PRESENT
+[OK] requirements_render.txt PRESENT
+[OK] main.py PRESENT
+
+========================================
+  TOUS LES FICHIERS SONT PRESENTS!
+========================================
+
+═══════════════════════════════════════════════════════════
+
+⚠️  SI LE SCRIPT NE FONCTIONNE PAS
+
+ALTERNATIVE: Vérifier dans le navigateur
+
+1. Ouvrir ce lien:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+2. Rafraîchir avec Ctrl+F5
+
+3. Vérifier que vous voyez:
+   - runtime.txt
+   - requirements_render.txt
+   - main.py
+
+═══════════════════════════════════════════════════════════
+
+🚀 APRES VERIFICATION
+
+1. Aller sur Render:
+   https://dashboard.render.com/
+
+2. Vérifier les logs de build
+
+3. Chercher "Using Python version 3.11.9"
+
+4. Si pas de rebuild: "Manual Deploy" → "Deploy latest commit"
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+
+═══════════════════════════════════════════════════════════

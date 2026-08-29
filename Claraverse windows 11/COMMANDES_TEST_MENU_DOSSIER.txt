@@ -1,0 +1,255 @@
+===========================================
+COMMANDES RAPIDES - TEST MENU DOSSIER
+===========================================
+
+📋 ACCÈS RAPIDE
+===========================================
+
+1. PAGE DE TEST
+   Ouvrir dans le navigateur :
+   → public/test-dossier-menu.html
+
+2. APPLICATION PRINCIPALE
+   Démarrer l'application et cliquer sur l'icône 📁 dans la sidebar
+
+
+🧪 TESTS DANS LA CONSOLE
+===========================================
+
+// Vérifier que le menu est chargé
+window.dossierMenu
+
+// Vérifier l'initialisation
+window.dossierMenu.initialized
+
+// Ouvrir le menu
+window.dossierMenu.showMenu()
+
+// Fermer le menu
+window.dossierMenu.hideMenu()
+
+// Basculer le menu
+window.dossierMenu.toggleMenu()
+
+// Rafraîchir l'accordéon
+window.dossierMenu.refreshAccordion()
+
+// Obtenir les messages avec tables
+window.dossierMenu.getLLMMessagesWithTables()
+
+// Vérifier la visibilité
+window.dossierMenu.isMenuVisible
+
+
+🔍 DIAGNOSTIC
+===========================================
+
+// Compter les messages LLM
+document.querySelectorAll('.message-assistant, [data-role="assistant"], .prose.prose-base').length
+
+// Compter les tables
+document.querySelectorAll('table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg').length
+
+// Vérifier le menu DOM
+document.getElementById('dossier-menu')
+
+// Vérifier le contenu de l'accordéon
+document.getElementById('dossier-menu-content')
+
+
+📊 TESTS FONCTIONNELS
+===========================================
+
+TEST 1 : Ouverture du Menu
+---------------------------
+1. Cliquer sur l'icône 📁 dans la sidebar
+2. Vérifier que le menu slide depuis la droite
+3. Vérifier que l'animation est fluide (300ms)
+
+TEST 2 : Accordéon
+---------------------------
+1. Ouvrir le menu
+2. Cliquer sur une rubrique
+3. Vérifier que l'accordéon s'ouvre
+4. Vérifier que les miniatures de tables apparaissent
+
+TEST 3 : Navigation vers Table
+---------------------------
+1. Ouvrir le menu
+2. Ouvrir une rubrique
+3. Cliquer sur une miniature de table
+4. Vérifier que le menu se ferme
+5. Vérifier que la page défile vers la table
+6. Vérifier l'effet de surbrillance (2 secondes)
+
+TEST 4 : Fermeture du Menu
+---------------------------
+1. Ouvrir le menu
+2. Tester les 3 méthodes de fermeture :
+   - Clic sur ✕
+   - Touche Escape
+   - Clic sur une miniature
+
+TEST 5 : Rafraîchissement Automatique
+---------------------------
+1. Ouvrir le menu
+2. Ajouter un nouveau message avec table dans le chat
+3. Attendre 2 secondes
+4. Vérifier que le menu se met à jour automatiquement
+
+TEST 6 : Messages Vides
+---------------------------
+1. Ouvrir le menu sans messages
+2. Vérifier l'affichage du message "Aucune table trouvée"
+
+
+🐛 DÉBOGAGE AVANCÉ
+===========================================
+
+// Activer les logs détaillés
+console.log('🐛 Debug Info:');
+console.log('- dossierMenu:', window.dossierMenu);
+console.log('- Initialized:', window.dossierMenu?.initialized);
+console.log('- Menu Visible:', window.dossierMenu?.isMenuVisible);
+console.log('- Messages LLM:', document.querySelectorAll('.message-assistant').length);
+
+if (window.dossierMenu) {
+  const llmMessages = window.dossierMenu.getLLMMessagesWithTables();
+  console.log('- Messages avec tables:', llmMessages.length);
+  console.log('- Détails:', llmMessages);
+}
+
+// Vérifier les événements
+document.addEventListener('click', (e) => {
+  console.log('Click:', e.target);
+});
+
+
+⚙️ CONFIGURATION
+===========================================
+
+// Modifier la largeur du menu (dans dossier-menu.js)
+config: {
+  menuWidth: "60%",  // Changer de 50% à 60%
+}
+
+// Modifier l'intervalle de rafraîchissement
+config: {
+  autoRefreshInterval: 5000,  // Changer de 2000ms à 5000ms
+}
+
+// Modifier la durée des animations
+config: {
+  animationDuration: 500,  // Changer de 300ms à 500ms
+}
+
+
+📝 NOTES IMPORTANTES
+===========================================
+
+1. Le menu détecte uniquement les messages du système LLM
+   (pas les messages de l'utilisateur)
+
+2. Les tables doivent avoir la classe CSS :
+   "min-w-full border border-gray-200 dark:border-gray-700 rounded-lg"
+
+3. Le titre de la rubrique est extrait de la première cellule
+   de la première ligne (colonne Description)
+
+4. Le rafraîchissement automatique se fait toutes les 2 secondes
+   quand le menu est visible
+
+5. Le menu a un z-index de 20000 pour être au-dessus de tout
+
+
+🚀 COMMANDES DE DÉVELOPPEMENT
+===========================================
+
+// Recharger le script sans recharger la page
+const script = document.createElement('script');
+script.src = '/dossier-menu.js?' + Date.now();
+document.body.appendChild(script);
+
+// Détruire et recréer le menu
+if (window.dossierMenu) {
+  window.dossierMenu.destroy();
+}
+// Puis recharger le script
+
+// Forcer un rafraîchissement
+if (window.dossierMenu) {
+  window.dossierMenu.refreshAccordion();
+}
+
+
+📚 DOCUMENTATION
+===========================================
+
+Guide complet :
+→ GUIDE_MENU_DOSSIER.md
+
+Implémentation :
+→ IMPLEMENTATION_MENU_DOSSIER_COMPLETE.md
+
+Page de test :
+→ public/test-dossier-menu.html
+
+
+✅ CHECKLIST DE VALIDATION
+===========================================
+
+[ ] Le menu s'ouvre en cliquant sur l'icône 📁
+[ ] Le menu slide depuis la droite avec animation fluide
+[ ] L'accordéon affiche les messages avec tables
+[ ] Les miniatures de tables sont cliquables
+[ ] Le clic sur une miniature fait défiler vers la table
+[ ] Le menu se ferme avec ✕, Escape, ou clic sur miniature
+[ ] Le rafraîchissement automatique fonctionne
+[ ] Aucune erreur dans la console
+[ ] Le design est cohérent avec l'application
+[ ] Les animations sont fluides
+
+
+🎯 RÉSOLUTION DE PROBLÈMES
+===========================================
+
+PROBLÈME : Le menu ne s'ouvre pas
+SOLUTION : 
+- Vérifier que dossier-menu.js est chargé
+- Vérifier window.dossierMenu dans la console
+- Vérifier les erreurs console
+
+PROBLÈME : Aucune table n'apparaît
+SOLUTION :
+- Vérifier les sélecteurs CSS
+- Vérifier que les messages ont la classe correcte
+- Vérifier que les tables ont la classe correcte
+
+PROBLÈME : Le rafraîchissement ne fonctionne pas
+SOLUTION :
+- Vérifier que le menu est visible
+- Vérifier l'intervalle dans la config
+- Vérifier les logs console
+
+PROBLÈME : L'animation est saccadée
+SOLUTION :
+- Réduire la durée de l'animation
+- Vérifier les performances du navigateur
+- Désactiver les extensions qui peuvent interférer
+
+
+📞 SUPPORT
+===========================================
+
+En cas de problème :
+1. Consulter GUIDE_MENU_DOSSIER.md
+2. Tester avec public/test-dossier-menu.html
+3. Vérifier les logs console
+4. Utiliser les commandes de débogage ci-dessus
+
+
+===========================================
+Version : 1.0
+Date : Décembre 2025
+Statut : ✅ Prêt à l'emploi
+===========================================

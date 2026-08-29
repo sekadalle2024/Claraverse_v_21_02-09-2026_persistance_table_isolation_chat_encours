@@ -1,0 +1,47 @@
+================================================================================
+                    COMMANDES TEST LEAD BALANCE - IMPORT EXCEL
+================================================================================
+
+1. DÉMARRER LE BACKEND PYTHON
+-----------------------------
+cd py_backend
+python main.py --host 127.0.0.1 --port 5000
+
+2. OUVRIR LA PAGE DE TEST
+-------------------------
+Ouvrir dans le navigateur: public/test-lead-balance.html
+
+3. FORMAT DU FICHIER EXCEL
+--------------------------
+Le fichier Excel doit contenir 2 onglets:
+- Onglet 1: Balance N (période actuelle)
+- Onglet 2: Balance N-1 (période précédente)
+
+Colonnes attendues:
+| Numéro | Intitulé | Ant Débit | Ant Crédit | Débit | Crédit | Solde Débit | Solde Crédit |
+
+Le solde net est calculé: Solde Débit - Solde Crédit
+
+4. UTILISATION DANS L'APPLICATION
+---------------------------------
+- Cliquer sur une table dans le chat
+- Menu contextuel > Modélisation Pandas > 📊 Lead Balance
+- Sélectionner le fichier Excel
+- Les résultats s'affichent en accordéons sous la table
+
+Raccourci: Ctrl+L
+
+5. TESTER LA CONNEXION BACKEND (PowerShell)
+-------------------------------------------
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/lead-balance/health"
+
+6. VÉRIFIER LES LOGS BACKEND
+----------------------------
+Les logs s'affichent dans la console Python:
+- 📥 Requête reçue
+- 📂 Fichier décodé
+- 📑 Onglets trouvés
+- 📊 Traitement des balances
+- ✅ Résultat envoyé
+
+================================================================================

@@ -1,0 +1,530 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║      SOLUTION PYTHON NATIF N8N - GOOGLE DRIVE - 12 AVRIL 2026             ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ SOLUTION : NODES CODE PYTHON NATIFS DANS N8N
+═══════════════════════════════════════════════════════════════════════════════
+
+Utiliser les nodes "Code" de n8n avec du Python pour interagir avec Google Drive
+via l'API REST. Pas besoin d'installer de librairies externes !
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 AVANTAGES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Python natif dans n8n (pas d'installation)
+✅ Utilise l'API REST Google Drive (pas de librairie)
+✅ OAuth2 géré par n8n
+✅ Code simple et lisible
+✅ Pas de dépendance externe
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1 : CONFIGURER OAUTH2
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Dans n8n : Settings > Credentials > New Credential
+
+2. Sélectionner "Google OAuth2 API"
+
+3. Remplir :
+   Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+   Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+   Scopes:
+   - https://www.googleapis.com/auth/drive
+   - https://www.googleapis.com/auth/drive.file
+
+4. Connecter et sauvegarder
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 2 : CRÉER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 1 : FORM TRIGGER
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Form Trigger
+
+Champs:
+- Client (Text, Required)
+- Exercice (Text, Required)
+- Cycle comptable (Dropdown, Required)
+  Options: Capitaux propres, Charge d'exploitation, Client, Fournisseur,
+           Immobilisations, Impôt et taxes, Personnel, Stock, Trésorerie, Ventes
+- Cross référence (Text, Required)
+- Document (Text, Required)
+- Fichier (File, Required)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 2 : RECHERCHER "DOSSIER CAC" (CODE PYTHON)
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Code
+Language: Python
+
+```python
+import requests
+import json
+
+# Récupérer le token OAuth2
+credentials = _get_credentials('googleOAuth2Api')
+access_token = credentials['oauthTokenData']['access_token']
+
+# Rechercher "Dossier CAC"
+url = 'https://www.googleapis.com/drive/v3/files'
+params = {
+    'q': "name='Dossier CAC' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+    'fields': 'files(id, name)',
+    'pageSize': 1
+}
+headers = {
+    'Authorization': f'Bearer {access_token}'
+}
+
+response = requests.get(url, params=params, headers=headers)
+data = response.json()
+
+# Retourner le résultat
+if 'files' in data and len(data['files']) > 0:
+    return {
+        'json': {
+            'found': True,
+            'folderId': data['files'][0]['id'],
+            'folderName': data['files'][0]['name']
+        }
+    }
+else:
+    return {
+        'json': {
+            'found': False,
+            'folderId': None,
+            'folderName': None
+        }
+    }
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 3 : IF (DOSSIER CAC EXISTE?)
+─────────────────────────────────────────────────────────────────────────────
+
+Type: IF
+
+Condition: {{ $json.found }} equals true
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 4 : CRÉER "DOSSIER CAC" (CODE PYTHON) - Branche FALSE
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Code
+Language: Python
+
+```python
+import requests
+import json
+
+# Récupérer le token OAuth2
+credentials = _get_credentials('googleOAuth2Api')
+access_token = credentials['oauthTokenData']['access_token']
+
+# Créer "Dossier CAC"
+url = 'https://www.googleapis.com/drive/v3/files'
+headers = {
+    'Authorization': f'Bearer {access_token}',
+    'Content-Type': 'application/json'
+}
+body = {
+    'name': 'Dossier CAC',
+    'mimeType': 'application/vnd.google-apps.folder'
+}
+
+response = requests.post(url, headers=headers, json=body)
+data = response.json()
+
+return {
+    'json': {
+        'found': True,
+        'folderId': data['id'],
+        'folderName': data['name']
+    }
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 5 : RECHERCHER DOSSIER CLIENT (CODE PYTHON)
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Code
+Language: Python
+
+```python
+import requests
+import json
+
+# Récupérer les données du formulaire
+form_data = _get_input_data(0)
+client = form_data['Client']
+exercice = form_data['Exercice']
+dossier_cac_id = _get_input_data(1)['folderId']
+
+# Récupérer le token OAuth2
+credentials = _get_credentials('googleOAuth2Api')
+access_token = credentials['oauthTokenData']['access_token']
+
+# Rechercher dossier client
+folder_name = f'{client}-{exercice}'
+url = 'https://www.googleapis.com/drive/v3/files'
+params = {
+    'q': f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder' and '{dossier_cac_id}' in parents and trashed=false",
+    'fields': 'files(id, name)',
+    'pageSize': 1
+}
+headers = {
+    'Authorization': f'Bearer {access_token}'
+}
+
+response = requests.get(url, params=params, headers=headers)
+data = response.json()
+
+if 'files' in data and len(data['files']) > 0:
+    return {
+        'json': {
+            'found': True,
+            'clientFolderId': data['files'][0]['id'],
+            'clientFolderName': data['files'][0]['name'],
+            'dossierCacId': dossier_cac_id
+        }
+    }
+else:
+    return {
+        'json': {
+            'found': False,
+            'clientFolderId': None,
+            'clientFolderName': folder_name,
+            'dossierCacId': dossier_cac_id
+        }
+    }
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 6 : IF (DOSSIER CLIENT EXISTE?)
+─────────────────────────────────────────────────────────────────────────────
+
+Type: IF
+
+Condition: {{ $json.found }} equals true
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 7 : CRÉER DOSSIER CLIENT + 10 CYCLES (CODE PYTHON) - Branche FALSE
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Code
+Language: Python
+
+```python
+import requests
+import json
+
+# Récupérer les données
+form_data = _get_input_data(0)
+client = form_data['Client']
+exercice = form_data['Exercice']
+previous_data = _get_input_data(1)
+dossier_cac_id = previous_data['dossierCacId']
+
+# Récupérer le token OAuth2
+credentials = _get_credentials('googleOAuth2Api')
+access_token = credentials['oauthTokenData']['access_token']
+
+url = 'https://www.googleapis.com/drive/v3/files'
+headers = {
+    'Authorization': f'Bearer {access_token}',
+    'Content-Type': 'application/json'
+}
+
+# Créer dossier client
+folder_name = f'{client}-{exercice}'
+body = {
+    'name': folder_name,
+    'mimeType': 'application/vnd.google-apps.folder',
+    'parents': [dossier_cac_id]
+}
+response = requests.post(url, headers=headers, json=body)
+client_folder = response.json()
+client_folder_id = client_folder['id']
+
+# Créer les 10 cycles
+cycles = [
+    'Capitaux propres',
+    'Charge d\'exploitation',
+    'Client',
+    'Fournisseur',
+    'Immobilisations',
+    'Impôt et taxes',
+    'Personnel',
+    'Stock',
+    'Trésorerie',
+    'Ventes'
+]
+
+cycle_folders = {}
+for cycle in cycles:
+    body = {
+        'name': cycle,
+        'mimeType': 'application/vnd.google-apps.folder',
+        'parents': [client_folder_id]
+    }
+    response = requests.post(url, headers=headers, json=body)
+    cycle_data = response.json()
+    cycle_folders[cycle] = cycle_data['id']
+
+return {
+    'json': {
+        'found': True,
+        'clientFolderId': client_folder_id,
+        'clientFolderName': folder_name,
+        'cycleFolders': cycle_folders
+    }
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 8 : RECHERCHER CYCLE SÉLECTIONNÉ (CODE PYTHON)
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Code
+Language: Python
+
+```python
+import requests
+import json
+
+# Récupérer les données
+form_data = _get_input_data(0)
+cycle_selectionne = form_data['Cycle comptable']
+previous_data = _get_input_data(1)
+client_folder_id = previous_data['clientFolderId']
+
+# Récupérer le token OAuth2
+credentials = _get_credentials('googleOAuth2Api')
+access_token = credentials['oauthTokenData']['access_token']
+
+# Rechercher le cycle
+url = 'https://www.googleapis.com/drive/v3/files'
+params = {
+    'q': f"name='{cycle_selectionne}' and mimeType='application/vnd.google-apps.folder' and '{client_folder_id}' in parents and trashed=false",
+    'fields': 'files(id, name)',
+    'pageSize': 1
+}
+headers = {
+    'Authorization': f'Bearer {access_token}'
+}
+
+response = requests.get(url, params=params, headers=headers)
+data = response.json()
+
+if 'files' in data and len(data['files']) > 0:
+    return {
+        'json': {
+            'cycleFolderId': data['files'][0]['id'],
+            'cycleFolderName': data['files'][0]['name']
+        }
+    }
+else:
+    return {
+        'json': {
+            'error': 'Cycle folder not found'
+        }
+    }
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NODE 9 : UPLOADER LE FICHIER (CODE PYTHON)
+─────────────────────────────────────────────────────────────────────────────
+
+Type: Code
+Language: Python
+
+```python
+import requests
+import json
+import base64
+
+# Récupérer les données
+form_data = _get_input_data(0)
+cross_ref = form_data['Cross référence']
+document = form_data['Document']
+file_data = form_data['Fichier']
+
+previous_data = _get_input_data(1)
+cycle_folder_id = previous_data['cycleFolderId']
+
+# Récupérer le token OAuth2
+credentials = _get_credentials('googleOAuth2Api')
+access_token = credentials['oauthTokenData']['access_token']
+
+# Préparer le nom du fichier
+file_name = f'[{cross_ref}]-{document}'
+if not file_name.endswith(('.xlsx', '.xls', '.pdf', '.docx', '.doc')):
+    file_name += '.xlsx'
+
+# Récupérer le contenu du fichier (binary data)
+file_content = file_data['data']  # Binary data from form
+file_mime_type = file_data.get('mimeType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+# Upload en 2 étapes : metadata puis content
+
+# Étape 1 : Créer le fichier avec metadata
+url = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable'
+headers = {
+    'Authorization': f'Bearer {access_token}',
+    'Content-Type': 'application/json'
+}
+metadata = {
+    'name': file_name,
+    'parents': [cycle_folder_id]
+}
+
+response = requests.post(url, headers=headers, json=metadata)
+upload_url = response.headers.get('Location')
+
+# Étape 2 : Upload le contenu
+headers = {
+    'Content-Type': file_mime_type
+}
+response = requests.put(upload_url, headers=headers, data=file_content)
+uploaded_file = response.json()
+
+return {
+    'json': {
+        'success': True,
+        'fileId': uploaded_file['id'],
+        'fileName': uploaded_file['name'],
+        'webViewLink': uploaded_file.get('webViewLink', 'N/A')
+    }
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 CONFIGURATION DES NODES CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour chaque node Code Python :
+
+1. Sélectionner Language: Python
+
+2. Dans Settings > Credentials :
+   - Ajouter le credential "Google OAuth2 API"
+
+3. Coller le code Python
+
+4. Sauvegarder
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 FONCTIONS SPÉCIALES N8N DANS PYTHON
+═══════════════════════════════════════════════════════════════════════════════
+
+_get_credentials('credentialName')
+→ Récupère les credentials OAuth2
+
+_get_input_data(index)
+→ Récupère les données du node précédent
+  index 0 = Form Trigger
+  index 1 = Node précédent immédiat
+
+return {'json': {...}}
+→ Retourne les données au node suivant
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 TEST DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Activer le workflow
+
+2. Copier l'URL du formulaire
+
+3. Ouvrir dans un navigateur
+
+4. Remplir :
+   - Client: Orange
+   - Exercice: 2025
+   - Cycle: Trésorerie
+   - Cross ref: I1
+   - Document: Lead sheet trésorerie
+   - Fichier: Sélectionner un Excel
+
+5. Soumettre
+
+6. Vérifier dans Google Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 STRUCTURE FINALE
+═══════════════════════════════════════════════════════════════════════════════
+
+Google Drive (root)
+└── Dossier CAC/
+    └── Orange-2025/
+        ├── Capitaux propres/
+        ├── Charge d'exploitation/
+        ├── Client/
+        ├── Fournisseur/
+        ├── Immobilisations/
+        ├── Impôt et taxes/
+        ├── Personnel/
+        ├── Stock/
+        ├── Trésorerie/
+        │   └── [I1]-Lead sheet trésorerie.xlsx
+        └── Ventes/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+ERREUR : "requests module not found"
+SOLUTION : n8n inclut requests par défaut, vérifier la version de n8n
+
+ERREUR : "Invalid credentials"
+SOLUTION : Reconnecter le compte Google dans le credential
+
+ERREUR : "File upload failed"
+SOLUTION : Vérifier que le fichier est bien dans file_data['data']
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ AVANTAGES DE CETTE SOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Python natif (pas d'installation)
+2. ✅ API REST Google Drive (standard)
+3. ✅ OAuth2 géré par n8n
+4. ✅ Code lisible et maintenable
+5. ✅ Pas de dépendance externe
+6. ✅ Fonctionne avec n8n 2.15.1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Créer le credential OAuth2
+2. ✅ Créer le workflow avec les 9 nodes
+3. ✅ Tester avec un document
+4. ⏳ Intégrer dans le menu contextuel de Claraverse
+
+═══════════════════════════════════════════════════════════════════════════════

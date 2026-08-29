@@ -1,0 +1,187 @@
+🔍 DIAGNOSTIC - ENVOI N8N → GOOGLE SHEETS VIDE
+═══════════════════════════════════════════════════════════════
+
+❌ PROBLÈME
+
+Vous observez:
+✅ Tables collectées (837 caractères)
+✅ Traçabilité dans Google Sheets
+❌ Données VIDES dans Google Sheets
+
+═══════════════════════════════════════════════════════════════
+
+🎯 LOGS AJOUTÉS POUR DIAGNOSTIC
+
+J'ai ajouté 2 logs critiques dans Flowise.js:
+
+1. LOG AVANT ENVOI
+   ═══════════════════════════════════════════════════════════════
+   📤 HTML ENVOYÉ VERS N8N
+   ═══════════════════════════════════════════════════════════════
+   [Tout le HTML des tables]
+   ═══════════════════════════════════════════════════════════════
+
+2. LOG APRÈS RÉCEPTION
+   ═══════════════════════════════════════════════════════════════
+   📥 RÉPONSE COMPLÈTE DE N8N
+   ═══════════════════════════════════════════════════════════════
+   [Structure JSON complète de la réponse]
+   ═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPES DE DIAGNOSTIC
+
+ÉTAPE 1: VIDER LE CACHE
+────────────────────────
+
+1. Ctrl+Shift+Delete
+2. Vider le cache complètement
+3. Recharger avec Ctrl+Shift+R
+
+ÉTAPE 2: CRÉER UNE TABLE FLOWISE
+─────────────────────────────────
+
+1. Créer une table avec en-tête "Flowise"
+2. Mot-clé: "Sous-unité 1 : Gestion stratégique et planification"
+
+ÉTAPE 3: OBSERVER LES LOGS
+───────────────────────────
+
+Dans la console, vous verrez:
+
+📤 HTML ENVOYÉ VERS N8N
+═══════════════════════════════════════════════════════════════
+<table class="min-w-full border...">
+  <thead><tr><th>Flowise</th></tr></thead>
+  <tbody><tr><td>Sous-unité 1 : Gestion stratégique...</td></tr></tbody>
+</table>
+<table class="min-w-full border...">
+  <thead><tr><th>user_message</th></tr></thead>
+  <tbody><tr><td>[command] = Table_Template...</td></tr></tbody>
+</table>
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 4: VÉRIFIER LA RÉPONSE N8N
+─────────────────────────────────
+
+📥 RÉPONSE COMPLÈTE DE N8N
+═══════════════════════════════════════════════════════════════
+{
+  "output": "...",
+  "data": {...},
+  ...
+}
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+
+🔍 CAUSES POSSIBLES
+
+1. ❌ MAUVAISE CLÉ DANS LE PAYLOAD
+   ──────────────────────────────
+   
+   Actuellement: { "question": "<html>..." }
+   
+   Vérifier dans n8n:
+   - Le webhook reçoit bien "question"
+   - Ou doit-il recevoir "html", "tables", "data" ?
+
+2. ❌ ATTRIBUTS HTML PARASITES
+   ───────────────────────────
+   
+   Le HTML contient:
+   - node="[object Object]"
+   - data-table-id="table_saphhv"
+   - data-stable-table-id="table_saphhv"
+   - data-observer-installed="true"
+   
+   Ces attributs peuvent perturber le parsing dans n8n.
+
+3. ❌ FORMAT HTML NON PARSÉ PAR N8N
+   ─────────────────────────────────
+   
+   n8n doit:
+   - Parser le HTML
+   - Extraire les données des tables
+   - Les envoyer à Google Sheets
+   
+   Vérifier le node "Code" dans n8n qui fait le parsing.
+
+4. ❌ MAPPING GOOGLE SHEETS INCORRECT
+   ────────────────────────────────────
+   
+   Vérifier dans n8n:
+   - Le node Google Sheets
+   - Le mapping des colonnes
+   - Les champs source
+
+═══════════════════════════════════════════════════════════════
+
+💡 SOLUTIONS À TESTER
+
+SOLUTION 1: NETTOYER LE HTML AVANT ENVOI
+─────────────────────────────────────────
+
+Supprimer les attributs parasites:
+- node
+- data-table-id
+- data-stable-table-id
+- data-observer-installed
+
+SOLUTION 2: CHANGER LA CLÉ DU PAYLOAD
+──────────────────────────────────────
+
+Au lieu de { "question": "..." }
+Essayer:
+- { "html": "..." }
+- { "tables": "..." }
+- { "data": "..." }
+
+SOLUTION 3: VÉRIFIER LE WORKFLOW N8N
+─────────────────────────────────────
+
+1. Ouvrir le workflow dans n8n
+2. Vérifier le node "Webhook"
+   - Quelle clé il attend
+3. Vérifier le node "Code" (JavaScript)
+   - Comment il parse le HTML
+   - Quelles données il extrait
+4. Vérifier le node "Google Sheets"
+   - Quel mapping il utilise
+   - Quelles colonnes il remplit
+
+═══════════════════════════════════════════════════════════════
+
+📋 ACTIONS IMMÉDIATES
+
+1. ✅ Vider le cache du navigateur
+2. ✅ Recharger l'application
+3. ✅ Créer une table Flowise
+4. ✅ Copier les logs complets:
+   - 📤 HTML ENVOYÉ VERS N8N
+   - 📥 RÉPONSE COMPLÈTE DE N8N
+5. ✅ Partager ces logs pour analyse
+
+═══════════════════════════════════════════════════════════════
+
+🎯 PROCHAINES ÉTAPES
+
+Une fois les logs récupérés, nous pourrons:
+
+1. Voir exactement ce qui est envoyé
+2. Voir exactement ce que n8n répond
+3. Identifier où les données se perdent
+4. Corriger le problème précisément
+
+═══════════════════════════════════════════════════════════════
+
+📝 NOTES
+
+- Le fichier Flowise.js a été mis à jour
+- Les logs sont maintenant TRÈS détaillés
+- Vous verrez TOUT le HTML envoyé
+- Vous verrez TOUTE la réponse n8n
+- Cela permettra un diagnostic précis
+
+═══════════════════════════════════════════════════════════════

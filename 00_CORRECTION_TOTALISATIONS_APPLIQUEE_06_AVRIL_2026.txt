@@ -1,0 +1,168 @@
+================================================================================
+✅ CORRECTION APPLIQUÉE - TOTALISATIONS (06 AVRIL 2026)
+================================================================================
+
+🎯 PROBLÈME RÉSOLU:
+
+Les lignes de totalisation du Bilan (ACTIF et PASSIF) restaient vides après
+l'export de la liasse officielle.
+
+================================================================================
+✅ CORRECTION APPLIQUÉE
+================================================================================
+
+Fichier modifié: py_backend/export_liasse.py
+
+AJOUT 1: Fonction calculer_totalisations_actif()
+───────────────────────────────────────────────────────────────────────────────
+
+Calcule automatiquement les totalisations du Bilan ACTIF:
+- AZ: TOTAL ACTIF IMMOBILISÉ (somme de AD à AQ)
+- BQ: TOTAL ACTIF CIRCULANT (somme de BA à BK)
+- BZ: TOTAL TRÉSORERIE-ACTIF (somme de BT, BU, BV)
+- CZ: TOTAL ÉCARTS DE CONVERSION-ACTIF (somme de CA, CB)
+- DZ: TOTAL GÉNÉRAL ACTIF (somme de AZ + BQ + BZ + CZ)
+
+AJOUT 2: Fonction calculer_totalisations_passif()
+───────────────────────────────────────────────────────────────────────────────
+
+Calcule automatiquement les totalisations du Bilan PASSIF:
+- DZ: TOTAL CAPITAUX PROPRES (somme de DA à DJ)
+- RZ: TOTAL DETTES FINANCIÈRES (somme de RA à RD)
+- TZ: TOTAL PASSIF CIRCULANT (somme de TA à TG)
+- UZ: TOTAL TRÉSORERIE-PASSIF (somme de UA, UB, UC)
+- VZ: TOTAL ÉCARTS DE CONVERSION-PASSIF (somme de VA, VB)
+
+AJOUT 3: Appel des fonctions avant le remplissage
+───────────────────────────────────────────────────────────────────────────────
+
+Les fonctions sont appelées AVANT le remplissage des onglets, et les
+totalisations sont ajoutées aux dictionnaires bilan_actif_dict et
+bilan_passif_dict.
+
+Résultat: Les totalisations sont automatiquement remplies par le scanner
+de REF existant!
+
+================================================================================
+🎯 RÉSULTAT ATTENDU
+================================================================================
+
+Après cette correction, l'export de la liasse officielle devrait contenir:
+
+BILAN ACTIF:
+✅ Tous les postes détaillés (AD, AE, AF, ..., BV)
+✅ AZ: TOTAL ACTIF IMMOBILISÉ (rempli)
+✅ BQ: TOTAL ACTIF CIRCULANT (rempli)
+✅ BZ: TOTAL TRÉSORERIE-ACTIF (rempli)
+✅ CZ: TOTAL ÉCARTS DE CONVERSION-ACTIF (rempli)
+✅ DZ: TOTAL GÉNÉRAL ACTIF (rempli)
+
+BILAN PASSIF:
+✅ Tous les postes détaillés (DA, DB, DC, ..., VB)
+✅ DZ: TOTAL CAPITAUX PROPRES (rempli)
+✅ RZ: TOTAL DETTES FINANCIÈRES (rempli)
+✅ TZ: TOTAL PASSIF CIRCULANT (rempli)
+✅ UZ: TOTAL TRÉSORERIE-PASSIF (rempli)
+✅ VZ: TOTAL ÉCARTS DE CONVERSION-PASSIF (rempli)
+
+================================================================================
+🧪 COMMENT TESTER
+================================================================================
+
+1. Redémarrer le backend:
+   .\start-claraverse.ps1
+
+2. Dans l'interface web:
+   - Importer la balance de test (P000 -BALANCE DEMO N_N-1_N-2.xls)
+   - Générer les états financiers
+   - Exporter la liasse officielle
+
+3. Ouvrir le fichier Excel exporté
+
+4. Vérifier que les lignes de totalisation sont remplies:
+   - Onglet ACTIF: lignes AZ, BQ, BZ, CZ, DZ
+   - Onglet PASSIF: lignes DZ, RZ, TZ, UZ, VZ
+
+================================================================================
+📊 PROBLÈMES RESTANTS
+================================================================================
+
+Cette correction résout le problème des totalisations, mais il reste:
+
+❌ 1. Colonnes BRUT et AMORTISSEMENT vides (Bilan ACTIF)
+   → Nécessite des modifications dans le backend pour calculer ces valeurs
+   → Voir: Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+           02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+❌ 2. TFT vierge
+   → Vérifier le mapping des colonnes dans le template
+   → Peut-être que les colonnes I et K sont incorrectes
+
+================================================================================
+🎯 PROCHAINES ÉTAPES
+================================================================================
+
+PRIORITÉ 1: Tester cette correction (5 min)
+   [ ] Redémarrer le backend
+   [ ] Exporter la liasse
+   [ ] Vérifier les totalisations
+
+PRIORITÉ 2: Vérifier le template Excel (5 min)
+   [ ] Ouvrir py_backend/Liasse_officielle_revise.xlsx
+   [ ] Noter les colonnes exactes pour ACTIF, PASSIF, RESULTAT, TFT
+   [ ] Comparer avec le code actuel
+
+PRIORITÉ 3: Corriger le TFT si nécessaire (10 min)
+   [ ] Modifier le mapping des colonnes si différent
+   [ ] Tester l'export
+
+PRIORITÉ 4: Ajouter BRUT et AMORTISSEMENT (optionnel, 60 min)
+   [ ] Modifier le backend pour calculer ces valeurs
+   [ ] Modifier l'export pour remplir les colonnes E et F
+   [ ] Modifier le frontend pour afficher ces colonnes
+
+================================================================================
+💡 NOTES IMPORTANTES
+================================================================================
+
+1. Cette correction est SÛRE:
+   - Ne modifie pas le backend
+   - Ne casse rien d'existant
+   - Ajoute seulement des calculs de totaux
+
+2. Les totalisations sont calculées à partir des postes existants:
+   - Si un poste est vide, il contribue 0 au total
+   - Les totaux sont cohérents avec les postes détaillés
+
+3. Le code est MAINTENABLE:
+   - Fonctions clairement nommées
+   - Commentaires explicites
+   - Logs informatifs
+
+4. Les totalisations sont calculées pour N ET N-1:
+   - Cohérence temporelle assurée
+   - Comparaison N/N-1 possible
+
+================================================================================
+📝 FICHIERS MODIFIÉS
+================================================================================
+
+1. py_backend/export_liasse.py
+   - Ajout de calculer_totalisations_actif() (~30 lignes)
+   - Ajout de calculer_totalisations_passif() (~30 lignes)
+   - Appel des fonctions avant remplissage (~5 lignes)
+   - TOTAL: ~65 lignes ajoutées
+
+================================================================================
+✅ STATUT
+================================================================================
+
+CORRECTION APPLIQUÉE: ✅
+TESTÉE: ⏳ (à tester)
+DOCUMENTÉE: ✅
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 18:15
+Agent: Kiro AI Assistant
+Statut: Correction appliquée - En attente de test
+================================================================================

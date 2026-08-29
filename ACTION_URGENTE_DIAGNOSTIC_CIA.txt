@@ -1,0 +1,162 @@
+═══════════════════════════════════════════════════════════════
+  🚨 ACTION URGENTE - Diagnostic Persistance CIA
+═══════════════════════════════════════════════════════════════
+
+Le problème persiste malgré les modifications.
+Suivez ces étapes pour identifier la cause exacte.
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 1 : DIAGNOSTIC RAPIDE (30 SECONDES)
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrez la console du navigateur (F12)
+
+2. Copiez-collez cette commande :
+
+const script = document.createElement('script');
+script.src = '/DIAGNOSTIC_URGENT_CIA_CHAT.js';
+document.head.appendChild(script);
+
+3. Attendez 2 secondes
+
+4. Lisez les résultats dans la console
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 2 : IDENTIFIER LE PROBLÈME
+═══════════════════════════════════════════════════════════════
+
+Cherchez dans les résultats du diagnostic :
+
+❌ CRITIQUE: conso.js non chargé
+   → Solution : Recharger avec Ctrl+F5
+
+❌ CRITIQUE: Aucune table CIA trouvée
+   → Solution : Vérifier que vous êtes sur une page avec tables CIA
+
+⚠️ Table CIA sans ID
+   → Solution : Exécuter claraverseProcessor.processAllTables()
+
+⚠️ Aucune table CIA sauvegardée
+   → Solution : Cocher des checkboxes et attendre 2 secondes
+
+❌ CRITIQUE: Système d'événements ne fonctionne pas
+   → Solution : Vérifier auto-restore-chat-change.js
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 3 : TEST VISUEL (2 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+Ouvrez dans votre navigateur :
+→ TEST_REEL_PERSISTANCE_CIA.html
+
+Cette page vous permet de :
+- Voir l'état du système en temps réel
+- Tester la sauvegarde
+- Tester la restauration
+- Voir les logs en direct
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 4 : VÉRIFICATIONS MANUELLES
+═══════════════════════════════════════════════════════════════
+
+Dans la console, exécutez ces commandes une par une :
+
+1. Vérifier les systèmes :
+   console.log('conso:', !!window.claraverseProcessor);
+   console.log('auto-restore:', !!window.restoreCurrentSession);
+
+2. Compter les tables CIA :
+   window.countCIATables ? window.countCIATables() : 'Fonction manquante';
+
+3. Vérifier les IDs :
+   document.querySelectorAll('table').forEach((t, i) => {
+     const headers = Array.from(t.querySelectorAll('th, td')).map(h => h.textContent);
+     if (headers.some(h => /reponse.*user/i.test(h))) {
+       console.log(`Table CIA ${i}: ID =`, t.dataset.tableId || '❌ SANS ID');
+     }
+   });
+
+4. Vérifier localStorage :
+   const data = JSON.parse(localStorage.getItem('claraverse_tables_data') || '{}');
+   const cia = Object.values(data).filter(t => t.isCIATable);
+   console.log('Tables CIA sauvegardées:', cia.length);
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 5 : SOLUTIONS SELON LE PROBLÈME
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME A : Scripts non chargés
+→ Recharger avec Ctrl+F5 (hard refresh)
+→ Vider le cache du navigateur
+→ Vérifier index.html
+
+PROBLÈME B : Tables sans ID
+→ Exécuter : claraverseProcessor.processAllTables()
+→ Attendre 2 secondes
+→ Vérifier à nouveau les IDs
+
+PROBLÈME C : Sauvegarde ne fonctionne pas
+→ Cocher une checkbox
+→ Attendre 2 secondes
+→ Exécuter : claraverseProcessor.saveNow()
+→ Vérifier localStorage
+
+PROBLÈME D : Restauration ne fonctionne pas
+→ Vérifier que des données existent dans localStorage
+→ Exécuter : claraverseProcessor.restoreAllTablesData()
+→ Attendre 2 secondes
+→ Vérifier les checkboxes
+
+PROBLÈME E : Événement ne fonctionne pas
+→ Vérifier auto-restore-chat-change.js
+→ Recharger avec Ctrl+F5
+→ Tester manuellement l'événement
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 6 : RAPPORT DU PROBLÈME
+═══════════════════════════════════════════════════════════════
+
+Si le problème persiste, notez :
+
+1. Quel diagnostic a échoué ? (A, B, C, D ou E)
+
+2. Messages d'erreur dans la console :
+   (Copiez les messages en rouge)
+
+3. Résultats du diagnostic :
+   window.diagnosticResults
+
+4. État des tables :
+   - Nombre de tables CIA : ?
+   - Tables avec ID : ?
+   - Tables sans ID : ?
+
+5. État du localStorage :
+   - Tables sauvegardées : ?
+   - Checkboxes cochées : ?
+
+═══════════════════════════════════════════════════════════════
+  COMMANDES DE DÉPANNAGE
+═══════════════════════════════════════════════════════════════
+
+Forcer tout le processus :
+
+// 1. Traiter les tables
+claraverseProcessor.processAllTables();
+
+// 2. Attendre 2 secondes
+setTimeout(() => {
+  // 3. Sauvegarder
+  claraverseProcessor.saveNow();
+  
+  // 4. Attendre 2 secondes
+  setTimeout(() => {
+    // 5. Restaurer
+    claraverseProcessor.restoreAllTablesData();
+  }, 2000);
+}, 2000);
+
+═══════════════════════════════════════════════════════════════
+
+Date : 26 novembre 2025
+Fichiers : DIAGNOSTIC_URGENT_CIA_CHAT.js, TEST_REEL_PERSISTANCE_CIA.html

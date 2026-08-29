@@ -1,0 +1,106 @@
+================================================================================
+QUICK REFERENCE - Correction Menu Accordéon
+================================================================================
+
+PROBLÈME:
+  CSS des accordéons non appliqué dans le frontend
+
+CAUSE:
+  Python mettait en cache le module importé
+
+SOLUTION:
+  CSS ajouté inline dans etats_financiers.py (ligne 1548)
+
+RÉSULTAT:
+  ✅ Menu accordéon fonctionnel
+  ✅ 5 sections cliquables
+  ✅ Format liasse officielle
+  ✅ Colonnes N et N-1
+
+================================================================================
+FICHIERS MODIFIÉS
+================================================================================
+
+1. py_backend/etats_financiers.py (ligne 1548)
+   - CSS inline ajouté
+   - Évite les problèmes de cache
+
+2. start-claraverse-conda.ps1 (version 2.0.0)
+   - Nettoyage automatique du cache
+   - Arrêt des processus existants
+   - Vérification du démarrage
+
+================================================================================
+DOCUMENTATION CRÉÉE
+================================================================================
+
+1. MEMO_PROBLEME_UPDATE_FRONTEND_ACCORDEON.md
+   - Détaillé et exhaustif
+   - Observations successives
+   - Analyse de la cause racine
+   - Prévention future
+
+2. SYNTHESE_CORRECTIONS_ACCORDEON_23_MARS_2026.md
+   - Résumé complet
+   - Modifications effectuées
+   - Vérification de la solution
+
+3. SOLUTION_FINALE_CSS_ACCORDEON.md
+   - Résumé technique
+
+4. DIAGNOSTIC_PROBLEME_CSS_ACCORDEON.md
+   - Diagnostic détaillé
+
+================================================================================
+COMMANDES UTILES
+================================================================================
+
+Démarrer Claraverse (avec nettoyage cache):
+  .\start-claraverse-conda.ps1
+
+Tester l'API:
+  .\test-api-curl.ps1
+
+Voir les logs backend:
+  Receive-Job -Id 1 -Keep
+
+Voir les logs frontend:
+  Receive-Job -Id 3 -Keep
+
+Arrêter Claraverse:
+  .\stop-claraverse.ps1
+
+Nettoyer le cache manuellement:
+  Remove-Item -Path "py_backend/__pycache__" -Recurse -Force
+
+================================================================================
+VÉRIFICATION
+================================================================================
+
+1. Ouvrir: http://localhost:5173
+2. Uploader: py_backend/BALANCES_N_N1_N2.xlsx
+3. Vérifier: 5 sections cliquables avec animations
+
+================================================================================
+PRÉVENTION FUTURE
+================================================================================
+
+✅ Script de démarrage nettoie automatiquement le cache
+✅ Mémo documenté pour résoudre les problèmes similaires
+✅ Bonnes pratiques documentées
+
+================================================================================
+RÉSULTATS
+================================================================================
+
+Avant:
+  - HTML: 59498 caractères
+  - CSS accordéon: ❌ Absent
+  - Menu accordéon: ❌ Non affiché
+
+Après:
+  - HTML: 84834 caractères (+25336)
+  - CSS accordéon: ✅ Présent
+  - Menu accordéon: ✅ Fonctionnel
+
+================================================================================

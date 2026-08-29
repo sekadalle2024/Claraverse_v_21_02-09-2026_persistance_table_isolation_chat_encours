@@ -1,0 +1,173 @@
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDES GIT - NOTIFICATIONS ROUTER N8N
+  29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 FICHIERS À COMMITER
+─────────────────────────────────────────────────────────────────────────────
+
+MODIFIÉ :
+  • src/services/claraApiService.ts
+
+CRÉÉS :
+  • 00_LIRE_EN_PREMIER_NOTIFICATIONS_ROUTER.txt
+  • 00_NOTIFICATION_ROUTER_N8N_29_MARS_2026.txt
+  • QUICK_START_TEST_NOTIFICATIONS_ROUTER.txt
+  • RECAP_SESSION_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+  • INDEX_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+  • LISTE_FICHIERS_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+  • COMMANDES_GIT_NOTIFICATIONS_ROUTER.txt
+
+⚡ COMMANDES RAPIDES
+─────────────────────────────────────────────────────────────────────────────
+
+# 1. Vérifier les fichiers modifiés
+git status
+
+# 2. Ajouter tous les fichiers
+git add src/services/claraApiService.ts
+git add 00_LIRE_EN_PREMIER_NOTIFICATIONS_ROUTER.txt
+git add 00_NOTIFICATION_ROUTER_N8N_29_MARS_2026.txt
+git add QUICK_START_TEST_NOTIFICATIONS_ROUTER.txt
+git add RECAP_SESSION_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+git add INDEX_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+git add LISTE_FICHIERS_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+git add COMMANDES_GIT_NOTIFICATIONS_ROUTER.txt
+
+# 3. Commiter avec un message descriptif
+git commit -m "feat: Ajout notifications front-end pour router n8n
+
+- Ajout de getN8nEndpointWithInfo() pour retourner case, route et URL
+- Ajout de resolveEndpointFromRouteKey() pour centraliser la résolution d'URL
+- Refactoring de getN8nEndpoint() (version legacy)
+- Ajout de notification dans sendChatMessage() avec addInfoNotification()
+- Support de 33 cases différents
+- Documentation complète créée (6 fichiers)
+
+Bénéfices:
+- Transparence totale du routing
+- Débogage facilité
+- Vérification immédiate du case activé
+- Confirmation de l'URL appelée
+- Traçabilité des requêtes n8n"
+
+# 4. Pousser vers le dépôt distant
+git push origin main
+
+📝 COMMANDE ALTERNATIVE (TOUT EN UNE)
+─────────────────────────────────────────────────────────────────────────────
+
+git add . && git commit -m "feat: Ajout notifications front-end pour router n8n - Support 33 cases avec affichage case/route/URL" && git push origin main
+
+🔍 VÉRIFICATION APRÈS COMMIT
+─────────────────────────────────────────────────────────────────────────────
+
+# Vérifier le dernier commit
+git log -1 --stat
+
+# Vérifier les fichiers commités
+git show --name-only
+
+# Vérifier le diff du dernier commit
+git show
+
+📊 STATISTIQUES DU COMMIT
+─────────────────────────────────────────────────────────────────────────────
+
+Fichiers modifiés : 1
+Fichiers créés : 6
+Total fichiers : 7
+
+Lignes de code ajoutées : ~200 lignes
+Lignes de documentation : ~500 lignes
+
+🎯 MESSAGE DE COMMIT DÉTAILLÉ (OPTIONNEL)
+─────────────────────────────────────────────────────────────────────────────
+
+git commit -m "feat: Ajout notifications front-end pour router n8n
+
+## Problème résolu
+Le router switch-case déterminait correctement les routes et endpoints n8n,
+mais ces informations n'étaient pas visibles en front-end.
+
+## Solution implémentée
+Ajout de notifications qui affichent:
+- Le numéro du case détecté (Case 1 à Case 33)
+- La route validée (routeKey)
+- L'URL de l'endpoint n8n utilisé
+
+## Modifications techniques
+1. Nouvelle méthode getN8nEndpointWithInfo()
+   - Retourne: { endpoint, caseName, routeKey }
+   - Remplace getN8nEndpoint() avec retour enrichi
+
+2. Méthode helper resolveEndpointFromRouteKey()
+   - Centralise la résolution des URLs
+   - Évite la duplication de code
+
+3. Refactoring getN8nEndpoint() (legacy)
+   - Maintenue pour compatibilité
+   - Utilise getN8nEndpointWithInfo() en interne
+   - Marquée @deprecated
+
+4. Notification dans sendChatMessage()
+   - Utilise addInfoNotification()
+   - Affiche case, route et URL
+   - Durée: 8 secondes
+
+## Cases supportés
+33 cases au total:
+- Case 1: default (template)
+- Case 2: design (integration_windows)
+- Case 11: cia_cours (cia_cours_gemini)
+- Case 21: lead_balance (traitement local)
+- Case 28: methodo_audit
+- Case 33: methodo_revision
+- ... et 27 autres cases
+
+## Documentation créée
+- 00_LIRE_EN_PREMIER_NOTIFICATIONS_ROUTER.txt
+- 00_NOTIFICATION_ROUTER_N8N_29_MARS_2026.txt
+- QUICK_START_TEST_NOTIFICATIONS_ROUTER.txt
+- RECAP_SESSION_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+- INDEX_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+- LISTE_FICHIERS_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+
+## Bénéfices
+✓ Transparence totale du routing
+✓ Débogage facilité
+✓ Vérification immédiate du case activé
+✓ Confirmation de l'URL appelée
+✓ Traçabilité des requêtes n8n
+
+## Tests
+Guide de test fourni dans QUICK_START_TEST_NOTIFICATIONS_ROUTER.txt
+
+## Statut
+✅ Implémenté et documenté
+✅ Code compilé sans erreurs
+✅ Prêt à utiliser"
+
+🔄 ANNULER LE DERNIER COMMIT (SI NÉCESSAIRE)
+─────────────────────────────────────────────────────────────────────────────
+
+# Annuler le commit mais garder les modifications
+git reset --soft HEAD~1
+
+# Annuler le commit et les modifications
+git reset --hard HEAD~1
+
+⚠️ ATTENTION : N'utilisez ces commandes que si vous êtes sûr !
+
+✅ CHECKLIST AVANT COMMIT
+─────────────────────────────────────────────────────────────────────────────
+□ Code compilé sans erreurs
+□ Tests effectués
+□ Documentation créée
+□ Fichiers ajoutés avec git add
+□ Message de commit rédigé
+□ Vérification finale avec git status
+
+═══════════════════════════════════════════════════════════════════════════════
+  PRÊT À COMMITER
+═══════════════════════════════════════════════════════════════════════════════

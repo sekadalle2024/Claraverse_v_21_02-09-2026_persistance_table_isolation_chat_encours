@@ -1,0 +1,144 @@
+🚨 ACTION IMMÉDIATE - PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME:
+Vous avez 2 fichiers Flowise.js avec des endpoints différents!
+
+📁 Flowise.js (racine) → n8n CLOUD
+📁 public/Flowise.js → n8n LOCAL
+
+index.html charge actuellement: Flowise.js (racine) = n8n CLOUD
+
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 1: TESTER LES DEUX ENDPOINTS
+───────────────────────────────────
+
+1. Ouvrir: TEST_N8N_CLOUD.html dans votre navigateur
+
+2. Cliquer sur "Test n8n CLOUD"
+   → Si ✅ = Utiliser Option A
+   → Si ❌ = Utiliser Option B
+
+3. Cliquer sur "Test n8n LOCAL"
+   → Si ✅ = Utiliser Option B
+   → Si ❌ = Démarrer n8n local
+
+═══════════════════════════════════════════════════════════════
+
+OPTION A: UTILISER N8N CLOUD (Si test réussit)
+───────────────────────────────────────────────
+
+✅ Aucune modification de code nécessaire
+
+1. Aller sur: https://barow52161.app.n8n.cloud
+
+2. Ouvrir le workflow "htlm_processor"
+
+3. Vérifier qu'il est ACTIF (toggle en haut à droite)
+
+4. Cliquer sur le node "Respond to Webhook"
+
+5. Configurer:
+   Respond With: "First Incoming Item"
+   (PAS "No Response Body")
+
+6. Sauvegarder
+
+7. Tester dans la console:
+   fetch('https://barow52161.app.n8n.cloud/webhook/htlm_processor', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ question: 'Test' })
+   })
+   .then(r => r.text())
+   .then(text => {
+     console.log('Length:', text.length);
+     if (text.length > 0) {
+       console.log('✅ FONCTIONNE!');
+       console.log(JSON.parse(text));
+     } else {
+       console.error('❌ Réponse vide');
+     }
+   });
+
+═══════════════════════════════════════════════════════════════
+
+OPTION B: UTILISER N8N LOCAL (Si Cloud ne fonctionne pas)
+──────────────────────────────────────────────────────────
+
+1. MODIFIER index.html ligne 49:
+   
+   AVANT:
+   <script src="/Flowise.js"></script>
+   
+   APRÈS:
+   <script src="/public/Flowise.js"></script>
+
+2. DÉMARRER n8n local:
+   npm run n8n
+   (ou: n8n start)
+
+3. Aller sur: http://localhost:5678
+
+4. Ouvrir le workflow "htlm_processor"
+
+5. Activer le workflow
+
+6. Configurer "Respond to Webhook":
+   Respond With: "First Incoming Item"
+
+7. Ajouter headers CORS:
+   Access-Control-Allow-Origin: *
+   Content-Type: application/json
+
+8. Sauvegarder
+
+9. Tester dans la console:
+   fetch('http://localhost:5678/webhook/htlm_processor', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ question: 'Test' })
+   })
+   .then(r => r.text())
+   .then(text => {
+     console.log('Length:', text.length);
+     if (text.length > 0) {
+       console.log('✅ FONCTIONNE!');
+       console.log(JSON.parse(text));
+     } else {
+       console.error('❌ Réponse vide');
+     }
+   });
+
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 2: VÉRIFIER LA COLLECTE
+──────────────────────────────
+
+Une fois l'endpoint configuré:
+
+1. Recharger votre page (Ctrl+F5)
+
+2. Créer une table Flowise avec un mot-clé
+
+3. Créer des tables Rubrique+Description avec ce mot-clé
+
+4. Vérifier les logs dans la console:
+   - "🚀 Initialisation du script dynamique"
+   - "✅ Table Flowise trouvée"
+   - "🎯 MATCH! Mot-clé trouvé"
+   - "📡 Envoi des données vers n8n"
+
+═══════════════════════════════════════════════════════════════
+
+RÉSUMÉ RAPIDE:
+
+1. Ouvrir TEST_N8N_CLOUD.html
+2. Tester Cloud ET Local
+3. Choisir celui qui fonctionne
+4. Configurer "Respond to Webhook" dans n8n
+5. Si Local: modifier index.html
+6. Recharger et tester
+
+═══════════════════════════════════════════════════════════════

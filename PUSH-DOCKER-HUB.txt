@@ -1,0 +1,195 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              🐳 PUBLICATION SUR DOCKER HUB                               ║
+║                  Compte: sekadalle                                       ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+🔑 INFORMATIONS DE CONNEXION
+═══════════════════════════════════════════════════════════════════════════
+
+Username:      sekadalle
+Token:         [VOTRE_TOKEN_DOCKER_HUB]
+Expire:        31 octobre 2026
+Permissions:   Read, Write, Delete
+
+
+🚀 MÉTHODE 1: SCRIPT AUTOMATIQUE (Recommandé)
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ DEPUIS WINDOWS (Double-clic)                                         │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   Double-cliquez sur: push-to-dockerhub.bat                          │
+│                                                                       │
+│   Le script va:                                                      │
+│   1. Se connecter à Docker Hub                                       │
+│   2. Taguer les images                                               │
+│   3. Publier sur Docker Hub                                          │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ DEPUIS WSL2                                                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   chmod +x push-to-dockerhub.sh                                      │
+│   ./push-to-dockerhub.sh                                             │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+📝 MÉTHODE 2: COMMANDES MANUELLES
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: CONNEXION À DOCKER HUB                                      │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   docker login -u sekadalle                                          │
+│                                                                       │
+│   Password: [VOTRE_TOKEN_DOCKER_HUB]                         │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: TAG DES IMAGES                                              │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # Frontend                                                         │
+│   docker tag claraverse-vfirebase-frontend \                        │
+│     sekadalle/e-audit:frontend-1.0.0                                 │
+│                                                                       │
+│   docker tag claraverse-vfirebase-frontend \                        │
+│     sekadalle/e-audit:frontend-latest                                │
+│                                                                       │
+│   # Backend                                                          │
+│   docker tag claraverse-vfirebase-backend \                         │
+│     sekadalle/e-audit:backend-1.0.0                                  │
+│                                                                       │
+│   docker tag claraverse-vfirebase-backend \                         │
+│     sekadalle/e-audit:backend-latest                                 │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: PUSH SUR DOCKER HUB                                         │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # Frontend                                                         │
+│   docker push sekadalle/e-audit:frontend-1.0.0                       │
+│   docker push sekadalle/e-audit:frontend-latest                      │
+│                                                                       │
+│   # Backend                                                          │
+│   docker push sekadalle/e-audit:backend-1.0.0                        │
+│   docker push sekadalle/e-audit:backend-latest                       │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+🔄 WORKFLOW COMPLET
+═══════════════════════════════════════════════════════════════════════════
+
+1️⃣  Vérifier que les images sont buildées
+    docker images | grep claraverse
+
+2️⃣  Se connecter à Docker Hub
+    docker login -u sekadalle
+
+3️⃣  Taguer les images
+    docker tag claraverse-vfirebase-frontend sekadalle/e-audit:frontend-latest
+    docker tag claraverse-vfirebase-backend sekadalle/e-audit:backend-latest
+
+4️⃣  Publier sur Docker Hub
+    docker push sekadalle/e-audit:frontend-latest
+    docker push sekadalle/e-audit:backend-latest
+
+
+📦 IMAGES PUBLIÉES
+═══════════════════════════════════════════════════════════════════════════
+
+Après publication, vos images seront disponibles sur:
+
+  https://hub.docker.com/r/sekadalle/e-audit
+
+Images:
+  • sekadalle/e-audit:frontend-1.0.0
+  • sekadalle/e-audit:frontend-latest
+  • sekadalle/e-audit:backend-1.0.0
+  • sekadalle/e-audit:backend-latest
+
+
+⬇️  TÉLÉCHARGER LES IMAGES
+═══════════════════════════════════════════════════════════════════════════
+
+Pour télécharger vos images depuis Docker Hub:
+
+  # Frontend
+  docker pull sekadalle/e-audit:frontend-latest
+
+  # Backend
+  docker pull sekadalle/e-audit:backend-latest
+
+  # Ou les deux
+  docker pull sekadalle/e-audit:frontend-latest
+  docker pull sekadalle/e-audit:backend-latest
+
+
+🔄 MISE À JOUR DES IMAGES SUR DOCKER HUB
+═══════════════════════════════════════════════════════════════════════════
+
+Après modification du code:
+
+1. Rebuild les images localement
+   docker compose build
+
+2. Taguer avec une nouvelle version
+   docker tag claraverse-vfirebase-frontend sekadalle/e-audit:frontend-1.0.1
+   docker tag claraverse-vfirebase-backend sekadalle/e-audit:backend-1.0.1
+
+3. Publier
+   docker push sekadalle/e-audit:frontend-1.0.1
+   docker push sekadalle/e-audit:backend-1.0.1
+
+4. Mettre à jour latest
+   docker tag claraverse-vfirebase-frontend sekadalle/e-audit:frontend-latest
+   docker tag claraverse-vfirebase-backend sekadalle/e-audit:backend-latest
+   docker push sekadalle/e-audit:frontend-latest
+   docker push sekadalle/e-audit:backend-latest
+
+
+💡 CONSEILS
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Utilisez le Personal Access Token comme mot de passe
+✓ Taguez toujours avec une version ET latest
+✓ Vérifiez les images avant de publier
+✓ La publication peut prendre 5-10 minutes
+✓ Vérifiez sur Docker Hub après publication
+
+
+🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════
+
+Problème: Échec de connexion
+Solution: Vérifiez le token et le username
+  docker login -u sekadalle
+
+Problème: Image non trouvée
+Solution: Rebuild l'image
+  docker compose build
+
+Problème: Push échoue
+Solution: Vérifiez la connexion internet et réessayez
+  docker push sekadalle/e-audit:frontend-latest
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ PRÊT POUR LA PUBLICATION                           ║
+║                                                                           ║
+║              Double-cliquez sur: push-to-dockerhub.bat                   ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

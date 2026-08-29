@@ -1,0 +1,155 @@
+=================================================================
+✅ FIX APPLIQUÉ - TÉLÉCHARGEMENT N8N_DOC
+=================================================================
+
+🎯 PROBLÈME IDENTIFIÉ ET RÉSOLU !
+
+Les logs montraient que le viewer était injecté, mais le téléchargement
+ne démarrait pas. Cause : les scripts inline dans innerHTML ne s'exécutent pas.
+
+=================================================================
+🔧 SOLUTION APPLIQUÉE
+=================================================================
+
+Créé une fonction séparée `downloadAndDisplayDocument()` qui :
+1. Prend le docId et l'élément viewer
+2. Télécharge le document via le proxy CORS
+3. Nettoie le HTML
+4. L'affiche dans le conteneur
+
+Cette fonction est appelée manuellement après l'injection du viewer.
+
+=================================================================
+⚡ TESTEZ MAINTENANT
+=================================================================
+
+1. Rechargez la page avec Ctrl+F5
+   http://localhost:5173/test-modelisation-template-v2.html
+
+2. Ouvrez la console (F12)
+
+3. Vous devriez maintenant voir TOUS les logs :
+
+   ✅ [N8N_DOC] 🎯 TABLE CIBLE TROUVÉE !
+   ✅ [N8N_DOC] 📄 Viewer injecté dans le DOM
+   🚀 [N8N_DOC] Lancement du téléchargement...
+   
+   📥 [N8N_DOC_DOWNLOAD] === DÉBUT TÉLÉCHARGEMENT ===
+   📥 [N8N_DOC_DOWNLOAD] Lancement de fetch()...
+   📥 [N8N_DOC_DOWNLOAD] Réponse reçue après XXXms
+   📥 [N8N_DOC_DOWNLOAD] Status: 200 OK
+   
+   ✅ [N8N_DOC_DOWNLOAD] Document téléchargé après XXXms
+   ✅ [N8N_DOC_DOWNLOAD] Taille: XXXX caractères
+   ✅ [N8N_DOC_DOWNLOAD] 🎉 Document affiché avec succès!
+
+=================================================================
+🎨 RÉSULTAT VISUEL ATTENDU
+=================================================================
+
+Vous devriez voir un accordéon avec :
+
+┌─────────────────────────────────────────┐
+│  📖 Page de Couverture         [－]     │
+│  ☁️ Document Google Drive               │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  📄 Contenu du Document        [－]     │
+├─────────────────────────────────────────┤
+│  [🔗 Ouvrir dans Google Docs]           │
+│  [⬇️ Télécharger (PDF)]                 │
+├─────────────────────────────────────────┤
+│  [Contenu HTML du document]             │
+│  Texte formaté, images, etc.            │
+│  PAS de message "Téléchargement..."     │
+│  Le contenu RÉEL du document !          │
+└─────────────────────────────────────────┘
+
+=================================================================
+🔍 CHANGEMENTS TECHNIQUES
+=================================================================
+
+AVANT :
+- Le script inline dans le HTML généré ne s'exécutait pas
+- Le téléchargement ne démarrait jamais
+- Message "Téléchargement..." restait affiché
+
+APRÈS :
+- Fonction séparée downloadAndDisplayDocument()
+- Appelée manuellement après l'injection
+- Le téléchargement démarre automatiquement
+- Le document s'affiche correctement
+
+=================================================================
+💻 CODE AJOUTÉ
+=================================================================
+
+Nouvelle fonction (avant detectAndDownloadN8nDocs) :
+
+async function downloadAndDisplayDocument(docId, viewerElement) {
+    // Trouve le conteneur
+    const contentDiv = viewerElement.querySelector(`#${viewerId}-content`);
+    
+    // Télécharge via proxy CORS
+    const response = await fetch(proxyUrl + encodeURIComponent(exportUrl));
+    const html = await response.text();
+    
+    // Nettoie et affiche
+    const cleanHtml = html.replace(/<script[^>]*>.*?<\/script>/gi, '');
+    contentDiv.innerHTML = cleanHtml;
+}
+
+Appel après injection :
+
+setTimeout(() => {
+    downloadAndDisplayDocument(CONFIG.docId, viewerElement);
+}, 100);
+
+=================================================================
+⏱️ TIMING
+=================================================================
+
+1. Détection table : Immédiat
+2. Injection viewer : Immédiat
+3. Lancement téléchargement : +100ms
+4. Réponse serveur : +2-10s (selon connexion)
+5. Affichage : Immédiat après réponse
+
+Total : 2-10 secondes pour voir le document
+
+=================================================================
+❌ SI ÇA NE FONCTIONNE TOUJOURS PAS
+=================================================================
+
+Vérifiez dans la console :
+
+1. Le viewer est-il injecté ?
+   Cherchez : "✅ [N8N_DOC] 📄 Viewer injecté dans le DOM"
+
+2. Le téléchargement démarre-t-il ?
+   Cherchez : "📥 [N8N_DOC_DOWNLOAD] === DÉBUT TÉLÉCHARGEMENT ==="
+
+3. Y a-t-il une erreur ?
+   Cherchez : "❌ [N8N_DOC_DOWNLOAD] Erreur"
+
+4. Le document est-il accessible ?
+   Testez manuellement :
+   https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=html
+
+=================================================================
+📊 INFORMATIONS
+=================================================================
+
+Fichier modifié : public/google-drive-downloader.js
+Fonction ajoutée : downloadAndDisplayDocument()
+Appel : setTimeout après injection (100ms)
+
+Document ID : 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+Proxy CORS : https://api.allorigins.win/raw?url=
+Format export : HTML
+
+=================================================================
+Date : 13 décembre 2025
+Statut : ✅ FIX APPLIQUÉ - PRÊT À TESTER
+=================================================================

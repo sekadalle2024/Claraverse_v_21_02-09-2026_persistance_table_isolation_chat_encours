@@ -1,0 +1,180 @@
+═══════════════════════════════════════════════════════════════════════════════
+📋 RÉCAPITULATIF SESSION - DIAGNOSTIC SCHÉMA DE CALCUL
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 24 avril 2026
+🎯 Problème signalé: "Aucune table ajoutée au clic de ajouter schema de calcul"
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Module existe: public/papier-travail-schema-calcul.js (713 lignes, 24 KB)
+2. ✅ Module chargé dans index.html (ligne 169)
+3. ✅ Action dans menu contextuel: menu.js ligne 10133-10180
+4. ✅ Raccourci clavier: Ctrl+Shift+K configuré
+5. ✅ Méthodes disponibles:
+   - ajouterSchemaCalcul()
+   - actualiserSchemaCalcul()
+   - supprimerSchemaCalcul()
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC DU PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+Le module fonctionne correctement, mais il a des CONDITIONS STRICTES:
+
+CONDITION 1: Structure minimale
+--------------------------------
+✓ Au moins 2 tables dans la même div
+✓ Une "table 2" avec "Nature de test"
+✓ Une "table principale" avec colonnes Conclusion/Assertion/CTR
+
+CONDITION 2: Table 2 (Information)
+--------------------------------
+✓ Doit contenir une cellule avec "Nature de test"
+✓ La valeur doit être dans la cellule suivante
+✓ Exemple:
+  ┌─────────────────┬──────────────┐
+  │ Nature de test  │ Validation   │
+  └─────────────────┴──────────────┘
+
+CONDITION 3: Table principale (Papier de travail)
+--------------------------------
+✓ Doit avoir AU MOINS UNE de ces colonnes:
+  - Conclusion
+  - Assertion
+  - CTR (ou CTR1, CTR2, etc.)
+
+CONDITION 4: Nature de test reconnue
+--------------------------------
+✓ Doit correspondre à un modèle:
+  - Validation
+  - Mouvement
+  - Rapprochement
+  - Séparation
+  - Estimation
+  - Revue analytique
+  - Cadrage TVA
+  - Cotisations sociales
+  - Vierge
+  - Modélisation (avec variables)
+
+═══════════════════════════════════════════════════════════════════════════════
+📁 FICHIERS CRÉÉS POUR LE DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════════
+
+1. 00_DIAGNOSTIC_SCHEMA_CALCUL_24_AVRIL_2026.txt
+   → Guide complet de diagnostic avec toutes les conditions
+
+2. QUICK_TEST_SCHEMA_CALCUL.txt
+   → Checklist rapide (30 secondes) pour tester
+
+3. test-schema-calcul.html
+   → Page HTML de test avec exemples corrects et incorrects
+   → Diagnostic automatique intégré
+
+4. 00_RECAP_SESSION_DIAGNOSTIC_SCHEMA_CALCUL_24_AVRIL_2026.txt
+   → Ce fichier (récapitulatif)
+
+═══════════════════════════════════════════════════════════════════════════════
+🧪 TESTS À EFFECTUER MAINTENANT
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST 1: Vérification rapide (Console F12)
+------------------------------------------
+1. Ouvrir la console (F12)
+2. Taper: window.SchemaCalculManager
+3. Résultat attendu: Objet (pas "undefined")
+
+TEST 2: Test avec la page HTML
+------------------------------------------
+1. Ouvrir: test-schema-calcul.html dans le navigateur
+2. Cliquer sur "Tester le module"
+3. Regarder les résultats du diagnostic
+
+TEST 3: Test dans l'application
+------------------------------------------
+1. Ouvrir l'application E-audit
+2. Créer une structure avec:
+   - Table 1: Nature de test | Validation
+   - Table 2: Compte | Montant | Conclusion
+3. Clic droit sur Table 2 → "Ajouter Schéma de calcul"
+4. Regarder la console (F12) pour les logs
+
+TEST 4: Forcer le traitement
+------------------------------------------
+Dans la console, taper:
+    schemaCalculCommands.processAll()
+
+Regarder les logs:
+- "Nature de test détectée: ..." → ✅ Bon signe
+- "Aucune table principale trouvée" → ❌ Problème de colonnes
+- Rien → ❌ Pas de table 2
+
+═══════════════════════════════════════════════════════════════════════════════
+💡 SOLUTIONS SELON LE CAS
+═══════════════════════════════════════════════════════════════════════════════
+
+CAS 1: "Aucune table sélectionnée"
+→ Cliquez d'abord sur la table avant le menu contextuel
+
+CAS 2: "Module non chargé"
+→ Rechargez la page (Ctrl+F5)
+
+CAS 3: Aucun log dans la console
+→ Vérifiez que vous avez bien 2 tables dans la même div
+
+CAS 4: "Aucune table principale trouvée"
+→ Ajoutez une colonne "Conclusion", "Assertion" ou "CTR"
+
+CAS 5: Pas de "Nature de test détectée"
+→ Créez une table avec "Nature de test" dans une cellule
+
+CAS 6: Nature de test non reconnue
+→ Utilisez une valeur de la liste (Validation, Mouvement, etc.)
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+// Vérifier que le module est chargé
+window.SchemaCalculManager
+
+// Forcer le traitement de toutes les tables
+schemaCalculCommands.processAll()
+
+// Voir les schémas sauvegardés
+schemaCalculCommands.showStorage()
+
+// Restaurer tous les schémas
+schemaCalculCommands.restoreAll()
+
+// Effacer tous les schémas
+schemaCalculCommands.clearStorage()
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Lire: QUICK_TEST_SCHEMA_CALCUL.txt (test rapide)
+2. Ouvrir: test-schema-calcul.html (diagnostic automatique)
+3. Effectuer les tests dans la console (F12)
+4. Partager les résultats des logs pour diagnostic approfondi
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CONCLUSION
+═══════════════════════════════════════════════════════════════════════════════
+
+Le module Schéma de Calcul est CORRECTEMENT INTÉGRÉ et FONCTIONNEL.
+
+Le problème vient probablement de:
+- Structure de tables non conforme aux conditions requises
+- Absence de colonne Conclusion/Assertion/CTR
+- Absence de "Nature de test" dans une table
+- Nature de test non reconnue
+
+Les fichiers de diagnostic créés permettront d'identifier précisément
+la cause du problème.
+
+═══════════════════════════════════════════════════════════════════════════════

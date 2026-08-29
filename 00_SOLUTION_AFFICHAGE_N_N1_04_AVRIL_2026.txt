@@ -1,0 +1,186 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION: AFFICHAGE N ET N-1 (avec N-2 en calcul)
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 04 Avril 2026
+🎯 Objectif: Clarifier que N-2 est utilisé mais pas affiché
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 PROBLÈME INITIAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Question: Les états financiers N-1 par rapport à N-2 ne sont pas affichés
+
+Clarification: N-2 doit être utilisé pour les calculs mais PAS affiché
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION MISE EN PLACE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VÉRIFICATION DU CODE EXISTANT
+   ✅ Le code charge bien N-2 depuis le fichier Excel
+   ✅ Le code calcule bien montant_n, montant_n1 ET montant_n2
+   ✅ Le code affiche seulement 2 colonnes (N et N-1)
+   ✅ Format conforme au SYSCOHADA Révisé
+
+2. SCRIPTS DE VÉRIFICATION CRÉÉS
+   ✅ verifier_calculs_n1_n2.py
+      → Vérifie que N-2 est chargé et utilisé
+      → Vérifie que seules 2 colonnes sont affichées
+      → Génère un rapport HTML de test
+
+   ✅ test-affichage-n-n1.ps1
+      → Script PowerShell pour lancer la vérification
+      → Facile à utiliser
+
+3. DOCUMENTATION CRÉÉE
+   ✅ 00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+      → Explique le principe de fonctionnement
+      → Détaille l'utilisation de N-2
+      → Fournit des exemples concrets
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 PRINCIPE DE FONCTIONNEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+N-2 EST UTILISÉ MAIS PAS AFFICHÉ:
+
+1. CHARGEMENT
+   • Fichier Excel: 3 onglets (BALANCE N, BALANCE N-1, BALANCE N-2)
+   • Code: Charge les 3 balances
+   • Stockage: 3 montants par poste (montant_n, montant_n1, montant_n2)
+
+2. CALCULS
+   • TFT: Utilise N-2 pour calculer les variations de N-1
+   • États de contrôle: Utilise N-2 pour les vérifications
+   • Annexes: Utilise N-2 pour les analyses
+
+3. AFFICHAGE
+   • Liasse officielle: 2 colonnes (N et N-1)
+   • Format SYSCOHADA: Conforme
+   • N-2: Stocké mais pas affiché
+
+═══════════════════════════════════════════════════════════════════════════════
+  📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+SCRIPTS:
+• Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+  → Script Python de vérification complète
+
+• Doc_Etat_Fin/Scripts/test-affichage-n-n1.ps1
+  → Script PowerShell pour lancer le test
+
+DOCUMENTATION:
+• Doc_Etat_Fin/Documentation/00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+  → Documentation complète du fonctionnement
+
+• 00_SOLUTION_AFFICHAGE_N_N1_04_AVRIL_2026.txt (ce fichier)
+  → Récapitulatif de la solution
+
+═══════════════════════════════════════════════════════════════════════════════
+  🚀 UTILISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+LANCER LE TEST:
+.\Doc_Etat_Fin\Scripts\test-affichage-n-n1.ps1
+
+RÉSULTAT:
+• Vérification que N-2 est chargé
+• Vérification que N-2 est utilisé dans les calculs
+• Vérification que seules 2 colonnes sont affichées
+• Génération d'un rapport HTML sur le bureau
+
+FICHIER HTML GÉNÉRÉ:
+• Nom: test_affichage_n_n1_avec_n2_calcul.html
+• Emplacement: Bureau
+• Contenu: Exemple d'affichage avec 2 colonnes
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 EXEMPLE D'AFFICHAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+TABLEAU AFFICHÉ (2 colonnes):
+
+┌─────┬──────────────────────────────┬──────┬─────────────┬─────────────┐
+│ REF │ LIBELLÉS                     │ NOTE │ EXERCICE N  │ EXERCICE N-1│
+├─────┼──────────────────────────────┼──────┼─────────────┼─────────────┤
+│ TA  │ Ventes de marchandises       │  21  │  1 000 000  │    950 000  │
+│ TB  │ Ventes de produits finis     │  21  │    500 000  │    480 000  │
+│ XA  │ CHIFFRE D'AFFAIRES           │      │  1 500 000  │  1 430 000  │
+│ RA  │ Achats de marchandises       │  22  │    600 000  │    570 000  │
+│ RB  │ Variation de stocks          │  22  │     50 000  │     48 000  │
+│ XB  │ MARGE BRUTE                  │      │    850 000  │    812 000  │
+│ XI  │ RÉSULTAT NET                 │      │    200 000  │    190 000  │
+└─────┴──────────────────────────────┴──────┴─────────────┴─────────────┘
+
+DONNÉES EN MÉMOIRE (3 montants):
+
+Poste TA:
+  • montant_n: 1 000 000 (affiché)
+  • montant_n1: 950 000 (affiché)
+  • montant_n2: 900 000 (utilisé mais pas affiché)
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+CODE VÉRIFIÉ:
+✅ py_backend/etats_financiers_v2.py
+   • process_balance_to_liasse_format() calcule bien montant_n2
+   • generate_section_html_liasse() affiche seulement 2 colonnes
+
+✅ py_backend/tableau_flux_tresorerie_v2.py
+   • calculer_tft_liasse() utilise N-2 pour les variations
+
+✅ py_backend/etats_controle_exhaustifs.py
+   • Les contrôles utilisent N-2 pour les vérifications
+
+CONFORMITÉ:
+✅ Format liasse officielle SYSCOHADA Révisé
+✅ 2 colonnes (N et N-1) comme requis
+✅ N-2 utilisé en interne pour les calculs
+
+═══════════════════════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION ASSOCIÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+LIRE EN PRIORITÉ:
+• Doc_Etat_Fin/Documentation/00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+  → Explication complète du fonctionnement
+
+ARCHITECTURE:
+• Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+  → Architecture globale du module
+
+INDEX:
+• Doc_Etat_Fin/00_INDEX_COMPLET_V2.md
+  → Index complet de la documentation
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 CONCLUSION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ LE CODE FONCTIONNE CORRECTEMENT:
+   • N-2 est chargé depuis le fichier Excel
+   • N-2 est utilisé pour les calculs (TFT, contrôles, annexes)
+   • Seules 2 colonnes sont affichées (N et N-1)
+   • Format conforme au SYSCOHADA Révisé
+
+✅ SCRIPTS DE VÉRIFICATION CRÉÉS:
+   • Permettent de valider le fonctionnement
+   • Génèrent un rapport HTML de test
+   • Faciles à utiliser
+
+✅ DOCUMENTATION COMPLÈTE:
+   • Explique le principe de fonctionnement
+   • Fournit des exemples concrets
+   • Détaille l'utilisation de N-2
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 04 Avril 2026
+✅ Statut: Solution validée et documentée
+🎯 Résultat: N-2 utilisé pour les calculs, 2 colonnes affichées (N et N-1)
+
+═══════════════════════════════════════════════════════════════════════════════

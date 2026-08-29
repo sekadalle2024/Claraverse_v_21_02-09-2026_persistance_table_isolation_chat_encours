@@ -1,0 +1,186 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║        ✅ SUPPRESSION MODES E-CIA EXAM PART 1 - TERMINÉE                     ║
+║                                                                              ║
+║                          Date: 27 Mars 2026                                  ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 RÉSUMÉ DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Modes spécifiques E-CIA créés (ECIA_MODES)
+✅ Logique conditionnelle ajoutée au SubMenuPortal
+✅ E-CIA Exam affiche uniquement le mode "Cours"
+✅ Modes supprimés : Demo, Avancé, Manuel
+✅ Aucune erreur de compilation
+
+
+🎯 OBJECTIF ATTEINT
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour le logiciel E-CIA Exam Part 1 :
+✅ Modes [Demo], [Avancé], [Manuel] supprimés
+✅ Seul le mode [Cours] est disponible
+
+
+📊 STATISTIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+Fichiers modifiés              : 1 (DemarrerMenu.tsx)
+Nouveaux tableaux de modes     : 1 (ECIA_MODES)
+Modes disponibles pour E-CIA   : 1 (Cours uniquement)
+Modes supprimés                : 3 (Demo, Avancé, Manuel)
+Erreurs de compilation         : 0
+
+
+🔍 COMMENT ÇA FONCTIONNE
+═══════════════════════════════════════════════════════════════════════════════
+
+DÉTECTION AUTOMATIQUE
+─────────────────────────────────────────────────────────────────────────────
+Le système détecte automatiquement les étapes E-CIA Exam en vérifiant si
+la commande contient "Cours CIA".
+
+LOGIQUE :
+  Si commande contient "Cours CIA" → Utilise ECIA_MODES (uniquement Cours)
+  Sinon → Utilise MODES (tous les modes globaux)
+
+AVANTAGE :
+  Pas besoin de modifier chaque test E-CIA individuellement !
+
+
+✅ VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Compilation TypeScript : Aucune erreur
+✅ Diagnostics            : No diagnostics found
+✅ ECIA_MODES créé        : Uniquement mode "Cours"
+✅ Logique conditionnelle : Ajoutée au SubMenuPortal
+
+
+🚀 PROCHAINES ÉTAPES - TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TEST E-CIA EXAM
+   ─────────────────────────────────────────────────────────────────────────
+   • Ouvrir l'application E-audit
+   • Cliquer sur le bouton "Démarrer"
+   • Sélectionner "E-CIA Exam Part 1"
+   • Cliquer sur n'importe quel objectif
+   • VÉRIFIER : Seul le mode "Cours" s'affiche
+   • VÉRIFIER : Les modes Demo, Avancé, Manuel ne s'affichent plus
+
+2. TEST AUTRES LOGICIELS (RÉGRESSION)
+   ─────────────────────────────────────────────────────────────────────────
+   • Tester E-audit pro : Tous les modes doivent s'afficher
+   • Tester E-revision : Tous les modes doivent s'afficher
+   • Tester E-carto : Tous les modes doivent s'afficher
+   • VÉRIFIER : Aucun impact sur les autres logiciels
+
+3. TEST FONCTIONNEL
+   ─────────────────────────────────────────────────────────────────────────
+   • Sélectionner le mode "Cours" pour E-CIA Exam
+   • Insérer la commande dans le chat
+   • Vérifier que le backend traite correctement la commande
+
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Doc menu demarrer/Scripts/remove_modes_ecia_exam.py
+   Script Python pour automatiser les modifications
+
+2. Doc menu demarrer/Documentation/SUPPRESSION_MODES_E_CIA_EXAM_27_MARS_2026.md
+   Documentation complète des modifications
+
+3. 00_SUPPRESSION_MODES_E_CIA_EXAM_27_MARS_2026.txt
+   Ce fichier (guide de démarrage rapide)
+
+
+📚 DOCUMENTATION DÉTAILLÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails, consulter :
+→ Doc menu demarrer/Documentation/SUPPRESSION_MODES_E_CIA_EXAM_27_MARS_2026.md
+
+
+💡 MODIFICATIONS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. CRÉATION DE ECIA_MODES
+   ───────────────────────────────────────────────────────────────────────
+   const ECIA_MODES: ModeItem[] = [
+     { id: 'cours', label: 'Cours', prefix: '' }
+   ];
+
+2. LOGIQUE CONDITIONNELLE DANS SUBMENUPORTAL
+   ───────────────────────────────────────────────────────────────────────
+   AVANT :
+   {(etape.modes || MODES).map(mode => (
+
+   APRÈS :
+   {(etape.modes || (etape.command?.includes('Cours CIA') ? ECIA_MODES : MODES)).map(mode => (
+
+
+⚠️  POINTS D'ATTENTION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DÉPENDANCE À "COURS CIA"
+   ───────────────────────────────────────────────────────────────────────
+   La détection est basée sur la présence de "Cours CIA" dans la commande.
+   Si cette valeur change, la détection ne fonctionnera plus.
+
+2. IMPACT SUR D'AUTRES LOGICIELS
+   ───────────────────────────────────────────────────────────────────────
+   Si un autre logiciel utilise "Cours CIA" dans ses commandes, il aura
+   aussi uniquement le mode Cours.
+
+3. MODES SPÉCIFIQUES VS MODES GLOBAUX
+   ───────────────────────────────────────────────────────────────────────
+   E-CIA Exam utilise maintenant des modes spécifiques. Si de nouveaux
+   modes globaux sont ajoutés, ils ne seront pas disponibles pour E-CIA.
+
+
+🔄 RÉVERSIBILITÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour revenir en arrière :
+1. Supprimer la définition de ECIA_MODES
+2. Restaurer la ligne originale dans SubMenuPortal :
+   {(etape.modes || MODES).map(mode => (
+
+
+📖 EXEMPLE D'UTILISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+SCÉNARIO : Utilisateur clique sur un objectif E-CIA Exam
+
+1. Ouvre le menu Démarrer
+2. Sélectionne "E-CIA Exam Part 1"
+3. Clique sur "Section A - Fondements de l'audit interne"
+4. Clique sur "Objectif 1"
+5. Clique sur "1.a - Expliquer les objectifs globaux"
+
+RÉSULTAT :
+  → Le SubMenuPortal s'ouvre
+  → Détecte "Cours CIA" dans la commande
+  → Affiche uniquement le mode "Cours"
+  → Les modes Demo, Avancé, Manuel ne sont plus visibles
+
+
+🎉 RÉSULTAT FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Les modifications ont été appliquées avec succès !
+
+E-CIA Exam Part 1 affiche maintenant uniquement le mode "Cours".
+Les modes Demo, Avancé et Manuel ont été supprimés.
+
+Vous pouvez maintenant tester l'interface pour vérifier que tout fonctionne
+correctement.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            Modification terminée ✅
+═══════════════════════════════════════════════════════════════════════════════

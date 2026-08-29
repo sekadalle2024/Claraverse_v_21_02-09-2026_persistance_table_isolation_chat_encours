@@ -1,0 +1,212 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║      WORKFLOW NODES NATIFS GOOGLE DRIVE - 13 AVRIL 2026                   ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ SOLUTION FINALE : NODES GOOGLE DRIVE NATIFS
+═══════════════════════════════════════════════════════════════════════════════
+
+Ce workflow utilise les nodes Google Drive natifs de n8n.
+Plus besoin de code Python !
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PRÉREQUIS : CRÉER UN SERVICE ACCOUNT
+═══════════════════════════════════════════════════════════════════════════════
+
+Suivre le guide : 00_SOLUTION_SERVICE_ACCOUNT_GOOGLE_DRIVE_13_AVRIL_2026.txt
+
+Résumé :
+1. Créer un Service Account sur Google Cloud Console
+2. Télécharger la clé JSON
+3. Activer l'API Google Drive
+4. Partager le dossier "Dossier CAC" avec l'email du service account
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1 : CONFIGURER LE CREDENTIAL DANS N8N
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Dans n8n : Settings > Credentials > New Credential
+
+2. Chercher et sélectionner "Google Service Account"
+
+3. Coller le contenu COMPLET du fichier JSON téléchargé
+
+4. Sauvegarder avec le nom : "Google Drive Service Account"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 2 : IMPORTER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Dans n8n : Workflows > Import from File
+
+2. Sélectionner : WORKFLOW_N8N_XREF_GOOGLE_DRIVE_NATIF.json
+
+3. Cliquer sur "Import"
+
+4. Le workflow s'ouvre automatiquement
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 3 : CONFIGURER LES CREDENTIALS DANS CHAQUE NODE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour chaque node Google Drive (5 nodes au total) :
+
+1. Cliquer sur le node
+
+2. Dans "Credential to connect with"
+
+3. Sélectionner "Google Drive Service Account"
+
+4. Sauvegarder
+
+Nodes à configurer :
+- Search Dossier CAC
+- Create Dossier CAC
+- Search Client Folder
+- Create Client Folder
+- Create Cycle Folders
+- Search Cycle Folder
+- Upload File
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 4 : ACTIVER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cliquer sur le bouton "Active" en haut à droite
+
+2. Copier l'URL du formulaire (Form Trigger)
+
+3. Tester en ouvrant l'URL dans un navigateur
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 ÉTAPE 5 : TESTER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir l'URL du formulaire
+
+2. Remplir les champs :
+   - Client: Orange
+   - Exercice: 2025
+   - Cycle comptable: Trésorerie
+   - Cross référence: I1
+   - Document: Lead sheet trésorerie
+   - Fichier: Sélectionner un fichier Excel
+
+3. Soumettre
+
+4. Vérifier dans Google Drive :
+   Dossier CAC/
+   └── Orange-2025/
+       └── Trésorerie/
+           └── [I1]-Lead sheet trésorerie.xlsx
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 STRUCTURE DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+14 NODES :
+
+1. Form Trigger (6 champs)
+   ↓
+2. Search Dossier CAC (Google Drive)
+   ↓
+3. IF Dossier CAC Exists?
+   ├─ TRUE → 5. Prepare Data
+   └─ FALSE → 4. Create Dossier CAC → 5. Prepare Data
+   
+5. Prepare Data (Code JS)
+   ↓
+6. Search Client Folder (Google Drive)
+   ↓
+7. IF Client Folder Exists?
+   ├─ TRUE → 11. Get Client Folder ID
+   └─ FALSE → 8. Create Client Folder → 9. Generate Cycles List
+   
+9. Generate Cycles List (Code JS)
+   ↓
+10. Create Cycle Folders (Google Drive - Loop)
+   ↓
+11. Get Client Folder ID (Code JS)
+   ↓
+12. Search Cycle Folder (Google Drive)
+   ↓
+13. Prepare Upload (Code JS)
+   ↓
+14. Upload File (Google Drive)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ AVANTAGES DE CETTE SOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Nodes natifs Google Drive (pas de code Python)
+✅ Service Account (pas d'OAuth2 compliqué)
+✅ Authentification stable et fiable
+✅ Interface visuelle n8n
+✅ Gestion d'erreurs intégrée
+✅ Code JS minimal (uniquement pour la logique)
+✅ Fonctionne avec toutes les versions de n8n
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+ERREUR : "Invalid credentials"
+SOLUTION : Vérifier que le JSON du service account est complet
+
+ERREUR : "Permission denied"
+SOLUTION : Partager le dossier "Dossier CAC" avec l'email du service account
+
+ERREUR : "API not enabled"
+SOLUTION : Activer l'API Google Drive dans Google Cloud Console
+
+ERREUR : "File not found"
+SOLUTION : Vérifier que le dossier "Dossier CAC" existe dans Google Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 DIFFÉRENCES AVEC LA VERSION PYTHON
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT (Python) :
+- Code Python dans chaque node
+- OAuth2 compliqué
+- Erreurs d'authentification
+- Difficile à déboguer
+
+MAINTENANT (Nodes natifs) :
+- Nodes Google Drive visuels
+- Service Account simple
+- Authentification stable
+- Facile à déboguer
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Créer le Service Account
+2. ✅ Configurer le credential dans n8n
+3. ✅ Importer le workflow
+4. ✅ Tester avec un document
+5. ⏳ Intégrer l'URL dans le menu contextuel Claraverse
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ WORKFLOW_N8N_XREF_GOOGLE_DRIVE_NATIF.json (workflow avec nodes natifs)
+✅ 00_GUIDE_WORKFLOW_NODES_NATIFS_13_AVRIL_2026.txt (ce fichier)
+✅ 00_SOLUTION_SERVICE_ACCOUNT_GOOGLE_DRIVE_13_AVRIL_2026.txt (guide service account)
+
+═══════════════════════════════════════════════════════════════════════════════

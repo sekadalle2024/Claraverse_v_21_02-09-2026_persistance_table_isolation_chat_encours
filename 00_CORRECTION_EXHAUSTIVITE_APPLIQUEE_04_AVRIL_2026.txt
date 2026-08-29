@@ -1,0 +1,117 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION EXHAUSTIVITÉ ÉTATS FINANCIERS - 04 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+Le workflow "Etat fin" ne générait que 4 sections au lieu de 11 attendues:
+  ✓ BILAN - ACTIF (présent)
+  ✓ BILAN - PASSIF (présent)
+  ✓ COMPTE DE RÉSULTAT (présent)
+  ✗ TFT - Tableau des Flux de Trésorerie (manquant)
+  ✓ NOTES ANNEXES (présentes)
+  ✗ 6 États de contrôle (manquants)
+
+🔍 CAUSE RACINE
+─────────────────────────────────────────────────────────────────────────────
+Ligne 1760 dans py_backend/etats_financiers.py:
+
+  ❌ AVANT (code défectueux):
+  ```python
+  etats_controle['etat_controle_sens_comptes'] = calculer_etat_controle_sens_comptes(
+      balance_df.to_dict('records'), balance_n1_df.to_dict('records')  # ❌ CRASH si balance_n1_df est None!
+  )
+  ```
+
+  PROBLÈME: Si balance_n1_df est None, l'appel à .to_dict('records') lève une exception
+  AttributeError: 'NoneType' object has no attribute 'to_dict'
+  
+  Cette exception était capturée silencieusement par le bloc try/except, empêchant
+  la génération de TOUS les états de contrôle (6 sections manquantes).
+
+✅ CORRECTION APPLIQUÉE
+─────────────────────────────────────────────────────────────────────────────
+Ligne 1760-1764 dans py_backend/etats_financiers.py:
+
+  ✓ APRÈS (code corrigé):
+  ```python
+  # État de contrôle du sens des comptes
+  balance_n_records = balance_df.to_dict('records') if balance_df is not None else []
+  balance_n1_records = balance_n1_df.to_dict('records') if balance_n1_df is not None else []
+  etats_controle['etat_controle_sens_comptes'] = calculer_etat_controle_sens_comptes(
+      balance_n_records, balance_n1_records
+  )
+  ```
+
+  SOLUTION: Vérification de None avant l'appel à .to_dict('records')
+  Si balance_n1_df est None, on passe une liste vide []
+
+📊 RÉSULTAT ATTENDU
+─────────────────────────────────────────────────────────────────────────────
+Après correction, le workflow "Etat fin" doit générer 11 sections:
+
+  1. 🏢 BILAN - ACTIF
+  2. 🏛️ BILAN - PASSIF
+  3. 📊 COMPTE DE RÉSULTAT
+  4. 💰 TABLEAU DES FLUX DE TRÉSORERIE
+  5. 📝 NOTES ANNEXES
+  6. ✓ État de contrôle Bilan Actif
+  7. ✓ État de contrôle Bilan Passif
+  8. ✓ État de contrôle Compte de Résultat
+  9. ✓ État de contrôle TFT
+  10. ✓ État de contrôle Sens des Comptes
+  11. ✓ État d'équilibre Bilan
+
+🧪 SCRIPT DE TEST
+─────────────────────────────────────────────────────────────────────────────
+Un script PowerShell a été créé pour tester la correction:
+
+  📁 Doc_Etat_Fin/Scripts/test-backend-exhaustivite.ps1
+
+  UTILISATION:
+  ```powershell
+  # 1. Démarrer le backend
+  cd py_backend
+  python main.py
+  
+  # 2. Dans un autre terminal, lancer le test
+  .\Doc_Etat_Fin\Scripts\test-backend-exhaustivite.ps1
+  ```
+
+  Le script:
+  - Vérifie que le backend est opérationnel
+  - Envoie le fichier de balance démo (P000 -BALANCE DEMO N_N-1_N-2.xls)
+  - Compte les sections générées
+  - Sauvegarde le HTML sur le bureau
+  - Ouvre le fichier dans le navigateur
+
+📝 NOTE SUR L'HYPOTHÈSE INITIALE
+─────────────────────────────────────────────────────────────────────────────
+L'hypothèse initiale était INCORRECTE:
+
+  ❌ HYPOTHÈSE FAUSSE (lignes 1742-1747):
+  "Les données N et N-1 ne sont PAS séparées correctement!"
+  
+  bilan_actif_n = [p for p in results_liasse['bilan_actif']]
+  bilan_actif_n1 = [p for p in results_liasse['bilan_actif']]  # Même liste
+
+  ✓ RÉALITÉ:
+  C'est CORRECT! Les fonctions de contrôle attendent la MÊME liste car chaque
+  poste contient déjà montant_n ET montant_n1. Les fonctions extraient les
+  bonnes valeurs avec p.get('montant_n') et p.get('montant_n1').
+
+🔄 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+1. Redémarrer le backend pour charger le code corrigé
+2. Lancer le script de test: .\Doc_Etat_Fin\Scripts\test-backend-exhaustivite.ps1
+3. Vérifier que les 11 sections sont bien générées
+4. Tester avec le workflow complet dans l'application
+
+═══════════════════════════════════════════════════════════════════════════════
+  FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+✓ py_backend/etats_financiers.py (lignes 1760-1764)
+✓ Doc_Etat_Fin/Scripts/test-backend-exhaustivite.ps1 (créé)
+✓ 00_CORRECTION_EXHAUSTIVITE_APPLIQUEE_04_AVRIL_2026.txt (ce fichier)
+
+═══════════════════════════════════════════════════════════════════════════════

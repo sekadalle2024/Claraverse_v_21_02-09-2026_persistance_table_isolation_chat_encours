@@ -1,0 +1,154 @@
+═══════════════════════════════════════════════════════════════════════════
+  NOUVEAU PROBLÈME - WORKFLOW N8N CASE 25
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+SYMPTÔME:
+✅ Router front-end fonctionne correctement (Case 25 détecté et exécuté)
+✅ Endpoint correct appelé: .../webhook/recos_contrôle_interne_comptable
+❌ Réponse du workflow n8n ne correspond PAS au message envoyé
+
+MESSAGE ENVOYÉ:
+[Command] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation des procedures DRH
+[Nature de test] = [Rapprochement]
+[Assertion] = validité
+[Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+RÉPONSE REÇUE:
+Recommandations sur la CAISSE (au lieu de RH/Recrutement)
+
+═══════════════════════════════════════════════════════════════════════════
+🔍 ANALYSE
+═══════════════════════════════════════════════════════════════════════════
+
+CONCLUSION:
+Le problème n'est PAS dans le front-end ClaraVerse.
+Le problème est dans le WORKFLOW N8N lui-même.
+
+PREUVE:
+1. ✅ Router détecte correctement "Recos contrôle interne comptable" → Case 25
+2. ✅ Endpoint correct appelé: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+3. ✅ Notification affichée: "Case 25 : recos_controle_interne"
+4. ❌ Réponse du workflow: Contenu sur la CAISSE (incorrect)
+
+HYPOTHÈSES:
+1. Le workflow n8n utilise un template/exemple par défaut (caisse)
+2. Le workflow n8n ne parse pas correctement le message envoyé
+3. Le workflow n8n a un prompt système qui force le sujet "caisse"
+4. Le workflow n8n appelle le mauvais LLM ou le mauvais prompt
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 VÉRIFICATIONS À FAIRE DANS N8N
+═══════════════════════════════════════════════════════════════════════════
+
+1. OUVRIR LE WORKFLOW N8N
+   URL: https://t22wtwxl.rpcld.app
+   Workflow: "recos_contrôle_interne_comptable"
+
+2. VÉRIFIER LE WEBHOOK
+   - Le webhook reçoit-il bien le message complet?
+   - Le champ "question" ou "data" contient-il le message?
+
+3. VÉRIFIER LE PROMPT SYSTÈME
+   - Y a-t-il un prompt système qui mentionne "caisse"?
+   - Le prompt système force-t-il un sujet spécifique?
+
+4. VÉRIFIER LE NODE LLM
+   - Quel prompt est envoyé au LLM?
+   - Le message utilisateur est-il bien inclus?
+   - Y a-t-il des exemples hardcodés?
+
+5. VÉRIFIER LA RÉPONSE
+   - La réponse est-elle générée dynamiquement?
+   - Ou est-ce un template statique?
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 SOLUTION PROBABLE
+═══════════════════════════════════════════════════════════════════════════
+
+DANS LE WORKFLOW N8N:
+
+1. SUPPRIMER tout exemple hardcodé sur la "caisse"
+
+2. S'ASSURER que le prompt système est générique:
+   ❌ MAUVAIS:
+   "Vous êtes un expert en contrôle interne. Générez des recommandations 
+    sur les inventaires de caisse..."
+   
+   ✅ BON:
+   "Vous êtes un expert en contrôle interne comptable. Analysez le message 
+    utilisateur et générez des recommandations appropriées basées sur le 
+    cycle, le test, et l'anomalie mentionnés."
+
+3. S'ASSURER que le message utilisateur est bien passé au LLM:
+   ```javascript
+   const userMessage = $input.item.json.question || $input.item.json.data;
+   
+   const prompt = `
+   Système: Vous êtes un expert en contrôle interne comptable...
+   
+   Utilisateur: ${userMessage}
+   `;
+   ```
+
+4. VÉRIFIER que la réponse n'est pas un template statique
+
+═══════════════════════════════════════════════════════════════════════════
+📝 TEST À REFAIRE APRÈS CORRECTION N8N
+═══════════════════════════════════════════════════════════════════════════
+
+MESSAGE TEST:
+[Command] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation des procedures DRH
+[Nature de test] = [Rapprochement]
+[Assertion] = validité
+[Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+RÉSULTAT ATTENDU:
+Recommandations sur:
+- Cycle: RH (Ressources Humaines)
+- Sujet: Procédures de recrutement
+- Anomalie: Absence de procédure de recrutement du DAF
+- PAS sur la caisse!
+
+═══════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC COMPLÉMENTAIRE
+═══════════════════════════════════════════════════════════════════════════
+
+POUR CONFIRMER QUE LE FRONT-END FONCTIONNE:
+
+1. Ouvrir la console du navigateur (F12)
+
+2. Chercher dans les logs:
+   🔀 Router → Case 25 : recos_controle_interne
+   📍 URL: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+
+3. Chercher la requête HTTP:
+   🚀 Envoi de la requête vers n8n endpoint: https://...
+   📝 Message original: [Command] : Recos contrôle interne comptable...
+
+4. Si ces logs sont présents → Le front-end fonctionne correctement
+   → Le problème est dans n8n
+
+═══════════════════════════════════════════════════════════════════════════
+✅ STATUT
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Router front-end corrigé et fonctionnel
+[✅] Case 25 détecté correctement
+[✅] Endpoint correct appelé
+[❌] Workflow n8n ne traite pas correctement le message
+[⏳] Correction du workflow n8n requise
+
+PROCHAINE ÉTAPE:
+Ouvrir n8n et corriger le workflow "recos_contrôle_interne_comptable"
+
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,80 @@
+========================================
+DÉMARRAGE RAPIDE - DIAGNOSTIC SÉLECTEURS
+========================================
+
+🎯 OBJECTIF
+-----------
+Identifier le bon sélecteur CSS pour détecter les tables dans le chat.
+
+⚡ ACTIONS IMMÉDIATES
+---------------------
+
+1. RAFRAÎCHIR LA PAGE
+   → Ctrl+F5 dans le navigateur
+
+2. ATTENDRE 3 SECONDES
+   → 2 alertes vont s'afficher automatiquement
+
+3. LIRE ET COPIER LES ALERTES
+   → Alerte 1: Informations sur les tables
+   → Alerte 2: Sélecteurs alternatifs
+
+4. COMMUNIQUER LES RÉSULTATS
+   → Envoyer le contenu des 2 alertes
+
+📋 INFORMATIONS À COPIER
+------------------------
+
+ALERTE 1 - Chercher ces informations:
+--------------------------------------
+✓ Sélecteur Claraverse: X table(s)
+✓ Toutes les tables: X
+
+Table 1:
+  Classes: "..." ← IMPORTANT!
+  Parent: ...
+  Classes parent: "..." ← IMPORTANT!
+  Première cellule: "..." ← IMPORTANT!
+
+ALERTE 2 - Chercher le sélecteur qui fonctionne:
+-------------------------------------------------
+table                          → X table(s)
+table.min-w-full              → X table(s)
+.prose table                  → X table(s)
+main table                    → X table(s)
+
+→ Noter le sélecteur qui retourne le PLUS de tables
+
+🔧 CORRECTION RAPIDE
+--------------------
+
+Si vous identifiez le bon sélecteur, modifier:
+
+Fichier: public/menu.js
+Ligne: ~7320
+
+Remplacer:
+  CHAT_TABLES: "table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg"
+
+Par (exemple):
+  CHAT_TABLES: "table"  ← ou le sélecteur qui fonctionne
+
+Puis:
+1. Sauvegarder menu.js
+2. Rafraîchir le navigateur (Ctrl+F5)
+3. Tester l'export
+
+📞 COMMANDE MANUELLE
+--------------------
+
+Si les alertes ne s'affichent pas:
+
+1. Ouvrir la console (F12)
+2. Taper: window.diagnosticTables()
+3. Appuyer sur Entrée
+
+📚 DOCUMENTATION COMPLÈTE
+-------------------------
+00_DIAGNOSTIC_SELECTEURS_CSS.txt
+
+========================================

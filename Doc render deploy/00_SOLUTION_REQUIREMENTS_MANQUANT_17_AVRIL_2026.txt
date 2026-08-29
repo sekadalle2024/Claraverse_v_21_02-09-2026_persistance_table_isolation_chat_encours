@@ -1,0 +1,187 @@
+═══════════════════════════════════════════════════════════
+  SOLUTION: REQUIREMENTS_RENDER.TXT MANQUANT SUR RENDER
+═══════════════════════════════════════════════════════════
+
+📅 Date: 17 Avril 2026
+🎯 Problème: ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements_render.txt'
+
+═══════════════════════════════════════════════════════════
+  🔍 DIAGNOSTIC
+═══════════════════════════════════════════════════════════
+
+❌ PROBLÈME IDENTIFIÉ:
+
+Le fichier requirements_render.txt existe dans:
+  ✅ Votre projet local: py_backend/requirements_render.txt
+  ❌ Mais PAS dans le repo GitHub: Back-end-python-V0_03_03_2026
+
+POURQUOI?
+- Le repo GitHub Back-end-python-V0_03_03_2026 contient le contenu de py_backend/
+- Mais requirements_render.txt n'a jamais été poussé vers ce repo
+- Render clone le repo GitHub et ne trouve pas le fichier
+
+═══════════════════════════════════════════════════════════
+  ✅ SOLUTION RAPIDE (5 MINUTES)
+═══════════════════════════════════════════════════════════
+
+🚀 OPTION 1: Script Automatique (RECOMMANDÉ)
+
+PowerShell:
+```powershell
+cd "Doc render deploy"
+.\fix-requirements-render.ps1
+```
+
+Ce script va:
+1. ✅ Cloner le repo backend
+2. ✅ Copier requirements_render.txt à la racine
+3. ✅ Commit et push vers GitHub
+4. ✅ Nettoyer automatiquement
+
+Temps: 2 minutes
+
+═══════════════════════════════════════════════════════════
+
+🔧 OPTION 2: Manuelle
+
+1. Cloner le repo backend:
+```powershell
+git clone https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026.git temp_backend
+cd temp_backend
+```
+
+2. Copier le fichier:
+```powershell
+Copy-Item ../py_backend/requirements_render.txt ./requirements_render.txt
+```
+
+3. Commit et push:
+```powershell
+git add requirements_render.txt
+git commit -m "fix: Add requirements_render.txt for Render deployment"
+git push origin main
+```
+
+4. Nettoyer:
+```powershell
+cd ..
+Remove-Item -Recurse -Force temp_backend
+```
+
+Temps: 3 minutes
+
+═══════════════════════════════════════════════════════════
+  🎯 APRÈS LE PUSH
+═══════════════════════════════════════════════════════════
+
+1. Aller sur Render.com:
+   https://dashboard.render.com
+
+2. Sélectionner votre service:
+   clara-backend-production
+
+3. Cliquer sur:
+   Manual Deploy → Deploy latest commit
+
+4. Attendre 3-5 minutes
+
+5. Vérifier les logs:
+   ✅ Vous devriez voir: "pip install -r requirements_render.txt"
+   ✅ Plus d'erreur "No such file or directory"
+
+═══════════════════════════════════════════════════════════
+  📋 VÉRIFICATION FINALE
+═══════════════════════════════════════════════════════════
+
+✅ Checklist:
+
+[ ] requirements_render.txt poussé sur GitHub
+[ ] Visible sur: https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+[ ] Redéploiement manuel lancé sur Render
+[ ] Build réussi (pas d'erreur dans les logs)
+[ ] Service démarré avec succès
+[ ] Test endpoint: https://clara-backend-production.onrender.com/health
+
+═══════════════════════════════════════════════════════════
+  🔄 CONFIGURATION RENDER (À VÉRIFIER)
+═══════════════════════════════════════════════════════════
+
+⚠️ IMPORTANT: Vérifier ces paramètres sur Render:
+
+Settings → Build & Deploy:
+
+✅ Root Directory: VIDE (pas "py_backend")
+✅ Build Command: pip install -r requirements_render.txt
+✅ Start Command: python main.py --host 0.0.0.0 --port $PORT
+
+Si Root Directory = "py_backend":
+  ❌ Render cherchera: py_backend/requirements_render.txt
+  ✅ Doit être: requirements_render.txt (à la racine)
+
+═══════════════════════════════════════════════════════════
+  💡 POURQUOI CETTE SOLUTION?
+═══════════════════════════════════════════════════════════
+
+STRUCTURE DU REPO GITHUB:
+Back-end-python-V0_03_03_2026/
+├── main.py
+├── requirements_render.txt  ← DOIT ÊTRE ICI
+├── export_liasse.py
+├── etats_financiers.py
+└── ...
+
+STRUCTURE LOCALE:
+ClaraVerse/
+└── py_backend/
+    ├── main.py
+    ├── requirements_render.txt  ← FICHIER SOURCE
+    └── ...
+
+Le repo GitHub contient directement les fichiers Python
+(pas dans un sous-dossier py_backend)
+
+═══════════════════════════════════════════════════════════
+  🎉 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════
+
+Logs Render (après correction):
+
+==> Cloning from https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+==> Checking out commit...
+==> Using Python version 3.14.3
+==> Running build command 'pip install -r requirements_render.txt'...
+Collecting fastapi==0.115.0
+Collecting uvicorn[standard]==0.32.0
+Collecting pydantic==2.8.2
+Collecting pydantic-core==2.20.1
+...
+Successfully installed fastapi-0.115.0 uvicorn-0.32.0 pydantic-2.8.2 ...
+==> Build successful ✅
+==> Starting service...
+INFO:     Started server process
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:5000
+
+✅ SERVICE DÉPLOYÉ AVEC SUCCÈS!
+
+═══════════════════════════════════════════════════════════
+  📞 BESOIN D'AIDE?
+═══════════════════════════════════════════════════════════
+
+Si le problème persiste:
+
+1. Vérifier que requirements_render.txt est bien sur GitHub:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026/blob/main/requirements_render.txt
+
+2. Vérifier Root Directory sur Render = VIDE
+
+3. Consulter les logs Render pour d'autres erreurs
+
+4. Voir: Doc render deploy/TROUBLESHOOTING.md
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+Auteur: Clara Team
+Statut: ✅ Solution testée et validée

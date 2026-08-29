@@ -1,0 +1,119 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ RÉACTIVATION DES NOTIFICATIONS JSON - 23 JUIN 2026
+═══════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ DE L'INTERVENTION
+───────────────────────────────────────────────────────────────────────────
+Date: 23 juin 2026
+Action: Réactivation des notifications de conversion JSON des fichiers
+Statut: ✅ TERMINÉ AVEC SUCCÈS
+
+📦 FICHIERS MODIFIÉS
+───────────────────────────────────────────────────────────────────────────
+1. src/components/Clara_Components/clara_assistant_input.tsx
+   - Ligne ~3056-3064
+   - Code décommenté et réactivé
+   - Marqueur: ✅ NOTIFICATIONS RÉACTIVÉES (23/06/2026)
+
+2. Doc ClaraAttachmentService traitement/GUIDE_REACTIVATION_NOTIFICATIONS.md
+   - Guide mis à jour avec le nouveau statut
+   - Documentation inversée (désactivation → réactivation)
+   - Version 2.0
+
+🔍 DÉTAILS TECHNIQUES
+───────────────────────────────────────────────────────────────────────────
+Service: claraAttachmentService
+Méthode: showExtractionAlert(processedAttachments)
+Types de fichiers concernés:
+  • Excel (.xlsx, .xls)
+  • Word (.doc, .docx)
+  • PDF (.pdf)
+
+💡 COMPORTEMENT ACTUEL
+───────────────────────────────────────────────────────────────────────────
+Lorsqu'un utilisateur envoie un fichier dans le chat:
+
+1. ✅ Le fichier est traité et converti en JSON
+2. ✅ Une notification d'alerte s'affiche avec:
+   - Le nom du fichier traité
+   - Le type de fichier (excel/word/pdf)
+   - Le contenu JSON formaté
+   - Un message de confirmation
+
+Exemple de notification:
+┌─────────────────────────────────────────────────────────────────────────
+│ 📊 Extraction des fichiers terminée !
+│
+│ ✅ Fichiers traités avec succès (1):
+│   • BALANCE_N_N1_N2.xlsx (excel)
+│
+│ 📤 Données Excel formatées pour l'endpoint Flowise:
+│
+│ {
+│   "BALANCE_N_N1_N2": [
+│     {
+│       "table 1": [
+│         {
+│           "Numéro": "101000",
+│           "Intitulé": "Capital social",
+│           "Solde N": "50000000",
+│           ...
+│         }
+│       ]
+│     }
+│   ]
+│ }
+│
+│ 📤 Les données extraites seront incluses dans votre message
+└─────────────────────────────────────────────────────────────────────────
+
+🎯 CAS D'USAGE
+───────────────────────────────────────────────────────────────────────────
+✅ Déboguer le traitement des fichiers
+✅ Vérifier la structure JSON générée
+✅ Valider l'extraction des données
+✅ Contrôle qualité en développement
+✅ Support utilisateur et formation
+
+📝 TESTS À EFFECTUER
+───────────────────────────────────────────────────────────────────────────
+1. Redémarrer l'application E-audit
+2. Envoyer un fichier Excel dans le chat
+3. Vérifier que la notification JSON s'affiche
+4. Tester avec un fichier Word
+5. Tester avec un fichier PDF
+
+🔄 POUR DÉSACTIVER À NOUVEAU (SI NÉCESSAIRE)
+───────────────────────────────────────────────────────────────────────────
+1. Ouvrir: src/components/Clara_Components/clara_assistant_input.tsx
+2. Chercher la ligne: ✅ NOTIFICATIONS RÉACTIVÉES
+3. Commenter le bloc de code avec /* */
+4. Sauvegarder et redémarrer
+
+⚠️ NOTES IMPORTANTES
+───────────────────────────────────────────────────────────────────────────
+• Performance: Les notifications peuvent ralentir l'interface pour les
+  gros fichiers (> 5 MB)
+  
+• UX: Les alertes peuvent être intrusives pour les utilisateurs finaux
+  en production
+  
+• Debug: Très utile en développement, à considérer pour la production
+
+📊 HISTORIQUE
+───────────────────────────────────────────────────────────────────────────
+• 06 mai 2026: Désactivation temporaire des notifications
+• 23 juin 2026: Réactivation des notifications (ce document)
+
+📞 SUPPORT
+───────────────────────────────────────────────────────────────────────────
+Documentation complète:
+  Doc ClaraAttachmentService traitement/GUIDE_REACTIVATION_NOTIFICATIONS.md
+
+Code source:
+  • Service: src/services/claraAttachmentService.ts
+  • Composant: src/components/Clara_Components/clara_assistant_input.tsx
+
+═══════════════════════════════════════════════════════════════════════════
+  FIN DU DOCUMENT - Version 1.0 - 23 juin 2026
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,192 @@
+═══════════════════════════════════════════════════════════════
+    COMMANDES DOCKER HUB - E-AUDIT
+═══════════════════════════════════════════════════════════════
+
+📦 COMPTE DOCKER HUB
+───────────────────────────────────────────────────────────────
+Username: sekadalle
+Repository: mes_images_docker
+Token: [VOTRE_TOKEN_DOCKER_HUB]
+Expire: 31 octobre 2026
+
+═══════════════════════════════════════════════════════════════
+🚀 MÉTHODE RAPIDE (RECOMMANDÉE)
+═══════════════════════════════════════════════════════════════
+
+Double-cliquez sur:
+    push-to-dockerhub-e-audit.bat
+
+Mot de passe à entrer: [VOTRE_TOKEN_DOCKER_HUB]
+
+═══════════════════════════════════════════════════════════════
+📝 COMMANDES MANUELLES
+═══════════════════════════════════════════════════════════════
+
+1️⃣ CONNEXION
+───────────────────────────────────────────────────────────────
+docker login -u sekadalle
+
+Entrez le token quand demandé:
+[VOTRE_TOKEN_DOCKER_HUB]
+
+
+2️⃣ BUILD DES IMAGES
+───────────────────────────────────────────────────────────────
+Frontend:
+docker build -f Dockerfile.frontend -t e-audit-frontend:latest .
+
+Backend:
+docker build -f Dockerfile.backend -t e-audit-backend:latest .
+
+
+3️⃣ TAG DES IMAGES
+───────────────────────────────────────────────────────────────
+Frontend:
+docker tag e-audit-frontend:latest sekadalle/mes_images_docker:e-audit-frontend
+
+Backend:
+docker tag e-audit-backend:latest sekadalle/mes_images_docker:e-audit-backend
+
+Latest:
+docker tag e-audit-frontend:latest sekadalle/mes_images_docker:e-audit-latest
+
+
+4️⃣ PUSH VERS DOCKER HUB
+───────────────────────────────────────────────────────────────
+Frontend:
+docker push sekadalle/mes_images_docker:e-audit-frontend
+
+Backend:
+docker push sekadalle/mes_images_docker:e-audit-backend
+
+Latest:
+docker push sekadalle/mes_images_docker:e-audit-latest
+
+
+═══════════════════════════════════════════════════════════════
+📥 UTILISATION DES IMAGES
+═══════════════════════════════════════════════════════════════
+
+PULL DES IMAGES
+───────────────────────────────────────────────────────────────
+docker pull sekadalle/mes_images_docker:e-audit-frontend
+docker pull sekadalle/mes_images_docker:e-audit-backend
+
+
+LANCER AVEC DOCKER-COMPOSE
+───────────────────────────────────────────────────────────────
+docker-compose -f docker-compose-hub.yml up -d
+
+
+ARRÊTER LES CONTAINERS
+───────────────────────────────────────────────────────────────
+docker-compose -f docker-compose-hub.yml down
+
+
+═══════════════════════════════════════════════════════════════
+🔍 COMMANDES DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════
+
+Voir les images locales:
+docker images
+
+Voir les containers en cours:
+docker ps
+
+Voir tous les containers:
+docker ps -a
+
+Voir les logs d'un container:
+docker logs e-audit-frontend-hub
+docker logs e-audit-backend-hub
+
+
+═══════════════════════════════════════════════════════════════
+🛠️ COMMANDES DE MAINTENANCE
+═══════════════════════════════════════════════════════════════
+
+Supprimer une image locale:
+docker rmi e-audit-frontend:latest
+
+Supprimer toutes les images non utilisées:
+docker image prune -a
+
+Nettoyer complètement Docker:
+docker system prune -a --volumes
+
+Voir l'espace utilisé:
+docker system df
+
+
+═══════════════════════════════════════════════════════════════
+🔄 MISE À JOUR DES IMAGES
+═══════════════════════════════════════════════════════════════
+
+1. Arrêter les containers:
+   docker-compose -f docker-compose-hub.yml down
+
+2. Supprimer les anciennes images:
+   docker rmi sekadalle/mes_images_docker:e-audit-frontend
+   docker rmi sekadalle/mes_images_docker:e-audit-backend
+
+3. Pull des nouvelles versions:
+   docker pull sekadalle/mes_images_docker:e-audit-frontend
+   docker pull sekadalle/mes_images_docker:e-audit-backend
+
+4. Relancer:
+   docker-compose -f docker-compose-hub.yml up -d
+
+
+═══════════════════════════════════════════════════════════════
+⚠️ DÉPANNAGE
+═══════════════════════════════════════════════════════════════
+
+Erreur de connexion Docker Hub:
+- Vérifier que Docker Desktop est lancé
+- Utiliser le token, pas le mot de passe
+- Vérifier la date d'expiration du token
+
+Erreur de build:
+- Vérifier que vous êtes dans le bon répertoire
+- Vérifier que les Dockerfile existent
+- Consulter les logs d'erreur
+
+Erreur de push:
+- Vérifier la connexion internet
+- Vérifier que vous êtes connecté (docker login)
+- Vérifier le nom du repository
+
+
+═══════════════════════════════════════════════════════════════
+📊 INFORMATIONS
+═══════════════════════════════════════════════════════════════
+
+Tailles approximatives:
+- Frontend: ~50-100 MB
+- Backend: ~200-300 MB
+- Total: ~250-400 MB
+
+Ports utilisés:
+- Frontend: 8080
+- Backend: 5000
+
+URL d'accès après déploiement:
+- Application: http://localhost:8080
+- API Backend: http://localhost:5000
+
+
+═══════════════════════════════════════════════════════════════
+🔗 LIENS UTILES
+═══════════════════════════════════════════════════════════════
+
+Docker Hub Repository:
+https://hub.docker.com/r/sekadalle/mes_images_docker
+
+Docker Hub Status:
+https://status.docker.com/
+
+Documentation Docker:
+https://docs.docker.com/
+
+
+═══════════════════════════════════════════════════════════════

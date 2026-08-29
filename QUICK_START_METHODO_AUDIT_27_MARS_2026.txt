@@ -1,0 +1,78 @@
+═══════════════════════════════════════════════════════════════════════════════
+  QUICK START - TEST METHODO AUDIT - 27 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE RAPIDE
+───────────────────
+
+1. Démarrer n8n
+   cd vers le dossier n8n
+   npm start (ou n8n start)
+   
+2. Vérifier que le workflow "methodo_audit" est actif
+   URL : http://localhost:5678/webhook/methodo_audit
+
+3. Démarrer ClaraVerse
+   npm run dev
+
+4. Dans le chat, taper :
+   "Methodo audit - Comment identifier les objets auditables ?"
+
+✅ RÉSULTAT ATTENDU
+───────────────────
+
+Vous devriez voir un menu accordéon avec :
+
+📋 Panel 1 : Couverture
+   - Titre de la section (ex: "Étape 1 — Identifier les objets auditables...")
+   - Design avec gradient orange
+   - Numéro de section
+
+📚 Panels 2-N : Sub-items
+   - Un panel par Sub-item (ex: "Cadrage de l'étape", "Mise en œuvre", etc.)
+   - Items avec badges colorés (quoi, pourquoi, action logique, etc.)
+   - Contenu formaté avec retours à la ligne
+
+🎥 Panel Final : Vidéos de Formation
+   - 2 vidéos YouTube intégrées
+   - Tutoriel Méthodologie Partie 1
+   - Tutoriel Méthodologie Partie 2
+
+🔍 VÉRIFICATIONS
+────────────────
+
+✓ La page de couverture s'affiche avec le titre complet
+✓ Les panels s'ouvrent/ferment au clic
+✓ Les badges de rubrique sont colorés
+✓ Le contenu est lisible et bien formaté
+✓ Les vidéos YouTube sont visibles et jouables
+✓ Le mode sombre fonctionne (si activé)
+
+🐛 DÉPANNAGE
+────────────
+
+Problème : Rien ne s'affiche
+→ Vérifier la console du navigateur (F12)
+→ Vérifier que n8n est démarré
+→ Vérifier l'URL de l'endpoint dans claraApiService.ts (ligne ~280)
+
+Problème : Format incorrect
+→ Vérifier la structure JSON de la réponse n8n
+→ Doit contenir "Sous-section" et "Sub-items"
+→ Vérifier les logs console : "FORMAT 5 DETECTE"
+
+Problème : Vidéos ne s'affichent pas
+→ Vérifier la connexion Internet
+→ Vérifier que YouTube n'est pas bloqué
+→ Les URLs sont : dUr1wDUaYzg et oyUk7J1w15c
+
+📊 EXEMPLE DE CURL POUR TESTER L'ENDPOINT
+──────────────────────────────────────────
+
+curl -X POST "http://localhost:5678/webhook/methodo_audit" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "[PARTIE] = PARTIE 3 - [THEMATIQUE] = CONNAISSANCES METIER POUR L'\''AUDIT INTERNE - [CHAPITRE] = Unité d'\''étude 1 : Gestion stratégique et planification - [SECTION] = Sous-unité 1 : Gestion stratégique et planification"
+  }'
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,189 @@
+═══════════════════════════════════════════════════════════════════════════
+  🔴 CORRECTION IMMÉDIATE - ERREUR "data ne contient pas un array"
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+ERREUR REÇUE
+═══════════════════════════════════════════════════════════════════════════
+
+Message: La clé "data" ne contient pas un array
+Type: Erreur de transformation
+Input: {"data": {"output": {"Etape mission - Recos contrôle interne comptable": [...]
+
+DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════
+
+Le problème vient de la structure de données reçue par le Markdown Generator:
+
+Structure reçue:
+{
+  "data": {
+    "output": {
+      "Etape mission - Recos contrôle interne comptable": [...]
+    }
+  }
+}
+
+Structure attendue par l'ancien code:
+{
+  "data": {
+    "Etape mission - Recos contrôle interne comptable": [...]
+  }
+}
+
+→ Le node "node clean1" enveloppe le JSON dans "data.output"
+→ Le Markdown Generator cherche directement dans "data"
+→ Il trouve un objet avec "output" au lieu d'un array
+
+SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+Le code du Markdown Generator a été corrigé pour gérer 3 cas:
+
+1. Structure avec data.output (cas actuel)
+2. Structure avec data directement
+3. Structure directe (sans data)
+
+FICHIER CORRIGÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Fichier: MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+
+Le code extrait maintenant correctement le JSON de:
+- item.json.data.output (priorité 1)
+- item.json.data (priorité 2)
+- item.json (priorité 3)
+
+ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: COPIER LE CODE CORRIGÉ
+───────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir le fichier: MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+2. Copier TOUT le contenu
+3. Ouvrir n8n: https://t22wtwxl.rpcld.app
+4. Ouvrir le workflow: recos_contrôle_interne_comptable
+5. Ouvrir le node "Markdown Generator1 corrige29"
+6. Coller le code corrigé
+7. Sauvegarder
+
+ÉTAPE 2: TESTER
+───────────────────────────────────────────────────────────────────────────
+
+Message test:
+[VAE] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+Résultat attendu:
+✅ Pas d'erreur "data ne contient pas un array"
+✅ Contenu affiché dans le frontend
+✅ Contenu parle de RH (pas Achats)
+
+EXPLICATION TECHNIQUE
+═══════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n a cette structure:
+
+Structured Output Parser
+  ↓ retourne: { "Etape mission - ...": [...] }
+  ↓
+node clean1
+  ↓ enveloppe dans: { "data": { "output": {...} } }
+  ↓
+Markdown Generator (ANCIEN CODE)
+  ↓ cherche dans: item.json.data (trouve "output" au lieu d'un array)
+  ❌ ERREUR
+
+Avec le code corrigé:
+
+Structured Output Parser
+  ↓ retourne: { "Etape mission - ...": [...] }
+  ↓
+node clean1
+  ↓ enveloppe dans: { "data": { "output": {...} } }
+  ↓
+Markdown Generator (CODE CORRIGÉ)
+  ↓ détecte: item.json.data.output existe
+  ↓ extrait: item.json.data.output
+  ↓ trouve: { "Etape mission - ...": [...] }
+  ✅ SUCCÈS
+
+CODE AJOUTÉ
+═══════════════════════════════════════════════════════════════════════════
+
+```javascript
+// Cas 1: Structure avec data.output (après node clean1)
+if (item.json.data && item.json.data.output) {
+  parsedData = item.json.data.output;
+  console.log('✅ JSON extrait de data.output');
+}
+// Cas 2: Structure avec data directement
+else if (item.json.data) {
+  parsedData = item.json.data;
+  console.log('✅ JSON extrait de data');
+}
+// Cas 3: Structure directe (sans data)
+else {
+  parsedData = item.json;
+  console.log('✅ JSON direct');
+}
+```
+
+VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════
+
+Après avoir copié le code corrigé, vérifier les logs n8n:
+
+1. Exécuter le workflow
+2. Ouvrir les logs du node "Markdown Generator1 corrige29"
+3. Chercher: "✅ JSON extrait de data.output"
+4. Vérifier: "📊 Clés dans parsedData: Etape mission - ..."
+
+Si vous voyez ces messages, le code fonctionne correctement.
+
+CHECKLIST
+═══════════════════════════════════════════════════════════════════════════
+
+[ ] Fichier MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js ouvert
+[ ] Code copié
+[ ] N8N ouvert
+[ ] Workflow "recos_contrôle_interne_comptable" ouvert
+[ ] Node "Markdown Generator1 corrige29" ouvert
+[ ] Code collé
+[ ] Workflow sauvegardé
+[ ] Test effectué
+[ ] Logs vérifiés
+[ ] Pas d'erreur "data ne contient pas un array"
+[ ] Contenu affiché dans le frontend
+
+FICHIERS LIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js (code corrigé)
+2. NODE_CLEAN1_CORRIGE_CASE_25.js (node précédent)
+3. GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md (guide complet)
+4. 00_ACTION_IMMEDIATE_STRUCTURED_OUTPUT_CASE_25.txt (action rapide)
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir le code corrigé:
+   code MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+
+2. Ouvrir n8n:
+   start https://t22wtwxl.rpcld.app
+
+3. Voir le guide complet:
+   code GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+
+PRIORITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+🔴 URGENT - Erreur bloque l'affichage du contenu dans le frontend
+
+═══════════════════════════════════════════════════════════════════════════
+

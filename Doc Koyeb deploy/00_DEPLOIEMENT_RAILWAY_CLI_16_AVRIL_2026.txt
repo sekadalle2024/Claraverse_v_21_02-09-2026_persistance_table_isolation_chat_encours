@@ -1,0 +1,188 @@
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║              🚂 DÉMARRAGE RAPIDE - DÉPLOIEMENT RAILWAY CLI                   ║
+║                           Date: 16 Avril 2026                                 ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+🎯 OBJECTIF
+═══════════════════════════════════════════════════════════════════════════════
+
+Déployer le backend Python sur Railway Hobby ($5/mois) via CLI
+pour éviter le sleep mode de Koyeb Free et garantir une disponibilité 24/7.
+
+
+📋 PRÉREQUIS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Node.js installé (pour Railway CLI)
+✅ Compte Railway créé (https://railway.app)
+✅ Backend dans py_backend/ avec Dockerfile
+✅ Carte bancaire pour Railway Hobby ($5/mois)
+
+
+⚡ DÉMARRAGE ULTRA-RAPIDE (5 MINUTES)
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣ INSTALLER RAILWAY CLI
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ npm install -g @railway/cli                                            │
+   │ railway --version                                                       │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+2️⃣ SE CONNECTER À RAILWAY
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ railway login                                                           │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+3️⃣ DÉPLOYER LE BACKEND (AUTOMATIQUE)
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ cd py_backend                                                           │
+   │ railway init                                                            │
+   │ railway up                                                              │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+4️⃣ RÉCUPÉRER L'URL
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ railway domain                                                          │
+   │ # Exemple: clara-backend-production.up.railway.app                      │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+5️⃣ ⚠️ VÉRIFICATION CRITIQUE
+   • Aller sur: https://railway.app/dashboard
+   • Sélectionner votre projet
+   • Settings → Sleep Settings
+   • VÉRIFIER: "App Sleeping" est DÉSACTIVÉ (OFF)
+
+6️⃣ METTRE À JOUR LE FRONTEND
+   • Fichier: src/services/claraApiService.ts
+   • Remplacer: hkj0631c.rpcl.app
+   • Par: clara-backend-production.up.railway.app
+
+
+🤖 DÉPLOIEMENT AUTOMATISÉ (RECOMMANDÉ)
+═══════════════════════════════════════════════════════════════════════════════
+
+Utilisez le script PowerShell pour automatiser tout le processus :
+
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ # Depuis la racine du projet                                            │
+   │ .\Doc Koyeb deploy\Scripts\deploy-railway.ps1                          │
+   │                                                                         │
+   │ # Ou avec options                                                       │
+   │ .\Doc Koyeb deploy\Scripts\deploy-railway.ps1 -ProjectName "mon-backend" │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+Le script fait automatiquement :
+   ✅ Vérification des prérequis
+   ✅ Connexion à Railway
+   ✅ Initialisation du projet
+   ✅ Configuration des variables d'environnement
+   ✅ Déploiement du backend
+   ✅ Tests post-déploiement
+   ✅ Affichage de l'URL
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails, consultez :
+   📄 GUIDE_DEPLOIEMENT_RAILWAY_CLI_16_AVRIL_2026.md
+
+Sections disponibles :
+   1. Pourquoi Railway Hobby à $5/mois ?
+   2. Installation de Railway CLI sur Windows
+   3. Configuration initiale
+   4. Déploiement du backend
+   5. Configuration des variables d'environnement
+   6. Vérification critique: Désactiver "App Sleeping"
+   7. Mise à jour du frontend
+   8. Tests post-déploiement
+   9. Commandes utiles
+   10. Dépannage
+
+
+🔧 COMMANDES ESSENTIELLES
+═══════════════════════════════════════════════════════════════════════════════
+
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ # Voir le statut                                                       │
+   │ railway status                                                          │
+   │                                                                         │
+   │ # Voir les logs                                                        │
+   │ railway logs --follow                                                   │
+   │                                                                         │
+   │ # Redéployer                                                           │
+   │ railway up                                                              │
+   │                                                                         │
+   │ # Ouvrir le dashboard                                                  │
+   │ railway open                                                            │
+   │                                                                         │
+   │ # Voir l'URL                                                           │
+   │ railway domain                                                          │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+💰 COÛT ESTIMÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Plan: Railway Hobby
+Prix: $5/mois (fixe)
+Crédit inclus: $5 de ressources
+
+Votre backend:
+   • RAM: ~256 MB actif
+   • CPU: Faible utilisation
+   • Estimation: Rentre dans le crédit de $5
+   • Surcoût: Aucun prévu
+
+
+⚠️ POINTS CRITIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DÉSACTIVER "APP SLEEPING"
+   C'est l'étape la plus importante pour éviter le cold start.
+   À vérifier manuellement dans le dashboard Railway.
+
+2. METTRE À JOUR LE FRONTEND
+   Remplacer toutes les occurrences de l'ancienne URL Koyeb
+   par la nouvelle URL Railway dans claraApiService.ts
+
+3. TESTER APRÈS DÉPLOIEMENT
+   Vérifier que tous les endpoints fonctionnent correctement
+
+
+✅ CHECKLIST RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Railway CLI installé
+□ Connecté à Railway
+□ Backend déployé
+□ URL récupérée
+□ "App Sleeping" DÉSACTIVÉ
+□ Frontend mis à jour
+□ Tests réussis
+
+
+🆘 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════════════════════
+
+Documentation Railway:
+   https://docs.railway.app/
+
+Support Railway:
+   https://railway.app/help
+
+Guide complet:
+   Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RAILWAY_CLI_16_AVRIL_2026.md
+
+
+🎉 PRÊT À DÉPLOYER !
+═══════════════════════════════════════════════════════════════════════════════
+
+Lancez le script automatisé ou suivez les étapes manuelles.
+Votre backend sera en production en moins de 5 minutes !
+
+Bon déploiement ! 🚀

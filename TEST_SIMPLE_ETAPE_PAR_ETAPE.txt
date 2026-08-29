@@ -1,0 +1,224 @@
+═══════════════════════════════════════════════════════════════
+  🧪 TEST SIMPLE - Étape par Étape
+═══════════════════════════════════════════════════════════════
+
+Suivez ces étapes EXACTEMENT dans l'ordre.
+Notez le résultat de chaque étape.
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 1 : Ouvrir la Console
+═══════════════════════════════════════════════════════════════
+
+1. Appuyez sur F12
+2. Cliquez sur l'onglet "Console"
+3. Effacez la console (clic droit → Clear console)
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 2 : Charger le Diagnostic
+═══════════════════════════════════════════════════════════════
+
+Copiez-collez ce code dans la console et appuyez sur Entrée:
+
+fetch('/DIAGNOSTIC_IMMEDIAT_CONSOLE.js').then(r=>r.text()).then(eval);
+
+Résultat attendu : Vous devez voir un rapport complet
+
+NOTEZ ICI CE QUE VOUS VOYEZ :
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 3 : Vérifier conso.js
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+window.claraverseProcessor
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Vous devez voir un objet avec des fonctions
+
+SI VOUS VOYEZ "undefined" :
+→ ❌ conso.js n'est pas chargé
+→ Solution : Rechargez avec Ctrl+F5
+
+NOTEZ ICI CE QUE VOUS VOYEZ :
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 4 : Compter les Tables CIA
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+Array.from(document.querySelectorAll('table')).filter(t => {
+  const headers = Array.from(t.querySelectorAll('th, td')).map(h => h.textContent);
+  return headers.some(h => /reponse.*user/i.test(h));
+}).length
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Un nombre > 0 (par exemple: 16)
+
+SI VOUS VOYEZ 0 :
+→ ❌ Aucune table CIA sur cette page
+→ Solution : Naviguez vers une page avec des tables d'examen CIA
+
+NOTEZ ICI LE NOMBRE :
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 5 : Vérifier les IDs des Tables
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+Array.from(document.querySelectorAll('table')).forEach((t, i) => {
+  const headers = Array.from(t.querySelectorAll('th, td')).map(h => h.textContent);
+  if (headers.some(h => /reponse.*user/i.test(h))) {
+    console.log(`Table CIA ${i}: ID =`, t.dataset.tableId || '❌ SANS ID');
+  }
+});
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Chaque table doit avoir un ID
+
+SI VOUS VOYEZ "SANS ID" :
+→ ⚠️ Les tables n'ont pas d'ID
+→ Solution : Exécutez claraverseProcessor.processAllTables()
+
+NOTEZ ICI CE QUE VOUS VOYEZ :
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 6 : Forcer la Génération des IDs (si nécessaire)
+═══════════════════════════════════════════════════════════════
+
+SI des tables n'ont pas d'ID, tapez:
+
+claraverseProcessor.processAllTables()
+
+Appuyez sur Entrée.
+
+Attendez 2 secondes.
+
+Puis répétez l'ÉTAPE 5 pour vérifier que les IDs sont créés.
+
+RÉSULTAT :
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 7 : Cocher une Checkbox
+═══════════════════════════════════════════════════════════════
+
+1. Trouvez une table CIA sur la page
+2. Cochez UNE checkbox dans la colonne "Reponse_user"
+3. Attendez 2 secondes
+
+FAIT ? OUI / NON : _____________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 8 : Forcer la Sauvegarde
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+claraverseProcessor.saveNow()
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Vous devez voir des logs de sauvegarde
+
+NOTEZ ICI CE QUE VOUS VOYEZ :
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 9 : Vérifier localStorage
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+const data = JSON.parse(localStorage.getItem('claraverse_tables_data') || '{}');
+const cia = Object.values(data).filter(t => t.isCIATable);
+console.log('Tables CIA sauvegardées:', cia.length);
+cia.forEach(t => {
+  const checked = (t.cells || []).filter(c => c.isCheckboxCell && c.isChecked).length;
+  console.log('  Checkboxes cochées:', checked);
+});
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Au moins 1 table CIA avec 1 checkbox cochée
+
+NOTEZ ICI CE QUE VOUS VOYEZ :
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 10 : Décocher la Checkbox
+═══════════════════════════════════════════════════════════════
+
+1. Décochez la checkbox que vous aviez cochée à l'étape 7
+2. Vérifiez visuellement qu'elle est décochée
+
+FAIT ? OUI / NON : _____________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 11 : Forcer la Restauration
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+claraverseProcessor.restoreAllTablesData()
+
+Appuyez sur Entrée.
+
+Attendez 2 secondes.
+
+RÉSULTAT ATTENDU : La checkbox doit se recocher automatiquement
+
+EST-CE QUE LA CHECKBOX S'EST RECOCHÉE ? OUI / NON : _____________
+
+SI NON, NOTEZ CE QUE VOUS VOYEZ DANS LA CONSOLE :
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 12 : Test de Changement de Chat
+═══════════════════════════════════════════════════════════════
+
+1. Cochez une checkbox
+2. Exécutez: claraverseProcessor.saveNow()
+3. Changez de chat (cliquez sur un autre chat)
+4. Attendez 10 secondes
+5. Revenez au chat initial
+6. Attendez 10 secondes
+
+EST-CE QUE LA CHECKBOX EST TOUJOURS COCHÉE ? OUI / NON : _____________
+
+SI NON, NOTEZ CE QUI SE PASSE :
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  RÉSUMÉ DES RÉSULTATS
+═══════════════════════════════════════════════════════════════
+
+Étape 3 (conso.js) : OK / ERREUR
+Étape 4 (Tables CIA) : _____ tables trouvées
+Étape 5 (IDs) : OK / SANS ID
+Étape 9 (localStorage) : OK / VIDE
+Étape 11 (Restauration) : OK / ÉCHEC
+Étape 12 (Changement chat) : OK / ÉCHEC
+
+═══════════════════════════════════════════════════════════════
+
+Date : 26 novembre 2025
+Fichier : TEST_SIMPLE_ETAPE_PAR_ETAPE.txt

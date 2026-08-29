@@ -1,0 +1,263 @@
+===========================================
+  COMMANDES DOCKER WSL2 - E-AUDIT
+===========================================
+
+📦 DÉMARRAGE RAPIDE
+===========================================
+
+# 1. Rendre les scripts exécutables
+chmod +x build-docker.sh start-docker.sh stop-docker.sh
+
+# 2. Builder les images
+./build-docker.sh
+
+# 3. Démarrer
+./start-docker.sh
+
+# 4. Accéder
+Frontend: http://localhost:3000
+Backend:  http://localhost:5000
+
+
+🔧 GESTION DES CONTENEURS
+===========================================
+
+# Démarrer
+docker compose up -d
+
+# Arrêter
+docker compose down
+
+# Redémarrer
+docker compose restart
+
+# Redémarrer un service spécifique
+docker compose restart frontend
+docker compose restart backend
+
+# État des conteneurs
+docker compose ps
+
+# Voir les logs
+docker compose logs -f
+
+# Logs d'un service spécifique
+docker compose logs -f frontend
+docker compose logs -f backend
+
+# Logs des 100 dernières lignes
+docker compose logs --tail=100 backend
+
+
+📊 MONITORING
+===========================================
+
+# Utilisation des ressources
+docker stats
+
+# Inspecter un conteneur
+docker inspect e-audit-frontend
+docker inspect e-audit-backend
+
+# Healthcheck du backend
+curl http://localhost:5000/health
+
+
+🔨 BUILD ET REBUILD
+===========================================
+
+# Build normal
+docker compose build
+
+# Build sans cache
+docker compose build --no-cache
+
+# Build d'un service spécifique
+docker compose build frontend
+docker compose build backend
+
+# Rebuild complet
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+
+
+🗑️ NETTOYAGE
+===========================================
+
+# Arrêter et supprimer les conteneurs
+docker compose down
+
+# Arrêter et supprimer les volumes (⚠️ perte de données)
+docker compose down -v
+
+# Nettoyer les ressources inutilisées
+docker system prune -a
+
+# Nettoyer les volumes non utilisés
+docker volume prune
+
+# Nettoyer les images non utilisées
+docker image prune -a
+
+
+📁 VOLUMES ET DONNÉES
+===========================================
+
+# Lister les volumes
+docker volume ls
+
+# Inspecter le volume de données
+docker volume inspect e-audit_backend-data
+
+# Backup du volume
+docker run --rm -v e-audit_backend-data:/data -v $(pwd):/backup alpine tar czf /backup/backend-data-backup.tar.gz -C /data .
+
+# Restaurer le volume
+docker run --rm -v e-audit_backend-data:/data -v $(pwd):/backup alpine tar xzf /backup/backend-data-backup.tar.gz -C /data
+
+
+🌐 RÉSEAU
+===========================================
+
+# Lister les réseaux
+docker network ls
+
+# Inspecter le réseau
+docker network inspect e-audit-network
+
+# Tester la connectivité
+docker exec e-audit-frontend ping backend
+
+
+🐛 DEBUGGING
+===========================================
+
+# Entrer dans un conteneur
+docker exec -it e-audit-frontend sh
+docker exec -it e-audit-backend bash
+
+# Voir les processus dans un conteneur
+docker top e-audit-frontend
+docker top e-audit-backend
+
+# Copier des fichiers depuis/vers un conteneur
+docker cp e-audit-backend:/app/logs/app.log ./
+docker cp ./config.json e-audit-backend:/app/
+
+
+🔄 MISE À JOUR
+===========================================
+
+# 1. Arrêter
+docker compose down
+
+# 2. Mettre à jour le code
+git pull
+
+# 3. Rebuild
+docker compose build
+
+# 4. Redémarrer
+docker compose up -d
+
+
+⚙️ DOCKER SERVICE (WSL2)
+===========================================
+
+# Démarrer Docker
+sudo service docker start
+
+# Arrêter Docker
+sudo service docker stop
+
+# Redémarrer Docker
+sudo service docker restart
+
+# État de Docker
+sudo service docker status
+
+# Vérifier Docker
+docker info
+docker version
+
+
+📋 PORTS DISPONIBLES
+===========================================
+
+❌ Ports à éviter (déjà utilisés):
+- 3000 (Flowise)
+- 5001 (Dockge)
+- 5002 (Lead Balance)
+- 5432 (PostgreSQL)
+- 27017 (MongoDB)
+
+✅ Ports recommandés:
+- 8000-8999
+- 4000-4999 (sauf 5001-5002)
+- 9000-9999
+
+
+🔑 VARIABLES D'ENVIRONNEMENT
+===========================================
+
+# Créer un fichier .env
+cp .env.docker .env
+
+# Éditer les variables
+nano .env
+
+# Redémarrer pour appliquer
+docker compose down
+docker compose up -d
+
+
+🚨 DÉPANNAGE RAPIDE
+===========================================
+
+# Backend ne démarre pas
+docker compose logs backend
+docker compose restart backend
+
+# Frontend ne charge pas
+docker compose logs frontend
+docker compose restart frontend
+
+# Port déjà utilisé
+docker ps --format "table {{.Names}}\t{{.Ports}}"
+docker stop <nom_conteneur>
+
+# Problème de permissions
+chmod +x *.sh
+sudo chown -R $USER:$USER .
+
+# Rebuild complet
+docker compose down -v
+docker system prune -a
+./build-docker.sh
+./start-docker.sh
+
+
+📞 COMMANDES UTILES WSL2
+===========================================
+
+# Naviguer vers le projet
+cd /mnt/c/Users/LEADER/chemin/projet
+
+# Voir l'espace disque
+df -h
+
+# Voir les processus Docker
+ps aux | grep docker
+
+# Redémarrer WSL2 (depuis PowerShell Windows)
+wsl --shutdown
+
+
+===========================================
+  FIN DES COMMANDES
+===========================================
+
+Pour plus d'informations, consultez:
+- README-DOCKER.md (documentation complète)
+- DEMARRAGE-RAPIDE-DOCKER.md (guide rapide)

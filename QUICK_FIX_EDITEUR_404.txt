@@ -1,0 +1,25 @@
+🚀 FIX RAPIDE - ENDPOINT EDITEUR 404 SUR ZEABUR
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Backend Zeabur retourne 404 pour /editeur/process
+CAUSE: Le code n'a pas été poussé vers GitHub
+SOLUTION: 3 commandes à exécuter
+
+═══════════════════════════════════════════════════════════════════════════════
+
+COPIER-COLLER CES COMMANDES:
+
+git add py_backend/endpoint_editeur.py py_backend/main.py public/EditeurAutoTrigger.js src/services/claraApiService.ts
+
+git commit -m "feat: Ajout endpoint Editeur (Case 44) pour test switch backend"
+
+git push origin main
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ENSUITE:
+1. Attendre 2-5 minutes (rebuild automatique Zeabur)
+2. Tester: curl https://pybackend.zeabur.app/editeur/health
+3. Si OK, tester sur https://prclaravi.netlify.app
+
+═══════════════════════════════════════════════════════════════════════════════

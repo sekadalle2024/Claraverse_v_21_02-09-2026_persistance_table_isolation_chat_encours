@@ -1,0 +1,129 @@
+================================================================================
+🎯 CORRECTION DOUBLE PROBLÈME - EXPORT LIASSE & ONGLET CONTRÔLE
+================================================================================
+Date: 05 Avril 2026
+Statut: 🔧 EN COURS DE CORRECTION
+
+================================================================================
+PROBLÈME 1: ÉTATS FINANCIERS NON ALIMENTÉS
+================================================================================
+
+❌ DIAGNOSTIC:
+- Les cellules à renseigner ne sont PAS fusionnées
+- Seules les parties neutres (titres, labels) sont fusionnées
+- La fonction write_to_cell() gère les cellules fusionnées mais pas les normales
+- Les cellules normales ne sont pas remplies
+
+✅ SOLUTION:
+Vérifier le template et identifier les vraies cellules à remplir:
+- Cellules de données: E10, E11, E12, etc. (colonnes E, F, G)
+- Cellules fusionnées: Titres et labels uniquement
+
+📝 ACTION REQUISE:
+1. Analyser le template Liasse_officielle_revise.xlsx
+2. Identifier les cellules exactes pour les montants
+3. Mettre à jour les mappings MAPPING_BILAN_ACTIF, MAPPING_BILAN_PASSIF, etc.
+4. Tester avec de vraies données
+
+================================================================================
+PROBLÈME 2: ONGLET CONTRÔLE UTILISE ANCIENS CONTRÔLES
+================================================================================
+
+❌ DIAGNOSTIC:
+- generer_onglet_controle_coherence.py utilise les anciens contrôles
+- Les 16 états actualisés sont dans etats_controle_exhaustifs_html.py
+- Deux systèmes différents coexistent
+
+✅ SOLUTION:
+Utiliser les 16 états actualisés de etats_controle_exhaustifs_html.py:
+
+1. Statistiques de Couverture (N)
+2. Équilibre du Bilan (N)
+3. Cohérence Résultat CR/Bilan (N)
+4. Comptes Non Intégrés (N)
+5. Comptes avec Sens Inversé (N)
+6. Comptes Créant un Déséquilibre (N)
+7. Hypothèse d'Affectation du Résultat (N)
+8. Comptes avec Sens Anormal par Nature (N)
+9-16. Mêmes contrôles pour N-1
+
+================================================================================
+FICHIERS DE RÉFÉRENCE
+================================================================================
+
+📁 Documentation des 16 États:
+- test_etats_controle_html.html (modèle HTML)
+- py_backend/etats_controle_exhaustifs_html.py (module de génération)
+- Doc_Etat_Fin/Documentation/SOLUTION_INTEGRATION_16_ETATS_ACCORDEON_05_AVRIL_2026.md
+
+📁 Structure DOM:
+- Structure DOM html des etats de controle.txt
+- MEMO_SOLUTION_FINALE_16_ETATS_CONTROLE_05_AVRIL_2026.md
+
+📁 Fichiers à Modifier:
+- py_backend/export_liasse.py (mappings cellules)
+- py_backend/generer_onglet_controle_coherence.py (utiliser nouveaux états)
+
+================================================================================
+PLAN D'ACTION
+================================================================================
+
+ÉTAPE 1: ANALYSER LE TEMPLATE
+```powershell
+# Créer un script pour analyser les cellules du template
+python py_backend/verifier_cellules_template.py
+```
+
+ÉTAPE 2: CORRIGER LES MAPPINGS
+- Identifier les vraies cellules de données (non fusionnées)
+- Mettre à jour MAPPING_BILAN_ACTIF, MAPPING_BILAN_PASSIF, etc.
+- Tester avec write_to_cell()
+
+ÉTAPE 3: METTRE À JOUR L'ONGLET CONTRÔLE
+- Modifier generer_onglet_controle_coherence.py
+- Utiliser generate_all_16_etats_controle_html()
+- Convertir HTML en format Excel
+
+ÉTAPE 4: TESTER
+```powershell
+# Test export liasse
+python py_backend/test_export_avec_correction.py
+
+# Test onglet contrôle
+python py_backend/test_onglet_controle_coherence.py
+```
+
+================================================================================
+PROCHAINES ÉTAPES IMMÉDIATES
+================================================================================
+
+1. ✅ Créer script d'analyse du template
+2. 🔧 Identifier les cellules exactes
+3. 🔧 Corriger les mappings
+4. 🔧 Mettre à jour l'onglet contrôle
+5. 🔧 Tester avec vraies données
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Analyser le template
+cd py_backend
+python verifier_cellules_template.py
+
+# Tester l'export
+python test_export_avec_correction.py
+
+# Vérifier l'onglet contrôle
+python test_onglet_controle_coherence.py
+
+================================================================================
+NOTES IMPORTANTES
+================================================================================
+
+⚠️ Les cellules fusionnées sont pour les TITRES et LABELS
+⚠️ Les cellules de DONNÉES sont normales (non fusionnées)
+⚠️ Les 16 états actualisés sont dans etats_controle_exhaustifs_html.py
+⚠️ Ne pas confondre avec les anciens contrôles
+
+================================================================================

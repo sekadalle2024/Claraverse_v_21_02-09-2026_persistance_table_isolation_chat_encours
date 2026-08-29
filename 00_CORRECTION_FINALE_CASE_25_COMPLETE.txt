@@ -1,0 +1,121 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION FINALE COMPLÈTE - CASE 25
+  Date: 29 Mars 2026 - 22h00
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME RÉSOLU
+───────────────────────────────────────────────────────────────────────────
+Les tableaux 2-6 s'affichaient en une seule ligne sans structure:
+| Intitule | |──────────────| | Défaut de sécurisation...
+
+CAUSE
+───────────────────────────────────────────────────────────────────────────
+Le séparateur utilisait des caractères Unicode `─` (U+2500) au lieu de
+tirets simples `-` (U+002D) requis par la spécification Markdown.
+
+SOLUTION APPLIQUÉE
+───────────────────────────────────────────────────────────────────────────
+Remplacer `'─'` par `'-'` dans le séparateur du tableau Markdown.
+
+FICHIER MODIFIÉ
+───────────────────────────────────────────────────────────────────────────
+src/services/claraApiService.ts
+→ Fonction convertHeaderTableToMarkdown() (ligne ~665)
+
+CHANGEMENT
+───────────────────────────────────────────────────────────────────────────
+AVANT: `|${'─'.repeat(headerText.length + 6)}|\n`  ❌ Unicode
+APRÈS:  `|${'-'.repeat(headerText.length + 6)}|\n`  ✅ Tirets simples
+
+CODE FINAL
+───────────────────────────────────────────────────────────────────────────
+```typescript
+// Tables 2+ (index > 0) : Format 1 colonne avec en-tête en gras
+if (entries.length === 1) {
+  const [key, value] = entries[0];
+  const headerText = key.charAt(0).toUpperCase() + key.slice(1);
+  let cellValue = String(value)
+    .replace(/\\n/g, '\n')
+    .replace(/\n/g, '\n\n')
+    .trim();
+  
+  // Tableau Markdown 1 colonne avec TIRETS SIMPLES
+  let md = `\n| **${headerText}** |\n`;
+  md += `|${'-'.repeat(headerText.length + 6)}|\n`;  // ✅ TIRETS SIMPLES
+  md += `| ${cellValue.replace(/\n\n/g, '<br><br>')} |\n\n`;
+  
+  return md;
+}
+```
+
+RÉSULTAT ATTENDU
+───────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────┐
+│ Intitule (EN GRAS)                                       │
+├──────────────────────────────────────────────────────────┤
+│ Défaut de sécurisation physique des fonds et            │
+│ non-respect du plafond d'encaisse autorisé              │
+└──────────────────────────────────────────────────────────┘
+
+TEST RAPIDE
+───────────────────────────────────────────────────────────────────────────
+.\test-formatage-tables-case25.ps1
+
+OU MANUELLEMENT:
+1. .\stop-claraverse.ps1; .\start-claraverse.ps1
+2. Envoyer: [Command] : Recos contrôle interne comptable
+            [Cycle] : trésorerie
+            [test] : AA010
+            [Anomalie] = Absence de contrôles inopinés
+3. Vérifier que les tableaux sont bien structurés avec en-têtes en gras
+
+VÉRIFICATIONS
+───────────────────────────────────────────────────────────────────────────
+✅ Table 1: Format 2 colonnes (inchangé)
+✅ Table 2: "Intitule" EN GRAS dans un tableau structuré
+✅ Table 3: "Observation" EN GRAS dans un tableau structuré
+✅ Table 4: "Constat" EN GRAS dans un tableau structuré
+✅ Table 5: "Risque" EN GRAS dans un tableau structuré
+✅ Table 6: "Recommendation" EN GRAS dans un tableau structuré
+
+DOCUMENTATION COMPLÈTE
+───────────────────────────────────────────────────────────────────────────
+00_CORRECTION_SEPARATEUR_TABLEAU_CASE_25.txt
+→ Explication de la correction du séparateur
+
+Doc prompt issues/EXPLICATION_TIRETS_MARKDOWN.md
+→ Pourquoi les tirets simples sont nécessaires
+
+Doc prompt issues/00_INDEX_CASE_25_COMPLET.md
+→ Index complet de toute la documentation Case 25
+
+STATUT
+───────────────────────────────────────────────────────────────────────────
+✅ Correction appliquée (tirets simples)
+✅ Aucune erreur TypeScript
+✅ Documentation complète créée
+⏳ Tests à effectuer
+
+COMMIT SUGGÉRÉ
+───────────────────────────────────────────────────────────────────────────
+git add src/services/claraApiService.ts
+git add "Doc prompt issues/"
+git add "00_*.txt"
+git commit -m "fix(case25): Corriger séparateur tableau (tirets simples)
+
+- Remplace caractères Unicode ─ par tirets simples -
+- Garantit rendu correct des tableaux Markdown
+- Tables 2-6 maintenant structurées avec en-têtes en gras
+- Ajoute documentation complète sur les tirets Markdown"
+git push origin main
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 22h00
+Version: 11.1 (correction séparateur tableau)
+Priorité: CRITIQUE
+Statut: CORRECTION APPLIQUÉE - REDÉMARRER ET TESTER MAINTENANT
+
+EXÉCUTER: .\test-formatage-tables-case25.ps1
+
+═══════════════════════════════════════════════════════════════════════════

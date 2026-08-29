@@ -1,0 +1,147 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    ❌ PROBLÈME: runtime.txt NON DÉTECTÉ PAR RENDER       ║
+║    17 AVRIL 2026                                         ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🔴 ERREUR IDENTIFIÉE
+
+Logs Render montrent:
+"==> Using Python version 3.14.3 (default)"
+
+Au lieu de:
+"==> Using Python version 3.11.9"
+
+═══════════════════════════════════════════════════════════
+
+🔍 CAUSE
+
+runtime.txt n'est PAS détecté par Render.
+
+Possibilités:
+1. Fichier pas encore sur GitHub (commit pas terminé)
+2. Fichier dans mauvais emplacement
+3. Render n'a pas rebuild après le commit
+
+═══════════════════════════════════════════════════════════
+
+✅ VÉRIFICATION IMMÉDIATE
+
+1️⃣  Vérifier sur GitHub:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+   Vous devez voir runtime.txt À LA RACINE:
+   
+   ├── runtime.txt              ← DOIT ÊTRE LÀ
+   ├── requirements_render.txt
+   ├── main.py
+   └── ...
+
+2️⃣  Cliquer sur runtime.txt pour vérifier le contenu:
+   
+   Contenu attendu:
+   python-3.11.9
+
+═══════════════════════════════════════════════════════════
+
+❓ AVEZ-VOUS CLIQUÉ "COMMIT CHANGES" ?
+
+Si NON:
+→ Retourner sur GitHub
+→ Terminer l'upload
+→ Cliquer "Commit changes"
+
+Si OUI:
+→ Vérifier que runtime.txt est visible sur GitHub
+→ Forcer un rebuild manuel sur Render
+
+═══════════════════════════════════════════════════════════
+
+🔧 SOLUTION 1: Terminer le Commit
+
+Si vous n'avez pas encore cliqué "Commit changes":
+
+1. Retourner sur GitHub
+2. Terminer l'upload de runtime.txt
+3. Cliquer "Commit changes"
+4. Attendre 30 secondes
+5. Vérifier que runtime.txt apparaît dans la liste
+
+═══════════════════════════════════════════════════════════
+
+🔧 SOLUTION 2: Forcer Rebuild Render
+
+Si runtime.txt est sur GitHub mais Render ne l'a pas détecté:
+
+1. Aller sur: https://dashboard.render.com/
+2. Sélectionner votre service backend
+3. Cliquer "Manual Deploy"
+4. Sélectionner "Deploy latest commit"
+5. Attendre le rebuild (2-5 minutes)
+
+Dans les nouveaux logs, vous devez voir:
+"==> Using Python version 3.11.9"
+
+═══════════════════════════════════════════════════════════
+
+🔧 SOLUTION 3: Vérifier l'Emplacement
+
+Si runtime.txt est dans un sous-dossier au lieu de la racine:
+
+INCORRECT:
+Back-end-python-V0_03_03_2026/
+└── py_backend/
+    └── runtime.txt              ← MAUVAIS EMPLACEMENT
+
+CORRECT:
+Back-end-python-V0_03_03_2026/
+├── runtime.txt                  ← BON EMPLACEMENT
+├── requirements_render.txt
+└── main.py
+
+═══════════════════════════════════════════════════════════
+
+📋 CHECKLIST DE VÉRIFICATION
+
+☐ runtime.txt visible sur GitHub (racine)
+☐ Contenu: python-3.11.9 (sans espace)
+☐ Pas de sous-dossier py_backend/ dans le repo
+☐ Rebuild Render déclenché
+☐ Logs Render: "Using Python version 3.11.9"
+
+═══════════════════════════════════════════════════════════
+
+🎯 PROCHAINE ACTION
+
+1. Vérifier GitHub maintenant:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+2. Si runtime.txt n'est PAS là:
+   → Le commit n'est pas terminé
+   → Retourner sur GitHub et terminer
+
+3. Si runtime.txt EST là:
+   → Forcer rebuild manuel sur Render
+   → Attendre nouveaux logs
+
+═══════════════════════════════════════════════════════════
+
+💬 RÉPONDEZ-MOI
+
+Pouvez-vous vérifier:
+
+1. Est-ce que runtime.txt est visible sur GitHub?
+   (Oui/Non)
+
+2. Avez-vous cliqué "Commit changes"?
+   (Oui/Non)
+
+3. À quel emplacement voyez-vous runtime.txt?
+   (Racine / Sous-dossier / Pas visible)
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+
+═══════════════════════════════════════════════════════════

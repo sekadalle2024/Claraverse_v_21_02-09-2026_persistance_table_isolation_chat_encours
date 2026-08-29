@@ -1,0 +1,141 @@
+feat: Intégration complète du Guide des Commandes avec accordéon
+
+═══════════════════════════════════════════════════════════════════════════
+RÉSUMÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Intégration du workflow n8n "guide_des_commandes" avec affichage en menu
+accordéon interactif dans le frontend Claraverse.
+
+═══════════════════════════════════════════════════════════════════════════
+NOUVEAUX FICHIERS (10)
+═══════════════════════════════════════════════════════════════════════════
+
+Composant React:
+- src/components/Clara_Components/GuideCommandesAccordionRenderer.tsx
+
+Documentation:
+- INTEGRATION_GUIDE_COMMANDES_27_MARS_2026.md
+- RECAP_FINAL_GUIDE_COMMANDES_27_MARS_2026.md
+- 00_GUIDE_COMMANDES_INTEGRATION_27_MARS_2026.txt
+- QUICK_START_GUIDE_COMMANDES.txt
+- INDEX_GUIDE_COMMANDES_27_MARS_2026.md
+- LISTE_FICHIERS_GUIDE_COMMANDES_27_MARS_2026.md
+- 00_LIRE_MAINTENANT_GUIDE_COMMANDES.txt
+- SYNTHESE_ULTRA_RAPIDE_GUIDE_COMMANDES.txt
+- 00_INDEX_DOCUMENTATION_GUIDE_COMMANDES.txt
+
+Tests:
+- test-guide-commandes.ps1
+
+Commit:
+- COMMIT_MESSAGE_GUIDE_COMMANDES.txt
+
+═══════════════════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS (2)
+═══════════════════════════════════════════════════════════════════════════
+
+- src/services/claraApiService.ts
+  • Ajout FORMAT 7 pour détecter la structure Guide des Commandes
+  • Marqueur __GUIDE_COMMANDES_ACCORDION__
+  • Métadonnées complètes
+
+- src/components/Clara_Components/MessageContentRenderer.tsx
+  • Import GuideCommandesAccordionRenderer
+  • Détection et rendu du marqueur
+  • Support mode sombre/clair
+
+═══════════════════════════════════════════════════════════════════════════
+FONCTIONNALITÉS
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Menu accordéon à 3 niveaux (Section → Sub-item → Items)
+✅ Page de couverture élégante pour chaque section
+✅ Cartes d'items avec 8 palettes de couleurs dynamiques
+✅ Support complet du mode sombre/clair
+✅ Animations et transitions fluides
+✅ Gestion d'erreur robuste
+✅ Parsing JSON automatique
+✅ Compatible avec tous les workflows n8n existants
+
+═══════════════════════════════════════════════════════════════════════════
+ARCHITECTURE
+═══════════════════════════════════════════════════════════════════════════
+
+Flux de traitement:
+1. Message utilisateur: "Guide des commandes"
+2. claraApiService.ts → Router Case 29
+3. Appel API: http://localhost:5678/webhook/guide_des_commandes
+4. Réponse n8n avec structure data/Sous-section/Sub-items
+5. normalizeN8nResponse() → FORMAT 7
+6. Marqueur: __GUIDE_COMMANDES_ACCORDION__
+7. MessageContentRenderer détecte et parse
+8. GuideCommandesAccordionRenderer affiche l'accordéon
+
+═══════════════════════════════════════════════════════════════════════════
+TESTS
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Script PowerShell automatisé (test-guide-commandes.ps1)
+✅ 5 tests de validation
+✅ Aucune erreur de compilation
+✅ Compatibilité vérifiée avec workflows existants
+
+═══════════════════════════════════════════════════════════════════════════
+DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Documentation technique complète
+✅ Guides de démarrage rapide
+✅ Index de navigation
+✅ Liste exhaustive des fichiers
+✅ Récapitulatif détaillé
+✅ Commentaires dans le code
+
+═══════════════════════════════════════════════════════════════════════════
+COMPATIBILITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Aucun impact sur les workflows existants:
+   - CIA Cours (FORMAT 5)
+   - CIA QCM (FORMAT 6)
+   - Methodo Audit (FORMAT 5)
+   - Programme de travail (FORMAT 4)
+   - Lead Balance
+   - États Financiers
+   - Recos Revision
+   - Rapport Synthèse CAC
+   - Tous les autres endpoints
+
+═══════════════════════════════════════════════════════════════════════════
+STATISTIQUES
+═══════════════════════════════════════════════════════════════════════════
+
+Code:
+- Lignes de code React/TS: ~450
+- Lignes de code service: ~35
+- Lignes de code rendu: ~20
+- Lignes de script test: ~200
+- Total: ~705 lignes
+
+Documentation:
+- Fichiers: 10
+- Lignes: ~2000
+
+Composants:
+- Composants React: 5
+- Interfaces TypeScript: 7
+
+═══════════════════════════════════════════════════════════════════════════
+BREAKING CHANGES
+═══════════════════════════════════════════════════════════════════════════
+
+Aucun. Toutes les fonctionnalités existantes sont préservées.
+
+═══════════════════════════════════════════════════════════════════════════
+CLOSES
+═══════════════════════════════════════════════════════════════════════════
+
+Intégration du workflow n8n "guide_des_commandes" avec affichage accordéon.
+
+═══════════════════════════════════════════════════════════════════════════

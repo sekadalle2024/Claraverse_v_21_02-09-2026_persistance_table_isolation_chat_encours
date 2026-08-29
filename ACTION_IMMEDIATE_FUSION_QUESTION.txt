@@ -1,0 +1,174 @@
+═══════════════════════════════════════════════════════════════
+  ⚡ ACTION IMMÉDIATE - COLONNES QUESTION NON FUSIONNÉES
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+───────────────────────────────────────────────────────────────
+Diagnostiquer pourquoi les colonnes Question ne sont pas 
+fusionnées et appliquer le correctif.
+
+
+⚡ ÉTAPE 1 : DIAGNOSTIC RAPIDE (2 minutes)
+───────────────────────────────────────────────────────────────
+
+1. Ouvrir la page avec la table problématique
+2. Appuyer sur F12 (Console)
+3. Copier-coller cette commande :
+
+┌─────────────────────────────────────────────────────────────┐
+│ const script = document.createElement('script');            │
+│ script.src = 'diagnostic-fusion-question.js';               │
+│ document.body.appendChild(script);                          │
+└─────────────────────────────────────────────────────────────┘
+
+4. Attendre 2 secondes
+5. Lire les résultats dans la console
+
+
+⚡ ÉTAPE 2 : VÉRIFICATION RAPIDE
+───────────────────────────────────────────────────────────────
+
+Copier-coller dans la console :
+
+┌─────────────────────────────────────────────────────────────┐
+│ console.log('Script chargé:', !!window.ClaraverseTableProcessor); │
+│ console.log('Tables:', document.querySelectorAll('table').length); │
+│ console.log('Fusionnées:', document.querySelectorAll('[rowspan]').length); │
+└─────────────────────────────────────────────────────────────┘
+
+
+📊 INTERPRÉTER LES RÉSULTATS
+───────────────────────────────────────────────────────────────
+
+Résultat 1 : Script chargé: false
+  ❌ PROBLÈME: conso.js n'est pas chargé
+  ✅ SOLUTION: Vérifier le chemin dans index.html
+  
+  <script src="conso.js"></script>
+  
+  Puis recharger (Ctrl+F5)
+
+───────────────────────────────────────────────────────────────
+
+Résultat 2 : Tables: 0
+  ❌ PROBLÈME: Aucune table détectée
+  ✅ SOLUTION: Attendre que la table soit chargée
+  
+  Réessayer après quelques secondes
+
+───────────────────────────────────────────────────────────────
+
+Résultat 3 : Fusionnées: 0
+  ❌ PROBLÈME: Aucune fusion active
+  ✅ SOLUTION: Voir les causes ci-dessous
+
+
+🔍 CAUSES POSSIBLES ET SOLUTIONS
+═══════════════════════════════════════════════════════════════
+
+CAUSE 1 : Valeurs non identiques
+───────────────────────────────────────────────────────────────
+Vérifier avec :
+
+┌─────────────────────────────────────────────────────────────┐
+│ const cells = document.querySelectorAll('tbody tr td:nth-child(2)'); │
+│ const values = Array.from(cells).map(c => c.textContent.trim()); │
+│ console.log('Valeurs:', values);                            │
+│ console.log('Uniques:', [...new Set(values)].length);       │
+└─────────────────────────────────────────────────────────────┘
+
+Si "Uniques: 1" → Les valeurs sont identiques ✅
+Si "Uniques: > 1" → Les valeurs sont différentes ❌
+
+SOLUTION si différentes :
+  - Vérifier les espaces invisibles
+  - Vérifier la ponctuation
+  - Normaliser les valeurs dans la source
+
+───────────────────────────────────────────────────────────────
+
+CAUSE 2 : Colonne non détectée
+───────────────────────────────────────────────────────────────
+Vérifier avec :
+
+┌─────────────────────────────────────────────────────────────┐
+│ document.querySelectorAll('th').forEach((th, i) => {        │
+│   console.log(`${i}. "${th.textContent.trim()}"`);          │
+│ });                                                          │
+└─────────────────────────────────────────────────────────────┘
+
+Chercher "Question" dans les résultats.
+
+SOLUTION si non trouvé :
+  - Vérifier l'orthographe de l'en-tête
+  - Vérifier le pattern dans conso.js ligne 318
+
+───────────────────────────────────────────────────────────────
+
+CAUSE 3 : Table non traitée
+───────────────────────────────────────────────────────────────
+Vérifier avec :
+
+┌─────────────────────────────────────────────────────────────┐
+│ document.querySelectorAll('table').forEach((t, i) => {      │
+│   console.log(`Table ${i}: ID=${t.dataset.tableId}`);       │
+│ });                                                          │
+└─────────────────────────────────────────────────────────────┘
+
+SOLUTION si pas d'ID :
+  - La table n'est pas détectée par conso.js
+  - Vérifier qu'elle contient "Reponse_user" ou est "modelisée"
+
+
+🔧 SOLUTION RAPIDE : FUSION MANUELLE
+═══════════════════════════════════════════════════════════════
+
+Si le diagnostic ne fonctionne pas, forcer la fusion :
+
+┌─────────────────────────────────────────────────────────────┐
+│ // ADAPTER L'INDEX DE LA COLONNE (0, 1, 2, etc.)            │
+│ const COLUMN_INDEX = 1; // Index de la colonne Question     │
+│                                                              │
+│ const table = document.querySelector('table');              │
+│ const tbody = table.querySelector('tbody');                 │
+│ const rows = tbody.querySelectorAll('tr');                  │
+│                                                              │
+│ let firstCell = null;                                       │
+│ rows.forEach((row, i) => {                                  │
+│   const cells = row.querySelectorAll('td');                 │
+│   const cell = cells[COLUMN_INDEX];                         │
+│                                                              │
+│   if (cell) {                                               │
+│     if (!firstCell) {                                       │
+│       firstCell = cell;                                     │
+│       firstCell.setAttribute('rowspan', rows.length);       │
+│       firstCell.style.cssText = `                           │
+│         vertical-align: middle !important;                  │
+│         text-align: center !important;                      │
+│         font-weight: 500;                                   │
+│         padding: 12px;                                      │
+│       `;                                                    │
+│     } else {                                                │
+│       cell.style.display = 'none';                          │
+│       cell.setAttribute('data-merged', 'true');             │
+│     }                                                        │
+│   }                                                          │
+│ });                                                          │
+│                                                              │
+│ console.log('✅ Fusion manuelle appliquée');                │
+└─────────────────────────────────────────────────────────────┘
+
+
+📞 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════
+
+1. Consulter DIAGNOSTIC_FUSION_QUESTION.md
+2. Exécuter le script de diagnostic complet
+3. Copier les logs de la console
+4. Faire une capture d'écran de la table
+
+
+═══════════════════════════════════════════════════════════════
+Date : 8 décembre 2024
+Temps estimé : 5 minutes
+═══════════════════════════════════════════════════════════════

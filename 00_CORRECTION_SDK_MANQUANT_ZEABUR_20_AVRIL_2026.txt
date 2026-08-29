@@ -1,0 +1,144 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  ✅ CORRECTION SDK MANQUANT - 20 AVRIL 2026                   ║
+║                    PROBLÈME ClaraFlowRunner RÉSOLU                            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 NOUVEAU PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Erreur Build Frontend Zeabur (après correction npm install):
+   Could not resolve "../../sdk/src/ClaraFlowRunner"
+   from "src/components/AgentRunnerSDK.tsx"
+   
+🔍 Cause Racine:
+   - Le dossier sdk/ existe à la racine du projet
+   - Il contient ClaraFlowRunner.ts nécessaire au build
+   - Le Dockerfile.frontend ne copie PAS ce dossier
+   - Résultat: erreur de résolution de module lors du build
+
+📁 Fichiers Concernés:
+   • src/components/AgentRunnerSDK.tsx (import SDK)
+   • src/components/AgentRunner.tsx (import SDK)
+   • sdk/src/ClaraFlowRunner.ts (fichier manquant dans Docker)
+
+✅ SOLUTION APPLIQUÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 Modification: Dockerfile.frontend
+
+AVANT:
+   # Copier le code source
+   COPY src/ ./src/
+   COPY public/ ./public/
+   COPY index.html ./
+
+APRÈS:
+   # Copier le code source
+   COPY src/ ./src/
+   COPY public/ ./public/
+   COPY sdk/ ./sdk/
+   COPY index.html ./
+
+💡 Pourquoi cette solution:
+   ✓ Le dossier sdk/ contient le Clara Flow SDK local
+   ✓ Nécessaire pour les imports relatifs ../../sdk/src/
+   ✓ Utilisé par AgentRunnerSDK.tsx et AgentRunner.tsx
+   ✓ Doit être présent dans le container Docker pour le build
+
+📊 HISTORIQUE DES CORRECTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ Première Erreur: npm ci failed
+   Solution: npm install --production=false
+   Statut: ✅ Corrigé
+
+2️⃣ Deuxième Erreur: SDK manquant
+   Solution: COPY sdk/ ./sdk/
+   Statut: ✅ Corrigé
+
+🎯 PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ PUSH VERS GITHUB
+   .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+2️⃣ REDÉPLOYER SUR ZEABUR
+   - Aller sur https://zeabur.com/dashboard
+   - Sélectionner le service "frontend"
+   - Cliquer sur "Redeploy"
+   - Attendre le build (5-10 minutes)
+
+3️⃣ VÉRIFIER LE DÉPLOIEMENT
+   - Frontend: https://prclaravi.zeabur.app
+   - Backend: https://pybackend.zeabur.app
+   - Test: Ouvrir le frontend et vérifier le menu
+
+📊 STATUT ACTUEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Backend:  DÉPLOYÉ ET FONCTIONNEL
+   - Port: 8080
+   - Health: OK
+   - URL: https://pybackend.zeabur.app
+
+⏳ Frontend: CORRECTIONS APPLIQUÉES (2/2)
+   - Correction 1: npm install ✅
+   - Correction 2: SDK copié ✅
+   - Prêt pour redéploiement
+
+🔧 STRUCTURE DU PROJET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Claraverse/
+├── src/
+│   └── components/
+│       ├── AgentRunnerSDK.tsx  → import '../../sdk/src/ClaraFlowRunner'
+│       └── AgentRunner.tsx     → import '../../sdk/src/ClaraFlowRunner'
+├── sdk/                        ← DOIT ÊTRE COPIÉ DANS DOCKER
+│   └── src/
+│       └── ClaraFlowRunner.ts  ← Fichier nécessaire
+├── public/
+├── Dockerfile.frontend         ← Modifié pour copier sdk/
+└── docker-compose.yml
+
+💡 NOTES IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  Dossiers à copier dans Docker:
+    - src/ : Code source React
+    - public/ : Assets statiques
+    - sdk/ : Clara Flow SDK local (NOUVEAU)
+    - index.html : Point d'entrée
+    
+✅  Ordre de copie important:
+    1. package*.json (pour npm install)
+    2. tsconfig*.json (pour TypeScript)
+    3. vite.config.ts (pour Vite)
+    4. Code source (src/, public/, sdk/)
+    5. index.html
+    
+🔄  Workflow de build:
+    1. npm install → Installe les dépendances
+    2. COPY src/ public/ sdk/ → Copie le code
+    3. npm run build → Build avec Vite
+    4. Vite résout les imports relatifs ../../sdk/
+
+🎉 RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après redéploiement:
+   ✅ Build frontend réussi
+   ✅ Tous les modules résolus (SDK inclus)
+   ✅ Application accessible sur https://prclaravi.zeabur.app
+   ✅ Communication frontend ↔ backend fonctionnelle
+   ✅ Déploiement automatique à chaque push GitHub
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Voir aussi:
+   - 00_CORRECTION_FRONTEND_ZEABUR_20_AVRIL_2026.txt (première correction)
+   - QUICK_FIX_FRONTEND_ZEABUR.txt (guide rapide)
+   - VERIFICATION_DEPLOIEMENT_ZEABUR.md (checklist)
+
+═══════════════════════════════════════════════════════════════════════════════

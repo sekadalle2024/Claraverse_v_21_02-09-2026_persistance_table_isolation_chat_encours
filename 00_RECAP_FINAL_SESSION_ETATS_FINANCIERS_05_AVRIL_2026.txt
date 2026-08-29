@@ -1,0 +1,149 @@
+================================================================
+RECAP FINAL SESSION : ETATS FINANCIERS N ET N-1
+================================================================
+
+Date : 04-05 Avril 2026
+Objectif : Resoudre le probleme d'affichage des etats financiers N et N-1
+
+================================================================
+PROBLEME INITIAL
+================================================================
+
+Le backend calcule correctement les etats financiers pour N, N-1 et N-2,
+mais le frontend n'affiche pas ces donnees dans le chat.
+
+Symptomes :
+- Seules les valeurs de N sont affichees
+- Les valeurs de N-1 ne sont pas visibles
+- Le TFT n'est pas affiche
+- Les accordeons ne s'ouvrent pas automatiquement
+
+================================================================
+TRAVAIL ACCOMPLI
+================================================================
+
+1. DIAGNOSTIC COMPLET
+   - Analyse de l'architecture complete
+   - Identification du workflow de bout en bout
+   - Verification du backend et du frontend
+
+2. TEST DU BACKEND
+   - Script cree : Doc_Etat_Fin/Scripts/test-backend-simple.ps1
+   - Resultat : Backend fonctionne parfaitement
+   - HTML genere : 77,323 caracteres
+   - Colonnes N et N-1 presentes
+   - Fichier sauvegarde : C:\Users\LEADER\Desktop\test_etats_financiers_backend.html
+
+3. DOCUMENTATION CREEE
+   - 00_DIAGNOSTIC_AFFICHAGE_FRONTEND_04_AVRIL_2026.txt
+   - 00_SOLUTION_AFFICHAGE_FRONTEND_04_AVRIL_2026.txt
+   - 00_TEST_BACKEND_REUSSI_04_AVRIL_2026.txt
+   - 00_RECAP_SESSION_DIAGNOSTIC_FRONTEND_04_AVRIL_2026.txt
+
+================================================================
+CONCLUSION
+================================================================
+
+LE BACKEND FONCTIONNE CORRECTEMENT
+- Calcule N, N-1 et N-2
+- Genere le HTML avec les accordeons
+- Affiche 2 colonnes (N et N-1)
+- N-2 est utilise pour les calculs mais pas affiche
+
+LE PROBLEME SE SITUE AU NIVEAU DU FRONTEND
+- Le HTML genere n'est pas affiche dans le chat
+- Les accordeons ne sont pas visibles
+- Le fichier public/EtatFinAutoTrigger.js doit etre modifie
+
+================================================================
+SOLUTION PROPOSEE
+================================================================
+
+FICHIER A MODIFIER : public/EtatFinAutoTrigger.js
+
+CHANGEMENTS A APPORTER :
+
+1. Ameliorer la recherche du div parent
+   - Essayer plusieurs selecteurs CSS
+   - Utiliser un selecteur plus generique
+
+2. Ouvrir le premier accordeon par defaut
+   - Ajouter la classe "active" au premier header
+   - Ajouter la classe "active" au premier content
+
+3. Ajouter des logs de debogage
+   - Tracer l'execution complete
+   - Verifier que le HTML est bien insere
+
+================================================================
+PROCHAINES ETAPES
+================================================================
+
+1. Ouvrir le fichier HTML genere sur le bureau
+2. Verifier que les accordeons s'affichent correctement
+3. Verifier que les colonnes N et N-1 sont presentes
+4. Modifier public/EtatFinAutoTrigger.js avec les ameliorations
+5. Tester le workflow complet dans l'application
+6. Verifier que les accordeons s'affichent dans le chat
+
+================================================================
+COMMANDES UTILES
+================================================================
+
+Tester le backend :
+  .\Doc_Etat_Fin\Scripts\test-backend-simple.ps1
+
+Demarrer le backend :
+  python py_backend/main.py
+
+Ouvrir le fichier HTML genere :
+  start C:\Users\LEADER\Desktop\test_etats_financiers_backend.html
+
+================================================================
+FICHIERS IMPORTANTS
+================================================================
+
+Backend :
+- py_backend/etats_financiers.py (endpoint principal)
+- py_backend/etats_financiers_v2.py (generation HTML format liasse)
+- py_backend/tableau_flux_tresorerie_v2.py (calcul TFT)
+- py_backend/correspondances_syscohada.json (mapping postes/comptes)
+
+Frontend :
+- public/EtatFinAutoTrigger.js (gestion upload et affichage)
+- src/services/claraApiService.ts (Case 24: detection "Etat fin")
+- index.html (inclusion du script)
+
+Documentation :
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+- Doc_Etat_Fin/00_INDEX_COMPLET_V2.md
+
+================================================================
+NOTES IMPORTANTES
+================================================================
+
+N-2 DOIT ETRE UTILISE MAIS PAS AFFICHE
+- N-2 est utilise pour calculer les variations de N-1
+- Seules 2 colonnes sont affichees : N et N-1
+- Format liasse officielle SYSCOHADA
+
+FICHIER DE BALANCE DEMO
+- Fichier : py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+- Onglets : "BALANCE 2018", "BALANCE 2017", "BALANCE 2016"
+
+DETECTION AUTOMATIQUE DES ONGLETS
+- Le backend detecte automatiquement les onglets
+- Patterns : "Balance N", "balance n", "BALANCE N", etc.
+
+================================================================
+STATUT ACTUEL
+================================================================
+
+Backend : ✅ OPERATIONNEL
+Frontend : ❌ PROBLEME D'AFFICHAGE
+
+Le diagnostic est complet et la solution est prete a etre appliquee.
+
+================================================================
+FIN DU RECAP
+================================================================

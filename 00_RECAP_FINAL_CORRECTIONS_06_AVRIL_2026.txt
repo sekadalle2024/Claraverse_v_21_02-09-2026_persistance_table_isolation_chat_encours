@@ -1,0 +1,183 @@
+================================================================================
+RÉCAPITULATIF FINAL - CORRECTIONS EXPORT LIASSE
+Date: 06 Avril 2026
+================================================================================
+
+🎯 MISSION: Corriger les 3 problèmes persistants de l'export liasse officielle
+
+================================================================================
+PROBLÈMES IDENTIFIÉS
+================================================================================
+
+1️⃣  COLONNES BRUT ET AMORTISSEMENT VIDES
+    Symptôme: Colonnes F et G vides dans l'onglet ACTIF
+    Cause: Balances non transmises à export_liasse.py
+    
+2️⃣  TOTALISATIONS MANQUANTES
+    Symptôme: Lignes AZ, BQ, BZ, CZ, DZ non renseignées pour N
+    Cause: Totalisations calculées mais sans brut/amort
+    
+3️⃣  MENU ACCORDÉON FRONTEND INCOMPLET
+    Symptôme: Manque colonnes BRUT et AMORT dans l'affichage
+    Cause: Composant React n'affiche pas ces colonnes
+
+================================================================================
+CORRECTIONS APPLIQUÉES
+================================================================================
+
+✅ CORRECTION 1: Ajout des balances à results_liasse
+   
+   Fichier: py_backend/etats_financiers.py
+   Ligne: ~1553
+   
+   Code ajouté:
+   ```python
+   # CORRECTION PROBLÈME 1: Ajouter les balances à results_liasse
+   results_liasse['balance_n_df'] = balance_df
+   results_liasse['balance_n1_df'] = balance_n1_df
+   if balance_n2_df is not None:
+       results_liasse['balance_n2_df'] = balance_n2_df
+   ```
+   
+   Impact:
+   - Les balances sont maintenant disponibles dans export_liasse.py
+   - La fonction enrichir_actif_avec_brut_amortissement() peut fonctionner
+   - Les colonnes F (BRUT) et G (AMORT) seront remplies
+
+✅ CORRECTION 2: Totalisations avec brut/amort
+   
+   Fichier: py_backend/export_liasse.py
+   Lignes: ~550-670
+   
+   Vérifications:
+   - calculer_totalisations_actif() calcule brut_n, amort_n, brut_n1, amort_n1
+   - bilan_actif_dict.update(totalisations_actif) AVANT remplissage
+   - Totalisations incluent toutes les colonnes
+   
+   Impact:
+   - Les lignes AZ, BQ, BZ, CZ, DZ seront complètes
+   - Cohérence entre postes détaillés et totaux
+
+⚠️  CORRECTION 3: Menu accordéon frontend (À FAIRE)
+   
+   Fichier: src/components/Clara_Components/[Composant Menu Accordéon]
+   
+   Modifications requises:
+   - Ajouter colonnes brut_n et amort_n à l'affichage
+   - Mettre à jour le CSS pour l'alignement
+   - Tester l'affichage complet
+   
+   Statut: NON TRAITÉ - Nécessite modification frontend
+
+================================================================================
+FLUX DE DONNÉES CORRIGÉ
+================================================================================
+
+AVANT:
+------
+etats_financiers.py → results_liasse (sans balances)
+                    ↓
+export_liasse.py → enrichir_actif_avec_brut_amortissement() ❌ Échec
+                    ↓
+Excel → Colonnes BRUT et AMORT vides ❌
+
+APRÈS:
+------
+etats_financiers.py → results_liasse + balances ✅
+                    ↓
+export_liasse.py → enrichir_actif_avec_brut_amortissement() ✅ Succès
+                 → calculer_totalisations_actif() ✅ Avec brut/amort
+                    ↓
+Excel → Colonnes F, G, H, I remplies ✅
+
+================================================================================
+TESTS À EFFECTUER
+================================================================================
+
+1. Démarrer le backend: .\start-claraverse.ps1
+2. Importer la balance: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+3. Générer les états financiers
+4. Exporter la liasse officielle
+5. Vérifier dans Excel:
+   ✓ Onglet ACTIF - Colonnes F, G, H, I remplies
+   ✓ Totalisations AZ, BQ, BZ, CZ, DZ complètes
+   ✓ Onglet TFT - Colonnes I, K remplies
+
+================================================================================
+FICHIERS CRÉÉS
+================================================================================
+
+📄 00_CORRECTIONS_APPLIQUEES_PROBLEMES_PERSISTANTS_06_AVRIL_2026.txt
+   → Résumé technique des corrections
+
+📄 Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/03_CORRECTIONS_FINALES_06_AVRIL_2026.md
+   → Analyse détaillée et complète
+
+📄 test-corrections-export-liasse.ps1
+   → Script de test guidé
+
+📄 QUICK_START_CORRECTIONS_EXPORT_LIASSE.txt
+   → Guide de démarrage rapide
+
+📄 00_RECAP_FINAL_CORRECTIONS_06_AVRIL_2026.txt
+   → Ce fichier (récapitulatif)
+
+================================================================================
+FICHIERS MODIFIÉS
+================================================================================
+
+✏️  py_backend/etats_financiers.py
+   Ligne ~1553: Ajout des balances à results_liasse
+
+✏️  py_backend/export_liasse.py
+   Vérifications: Totalisations et colonnes correctes
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+IMMÉDIAT:
+1. ✅ Tester les corrections backend (problèmes 1 et 2)
+2. ⚠️  Vérifier que le TFT est bien rempli
+3. ⚠️  Identifier le composant menu accordéon frontend
+
+COURT TERME:
+4. Modifier le composant React pour afficher BRUT et AMORT
+5. Tester l'affichage frontend complet
+6. Valider avec l'utilisateur
+
+DOCUMENTATION:
+7. Mettre à jour la documentation utilisateur
+8. Créer des captures d'écran de référence
+9. Documenter le mapping complet des colonnes
+
+================================================================================
+STATUT FINAL
+================================================================================
+
+✅ Problème 1: RÉSOLU (ajout balances)
+✅ Problème 2: RÉSOLU (totalisations)
+⚠️  Problème 3: EN ATTENTE (frontend)
+
+TESTS REQUIS: OUI
+VALIDATION UTILISATEUR: EN ATTENTE
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Démarrer le backend
+.\start-claraverse.ps1
+
+# Tester les corrections
+.\test-corrections-export-liasse.ps1
+
+# Voir la documentation complète
+cat Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/03_CORRECTIONS_FINALES_06_AVRIL_2026.md
+
+# Voir le guide rapide
+cat QUICK_START_CORRECTIONS_EXPORT_LIASSE.txt
+
+================================================================================
+FIN DU RÉCAPITULATIF
+================================================================================

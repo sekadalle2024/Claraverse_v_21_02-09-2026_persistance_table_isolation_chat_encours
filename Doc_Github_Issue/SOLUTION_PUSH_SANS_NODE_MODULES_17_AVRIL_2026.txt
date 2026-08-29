@@ -1,0 +1,74 @@
+================================================================
+   SOLUTION PUSH SANS NODE_MODULES - 17 AVRIL 2026
+================================================================
+
+⚠️ PROBLÈME IDENTIFIÉ
+----------------------
+Le push tourne en boucle à cause des fichiers node_modules qui causent
+des avertissements de conversion LF/CRLF.
+
+✅ SOLUTION IMMÉDIATE
+---------------------
+
+ÉTAPE 1: Exclure node_modules et .netlify du push
+--------------------------------------------------
+
+Ajoutez ces dossiers au .gitignore:
+
+echo "node_modules/" >> .gitignore
+echo ".netlify/" >> .gitignore
+echo "deploiement-netlify/.netlify/" >> .gitignore
+
+ÉTAPE 2: Supprimer ces fichiers de l'index Git
+-----------------------------------------------
+
+git rm -r --cached node_modules/ 2>$null
+git rm -r --cached .netlify/ 2>$null
+git rm -r --cached deploiement-netlify/.netlify/ 2>$null
+
+ÉTAPE 3: Désactiver l'avertissement CRLF
+-----------------------------------------
+
+git config core.autocrlf false
+
+ÉTAPE 4: Utiliser le script existant
+-------------------------------------
+
+.\push-commits-multiples-140mb-16-avril-2026.ps1
+
+================================================================
+
+🚀 SCRIPT AUTOMATIQUE CRÉÉ
+---------------------------
+
+Un nouveau script a été créé qui fait tout automatiquement:
+push-sans-node-modules-17-avril-2026.ps1
+
+Lancez simplement:
+.\push-sans-node-modules-17-avril-2026.ps1
+
+================================================================
+
+💡 POURQUOI CETTE SOLUTION
+---------------------------
+
+✓ node_modules ne doit JAMAIS être dans Git
+✓ .netlify contient des fichiers temporaires
+✓ Ces dossiers sont volumineux et inutiles
+✓ Ils causent des problèmes de conversion LF/CRLF
+✓ Le push sera beaucoup plus rapide sans eux
+
+================================================================
+
+📊 TAILLE RÉDUITE
+-----------------
+
+Avant: ~140 MB (avec node_modules)
+Après: ~50-70 MB (sans node_modules)
+
+Temps de push estimé: 5-10 minutes au lieu de 15-20 minutes
+
+================================================================
+Date: 17 Avril 2026
+Solution: Exclusion node_modules et .netlify
+================================================================

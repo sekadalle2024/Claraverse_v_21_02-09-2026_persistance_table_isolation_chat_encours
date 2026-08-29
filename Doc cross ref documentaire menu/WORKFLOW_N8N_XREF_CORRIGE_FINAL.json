@@ -1,0 +1,489 @@
+{
+  "name": "Cross References - Upload Documents (CORRIGÉ)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Upload Documents pour Révision (Syscohada)",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Files",
+              "fieldType": "file",
+              "acceptFileTypes": ".xlsx,.xls,.pdf,.doc,.docx",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Client",
+              "defaultValue": "ORANGE",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Exercice",
+              "defaultValue": "2025",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cycle comptable",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  { "option": "Capitaux propres" },
+                  { "option": "Charge d'exploitation" },
+                  { "option": "Client" },
+                  { "option": "Fournisseur" },
+                  { "option": "Immobilisations" },
+                  { "option": "Impôt et taxes" },
+                  { "option": "Personnel" },
+                  { "option": "Stock" },
+                  { "option": "Trésorerie" },
+                  { "option": "Ventes" }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cross référence",
+              "defaultValue": "[I10]",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Document",
+              "defaultValue": "Proces verbal caisse",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "form-trigger",
+      "name": "Cross references Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [250, 300],
+      "webhookId": "2a0938f8-c21e-4cdb-9e86-d8b91ebf8783",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "queryString": "name='Dossier CAC' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+        "options": {}
+      },
+      "id": "find-dossier-cac",
+      "name": "Find Dossier CAC",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [450, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "leftValue": "={{ $json.files && $json.files.length > 0 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-dossier-cac-exists",
+      "name": "Dossier CAC Exists?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "name": "Dossier CAC",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "options": {}
+      },
+      "id": "create-dossier-cac",
+      "name": "Create Dossier CAC",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [850, 400],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "queryString": "={{ \"name='\" + $('Cross references Form').first().json.Client.trim() + \"-\" + $('Cross references Form').first().json.Exercice.toString().trim() + \"' and '\" + $('Find Dossier CAC').first().json.files[0].id + \"' in parents and trashed=false\" }}",
+        "options": {}
+      },
+      "id": "find-client-folder",
+      "name": "Find Client Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [1050, 200],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "leftValue": "={{ $json.files && $json.files.length > 0 }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-client-exists",
+      "name": "Client Folder Exists?",
+      "type": "n8n-nodes-base.if",
+      "position": [1250, 200],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "name": "={{ $('Cross references Form').first().json.Client.trim() + \"-\" + $('Cross references Form').first().json.Exercice.toString().trim() }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Find Dossier CAC').first().json.files[0].id }}"
+        },
+        "options": {}
+      },
+      "id": "create-client-folder",
+      "name": "Create Client Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [1450, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "jsCode": "const cycles = [\n  \"Capitaux propres\", \"Charge d'exploitation\", \"Client\", \n  \"Fournisseur\", \"Immobilisations\", \"Impôt et taxes\", \n  \"Personnel\", \"Stock\", \"Trésorerie\", \"Ventes\"\n];\n\nconst parentId = $input.item.json.id;\nconst targetCycle = $('Cross references Form').first().json['Cycle comptable'];\n\nreturn cycles.map(cycle => ({\n  json: {\n    cycleName: cycle,\n    parentId: parentId,\n    isTarget: cycle === targetCycle\n  }\n}));"
+      },
+      "id": "generate-cycles-list",
+      "name": "Generate Cycles List",
+      "type": "n8n-nodes-base.code",
+      "position": [1650, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "name": "={{ $json.cycleName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.parentId }}"
+        },
+        "options": {}
+      },
+      "id": "create-cycle-folders",
+      "name": "Create Cycle Folders",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [1850, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "leftValue": "={{ $json.isTarget }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-target-cycle",
+      "name": "Filter Target Cycle",
+      "type": "n8n-nodes-base.if",
+      "position": [2050, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "queryString": "={{ \"name='\" + $('Cross references Form').first().json['Cycle comptable'] + \"' and '\" + $('Find Client Folder').first().json.files[0].id + \"' in parents and trashed=false\" }}",
+        "options": {}
+      },
+      "id": "find-cycle-folder",
+      "name": "Find Cycle Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [1450, 100],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer l'ID du dossier cible\nlet targetFolderId;\n\n// Vérifier d'où viennent les données\nif ($input.item.json.files && $input.item.json.files.length > 0) {\n  // Données de Find Cycle Folder\n  targetFolderId = $input.item.json.files[0].id;\n} else if ($input.item.json.id) {\n  // Données de Filter Target Cycle (nouveau dossier créé)\n  targetFolderId = $input.item.json.id;\n}\n\nconst crossRef = $('Cross references Form').first().json['Cross référence'];\nconst docName = $('Cross references Form').first().json.Document;\nconst fileName = `[${crossRef}]-${docName}`;\n\nreturn {\n  json: {\n    targetFolderId: targetFolderId,\n    fileName: fileName\n  }\n};"
+      },
+      "id": "prepare-upload-data",
+      "name": "Prepare Upload Data",
+      "type": "n8n-nodes-base.code",
+      "position": [2450, 200],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "name": "={{ $json.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.targetFolderId }}"
+        },
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "id": "upload-file-to-drive",
+      "name": "Upload File to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [2650, 200],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {},
+      "id": "merge-branches",
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.merge",
+      "position": [2250, 200],
+      "typeVersion": 2.1
+    }
+  ],
+  "connections": {
+    "Cross references Form": {
+      "main": [
+        [
+          {
+            "node": "Find Dossier CAC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Dossier CAC": {
+      "main": [
+        [
+          {
+            "node": "Dossier CAC Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dossier CAC Exists?": {
+      "main": [
+        [
+          {
+            "node": "Find Client Folder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Dossier CAC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Dossier CAC": {
+      "main": [
+        [
+          {
+            "node": "Find Client Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Client Folder": {
+      "main": [
+        [
+          {
+            "node": "Client Folder Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Client Folder Exists?": {
+      "main": [
+        [
+          {
+            "node": "Find Cycle Folder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Client Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Client Folder": {
+      "main": [
+        [
+          {
+            "node": "Generate Cycles List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Cycles List": {
+      "main": [
+        [
+          {
+            "node": "Create Cycle Folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Cycle Folders": {
+      "main": [
+        [
+          {
+            "node": "Filter Target Cycle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Target Cycle": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Find Cycle Folder": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
+      "main": [
+        [
+          {
+            "node": "Prepare Upload Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Upload Data": {
+      "main": [
+        [
+          {
+            "node": "Upload File to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9131465eca0291f1ecef4835bf7bafb685a9cf7920533b0125b3fa5b3b4a5df4"
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-13T00:00:00.000Z",
+  "versionId": "2"
+}

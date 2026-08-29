@@ -1,0 +1,58 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║     🚀 FIX RAPIDE - RENDER DEPLOYMENT (2 MINUTES)        ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+❌ ERREUR ACTUELLE:
+   "Could not open requirements file: requirements_render.txt"
+
+✅ SOLUTION EN 3 COMMANDES:
+
+┌───────────────────────────────────────────────────────────┐
+│  1️⃣  OUVRIR POWERSHELL                                    │
+└───────────────────────────────────────────────────────────┘
+
+cd "Doc render deploy"
+
+
+┌───────────────────────────────────────────────────────────┐
+│  2️⃣  LANCER LE SCRIPT DE CORRECTION                       │
+└───────────────────────────────────────────────────────────┘
+
+.\fix-requirements-render.ps1
+
+
+┌───────────────────────────────────────────────────────────┐
+│  3️⃣  REDÉPLOYER SUR RENDER                                │
+└───────────────────────────────────────────────────────────┘
+
+1. Aller sur: https://dashboard.render.com
+2. Cliquer sur votre service
+3. Manual Deploy → Deploy latest commit
+4. Attendre 3-5 minutes
+
+✅ C'EST TOUT!
+
+═══════════════════════════════════════════════════════════
+
+📊 CE QUE LE SCRIPT FAIT:
+
+✅ Clone le repo backend GitHub
+✅ Copie requirements_render.txt à la racine
+✅ Commit et push automatiquement
+✅ Nettoie tout après
+
+═══════════════════════════════════════════════════════════
+
+🎯 RÉSULTAT ATTENDU:
+
+Logs Render (après):
+✅ "pip install -r requirements_render.txt"
+✅ "Successfully installed fastapi uvicorn pydantic..."
+✅ "Build successful"
+✅ "Service started"
+
+═══════════════════════════════════════════════════════════
+
+⏱️  TEMPS TOTAL: 2 minutes

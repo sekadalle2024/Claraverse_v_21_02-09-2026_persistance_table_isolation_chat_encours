@@ -1,0 +1,133 @@
+═══════════════════════════════════════════════════════════════════
+🚀 SOLUTION DÉPLOIEMENT ZEABUR - 20 AVRIL 2026
+═══════════════════════════════════════════════════════════════════
+
+📊 STATUT ACTUEL
+═══════════════════════════════════════════════════════════════════
+
+✅ BACKEND:  FONCTIONNE
+   - Port: 8080
+   - URL: https://pybackend.zeabur.app
+   - Status: Running
+   - Logs: Uvicorn OK
+
+❌ FRONTEND: BLOQUÉ AU BUILD
+   - Étape: #7 extracting
+   - Problème: Build incomplet
+   - Cause probable: Configuration Nginx
+
+═══════════════════════════════════════════════════════════════════
+🎯 SOLUTION EN 3 ÉTAPES
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: VÉRIFIER nginx.conf À LA RACINE                       │
+└─────────────────────────────────────────────────────────────────┘
+
+PROBLÈME:
+Si un fichier nginx.conf existe à la racine du projet, il entre
+en conflit avec la configuration générée dans Dockerfile.frontend
+
+ACTION:
+1. Vérifier si nginx.conf existe à la racine
+2. Si oui, le supprimer (la config est dans Dockerfile.frontend)
+
+COMMANDE:
+Remove-Item nginx.conf -ErrorAction SilentlyContinue
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: OPTIMISER Dockerfile.frontend                         │
+└─────────────────────────────────────────────────────────────────┘
+
+PROBLÈME:
+Le build peut être trop long ou manquer de ressources
+
+SOLUTION:
+Simplifier le Dockerfile pour Zeabur
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: CONFIGURATION ZEABUR                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+VÉRIFIER DANS ZEABUR DASHBOARD:
+
+Frontend Service:
+├── Build Method: Docker Compose
+├── Service Name: frontend  ← IMPORTANT
+├── Port: 80
+└── Root Directory: /
+
+Backend Service:
+├── Build Method: Docker Compose
+├── Service Name: backend  ← IMPORTANT
+├── Port: 8080
+└── Root Directory: /
+
+═══════════════════════════════════════════════════════════════════
+🔧 ACTIONS IMMÉDIATES
+═══════════════════════════════════════════════════════════════════
+
+1️⃣ VÉRIFIER nginx.conf
+   .\Doc zeabur docker\Scripts\verifier-nginx-conf.ps1
+
+2️⃣ PUSH CORRECTIONS
+   .\Doc zeabur docker\Scripts\push-correction-zeabur.ps1
+
+3️⃣ REDÉPLOYER FRONTEND
+   - Aller sur Zeabur Dashboard
+   - Service Frontend → Settings
+   - Cliquer "Redeploy"
+
+═══════════════════════════════════════════════════════════════════
+📋 CHECKLIST DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════
+
+AVANT PUSH:
+□ nginx.conf supprimé (si existe)
+□ Dockerfile.frontend optimisé
+□ docker-compose.yml correct
+□ Variables d'environnement configurées
+
+CONFIGURATION ZEABUR:
+□ Frontend: Service Name = "frontend"
+□ Frontend: Port = 80
+□ Backend: Service Name = "backend"
+□ Backend: Port = 8080
+□ Domaines configurés
+
+APRÈS DÉPLOIEMENT:
+□ Frontend: Status = Running
+□ Backend: Status = Running
+□ Frontend accessible: https://prclaravi.zeabur.app
+□ Backend accessible: https://pybackend.zeabur.app
+□ Pas d'erreur CORS
+
+═══════════════════════════════════════════════════════════════════
+🎯 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════
+
+# Vérifier nginx.conf
+Test-Path nginx.conf
+
+# Supprimer nginx.conf si existe
+Remove-Item nginx.conf -Force
+
+# Push corrections
+git add .
+git commit -m "fix: optimisation Dockerfile.frontend pour Zeabur"
+git push origin main
+
+# Vérifier déploiement
+curl https://pybackend.zeabur.app/health
+curl https://prclaravi.zeabur.app
+
+═══════════════════════════════════════════════════════════════════
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════
+
+Si le problème persiste:
+1. Vérifier les logs Zeabur du frontend
+2. Vérifier la configuration du service
+3. Essayer un rebuild complet
+
+═══════════════════════════════════════════════════════════════════

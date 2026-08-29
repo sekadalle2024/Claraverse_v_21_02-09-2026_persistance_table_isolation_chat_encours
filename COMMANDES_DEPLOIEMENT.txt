@@ -1,0 +1,226 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║           📋 COMMANDES NETLIFY - COPIER-COLLER 📋           ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+🚀 DÉPLOIEMENT (CHOISIR UNE OPTION)
+═══════════════════════════════════════════════════════════════
+
+OPTION 1 : Script automatique (Recommandé) ⭐
+──────────────────────────────────────────────
+.\deploy-now.ps1
+
+
+OPTION 2 : Commande directe
+──────────────────────────────────────────────
+netlify deploy --prod --dir=dist
+
+
+OPTION 3 : Script complet (avec build)
+──────────────────────────────────────────────
+.\deploy-netlify-update.ps1
+
+
+OPTION 4 : Déploiement de test d'abord
+──────────────────────────────────────────────
+netlify deploy --dir=dist
+# Puis si OK :
+netlify deploy --prod --dir=dist
+
+
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════
+
+# Voir le statut du site
+netlify status
+
+# Voir les logs de déploiement
+netlify logs
+
+# Ouvrir le dashboard Netlify
+netlify open
+
+# Lister tous les sites
+netlify sites:list
+
+# Voir les déploiements récents
+netlify deploys:list
+
+
+🛠️ BUILD LOCAL
+═══════════════════════════════════════════════════════════════
+
+# Build de production
+npm run build
+
+# Preview local du build
+npm run preview
+
+# Développement local
+npm run dev
+
+
+🔐 AUTHENTIFICATION
+═══════════════════════════════════════════════════════════════
+
+# Se connecter à Netlify
+netlify login
+
+# Voir l'utilisateur actuel
+netlify status
+
+# Lier le projet à un site existant
+netlify link
+
+
+⚙️ CONFIGURATION
+═══════════════════════════════════════════════════════════════
+
+# Initialiser un nouveau site
+netlify init
+
+# Configurer les variables d'environnement
+netlify env:set VARIABLE_NAME "valeur"
+
+# Lister les variables d'environnement
+netlify env:list
+
+# Voir la configuration actuelle
+netlify status
+
+
+📊 MONITORING
+═══════════════════════════════════════════════════════════════
+
+# Voir les logs en temps réel
+netlify logs --live
+
+# Voir les logs de fonction
+netlify functions:log
+
+# Voir les métriques
+netlify open:admin
+
+
+🔄 GESTION DES DÉPLOIEMENTS
+═══════════════════════════════════════════════════════════════
+
+# Annuler le dernier déploiement
+netlify rollback
+
+# Voir l'historique des déploiements
+netlify deploys:list
+
+# Créer un déploiement avec message
+netlify deploy --prod --dir=dist --message="Mise à jour Mars 2026"
+
+
+🌐 OUVRIR DANS LE NAVIGATEUR
+═══════════════════════════════════════════════════════════════
+
+# Ouvrir le site en production
+start https://prclaravi.netlify.app
+
+# Ouvrir le dashboard
+netlify open
+
+# Ouvrir les paramètres du site
+netlify open:site
+
+
+🧹 NETTOYAGE
+═══════════════════════════════════════════════════════════════
+
+# Nettoyer le dossier de build
+Remove-Item -Recurse -Force dist
+
+# Nettoyer node_modules
+Remove-Item -Recurse -Force node_modules
+
+# Réinstaller les dépendances
+npm install
+
+
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════
+
+# Vérifier la version de Netlify CLI
+netlify --version
+
+# Mettre à jour Netlify CLI
+npm install -g netlify-cli@latest
+
+# Vérifier la connexion
+netlify status
+
+# Relancer l'authentification
+netlify logout
+netlify login
+
+
+📦 BUILD ET DÉPLOIEMENT COMPLET
+═══════════════════════════════════════════════════════════════
+
+# Séquence complète
+npm run build
+netlify deploy --dir=dist
+# Vérifier le preview
+netlify deploy --prod --dir=dist
+
+
+🎯 WORKFLOW RAPIDE
+═══════════════════════════════════════════════════════════════
+
+# 1. Développement
+npm run dev
+
+# 2. Build
+npm run build
+
+# 3. Preview local
+npm run preview
+
+# 4. Déploiement
+.\deploy-now.ps1
+
+# 5. Vérification
+netlify status
+netlify logs
+
+
+📝 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════
+
+# Aide générale
+netlify help
+
+# Aide sur une commande spécifique
+netlify deploy --help
+
+# Version de Netlify CLI
+netlify --version
+
+# Informations du site
+netlify status
+
+
+🔗 LIENS RAPIDES
+═══════════════════════════════════════════════════════════════
+
+Site production : https://prclaravi.netlify.app
+Dashboard       : https://app.netlify.com/projects/prclaravi
+Documentation   : https://docs.netlify.com/
+CLI Reference   : https://cli.netlify.com/
+
+
+⚡ COMMANDE RECOMMANDÉE POUR DÉPLOYER MAINTENANT
+═══════════════════════════════════════════════════════════════
+
+.\deploy-now.ps1
+
+
+═══════════════════════════════════════════════════════════════
+Copiez-collez simplement la commande dont vous avez besoin !
+═══════════════════════════════════════════════════════════════

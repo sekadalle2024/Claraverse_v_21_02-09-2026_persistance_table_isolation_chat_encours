@@ -1,0 +1,78 @@
+============================================================
+   FIX FUSION COLONNE QUESTION - V1.4 APPLIQUÉ
+============================================================
+
+PROBLÈME CORRIGÉ:
+Les cellules de la colonne "Question" n'étaient pas fusionnées.
+Chaque ligne affichait la même question au lieu d'une seule
+cellule fusionnée centrée verticalement.
+
+SPÉCIFICATION:
+- Chaque table = 1 question avec plusieurs options
+- Les cellules de la colonne Question doivent être fusionnées
+- Utiliser la valeur de la première cellule
+- Texte centré verticalement au milieu de la cellule fusionnée
+
+============================================================
+                 MODIFICATIONS APPLIQUÉES
+============================================================
+
+1. menu_cia.js (V1.3 → V1.4):
+   - Nouvelle fonction mergeQuestionColumn()
+   - Nouvelle fonction mergeRefQuestionColumn()
+   - Appel dans showResultatFinal()
+
+2. fix-menu-cia-v3-final.js (V3.1 → V3.2):
+   - Appel de mergeQuestionColumn() si disponible
+   - Appel de mergeRefQuestionColumn() si disponible
+
+============================================================
+                    ÉTAPES DE TEST
+============================================================
+
+1. VIDER LE CACHE (Ctrl+Shift+R)
+
+2. Générer un questionnaire CIA avec plusieurs tables
+
+3. Clic droit > "📊 Résultat final"
+
+4. VÉRIFIER:
+   - La colonne Question affiche UNE seule cellule fusionnée
+   - Le texte est centré verticalement
+   - La colonne Ref_question est aussi fusionnée
+
+============================================================
+                 EXEMPLE VISUEL
+============================================================
+
+AVANT (bug):
+┌─────────────┬──────────────────────────────┬────────┐
+│ Ref Question│ Question                     │ Option │
+├─────────────┼──────────────────────────────┼────────┤
+│ Q1          │ Quelle est la bonne réponse? │ A      │
+│ Q1          │ Quelle est la bonne réponse? │ B      │
+│ Q1          │ Quelle est la bonne réponse? │ C      │
+└─────────────┴──────────────────────────────┴────────┘
+
+APRÈS (corrigé):
+┌─────────────┬──────────────────────────────┬────────┐
+│ Ref Question│ Question                     │ Option │
+├─────────────┼──────────────────────────────┼────────┤
+│             │                              │ A      │
+│     Q1      │ Quelle est la bonne réponse? │ B      │
+│             │                              │ C      │
+└─────────────┴──────────────────────────────┴────────┘
+(cellules fusionnées et centrées verticalement)
+
+============================================================
+                 LOGS CONSOLE ATTENDUS
+============================================================
+
+🎯 [CIA Menu] 📊 Affichage du résultat final
+🎯 [CIA Menu] 🔗 Fusion des cellules Question (index DOM X)
+🎯 [CIA Menu] 📝 Question à fusionner: "Quelle est la bonne..."
+🎯 [CIA Menu] ✅ X cellules Question fusionnées
+🎯 [CIA Menu] 🔗 Fusion des cellules Ref_question (index DOM Y)
+🎯 [CIA Menu] ✅ Y cellules Ref_question fusionnées
+
+============================================================

@@ -1,0 +1,149 @@
+═══════════════════════════════════════════════════════════════
+📊 RÉSUMÉ: LOGIQUES FLOWISE.JS
+═══════════════════════════════════════════════════════════════
+
+SITUATION:
+Vous avez 2 fichiers Flowise.js IDENTIQUES (même logique V17.1)
+Seule différence: l'endpoint (Cloud vs Local)
+
+═══════════════════════════════════════════════════════════════
+
+📁 FICHIER ACTUELLEMENT UTILISÉ:
+Flowise.js (racine) → n8n CLOUD
+✅ Chargé par index.html
+✅ Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+
+═══════════════════════════════════════════════════════════════
+
+🔍 LOGIQUE V17.1 (ACTUELLE):
+
+1️⃣ DÉTECTION TABLE FLOWISE
+   ├─ MutationObserver surveille les nouvelles tables
+   ├─ Détecte table avec en-tête "Flowise"
+   └─ Extrait mot-clé de la première cellule
+
+2️⃣ COLLECTE DES TABLES CRITÈRES
+   ├─ Parcourt toutes les divs .prose
+   ├─ Pour chaque div:
+   │  ├─ Regarde la PREMIÈRE table
+   │  ├─ Vérifie: a-t-elle "Rubrique" + "Description"?
+   │  ├─ Cherche le mot-clé dans TOUTES les cellules
+   │  └─ Si trouvé → Collecte TOUTES les tables de cette div
+   └─ Résultat: HTML consolidé de toutes les tables
+
+3️⃣ ENVOI À N8N
+   ├─ Consolide: Tables critères + Table Flowise + user_message
+   ├─ Envoie à n8n Cloud
+   └─ Attend la réponse
+
+═══════════════════════════════════════════════════════════════
+
+✅ CE QUI FONCTIONNE:
+
+✓ Script chargé
+✓ Table Flowise détectée
+✓ Mot-clé extrait: "Gestion stratégique"
+✓ Tables Rubrique+Description trouvées: 2
+✓ Collecte manuelle réussie: 2 tables
+✓ Endpoint n8n accessible (Status 200)
+
+❌ CE QUI NE FONCTIONNE PAS:
+
+✗ n8n Cloud retourne une réponse VIDE
+✗ Erreur: "Failed to execute 'json' on 'Response': Unexpected end of JSON input"
+
+═══════════════════════════════════════════════════════════════
+
+🎯 DIAGNOSTIC:
+
+LE SCRIPT FLOWISE.JS FONCTIONNE PARFAITEMENT!
+
+Le problème est dans la configuration n8n Cloud:
+- Le workflow répond (Status 200)
+- Mais le node "Respond to Webhook" est mal configuré
+- Il retourne une réponse vide au lieu des données
+
+═══════════════════════════════════════════════════════════════
+
+🔧 SOLUTION:
+
+NE PAS MODIFIER FLOWISE.JS!
+
+Actions à faire dans n8n Cloud:
+
+1. Aller sur: https://barow52161.app.n8n.cloud
+
+2. Ouvrir le workflow: "htlm_processor"
+
+3. Cliquer sur le node: "Respond to Webhook"
+
+4. Configurer:
+   Respond With: "First Incoming Item"
+   (PAS "No Response Body")
+
+5. Sauvegarder
+
+6. Tester dans la console:
+   fetch('https://barow52161.app.n8n.cloud/webhook/htlm_processor', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ question: 'Test' })
+   })
+   .then(r => r.text())
+   .then(t => console.log(t.length > 0 ? '✅ OK' : '❌ Vide'));
+
+═══════════════════════════════════════════════════════════════
+
+📊 COMPARAISON DES LOGIQUES:
+
+V17.1 (ACTUELLE):
+├─ Scope: Divs .prose
+├─ Critère: Première table de la div
+├─ Recherche: Toutes cellules de la première table
+└─ Collecte: Toutes tables de la div si match
+
+V18.0 (PROPOSÉE - Non implémentée):
+├─ Scope: Toutes les tables
+├─ Critère: Chaque table individuellement
+├─ Recherche: Toutes lignes de la colonne Description
+└─ Collecte: Table individuelle si match
+
+═══════════════════════════════════════════════════════════════
+
+💡 RECOMMANDATION:
+
+1. Garder V17.1 (actuelle) ✅
+   - Logique éprouvée
+   - Fonctionne correctement
+   - Pas de régression
+
+2. Fixer n8n Cloud ⚡
+   - C'est le vrai problème
+   - Solution simple
+   - 5 minutes max
+
+3. V18.0 plus tard (optionnel)
+   - Après avoir résolu n8n
+   - Si besoin de plus de précision
+   - Tester en parallèle
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CONCLUSION:
+
+Vos fichiers Flowise.js ne sont PAS confondus!
+Ils sont identiques et fonctionnent correctement.
+
+Le problème est uniquement dans la configuration n8n Cloud.
+
+Une fois "Respond to Webhook" configuré correctement,
+tout fonctionnera immédiatement!
+
+═══════════════════════════════════════════════════════════════
+
+FICHIERS DE RÉFÉRENCE:
+- ANALYSE_LOGIQUES_FLOWISE.md (analyse détaillée)
+- FIX_N8N_CLOUD_REPONSE_VIDE.md (guide de configuration)
+- ACTION_N8N_CLOUD_MAINTENANT.txt (actions rapides)
+
+═══════════════════════════════════════════════════════════════

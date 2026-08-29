@@ -1,0 +1,130 @@
+═══════════════════════════════════════════════════════════════
+  DIAGNOSTIC AUTOMATIQUE - DÉTECTION TABLES RAPPORT CONSOLIDÉ
+═══════════════════════════════════════════════════════════════
+
+📅 Date: 25 Mars 2026
+🎯 Objectif: Identifier pourquoi les tables ne sont pas détectées
+
+═══════════════════════════════════════════════════════════════
+  INSTRUCTIONS RAPIDES
+═══════════════════════════════════════════════════════════════
+
+1️⃣  RAFRAÎCHIR LA PAGE
+    → Appuyez sur Ctrl+F5
+
+2️⃣  ATTENDRE 1 MINUTE APRÈS LE CHARGEMENT
+    → Deux alertes vont s'afficher automatiquement
+
+3️⃣  LIRE LES ALERTES
+    
+    📊 ALERTE 1: Informations générales
+    ─────────────────────────────────
+    - Nombre total de tables trouvées
+    - Classes CSS des 3 premières tables
+    - Balises parentes
+    
+    🔍 ALERTE 2: Test des sélecteurs
+    ─────────────────────────────────
+    - Résultats pour 5 sélecteurs CSS différents
+    - Nombre d'éléments trouvés par sélecteur
+
+4️⃣  COMMUNIQUER LES RÉSULTATS
+    → Prenez une capture d'écran OU
+    → Recopiez le texte des alertes
+
+═══════════════════════════════════════════════════════════════
+  QUE VONT AFFICHER LES ALERTES ?
+═══════════════════════════════════════════════════════════════
+
+ALERTE 1 - Exemple:
+┌─────────────────────────────────────────────────────────────┐
+│ 📊 DIAGNOSTIC DES TABLES                                    │
+│                                                              │
+│ ✅ Nombre total de tables: 3                                │
+│                                                              │
+│ 🎯 Classes CSS des 3 premières tables:                      │
+│                                                              │
+│ Table 1:                                                     │
+│   - Classes: claraverse-table                               │
+│   - Parent: DIV                                             │
+│   - Classes parent: message-content                         │
+│                                                              │
+│ Table 2:                                                     │
+│   - Classes: (aucune classe)                                │
+│   - Parent: DIV                                             │
+│   - Classes parent: chat-message                            │
+└─────────────────────────────────────────────────────────────┘
+
+ALERTE 2 - Exemple:
+┌─────────────────────────────────────────────────────────────┐
+│ 🔍 RÉSULTATS DES SÉLECTEURS                                 │
+│                                                              │
+│ table                                                        │
+│   → 3 élément(s) trouvé(s)                                  │
+│                                                              │
+│ .claraverse-table                                           │
+│   → 1 élément(s) trouvé(s)                                  │
+│                                                              │
+│ [data-claraverse-table]                                     │
+│   → 0 élément(s) trouvé(s)                                  │
+│                                                              │
+│ div[class*="table"] table                                   │
+│   → 2 élément(s) trouvé(s)                                  │
+│                                                              │
+│ div[class*="chat"] table                                    │
+│   → 3 élément(s) trouvé(s)                                  │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  POURQUOI CE DIAGNOSTIC ?
+═══════════════════════════════════════════════════════════════
+
+Le système d'export du rapport consolidé CAC ne détecte pas les
+tables dans le chat. Ce diagnostic va identifier:
+
+✅ Combien de tables sont présentes
+✅ Quelles classes CSS elles utilisent
+✅ Quel sélecteur CSS fonctionne le mieux
+
+Une fois ces informations obtenues, je pourrai corriger le code
+dans menu.js pour détecter correctement vos tables.
+
+═══════════════════════════════════════════════════════════════
+  FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+✅ index.html
+   → Script d'alerte automatique ajouté (ligne ~70)
+
+═══════════════════════════════════════════════════════════════
+  DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+📖 Doc export rapport/DIAGNOSTIC_DETECTION_TABLES.md
+   → Explication détaillée du problème et de la solution
+
+📖 Doc export rapport/GUIDE_EXPORT_SYNTHESE_CAC.md
+   → Guide d'utilisation de l'export rapport consolidé
+
+═══════════════════════════════════════════════════════════════
+  APRÈS LE DIAGNOSTIC
+═══════════════════════════════════════════════════════════════
+
+Une fois que vous m'aurez communiqué les résultats des alertes,
+je pourrai:
+
+1. Identifier le bon sélecteur CSS
+2. Corriger la fonction collectFrapPoints() dans menu.js
+3. Tester l'export du rapport consolidé
+4. Valider que toutes les tables sont détectées
+
+═══════════════════════════════════════════════════════════════
+
+🚀 PRÊT À COMMENCER ?
+
+   1. Ctrl+F5 pour rafraîchir
+   2. Attendez 3 secondes
+   3. Lisez les 2 alertes
+   4. Envoyez-moi le contenu
+
+═══════════════════════════════════════════════════════════════

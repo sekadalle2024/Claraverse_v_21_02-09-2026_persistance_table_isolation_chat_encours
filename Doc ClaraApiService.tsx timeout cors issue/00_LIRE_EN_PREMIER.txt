@@ -1,0 +1,221 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 ANALYSE TIMEOUT ET CORS - CLARAAPI SERVICE
+  Date: 15 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ EXÉCUTIF
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME INITIAL:
+  ❌ Timeout configuré à 10 minutes dans claraApiService.ts
+  ❌ MAIS erreur après ~3 minutes dans la pratique
+  ❌ Message d'erreur: "Failed to fetch" ou "Network error"
+
+CAUSE IDENTIFIÉE:
+  ⚠️ Le timeout de 10 minutes dans claraApiService.ts n'est PAS le seul timeout
+  ⚠️ Il existe d'autres timeouts de 30 secondes dans le code
+  ⚠️ Le timeout le plus court prend le dessus
+
+SOLUTION:
+  ✅ Timeout maintenu à 10 minutes dans claraApiService.ts
+  ✅ Message de notification système ajouté
+  ✅ Documentation complète des timeouts multiples
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 ANALYSE DES TIMEOUTS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TIMEOUT PRINCIPAL (claraApiService.ts)
+   ─────────────────────────────────────────────────────────────────────────
+   Fichier: src/services/claraApiService.ts
+   Ligne: 330
+   Valeur: 10 * 60 * 1000 = 600 000 ms = 10 minutes
+   
+   Code:
+   private n8nTimeout = 10 * 60 * 1000; // 10 minutes
+
+2. TIMEOUT DE TEST (claraApiService.ts)
+   ─────────────────────────────────────────────────────────────────────────
+   Fichier: src/services/claraApiService.ts
+   Ligne: 372
+   Valeur: 30 000 ms = 30 secondes
+   
+   Code:
+   const timeoutId = setTimeout(() => controller.abort(), 30000);
+   
+   ⚠️ Ce timeout est utilisé dans testN8nConnection()
+   ⚠️ Il ne devrait PAS affecter les requêtes normales
+
+3. AUTRES TIMEOUTS DANS LE CODE
+   ─────────────────────────────────────────────────────────────────────────
+   
+   a) NodeRegistry.ts (ligne 504)
+      const timeout = node.data.timeout || 30000;
+      → Timeout par défaut de 30 secondes pour les requêtes HTTP
+   
+   b) FlowExecutor.ts (ligne 30)
+      timeout: 30000
+      → Timeout par défaut pour l'exécution des flows
+   
+   c) DEFAULT_CONFIG (constants.ts, ligne 247)
+      defaultTimeout: 30000
+      → Timeout par défaut global de 30 secondes
+   
+   d) nodeDefinitions.ts (ligne 380)
+      defaultValue: 30000
+      → Timeout par défaut pour les nodes HTTP
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 POURQUOI L'ERREUR APRÈS 3 MINUTES ?
+═══════════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE 1: Timeout du navigateur
+  ─────────────────────────────────────────────────────────────────────────
+  Les navigateurs ont leurs propres timeouts pour les requêtes fetch()
+  
+  Chrome/Edge: ~5 minutes par défaut
+  Firefox: ~90 secondes par défaut
+  Safari: ~60 secondes par défaut
+  
+  ⚠️ Le timeout du navigateur peut être plus court que celui configuré
+
+HYPOTHÈSE 2: Timeout du serveur n8n
+  ─────────────────────────────────────────────────────────────────────────
+  n8n a ses propres timeouts configurables:
+  
+  - Timeout de workflow: configurable dans n8n
+  - Timeout de webhook: configurable dans n8n
+  - Timeout de node HTTP: configurable par node
+  
+  ⚠️ Si n8n timeout avant 10 minutes, la requête échoue
+
+HYPOTHÈSE 3: Timeout réseau/proxy
+  ─────────────────────────────────────────────────────────────────────────
+  Les proxies, load balancers, ou firewalls peuvent avoir leurs propres timeouts
+  
+  Exemples courants:
+  - Nginx: 60 secondes par défaut
+  - Apache: 300 secondes par défaut
+  - Cloudflare: 100 secondes pour les requêtes HTTP
+  
+  ⚠️ Un timeout intermédiaire peut couper la connexion
+
+HYPOTHÈSE 4: Timeout CORS preflight
+  ─────────────────────────────────────────────────────────────────────────
+  Les requêtes CORS font d'abord une requête OPTIONS (preflight)
+  
+  Si le preflight timeout ou échoue:
+  - La requête principale n'est jamais envoyée
+  - Erreur "Failed to fetch" ou "Network error"
+  
+  ⚠️ Vérifier la configuration CORS sur n8n
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 SOLUTIONS RECOMMANDÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+SOLUTION 1: Vérifier la configuration n8n
+  ─────────────────────────────────────────────────────────────────────────
+  1. Ouvrir le workflow n8n
+  2. Vérifier le timeout du webhook node
+  3. Augmenter si nécessaire (ex: 15 minutes)
+  4. Vérifier les headers CORS
+
+SOLUTION 2: Vérifier les timeouts intermédiaires
+  ─────────────────────────────────────────────────────────────────────────
+  1. Vérifier si un proxy/load balancer est utilisé
+  2. Augmenter le timeout du proxy si nécessaire
+  3. Vérifier les logs du serveur pour identifier le timeout
+
+SOLUTION 3: Implémenter un système de polling
+  ─────────────────────────────────────────────────────────────────────────
+  Au lieu d'attendre la réponse pendant 10 minutes:
+  
+  1. Envoyer la requête à n8n
+  2. n8n retourne immédiatement un ID de tâche
+  3. Le frontend poll régulièrement pour vérifier l'état
+  4. Quand la tâche est terminée, récupérer le résultat
+  
+  Avantages:
+  - Pas de timeout
+  - Meilleure expérience utilisateur (barre de progression)
+  - Plus robuste
+
+SOLUTION 4: Utiliser des webhooks asynchrones
+  ─────────────────────────────────────────────────────────────────────────
+  1. n8n envoie une notification quand le traitement est terminé
+  2. Le frontend écoute les notifications (WebSocket ou SSE)
+  3. Pas besoin d'attendre la réponse HTTP
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 DIAGNOSTIC RECOMMANDÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Tester avec curl
+  ─────────────────────────────────────────────────────────────────────────
+  curl -X POST https://hkj0631c.rpcl.app/webhook/template \
+    -H "Content-Type: application/json" \
+    -d '{"question":"Test"}' \
+    --max-time 600
+  
+  Si curl timeout aussi après 3 minutes:
+  → Le problème est côté serveur (n8n ou proxy)
+  
+  Si curl fonctionne:
+  → Le problème est côté navigateur
+
+ÉTAPE 2: Vérifier les logs n8n
+  ─────────────────────────────────────────────────────────────────────────
+  1. Ouvrir n8n
+  2. Aller dans Executions
+  3. Vérifier si le workflow s'exécute pendant 10 minutes
+  4. Ou si il timeout avant
+  
+  Si le workflow timeout dans n8n:
+  → Augmenter le timeout dans n8n
+  
+  Si le workflow s'exécute correctement:
+  → Le problème est dans la communication HTTP
+
+ÉTAPE 3: Vérifier les headers CORS
+  ─────────────────────────────────────────────────────────────────────────
+  Dans le webhook node de n8n, vérifier:
+  
+  Response Headers:
+  - Access-Control-Allow-Origin: *
+  - Access-Control-Allow-Methods: POST, OPTIONS
+  - Access-Control-Allow-Headers: Content-Type
+  - Access-Control-Max-Age: 86400
+  
+  Si ces headers manquent:
+  → Ajouter les headers CORS
+
+═══════════════════════════════════════════════════════════════════════════════
+📁 FICHIERS DE DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. 00_LIRE_EN_PREMIER.txt (ce fichier)
+   → Vue d'ensemble du problème
+
+2. ANALYSE_TIMEOUTS_MULTIPLES.md
+   → Analyse détaillée de tous les timeouts
+
+3. DIAGNOSTIC_ERREUR_3_MINUTES.md
+   → Guide de diagnostic étape par étape
+
+4. SOLUTIONS_RECOMMANDEES.md
+   → Solutions détaillées avec exemples de code
+
+5. CONFIGURATION_N8N_CORS.md
+   → Guide de configuration CORS pour n8n
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ STATUT ACTUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Timeout maintenu à 10 minutes dans claraApiService.ts
+✅ Message de notification système ajouté
+✅ Documentation complète créée
+⚠️ Diagnostic nécessaire pour identifier la cause exacte du timeout à 3 minutes
+
+═══════════════════════════════════════════════════════════════════════════════

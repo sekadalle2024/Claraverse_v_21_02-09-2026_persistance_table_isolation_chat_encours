@@ -1,0 +1,113 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    EXECUTER LE SCRIPT - 17 AVRIL 2026                    ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🎯 ACTION IMMEDIATE (30 SECONDES)
+
+═══════════════════════════════════════════════════════════
+
+⚠️  NE PAS COPIER-COLLER LA COMMANDE MANUELLEMENT!
+
+Utilisez le script PowerShell qui fait tout automatiquement.
+
+═══════════════════════════════════════════════════════════
+
+📋 ETAPES SIMPLES
+
+1. OUVRIR POWERSHELL
+   ─────────────────
+   Vous êtes déjà dans PowerShell (bon!)
+
+2. NAVIGUER VERS LE PROJET
+   ───────────────────────
+   cd "H:\ClaraVerse"
+
+3. EXECUTER LE SCRIPT
+   ──────────────────
+   .\Doc` render` deploy\verifier-fichiers-github.ps1
+
+   IMPORTANT: Utiliser les backticks (`) pour échapper les espaces
+   
+   OU SANS BACKTICKS:
+   
+   & ".\Doc render deploy\verifier-fichiers-github.ps1"
+
+═══════════════════════════════════════════════════════════
+
+💡 COPIER-COLLER CES COMMANDES
+
+Commande 1 (naviguer):
+cd "H:\ClaraVerse"
+
+Commande 2 (exécuter le script):
+& ".\Doc render deploy\verifier-fichiers-github.ps1"
+
+═══════════════════════════════════════════════════════════
+
+✅ CE QUE LE SCRIPT VA FAIRE
+
+1. Se connecter à l'API GitHub
+2. Récupérer la liste des fichiers du repository backend
+3. Vérifier si runtime.txt est présent
+4. Vérifier si requirements_render.txt est présent
+5. Afficher le résultat
+
+═══════════════════════════════════════════════════════════
+
+🔍 RESULTAT ATTENDU
+
+Si les fichiers sont présents:
+✓ [OK] runtime.txt PRESENT
+✓ [OK] requirements_render.txt PRESENT
+✓ [OK] main.py PRESENT
+
+Si les fichiers sont absents:
+✗ [MANQUANT] runtime.txt NON TROUVE
+
+═══════════════════════════════════════════════════════════
+
+⚠️  SI LE SCRIPT NE FONCTIONNE PAS
+
+SOLUTION ALTERNATIVE: Vérifier directement dans le navigateur
+
+1. Ouvrir ce lien:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+2. Rafraîchir la page avec Ctrl+F5 (Windows)
+
+3. Vérifier que vous voyez ces fichiers À LA RACINE:
+   - runtime.txt
+   - requirements_render.txt
+   - main.py
+
+═══════════════════════════════════════════════════════════
+
+📞 POURQUOI LE SCRIPT EST MEILLEUR
+
+Au lieu de taper manuellement:
+curl -s "https://api.github.com/repos/..." | ConvertFrom-Json
+
+Le script fait TOUT automatiquement:
+- Pas besoin de taper l'URL
+- Pas de paramètres à renseigner
+- Affichage clair et coloré
+- Vérification automatique des fichiers clés
+
+═══════════════════════════════════════════════════════════
+
+🚀 APRES LA VERIFICATION
+
+Une fois que vous confirmez que les fichiers sont sur GitHub:
+
+1. Aller sur Render: https://dashboard.render.com/
+2. Vérifier les logs de build
+3. Chercher "Using Python version 3.11.9"
+4. Si pas de rebuild automatique: "Manual Deploy" → "Deploy latest commit"
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+
+═══════════════════════════════════════════════════════════

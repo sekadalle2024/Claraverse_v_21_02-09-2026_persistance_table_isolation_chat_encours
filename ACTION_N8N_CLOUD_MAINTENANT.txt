@@ -1,0 +1,73 @@
+🚨 ACTION IMMÉDIATE - n8n CLOUD
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME:
+n8n Cloud répond (Status 200) mais avec une réponse VIDE
+
+CAUSE:
+Node "Respond to Webhook" mal configuré
+
+═══════════════════════════════════════════════════════════════
+
+⚡ SOLUTION EN 3 MINUTES ⚡
+
+1️⃣ OUVRIR N8N CLOUD
+   https://barow52161.app.n8n.cloud
+
+2️⃣ OUVRIR LE WORKFLOW
+   Chercher: "htlm_processor"
+   Vérifier: ACTIF (toggle vert)
+
+3️⃣ CONFIGURER "RESPOND TO WEBHOOK"
+   
+   Cliquer sur le node "Respond to Webhook"
+   
+   ⭐ CHANGER CECI:
+   
+   Respond With: "First Incoming Item"
+   (PAS "No Response Body")
+   
+   Response Code: 200
+   
+   Response Headers (Add Option > Response Headers):
+   - Access-Control-Allow-Origin: *
+   - Content-Type: application/json
+   
+   SAUVEGARDER
+
+4️⃣ TESTER IMMÉDIATEMENT
+   
+   Dans la console du navigateur:
+   
+   fetch('https://barow52161.app.n8n.cloud/webhook/htlm_processor', {
+     method: 'POST',
+     headers: { 'Content-Type': 'application/json' },
+     body: JSON.stringify({ question: 'Test' })
+   })
+   .then(r => r.text())
+   .then(t => console.log(t.length > 0 ? '✅ FONCTIONNE!' : '❌ Vide'));
+
+═══════════════════════════════════════════════════════════════
+
+SI ÇA AFFICHE "✅ FONCTIONNE!":
+Votre n8n Cloud est configuré! La collecte devrait fonctionner.
+
+SI ÇA AFFICHE "❌ Vide":
+Vérifier que "Respond With" = "First Incoming Item"
+PAS "No Response Body"
+
+═══════════════════════════════════════════════════════════════
+
+APRÈS LA CONFIGURATION:
+
+1. Recharger votre page (Ctrl+F5)
+2. Créer une table Flowise
+3. Créer des tables Rubrique+Description
+4. Vérifier les logs dans la console
+
+═══════════════════════════════════════════════════════════════
+
+GUIDE COMPLET:
+Voir: FIX_N8N_CLOUD_REPONSE_VIDE.md
+
+═══════════════════════════════════════════════════════════════

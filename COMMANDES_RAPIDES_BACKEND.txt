@@ -1,0 +1,156 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║              COMMANDES RAPIDES - BACKEND PYTHON                ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+🚀 SAUVEGARDE BACKEND (2 COMMANDES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ VÉRIFIER
+.\verifier-backend-rapide.ps1
+
+2️⃣ SAUVEGARDER
+.\push-backend-github-v10.ps1
+
+
+🔍 VÉRIFICATIONS MANUELLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier le remote actuel
+git remote -v
+
+# Vérifier la branche
+git branch
+
+# Vérifier l'état Git
+git status py_backend/
+
+# Voir les derniers commits
+git log --oneline -3
+
+
+🔧 RESTAURATION REMOTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Si le remote n'est pas restauré automatiquement
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_9_19-04-2026_V5-Export_CAC-V0-Public.git
+
+# Ou utiliser le script
+.\Doc backend github\Scripts\restaurer-remote-original.ps1
+
+
+📊 INFORMATIONS BACKEND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Compter les fichiers
+(Get-ChildItem -Path "py_backend" -Recurse -File).Count
+
+# Taille du dossier
+$size = (Get-ChildItem -Path "py_backend" -Recurse -File | Measure-Object -Property Length -Sum).Sum
+[math]::Round($size / 1MB, 2)
+
+# Fichiers modifiés récemment
+Get-ChildItem -Path "py_backend" -Recurse -File | Where-Object { $_.LastWriteTime -gt (Get-Date).AddDays(-1) }
+
+
+🔗 URLS REPOSITORIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Backend:
+https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026.git
+
+Principal:
+https://github.com/sekadalle2024/Claverse_windows__v_9_19-04-2026_V5-Export_CAC-V0-Public.git
+
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Guide rapide
+GUIDE_RAPIDE_SAUVEGARDE_BACKEND.md
+
+# Index complet
+00_INDEX_SAUVEGARDE_BACKEND_V10.md
+
+# Précautions
+Doc backend github\Documentation\PRECAUTIONS_IMPORTANTES.md
+
+# Troubleshooting
+Doc backend github\Documentation\TROUBLESHOOTING.md
+
+
+🆘 DÉPANNAGE RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Problème: Remote non restauré
+git remote -v
+# Si pointe vers backend, restaurer:
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_9_19-04-2026_V5-Export_CAC-V0-Public.git
+
+# Problème: Push échoue
+# Vérifier connexion GitHub
+git remote -v
+# Vérifier credentials
+# Réessayer avec le script
+
+# Problème: Modifications non commitées
+git status py_backend/
+# Commiter avant de sauvegarder
+
+
+✅ CHECKLIST AVANT SAUVEGARDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Dossier py_backend existe
+□ Modifications importantes effectuées
+□ Pas de fichiers sensibles
+□ Remote pointe vers repo principal
+□ Sur la branche master
+
+
+⚡ WORKFLOW QUOTIDIEN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Matin:
+  → Travailler sur py_backend/
+
+Modifications importantes:
+  → .\verifier-backend-rapide.ps1
+  → .\push-backend-github-v10.ps1
+
+Fin de journée:
+  → .\verifier-backend-rapide.ps1
+  → .\push-backend-github-v10.ps1
+
+
+💡 ASTUCES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Sauvegarder régulièrement (fin de journée)
+• Toujours vérifier avant de sauvegarder
+• Lire les messages du script attentivement
+• Confirmer seulement si sûr
+• Le remote est restauré automatiquement
+
+
+🎯 COMMANDES ESSENTIELLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier
+.\verifier-backend-rapide.ps1
+
+# Sauvegarder
+.\push-backend-github-v10.ps1
+
+# Restaurer remote
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_9_19-04-2026_V5-Export_CAC-V0-Public.git
+
+# Vérifier remote
+git remote -v
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Date: 19 avril 2026
+Version: V10
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

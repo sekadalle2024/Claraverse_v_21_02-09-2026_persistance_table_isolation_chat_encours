@@ -1,0 +1,317 @@
+================================================================================
+📊 RÉCAPITULATIF FINAL - PROBLÈMES 1 ET 3 (06 AVRIL 2026)
+================================================================================
+
+🎯 MISSION: Résoudre les problèmes 1 et 3 de l'export de la liasse officielle
+
+STATUT: ✅ SOLUTIONS IMPLÉMENTÉES - EN ATTENTE DE TEST
+
+================================================================================
+📋 PROBLÈMES TRAITÉS
+================================================================================
+
+PROBLÈME 1: Colonnes BRUT et AMORTISSEMENT vides (Bilan ACTIF)
+───────────────────────────────────────────────────────────────────────────────
+   Symptôme:
+   - Le template Excel a 3 colonnes pour N: BRUT, AMORTISSEMENT, NET
+   - Seule la colonne NET était renseignée
+   - Les colonnes BRUT et AMORTISSEMENT restaient vides
+
+   Solution appliquée:
+   ✅ Fonction d'extraction depuis la balance
+   ✅ Enrichissement du dictionnaire bilan_actif
+   ✅ Fonction de remplissage avec 4 colonnes (E, F, G, H)
+   ✅ Calcul des totalisations avec brut et amortissement
+
+PROBLÈME 3: TFT (Tableau des Flux de Trésorerie) vierge
+───────────────────────────────────────────────────────────────────────────────
+   Symptôme:
+   - L'onglet TFT restait complètement vide après export
+   - Le TFT était pourtant généré (format dict)
+
+   Solution appliquée:
+   ✅ Mapping complet des clés TFT vers REF
+   ✅ Conversion améliorée dict → liste de postes
+   ✅ Logs détaillés pour diagnostic
+   ✅ Remplissage avec colonnes I (N) et K (N-1)
+
+================================================================================
+📁 FICHIERS MODIFIÉS
+================================================================================
+
+py_backend/export_liasse.py
+───────────────────────────────────────────────────────────────────────────────
+   Modifications:
+   - Ajout de extraire_brut_et_amortissement_depuis_balance() (~40 lignes)
+   - Ajout de enrichir_actif_avec_brut_amortissement() (~50 lignes)
+   - Ajout de remplir_onglet_actif_avec_brut_amort() (~60 lignes)
+   - Modification de calculer_totalisations_actif() (~30 lignes)
+   - Amélioration du remplissage TFT (~30 lignes)
+   - Appel de l'enrichissement avant remplissage (~10 lignes)
+   
+   TOTAL: ~220 lignes ajoutées/modifiées
+
+================================================================================
+📁 FICHIERS CRÉÉS
+================================================================================
+
+1. py_backend/test_problemes_1_et_3.py
+   → Script de test Python (~250 lignes)
+   → Teste les 2 problèmes séparément
+   → Génère 2 fichiers Excel de test
+
+2. test-problemes-1-et-3.ps1
+   → Script de test PowerShell (~100 lignes)
+   → Interface conviviale pour exécuter les tests
+   → Affiche un résumé coloré
+
+3. 00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+   → Documentation complète des solutions (~400 lignes)
+   → Détails techniques
+   → Guide de test et vérification
+
+4. QUICK_START_PROBLEMES_1_ET_3.txt
+   → Guide de démarrage rapide (~150 lignes)
+   → 3 étapes simples
+   → Résultats possibles et actions
+
+5. 00_RECAP_FINAL_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+   → Ce fichier récapitulatif
+
+================================================================================
+🚀 COMMENT TESTER (3 MÉTHODES)
+================================================================================
+
+MÉTHODE 1: Script PowerShell (RECOMMANDÉ)
+───────────────────────────────────────────────────────────────────────────────
+   Commande:
+      .\test-problemes-1-et-3.ps1
+   
+   Avantages:
+      ✅ Interface conviviale
+      ✅ Résumé coloré
+      ✅ Instructions claires
+   
+   Fichiers générés:
+      📄 py_backend/test_probleme_1_brut_amort.xlsx
+      📄 py_backend/test_probleme_3_tft.xlsx
+
+MÉTHODE 2: Script Python direct
+───────────────────────────────────────────────────────────────────────────────
+   Commandes:
+      cd py_backend
+      python test_problemes_1_et_3.py
+   
+   Avantages:
+      ✅ Logs détaillés
+      ✅ Diagnostic complet
+
+MÉTHODE 3: Via l'interface web
+───────────────────────────────────────────────────────────────────────────────
+   Étapes:
+      1. Redémarrer le backend: .\start-claraverse.ps1
+      2. Importer la balance: P000 -BALANCE DEMO N_N-1_N-2.xls
+      3. Générer les états financiers
+      4. Exporter la liasse officielle
+      5. Vérifier le fichier Excel
+   
+   Avantages:
+      ✅ Test en conditions réelles
+      ✅ Workflow complet
+
+================================================================================
+📋 VÉRIFICATION MANUELLE
+================================================================================
+
+PROBLÈME 1 - Ouvrir: test_probleme_1_brut_amort.xlsx
+───────────────────────────────────────────────────────────────────────────────
+   Onglet: ACTIF
+   
+   Vérifier les colonnes:
+   ✅ Colonne E: BRUT (Valeurs brutes N)
+   ✅ Colonne F: AMORTISSEMENT (Amortissements N)
+   ✅ Colonne G: NET (Valeurs nettes N)
+   ✅ Colonne H: NET N-1 (Valeurs nettes N-1)
+   
+   Vérifier les lignes:
+   ✅ AI: Terrains
+   ✅ AJ: Bâtiments
+   ✅ AK: Installations et agencements
+   ✅ AL: Matériel
+   ✅ AM: Matériel de transport
+   ✅ AZ: TOTAL ACTIF IMMOBILISÉ
+   ✅ DZ: TOTAL GÉNÉRAL ACTIF
+   
+   Vérifier la cohérence:
+   ✅ NET = BRUT - AMORTISSEMENT
+
+PROBLÈME 3 - Ouvrir: test_probleme_3_tft.xlsx
+───────────────────────────────────────────────────────────────────────────────
+   Onglet: TFT (Tableau des Flux de Trésorerie)
+   
+   Vérifier les colonnes:
+   ✅ Colonne I: Exercice N
+   ✅ Colonne K: Exercice N-1
+   
+   Vérifier les lignes:
+   ✅ ZA: Trésorerie ouverture
+   ✅ ZB: Flux opérationnels
+   ✅ ZC: Flux investissement
+   ✅ ZD: Flux capitaux propres
+   ✅ ZE: Flux capitaux étrangers
+   ✅ ZF: Flux financement
+   ✅ ZG: Variation trésorerie
+   ✅ ZH: Trésorerie clôture
+   ✅ FA à FK: Détails des flux
+
+================================================================================
+⚠️ LIMITATIONS CONNUES
+================================================================================
+
+PROBLÈME 1:
+───────────────────────────────────────────────────────────────────────────────
+   1. Les balances DOIVENT être disponibles dans results
+      → Clés: 'balance_n_df' et 'balance_n1_df'
+      → Si absentes: fallback sur remplissage standard
+
+   2. Le mapping REF → comptes est SIMPLIFIÉ
+      → Peut nécessiter des ajustements selon la structure des comptes
+
+   3. Le frontend (menu accordéon) N'EST PAS MODIFIÉ
+      → Les colonnes BRUT et AMORTISSEMENT ne sont pas affichées
+      → Modification optionnelle pour cohérence complète
+
+PROBLÈME 3:
+───────────────────────────────────────────────────────────────────────────────
+   1. Le TFT doit être généré par etats_financiers_v2.py
+      → Clé: 'tft' dans results
+      → Format: dict avec clés comme 'ZA_tresorerie_ouverture'
+
+   2. Les colonnes I et K sont BASÉES sur les captures d'écran
+      → Vérifier dans le template réel si différent
+
+================================================================================
+🎯 PROCHAINES ÉTAPES
+================================================================================
+
+IMMÉDIAT (5 min):
+───────────────────────────────────────────────────────────────────────────────
+   [ ] Exécuter: .\test-problemes-1-et-3.ps1
+   [ ] Vérifier les fichiers Excel générés
+   [ ] Confirmer que les colonnes sont remplies
+
+COURT TERME (30 min):
+───────────────────────────────────────────────────────────────────────────────
+   [ ] Tester via l'interface web
+   [ ] Vérifier avec une vraie balance
+   [ ] Documenter les résultats avec captures d'écran
+
+MOYEN TERME (optionnel, 1h):
+───────────────────────────────────────────────────────────────────────────────
+   [ ] Modifier le frontend pour afficher BRUT/AMORT
+   [ ] Vérifier les colonnes exactes dans le template
+   [ ] Ajuster le mapping si nécessaire
+
+LONG TERME:
+───────────────────────────────────────────────────────────────────────────────
+   [ ] Intégrer dans le workflow de production
+   [ ] Former les utilisateurs
+   [ ] Créer des tests automatisés
+
+================================================================================
+📊 RÉSUMÉ DES CORRECTIONS
+================================================================================
+
+PROBLÈME 2 (FAIT ✅):
+───────────────────────────────────────────────────────────────────────────────
+   ✅ Totalisations calculées et remplies
+   ✅ AZ, BQ, BZ, CZ, DZ (ACTIF)
+   ✅ DZ, RZ, TZ, UZ, VZ (PASSIF)
+   
+   Fichier: 00_CORRECTION_TOTALISATIONS_APPLIQUEE_06_AVRIL_2026.txt
+
+PROBLÈME 1 (FAIT ✅):
+───────────────────────────────────────────────────────────────────────────────
+   ✅ Extraction brut et amortissement depuis balance
+   ✅ Enrichissement du dictionnaire bilan_actif
+   ✅ Remplissage avec 4 colonnes (E, F, G, H)
+   ✅ Totalisations incluant brut et amortissement
+
+PROBLÈME 3 (FAIT ✅):
+───────────────────────────────────────────────────────────────────────────────
+   ✅ Mapping complet des clés TFT
+   ✅ Conversion améliorée dict → liste
+   ✅ Logs détaillés pour diagnostic
+   ✅ Remplissage avec colonnes I et K
+
+================================================================================
+💡 POINTS CLÉS
+================================================================================
+
+1. Les corrections sont APPLIQUÉES et PRÊTES à être testées
+2. Les tests GÉNÈRENT des fichiers Excel pour vérification manuelle
+3. Les balances DOIVENT être disponibles pour le problème 1
+4. Le TFT DOIT être généré pour le problème 3
+5. Le frontend N'EST PAS MODIFIÉ (optionnel)
+6. Les colonnes sont BASÉES sur les captures d'écran (à vérifier)
+
+================================================================================
+📞 DOCUMENTATION
+================================================================================
+
+Guide de démarrage rapide:
+   QUICK_START_PROBLEMES_1_ET_3.txt
+
+Documentation complète:
+   00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+
+Analyse détaillée:
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+   02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+Solutions précédentes:
+   00_CORRECTION_TOTALISATIONS_APPLIQUEE_06_AVRIL_2026.txt
+
+Architecture:
+   Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+
+================================================================================
+✅ STATUT FINAL
+================================================================================
+
+PROBLÈME 1 (BRUT/AMORTISSEMENT):
+   Code: ✅ IMPLÉMENTÉ
+   Tests: ⏳ EN ATTENTE
+   Frontend: ❌ NON MODIFIÉ (optionnel)
+
+PROBLÈME 2 (TOTALISATIONS):
+   Code: ✅ IMPLÉMENTÉ
+   Tests: ⏳ EN ATTENTE
+   Frontend: ✅ N/A
+
+PROBLÈME 3 (TFT):
+   Code: ✅ IMPLÉMENTÉ
+   Tests: ⏳ EN ATTENTE
+   Frontend: ✅ N/A
+
+GLOBAL:
+   Solutions: ✅ APPLIQUÉES
+   Documentation: ✅ COMPLÈTE
+   Tests: ⏳ À EXÉCUTER
+   Validation: ⏳ À FAIRE
+
+================================================================================
+🚀 ACTION IMMÉDIATE
+================================================================================
+
+Exécutez maintenant:
+
+   .\test-problemes-1-et-3.ps1
+
+Et vérifiez les fichiers Excel générés!
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 19:45
+Agent: Kiro AI Assistant
+Statut: Solutions implémentées - Prêt pour test
+================================================================================

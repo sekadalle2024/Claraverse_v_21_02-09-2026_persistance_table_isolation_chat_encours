@@ -1,0 +1,182 @@
+========================================================================
+   REBUILD HUGGING FACE LANCE - 18 AVRIL 2026
+========================================================================
+
+Date : 18 Avril 2026 - 13:00
+Action : Relance du deploiement avec Dockerfile optimise
+
+========================================================================
+   COMMIT ET PUSH
+========================================================================
+
+Commit : 7e75079
+Message : "Force rebuild on Hugging Face - Optimized Dockerfile without spaCy"
+
+Push vers Hugging Face : REUSSI
+Branch : master -> main
+
+========================================================================
+   OPTIMISATIONS APPLIQUEES
+========================================================================
+
+1. SUPPRESSION DE SPACY
+   - Retire l'installation de spaCy (non necessaire)
+   - Retire le telechargement du modele en_core_web_sm
+   - Gain de temps : ~15-20 minutes
+
+2. SIMPLIFICATION DU BUILD
+   - Utilisation directe de pip au lieu de uv
+   - Suppression de build-essential
+   - Installation plus rapide des dependances
+
+3. PORT HUGGING FACE
+   - Port fixe a 7860 (standard Hugging Face Spaces)
+   - Variables d'environnement optimisees
+
+4. HEALTHCHECK OPTIMISE
+   - Timeout reduit de 30s a 10s
+   - Verification sur le port 7860
+
+========================================================================
+   TEMPS DE BUILD ESTIME
+========================================================================
+
+Ancien temps : 30+ minutes (timeout)
+Nouveau temps estime : 5-10 minutes
+
+Dependances principales :
+- FastAPI, Uvicorn : ~1 min
+- Pandas, NumPy, OpenPyXL : ~2-3 min
+- PyPDF2, python-docx : ~1 min
+- Autres dependances : ~1 min
+- Build Docker : ~1-2 min
+
+Total : ~5-8 minutes
+
+========================================================================
+   PROCHAINES ETAPES
+========================================================================
+
+1. ATTENDRE LE BUILD (5-10 minutes)
+   --------------------------------
+   Allez sur : https://huggingface.co/spaces/ohadada/claraverse-backend
+   
+   Cliquez sur "Logs" pour suivre la progression en temps reel
+
+2. VERIFIER LE DEMARRAGE
+   ----------------------
+   Une fois le build termine (statut "Running"), testez :
+   
+   Health Check :
+   https://ohadada-claraverse-backend.hf.space/health
+   
+   Documentation API :
+   https://ohadada-claraverse-backend.hf.space/docs
+
+3. TESTER LES ENDPOINTS
+   ---------------------
+   Endpoints disponibles :
+   - GET  /health          : Verification du serveur
+   - GET  /docs            : Documentation interactive
+   - POST /upload-balance  : Upload de fichier Excel
+   - POST /analyze-balance : Analyse de balance
+   - GET  /export-excel    : Export Excel
+
+========================================================================
+   SURVEILLANCE DU BUILD
+========================================================================
+
+Etapes du build a surveiller :
+
+1. "Building Docker image..." (2-3 min)
+   - Installation des dependances systeme
+   - Installation de pip
+
+2. "Installing Python packages..." (3-5 min)
+   - Installation de FastAPI, Uvicorn
+   - Installation de Pandas, NumPy
+   - Installation des autres dependances
+
+3. "Starting application..." (30 sec)
+   - Demarrage de Uvicorn
+   - Chargement des routers
+   - Healthcheck
+
+4. "Application is running" (SUCCES !)
+   - Le Space est pret
+   - L'API est accessible
+
+========================================================================
+   EN CAS DE PROBLEME
+========================================================================
+
+Si le build echoue a nouveau :
+
+1. VERIFIER LES LOGS
+   - Onglet "Logs" sur Hugging Face
+   - Chercher les erreurs en rouge
+   - Noter le message d'erreur exact
+
+2. PROBLEMES POSSIBLES
+   
+   a) Dependance manquante :
+      - Ajouter dans requirements.txt
+      - Commit et push
+   
+   b) Port incorrect :
+      - Verifier que le port 7860 est utilise
+      - Verifier la variable PORT dans main.py
+   
+   c) Fichier volumineux :
+      - Verifier .dockerignore
+      - Exclure les fichiers > 10MB
+
+3. CONSULTER LE TROUBLESHOOTING
+   - Fichier : Doc backend huggings face/TROUBLESHOOTING.md
+   - Solutions detaillees pour chaque probleme
+
+========================================================================
+   URLS IMPORTANTES
+========================================================================
+
+Space Hugging Face :
+https://huggingface.co/spaces/ohadada/claraverse-backend
+
+API Health Check :
+https://ohadada-claraverse-backend.hf.space/health
+
+API Documentation :
+https://ohadada-claraverse-backend.hf.space/docs
+
+Logs en temps reel :
+https://huggingface.co/spaces/ohadada/claraverse-backend/logs
+
+========================================================================
+   STATUT ACTUEL
+========================================================================
+
+✅ Dockerfile optimise (sans spaCy)
+✅ Commit cree (7e75079)
+✅ Push vers Hugging Face reussi
+⏳ Build en cours...
+
+Temps ecoule : 0 minutes
+Temps estime restant : 5-10 minutes
+
+========================================================================
+   SUCCES ATTENDU
+========================================================================
+
+Le build devrait maintenant reussir en 5-10 minutes au lieu de timeout.
+
+Une fois termine, vous aurez :
+- Un backend FastAPI fonctionnel
+- Une API REST accessible publiquement
+- Une documentation interactive (Swagger)
+- Des endpoints pour l'analyse de balances comptables
+
+========================================================================
+
+PROCHAINE ACTION : Attendre 5-10 minutes et verifier les logs !
+
+========================================================================

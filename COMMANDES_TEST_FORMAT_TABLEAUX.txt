@@ -1,0 +1,186 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 COMMANDES DE TEST - CORRECTION FORMAT TABLEAUX
+  Date: 31 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 TESTER LE WEBHOOK DIRECTEMENT
+─────────────────────────────────────────────────────────────────────────────
+
+PowerShell:
+  .\test-webhook-programme-controle.ps1
+
+Ce script va :
+  ✓ Appeler le webhook n8n
+  ✓ Afficher la structure exacte de la réponse
+  ✓ Vérifier si la propriété 'data' existe
+  ✓ Lister toutes les clés disponibles
+
+
+🌐 TESTER DANS LE NAVIGATEUR
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir l'application Clara
+2. Appuyer sur F12 pour ouvrir la console
+3. Envoyer le message : "Programme_controle_comptes"
+4. Chercher dans les logs :
+
+   ✅ Succès :
+      "✅ FORMAT 4 DETECTE"
+      "🔄 Début de la conversion en Markdown..."
+      "✅ Conversion terminée: X caractères générés"
+
+   ❌ Échec :
+      "⚠️ Format de réponse n8n non reconnu"
+      "hasData: false"
+
+
+🔧 TESTER DANS N8N
+─────────────────────────────────────────────────────────────────────────────
+
+1. Aller sur : https://t22wtwxl.rpcld.app
+2. Ouvrir le workflow "Programme contrôle comptes"
+3. Cliquer sur "Execute Workflow"
+4. Cliquer sur le node "Parseur JSON + Format"
+5. Vérifier les logs :
+
+   ✅ Succès :
+      "🎯 [SOLUTION FINALE] STRUCTURE RETOURNÉE: [{ data: {...} }] SANS "json""
+      "hasJsonProperty: false"
+      "✅ [SOLUTION FINALE] Format final généré"
+
+   ❌ Échec :
+      "hasJsonProperty: true"
+      "❌ Output LLM vide"
+      "❌ Parse échoué"
+
+
+📊 VÉRIFIER LA STRUCTURE RETOURNÉE
+─────────────────────────────────────────────────────────────────────────────
+
+PowerShell (avec curl):
+  curl -X POST https://t22wtwxl.rpcld.app/webhook/programme_controle_comptes `
+    -H "Content-Type: application/json" `
+    -d '{"message":"Programme_controle_comptes"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
+
+Résultat attendu :
+  [
+    {
+      "data": {
+        "Tableau entete": {...},
+        "Tableau processus": [...]
+      }
+    }
+  ]
+
+Résultat incorrect (si le problème persiste) :
+  [
+    {
+      "json": {
+        "data": {
+          "Tableau entete": {...},
+          "Tableau processus": [...]
+        }
+      }
+    }
+  ]
+
+
+🔍 VÉRIFIER LES LOGS DÉTAILLÉS
+─────────────────────────────────────────────────────────────────────────────
+
+Dans la console du navigateur (F12), filtrer par :
+
+  "FORMAT 4"     → Pour voir la détection
+  "SOLUTION"     → Pour voir les logs du node Code
+  "Markdown"     → Pour voir la conversion
+  "data"         → Pour voir la structure
+
+
+📝 VÉRIFIER L'AFFICHAGE FINAL
+─────────────────────────────────────────────────────────────────────────────
+
+Dans l'application Clara, après avoir envoyé "Programme_controle_comptes" :
+
+  ✅ Succès :
+     - Tableau d'en-tête avec bordures
+     - Colonnes : Rubrique | Description
+     - Tableau des processus avec toutes les colonnes
+     - Pas de texte brut
+
+  ❌ Échec :
+     - Texte brut : "**Tableau entete**:**Etape de mission**: ..."
+     - Pas de bordures de tableau
+     - Tout est collé
+
+
+🚨 DIAGNOSTIC COMPLET
+─────────────────────────────────────────────────────────────────────────────
+
+Si le problème persiste après avoir remplacé le code :
+
+1. Exécuter le script de diagnostic :
+   .\test-webhook-programme-controle.ps1
+
+2. Vérifier la structure retournée :
+   - Si "json" est présent → Le code n'a pas été correctement remplacé
+   - Si "data" n'est pas présent → Problème dans le parsing du LLM
+
+3. Vérifier les logs n8n :
+   - Chercher "hasJsonProperty"
+   - Si "true" → Le code n'a pas été sauvegardé
+
+4. Vérifier les logs du navigateur :
+   - Chercher "FORMAT 4 DETECTE"
+   - Si absent → La structure n'est pas correcte
+
+5. Consulter le guide de diagnostic :
+   00_DIAGNOSTIC_PROBLEME_PERSISTANT.txt
+
+
+🔄 REDÉMARRER LES SERVICES (si nécessaire)
+─────────────────────────────────────────────────────────────────────────────
+
+Si les modifications ne sont pas prises en compte :
+
+1. Dans n8n :
+   - Sauvegarder le workflow
+   - Désactiver puis réactiver le workflow
+   - Ou redémarrer n8n
+
+2. Dans l'application Clara :
+   - Vider le cache du navigateur (Ctrl+Shift+Delete)
+   - Recharger la page (Ctrl+F5)
+   - Ou redémarrer le serveur front-end
+
+
+📋 CHECKLIST DE VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+□ Le code a été copié depuis n8n_node_code_SOLUTION_FINALE.js
+□ Le code a été collé dans le node "Parseur JSON + Format"
+□ Le workflow a été sauvegardé dans n8n
+□ Le test manuel dans n8n affiche "hasJsonProperty: false"
+□ Le test dans l'application affiche "FORMAT 4 DETECTE"
+□ Les tableaux s'affichent correctement
+□ Pas de texte brut visible
+
+
+🎯 COMMANDES RAPIDES DE RÉFÉRENCE
+─────────────────────────────────────────────────────────────────────────────
+
+# Tester le webhook
+.\test-webhook-programme-controle.ps1
+
+# Vérifier la structure avec curl
+curl -X POST https://t22wtwxl.rpcld.app/webhook/programme_controle_comptes -H "Content-Type: application/json" -d '{"message":"Programme_controle_comptes"}'
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+# Ouvrir le guide de diagnostic
+notepad 00_DIAGNOSTIC_PROBLEME_PERSISTANT.txt
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DES COMMANDES
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,210 @@
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║              ✅ DÉPLOIEMENT RAILWAY - SUITE MANUELLE                          ║
+║                           Date: 16 Avril 2026                                 ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+🎉 ÉTAPES ACCOMPLIES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Railway CLI installé (version 4.37.4)
+✅ Connexion à Railway réussie (ohada.save12@gmail.com)
+✅ Projet créé: pybackend
+✅ URL du projet: https://railway.com/project/a3855675-b57e-430b-8f3f-944367fad6a7
+
+
+⚠️ PROBLÈME RENCONTRÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Le déploiement via CLI a rencontré un timeout réseau.
+→ Solution: Continuer via le dashboard Railway (plus stable)
+
+
+🚀 SUITE DU DÉPLOIEMENT VIA DASHBOARD
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Ouvrir le projet Railway
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Aller sur: https://railway.com/project/a3855675-b57e-430b-8f3f-944367fad6a7
+   │                                                                         │
+   │ 2. Vous devriez voir votre projet "pybackend"                          │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 2: Créer un nouveau service
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Cliquer sur "+ New"                                                  │
+   │ 2. Sélectionner "Empty Service"                                         │
+   │ 3. Nom du service: clara-backend-production                             │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 3: Connecter le repository Github
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Dans le service, cliquer sur "Settings"                              │
+   │ 2. Section "Source"                                                     │
+   │ 3. Cliquer sur "Connect Repo"                                           │
+   │ 4. Sélectionner: Back-end-python-V0_03_03_2026                          │
+   │    (https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026)    │
+   │ 5. Branch: main                                                         │
+   │ 6. Root Directory: / (racine)                                           │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 4: Configurer les variables d'environnement
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Onglet "Variables"                                                   │
+   │ 2. Ajouter les variables suivantes:                                     │
+   │                                                                         │
+   │    HOST = 0.0.0.0                                                       │
+   │    PORT = 5000                                                          │
+   │    PYTHONDONTWRITEBYTECODE = 1                                          │
+   │    PYTHONUNBUFFERED = 1                                                 │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 5: Déployer
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Railway détectera automatiquement le Dockerfile                      │
+   │ 2. Le déploiement démarrera automatiquement                             │
+   │ 3. Attendre 3-5 minutes                                                 │
+   │ 4. Vérifier les logs dans l'onglet "Deployments"                        │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 6: Générer un domaine public
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Onglet "Settings"                                                    │
+   │ 2. Section "Networking"                                                 │
+   │ 3. Cliquer sur "Generate Domain"                                        │
+   │ 4. Noter l'URL générée (ex: clara-backend-production.up.railway.app)   │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 7: ⚠️ CRITIQUE - Désactiver "App Sleeping"
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Onglet "Settings"                                                    │
+   │ 2. Section "Sleep Settings"                                             │
+   │ 3. VÉRIFIER que "App Sleeping" est DÉSACTIVÉ (OFF)                      │
+   │                                                                         │
+   │ ⚠️  C'est l'étape la plus importante pour éviter le cold start!         │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+📝 ALTERNATIVE: DÉPLOIEMENT VIA CLI (SI RÉSEAU STABLE)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si votre connexion réseau est stable, vous pouvez réessayer via CLI:
+
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ # Naviguer vers le backend                                              │
+   │ cd py_backend                                                           │
+   │                                                                         │
+   │ # Déployer                                                              │
+   │ railway up                                                              │
+   │                                                                         │
+   │ # Si succès, configurer les variables                                   │
+   │ railway variables set HOST=0.0.0.0                                     │
+   │ railway variables set PORT=5000                                        │
+   │ railway variables set PYTHONDONTWRITEBYTECODE=1                        │
+   │ railway variables set PYTHONUNBUFFERED=1                               │
+   │                                                                         │
+   │ # Générer un domaine                                                    │
+   │ railway domain                                                          │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+🔧 APRÈS LE DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Mettre à jour le frontend
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Fichier: src/services/claraApiService.ts                                │
+   │                                                                         │
+   │ Remplacer:                                                              │
+   │   https://hkj0631c.rpcl.app                                             │
+   │                                                                         │
+   │ Par:                                                                    │
+   │   https://votre-url.up.railway.app                                      │
+   │                                                                         │
+   │ (Utiliser l'URL générée à l'étape 6)                                    │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 2: Tester le backend
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ # Test de santé                                                         │
+   │ curl https://votre-url.up.railway.app/health                            │
+   │                                                                         │
+   │ # Ou via PowerShell                                                     │
+   │ Invoke-WebRequest -Uri "https://votre-url.up.railway.app/health"       │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+✅ CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Service créé sur Railway
+□ Repository Github connecté
+□ Variables d'environnement configurées
+□ Déploiement réussi
+□ Domaine public généré
+□ ⚠️ "App Sleeping" DÉSACTIVÉ (CRITIQUE)
+□ Frontend mis à jour avec la nouvelle URL
+□ Tests réussis
+
+
+💰 COÛT
+═══════════════════════════════════════════════════════════════════════════════
+
+Plan: Railway Hobby
+Prix: $5/mois (fixe)
+Crédit inclus: $5 de ressources
+
+Votre backend (~256 MB RAM) rentre dans le crédit de $5.
+Pas de surcoût prévu.
+
+
+📞 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+   # Voir le statut
+   railway status
+
+   # Voir les logs
+   railway logs --follow
+
+   # Ouvrir le dashboard
+   railway open
+
+   # Voir l'URL
+   railway domain
+
+
+🔗 LIENS UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre projet:
+   https://railway.com/project/a3855675-b57e-430b-8f3f-944367fad6a7
+
+Dashboard Railway:
+   https://railway.app/dashboard
+
+Documentation Railway:
+   https://docs.railway.app/
+
+Support Railway:
+   https://railway.app/help
+
+
+🎉 PRÊT À CONTINUER !
+═══════════════════════════════════════════════════════════════════════════════
+
+Suivez les étapes ci-dessus via le dashboard Railway pour terminer le déploiement.
+
+Le dashboard est plus stable que la CLI pour les connexions réseau instables.
+
+Bon déploiement ! 🚀
+
+
+═══════════════════════════════════════════════════════════════════════════════
+Date: 16 Avril 2026
+Statut: ✅ Railway CLI installé et projet créé
+Action: Continuer via dashboard Railway
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,51 @@
+================================================================
+   QUICK START - WORKFLOW HTTP REQUEST
+================================================================
+
+🚀 3 ÉTAPES SIMPLES
+===================
+
+ÉTAPE 1: IMPORTER LE WORKFLOW
+------------------------------
+1. Ouvrir: https://n8nsqlite.zeabur.app
+2. Menu "Workflows" → "Import from File"
+3. Fichier: workflow_n8n_ouvrir_xref_HTTP_REQUEST.json
+4. Cliquer "Import"
+
+ÉTAPE 2: CONFIGURER LES CREDENTIALS
+------------------------------------
+Si le credential "Google Drive OAuth2" n'existe pas:
+
+1. Menu "Credentials" → "+ Add Credential"
+2. Type: "OAuth2 API"
+3. Ouvrir le fichier local: .env.google-oauth.local
+4. Remplir:
+   - Authorization URL: https://accounts.google.com/o/oauth2/v2/auth
+   - Access Token URL: https://oauth2.googleapis.com/token
+   - Client ID: (voir .env.google-oauth.local)
+   - Client Secret: (voir .env.google-oauth.local)
+   - Scope: https://www.googleapis.com/auth/drive
+   - Auth URI Query Parameters: access_type=offline
+
+4. Cliquer "Connect my account" et autoriser
+
+5. Associer aux nodes:
+   - "Find Dossier CAC"
+   - "Find Document"
+
+ÉTAPE 3: ACTIVER ET TESTER
+---------------------------
+1. Toggle "Active" dans le workflow
+2. Exécuter:
+   ```powershell
+   .\test-workflow-xref-afriland.ps1
+   ```
+
+
+✅ C'EST TOUT !
+===============
+
+Le workflow utilise la même approche que vos workflows
+fonctionnels avec HTTP Request.
+
+================================================================

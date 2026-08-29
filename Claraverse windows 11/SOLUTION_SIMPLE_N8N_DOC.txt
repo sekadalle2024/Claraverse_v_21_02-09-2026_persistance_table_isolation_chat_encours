@@ -1,0 +1,117 @@
+=================================================================
+✅ SOLUTION SIMPLE - N8N_DOC SANS PLANTAGE
+=================================================================
+
+🚨 PROBLÈME : Le script google-drive-downloader.js cause des plantages
+
+✅ SOLUTION : DÉSACTIVÉ temporairement
+
+=================================================================
+📋 RECOMMANDATION FINALE
+=================================================================
+
+Pour n8n_doc, utilisez simplement le **Case 8** existant qui fonctionne déjà :
+
+Le script fix-google-drive-case8.js gère déjà les documents Google Drive
+avec un viewer iframe. C'est plus stable et ne cause pas de plantages.
+
+=================================================================
+🎯 CE QUI FONCTIONNE DÉJÀ
+=================================================================
+
+Dans Modelisation_template_v2.js, le Case 8 détecte n8n_doc et génère :
+
+```javascript
+case 'n8n_doc':
+    // Génère un viewer Google Docs avec iframe
+    const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(docUrl)}&embedded=true`;
+```
+
+C'est une solution simple et stable qui fonctionne sans téléchargement.
+
+=================================================================
+⚡ TESTEZ MAINTENANT
+=================================================================
+
+1. Rechargez la page avec Ctrl+F5
+   http://localhost:5173/test-modelisation-template-v2.html
+
+2. La page devrait fonctionner normalement
+
+3. Le document n8n_doc s'affichera avec le viewer Google Docs standard
+
+=================================================================
+💡 POURQUOI LE TÉLÉCHARGEMENT NE FONCTIONNE PAS
+=================================================================
+
+Problèmes rencontrés :
+1. MutationObserver créait des boucles infinies
+2. Duplications multiples du viewer
+3. Plantages de la page du chat
+4. Conflits avec d'autres scripts
+
+La solution de téléchargement direct est trop complexe et instable
+pour l'environnement actuel.
+
+=================================================================
+✅ SOLUTION RECOMMANDÉE
+=================================================================
+
+Utilisez le **Google Docs Viewer** (Case 8 existant) :
+
+AVANTAGES :
+- ✅ Stable et fiable
+- ✅ Pas de téléchargement nécessaire
+- ✅ Pas de plantages
+- ✅ Fonctionne immédiatement
+- ✅ Déjà implémenté
+
+INCONVÉNIENTS :
+- ⚠️ Dépend de Google Docs Viewer
+- ⚠️ Peut avoir des limitations d'affichage
+- ⚠️ Nécessite que le document soit public
+
+=================================================================
+🔧 SI VOUS VOULEZ AMÉLIORER L'AFFICHAGE
+=================================================================
+
+Option 1 : Utiliser un iframe direct (si le document est public)
+```html
+<iframe src="https://docs.google.com/document/d/DOC_ID/preview"></iframe>
+```
+
+Option 2 : Utiliser Google Docs Viewer
+```html
+<iframe src="https://docs.google.com/viewer?url=DOC_URL&embedded=true"></iframe>
+```
+
+Option 3 : Lien direct vers Google Docs
+```html
+<a href="https://docs.google.com/document/d/DOC_ID/edit">Ouvrir le document</a>
+```
+
+=================================================================
+📊 ÉTAT ACTUEL
+=================================================================
+
+Fichier modifié : index.html
+Script désactivé : google-drive-downloader.js
+Solution active : Case 8 (Google Docs Viewer)
+
+Le Case 8 dans Modelisation_template_v2.js gère déjà n8n_doc
+et génère un viewer fonctionnel.
+
+=================================================================
+🎯 CONCLUSION
+=================================================================
+
+La solution de téléchargement direct était trop ambitieuse.
+Le Google Docs Viewer (Case 8) est plus simple et plus stable.
+
+Utilisez-le tel quel, il fonctionne correctement pour afficher
+les documents Google Drive.
+
+=================================================================
+Date : 13 décembre 2025
+Statut : ✅ SCRIPT DÉSACTIVÉ - PAGE STABLE
+=================================================================

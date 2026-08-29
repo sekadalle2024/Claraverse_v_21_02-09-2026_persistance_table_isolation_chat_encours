@@ -1,0 +1,77 @@
+feat: Configuration timeout 3 minutes et notification système avec WhatsApp
+
+## 🎯 Objectif
+
+Configurer le timeout à 3 minutes et ajouter une notification système claire
+en cas de surcharge avec le numéro WhatsApp de l'éditeur.
+
+## ✅ Modifications
+
+### Code Source
+- **src/services/claraApiService.ts**
+  - Ligne 330: Timeout réduit de 10 minutes à 3 minutes
+  - Lignes 2078-2095: Message de notification système en français
+
+### Fonctionnalités
+- ✅ Timeout configuré à 3 minutes (180 000 ms)
+- ✅ Message de notification en français
+- ✅ Numéro WhatsApp de l'éditeur: +225 05 44 13 07 98
+- ✅ Tableau d'informations techniques professionnel
+
+## 📱 Message de Notification
+
+En cas de timeout, l'utilisateur voit maintenant:
+
+```markdown
+## Notification système
+
+⏱️ **Délai d'attente dépassé** (>3 minutes)
+
+Nous sommes en surcharge de requêtes.
+
+**Merci de notifier l'événement à l'éditeur par WhatsApp :**
+
+📱 **+225 05 44 13 07 98**
+
+---
+
+### Informations techniques
+
+| Rubrique | Description |
+|----------|-------------|
+| **Endpoint** | https://hkj0631c.rpcl.app/webhook/... |
+| **Timeout configuré** | 3 minutes |
+| **Type d'erreur** | Délai d'attente dépassé |
+```
+
+## 📚 Documentation
+
+Documentation complète créée:
+- 00_LIRE_EN_PREMIER_TIMEOUT.txt
+- 00_INDEX_CORRECTION_TIMEOUT_15_AVRIL_2026.md
+- 00_SOLUTION_TIMEOUT_CLARAAPI_15_AVRIL_2026.txt
+- SYNTHESE_VISUELLE_TIMEOUT_15_AVRIL_2026.txt
+- QUICK_TEST_TIMEOUT_CLARAAPI.txt
+- COMMANDES_RAPIDES_TIMEOUT.txt
+- LISTE_FICHIERS_TIMEOUT_15_AVRIL_2026.md
+
+## 🧪 Tests
+
+Vérification:
+```javascript
+claraApiService.getN8nTimeout()
+// → Résultat: 180000 (3 minutes)
+```
+
+## 📊 Impact
+
+- Meilleure expérience utilisateur en cas de surcharge
+- Message clair et professionnel en français
+- Contact direct avec l'éditeur via WhatsApp
+- Informations techniques structurées
+
+## 🔗 Références
+
+- Issue: Timeout et notification système
+- Date: 15 avril 2026
+- Contact: +225 05 44 13 07 98

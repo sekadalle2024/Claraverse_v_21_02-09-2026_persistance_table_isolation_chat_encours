@@ -1,0 +1,72 @@
+🚨 ACTION IMMÉDIATE - DIAGNOSTIC COLLECTE TABLES
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ:
+- Aucune collecte de tables ne se déclenche
+- Aucun log d'appel API n8n
+- Aucune opération enregistrée dans Google Sheets
+
+ÉTAPES À SUIVRE MAINTENANT:
+
+1️⃣ OUVRIR LA CONSOLE DU NAVIGATEUR
+   - F12 ou Ctrl+Shift+I
+   - Onglet "Console"
+
+2️⃣ COPIER-COLLER CE SCRIPT:
+   
+   Ouvrir le fichier: DIAGNOSTIC_URGENT_COLLECTE_TABLES.js
+   Copier TOUT le contenu
+   Coller dans la console
+   Appuyer sur Entrée
+
+3️⃣ ANALYSER LES RÉSULTATS:
+   
+   Le script va vérifier:
+   ✓ Si Flowise.js est chargé
+   ✓ Si des tables sont présentes
+   ✓ Si la table "Flowise" existe
+   ✓ Si les tables "Rubrique + Description" existent
+   ✓ Si le mot-clé est trouvé
+   ✓ Si l'endpoint n8n est accessible
+
+4️⃣ PROBLÈMES POSSIBLES:
+
+   A) Script Flowise.js non chargé
+      → Vérifier index.html contient: <script src="Flowise.js"></script>
+      → Recharger la page (Ctrl+F5)
+
+   B) Table Flowise manquante
+      → Créer une table avec en-tête "Flowise"
+      → Première cellule = mot-clé à rechercher
+
+   C) Tables Rubrique+Description manquantes
+      → Vérifier que vos tables ont ces en-têtes exacts
+      → Vérifier la casse (majuscules/minuscules)
+
+   D) Mot-clé non trouvé
+      → Vérifier que le mot-clé de la table Flowise
+        est bien présent dans la colonne Description
+        des autres tables
+
+   E) Endpoint n8n inaccessible
+      → Démarrer n8n: npm run n8n
+      → Vérifier workflow actif
+      → Vérifier CORS configuré
+
+5️⃣ APRÈS LE DIAGNOSTIC:
+   
+   Partager les résultats de la console pour analyse approfondie
+
+═══════════════════════════════════════════════════════════════
+COMMANDE RAPIDE:
+
+Dans la console du navigateur, taper:
+```javascript
+// Charger et exécuter le diagnostic
+fetch('DIAGNOSTIC_URGENT_COLLECTE_TABLES.js')
+  .then(r => r.text())
+  .then(eval);
+```
+
+Ou simplement copier-coller le contenu du fichier
+═══════════════════════════════════════════════════════════════

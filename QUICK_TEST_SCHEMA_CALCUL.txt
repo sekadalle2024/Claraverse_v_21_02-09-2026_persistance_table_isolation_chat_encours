@@ -1,0 +1,80 @@
+═══════════════════════════════════════════════════════════════════════════════
+⚡ TEST RAPIDE - SCHÉMA DE CALCUL
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF: Vérifier pourquoi aucune table n'est ajoutée
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST RAPIDE (30 SECONDES)
+═══════════════════════════════════════════════════════════════════════════════
+
+□ 1. Appuyez sur F12 (ouvrir la console)
+
+□ 2. Tapez: window.SchemaCalculManager
+   → Doit afficher un objet (pas "undefined")
+
+□ 3. Cliquez sur votre table
+
+□ 4. Faites clic droit → "Ajouter Schéma de calcul"
+
+□ 5. Regardez les messages dans la console
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 MESSAGES POSSIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ "📐 [Schéma Calcul] Ajout du schéma de calcul"
+   → Le module fonctionne
+
+❌ "⚠️ Aucune table sélectionnée"
+   → Cliquez d'abord sur la table
+
+❌ "❌ Le module Schéma de Calcul n'est pas chargé"
+   → Rechargez la page (Ctrl+F5)
+
+❌ "⚠️ Impossible de trouver le conteneur de la table"
+   → Problème de structure HTML
+
+═══════════════════════════════════════════════════════════════════════════════
+⚡ TEST AUTOMATIQUE
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans la console, tapez:
+
+    schemaCalculCommands.processAll()
+
+Regardez les logs:
+
+✅ "Nature de test détectée: Validation"
+   → Parfait! Le schéma devrait être créé
+
+❌ Aucun log
+   → Pas de table 2 avec "Nature de test"
+
+❌ "Aucune table principale trouvée"
+   → La table n'a pas les colonnes Conclusion/Assertion/CTR
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 STRUCTURE MINIMALE REQUISE
+═══════════════════════════════════════════════════════════════════════════════
+
+Vous devez avoir 2 tables:
+
+TABLE 1 (Info):
+┌─────────────────┬──────────────┐
+│ Nature de test  │ Validation   │
+└─────────────────┴──────────────┘
+
+TABLE 2 (Papier de travail):
+┌──────────┬────────────┬────────────┐
+│ Compte   │ Montant    │ Conclusion │  ← Colonne obligatoire!
+└──────────┴────────────┴────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+💡 ASTUCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Si vous voyez "Nature de test détectée" mais pas de table ajoutée:
+→ Vérifiez que votre table principale a une colonne "Conclusion", "Assertion" ou "CTR"
+
+═══════════════════════════════════════════════════════════════════════════════

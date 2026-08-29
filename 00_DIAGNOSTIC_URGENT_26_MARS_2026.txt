@@ -1,0 +1,150 @@
+═══════════════════════════════════════════════════════════════
+   DIAGNOSTIC URGENT - 26 MARS 2026
+═══════════════════════════════════════════════════════════════
+
+PROBLÈMES CONSTATÉS:
+1. Export CAC: "Aucun point d'audit CAC détecté"
+2. Rapports audit: Exportés mais vides
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 1: DIAGNOSTIC BACKEND (2 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+Exécuter le script de diagnostic:
+→ .\diagnostic-export-complet.ps1
+
+Ce script va vérifier:
+✓ Backend actif
+✓ Endpoints disponibles
+✓ Export avec données test
+✓ Fichier menu.js corrigé
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 2: DIAGNOSTIC FRONTEND (3 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir Claraverse: http://localhost:5173
+
+2. Rafraîchir OBLIGATOIREMENT: Ctrl+F5
+
+3. Ouvrir la console: F12 → Onglet Console
+
+4. Exécuter ce code dans la console:
+
+   // Test 1: Compter les tables
+   console.log("Tables totales:", document.querySelectorAll('table').length);
+   console.log("Tables div.prose:", document.querySelectorAll('div.prose table').length);
+   
+   // Test 2: Vérifier les classes des tables
+   const tables = document.querySelectorAll('table');
+   tables.forEach((t, i) => {
+     console.log(`Table ${i+1}:`, t.className);
+     console.log(`  Parent:`, t.parentElement.className);
+   });
+   
+   // Test 3: Vérifier le contenu des tables
+   const firstTable = document.querySelector('table');
+   if (firstTable) {
+     console.log("Première table:", firstTable.textContent.substring(0, 100));
+   }
+
+5. Copier TOUS les résultats
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 3: TESTER L'EXPORT
+═══════════════════════════════════════════════════════════════
+
+1. Dans la console, exécuter:
+
+   // Vérifier que la fonction existe
+   console.log("Menu:", typeof window.claraverseMenu);
+   
+   // Tester la détection
+   const allTables = document.querySelectorAll('div.prose table');
+   console.log("Tables détectées:", allTables.length);
+
+2. Clic droit sur une table → Export Synthèse CAC
+
+3. Noter le message d'erreur EXACT
+
+4. Copier TOUS les logs de la console
+
+═══════════════════════════════════════════════════════════════
+INFORMATIONS À COLLECTER
+═══════════════════════════════════════════════════════════════
+
+Pour chaque problème, noter:
+
+1. BACKEND:
+   □ Backend actif? (oui/non)
+   □ Endpoint accessible? (oui/non)
+   □ Test export réussi? (oui/non)
+   □ Taille fichier test: ___ octets
+
+2. FRONTEND:
+   □ Nombre de tables totales: ___
+   □ Nombre de tables div.prose: ___
+   □ Classes des tables: ___
+   □ Contenu première table: ___
+
+3. EXPORT CAC:
+   □ Message d'erreur: ___
+   □ Logs console: ___
+   □ Tables détectées: ___
+   □ Points collectés: ___
+
+4. RAPPORTS AUDIT:
+   □ Export réussi? (oui/non)
+   □ Fichier créé? (oui/non)
+   □ Taille fichier: ___ octets
+   □ Contenu vide? (oui/non)
+
+═══════════════════════════════════════════════════════════════
+CAUSES POSSIBLES
+═══════════════════════════════════════════════════════════════
+
+EXPORT CAC:
+❌ Tables pas dans div.prose
+❌ Contenu des tables ne correspond pas aux mots-clés
+❌ Fonction de détection ne s'exécute pas
+❌ Cache navigateur pas vidé
+
+RAPPORTS VIDES:
+❌ Extraction du contenu échoue
+❌ Fonction extractFullCellContent ne fonctionne pas
+❌ Backend reçoit des données vides
+❌ Template Word corrompu
+
+═══════════════════════════════════════════════════════════════
+ACTIONS IMMÉDIATES
+═══════════════════════════════════════════════════════════════
+
+SI BACKEND NON ACTIF:
+→ .\stop-claraverse.ps1
+→ .\start-claraverse-conda.ps1
+
+SI CACHE NAVIGATEUR:
+→ Ctrl+Shift+Delete
+→ Vider le cache
+→ Redémarrer le navigateur
+
+SI FICHIER menu.js PAS À JOUR:
+→ Vérifier la date de modification
+→ Comparer avec la version corrigée
+→ Rafraîchir avec Ctrl+F5
+
+═══════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════
+
+1. Exécuter .\diagnostic-export-complet.ps1
+2. Collecter les informations frontend
+3. Me communiquer TOUS les résultats
+4. Je fournirai la solution adaptée
+
+═══════════════════════════════════════════════════════════════
+
+Date: 26 Mars 2026
+Priorité: URGENTE
+Statut: Diagnostic en cours
+

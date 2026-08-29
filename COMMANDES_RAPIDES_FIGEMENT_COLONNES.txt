@@ -1,0 +1,302 @@
+╔════════════════════════════════════════════════════════════════════╗
+║                                                                    ║
+║      ⚡ COMMANDES RAPIDES - FIGEMENT DE COLONNES                  ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+
+📋 COMMANDES POUR TESTER
+═══════════════════════════════════════════════════════════════════
+
+// Dans la console du navigateur sur test-freeze-columns.html
+
+// 1. Vérifier l'état du figement
+const table = document.getElementById('testTable');
+const firstCell = table.querySelector('td');
+console.log('État:', {
+  position: firstCell.style.position,
+  left: firstCell.style.left,
+  zIndex: firstCell.style.zIndex,
+  width: firstCell.offsetWidth
+});
+
+// 2. Forcer le figement en JavaScript
+freezeSelectedColumns();
+
+// 3. Annuler le figement
+unfreezeColumns();
+
+// 4. Mesurer la largeur du tableau vs conteneur
+const container = document.getElementById('tableContainer');
+console.log('Dimensions:', {
+  tableWidth: table.getBoundingClientRect().width,
+  containerWidth: container.getBoundingClientRect().width,
+  hasScroll: table.getBoundingClientRect().width > container.getBoundingClientRect().width
+});
+
+
+📋 COMMANDES POUR DÉBOGUER CLARAVERSE
+═══════════════════════════════════════════════════════════════════
+
+// Dans la console du navigateur sur Claraverse
+
+// 1. Trouver toutes les tables
+const tables = document.querySelectorAll('table');
+console.log(`${tables.length} table(s) trouvée(s)`);
+
+// 2. Sélectionner la première table
+const table = tables[0];
+console.log('Table:', table);
+
+// 3. Vérifier le conteneur
+const container = table.parentElement;
+console.log('Conteneur:', {
+  tagName: container.tagName,
+  overflowX: window.getComputedStyle(container).overflowX,
+  width: container.getBoundingClientRect().width
+});
+
+// 4. Analyser les cellules
+const cells = table.querySelectorAll('td');
+const firstCell = cells[0];
+console.log('Première cellule:', {
+  position: window.getComputedStyle(firstCell).position,
+  left: firstCell.style.left,
+  zIndex: firstCell.style.zIndex,
+  backgroundColor: window.getComputedStyle(firstCell).backgroundColor,
+  width: firstCell.offsetWidth,
+  height: firstCell.offsetHeight
+});
+
+// 5. Simuler le figement manuellement
+const numCols = 3;
+const rows = table.querySelectorAll('tr');
+rows.forEach(row => {
+  const cells = row.querySelectorAll('th, td');
+  let left = 0;
+  cells.forEach((cell, idx) => {
+    if (idx < numCols) {
+      cell.style.position = 'sticky';
+      cell.style.left = `${left}px`;
+      cell.style.zIndex = '100';
+      cell.style.backgroundColor = '#ffffff';
+      console.log(`Cell ${idx}: left=${left}px`);
+    }
+    left += cell.offsetWidth;
+  });
+});
+
+// 6. Vérifier que le style a bien été appliqué
+console.log('Vérification post-figement:', {
+  position: cells[0].style.position,
+  left: cells[0].style.left,
+  zIndex: cells[0].style.zIndex
+});
+
+
+📋 COMMANDES POUR NETTOYER
+═══════════════════════════════════════════════════════════════════
+
+// Retirer le figement manuellement
+const table = document.querySelector('table');
+const cells = table.querySelectorAll('th, td');
+cells.forEach(cell => {
+  cell.style.position = '';
+  cell.style.left = '';
+  cell.style.zIndex = '';
+  cell.style.borderRight = '';
+  cell.style.boxShadow = '';
+  cell.classList.remove('freeze-last-col');
+});
+console.log('✅ Figement retiré');
+
+
+📋 COMMANDES POUR MESURER PERFORMANCE
+═══════════════════════════════════════════════════════════════════
+
+// Mesurer le temps d'exécution du figement
+console.time('Figement');
+freezeSelectedColumns(); // ou applyFreezePanes()
+console.timeEnd('Figement');
+
+// Mesurer le temps de calcul des largeurs
+console.time('Calcul largeurs');
+const table = document.querySelector('table');
+const rows = table.querySelectorAll('tr');
+let total = 0;
+rows.forEach(row => {
+  const cells = row.querySelectorAll('th, td');
+  cells.forEach(cell => {
+    total += cell.offsetWidth;
+  });
+});
+console.timeEnd('Calcul largeurs');
+console.log(`Total: ${total}px`);
+
+
+📋 COMMANDES POUR INJECTER LE FIX EN LIVE
+═══════════════════════════════════════════════════════════════════
+
+// ATTENTION: À utiliser uniquement pour tester sans modifier menu.js
+
+// 1. Définir la fonction ensureScrollContainer
+window.ensureScrollContainer = function(table) {
+  const parent = table.parentElement;
+  if (parent.classList.contains('freeze-scroll-container')) return;
+  parent.classList.add('freeze-scroll-container');
+  parent.style.overflowX = 'auto';
+  parent.style.overflowY = 'visible';
+  parent.style.maxWidth = '100%';
+  parent.style.position = 'relative';
+  console.log('✓ Conteneur configuré');
+};
+
+// 2. Définir la fonction applyFreezePanes corrigée
+window.applyFreezePanes = function(table, freezeRows, freezeCols) {
+  console.log(`🔧 Figement: ${freezeCols} colonnes`);
+  table.style.borderCollapse = 'separate';
+  table.style.borderSpacing = '0';
+  table.style.minWidth = 'max-content';
+  
+  void table.offsetHeight; // Force reflow
+  
+  const rows = Array.from(table.querySelectorAll('tr'));
+  rows.forEach((row, rowIndex) => {
+    const cells = Array.from(row.querySelectorAll('th, td'));
+    let currentLeft = 0;
+    cells.forEach((cell, colIndex) => {
+      if (colIndex < freezeCols) {
+        cell.style.position = 'sticky';
+        cell.style.left = `${currentLeft}px`;
+        cell.style.zIndex = '100';
+        cell.style.backgroundColor = cell.tagName === 'TH' ? '#380101' : 
+          (rowIndex % 2 === 0 ? '#ffffff' : '#f9fafb');
+        if (colIndex === freezeCols - 1) {
+          cell.style.borderRight = '3px solid #380101';
+          cell.style.boxShadow = '2px 0 5px rgba(56,1,1,0.2)';
+        }
+      } else {
+        cell.style.position = '';
+        cell.style.left = '';
+        cell.style.zIndex = '';
+      }
+      currentLeft += cell.offsetWidth || 150;
+    });
+  });
+  console.log('✅ Figement terminé');
+};
+
+// 3. Tester immédiatement
+const table = document.querySelector('table');
+ensureScrollContainer(table);
+applyFreezePanes(table, 0, 3);
+
+
+📋 COMMANDES GIT
+═══════════════════════════════════════════════════════════════════
+
+# Sauvegarder avant modification
+git add public/menu.js
+git commit -m "Backup: menu.js avant correction figement colonnes"
+
+# Après avoir appliqué la correction
+git add public/menu.js
+git add test-freeze-columns.html
+git add "Doc menu contextuel menu.js update/"
+git add "00_COMMENCER_ICI_FIGEMENT_COLONNES_18_JUIN_2026.txt"
+git add "QUICK_START_FIGEMENT_COLONNES_18_JUIN_2026.txt"
+git add "SYNTHESE_VISUELLE_FIGEMENT_COLONNES_18_JUIN_2026.txt"
+git add "00_INDEX_FIGEMENT_COLONNES_18_JUIN_2026.md"
+git add "COMMANDES_RAPIDES_FIGEMENT_COLONNES.txt"
+git commit -m "✨ Feature: Correction figement de colonnes dans menu.js
+
+- Ajout ensureScrollContainer() pour préparer le conteneur
+- Refactorisation applyFreezePanes() avec 10 améliorations
+- Utilisation offsetWidth au lieu de getBoundingClientRect
+- Z-index augmenté à 100
+- Backgrounds explicites et marqueurs visuels
+- Documentation complète et page de test
+- Logs de debug détaillés
+
+Closes #XXX"
+
+# Créer une branche si préféré
+git checkout -b feature/fix-freeze-columns
+git add .
+git commit -m "✨ Feature: Correction figement de colonnes"
+git push origin feature/fix-freeze-columns
+
+
+📋 COMMANDES NPM (si applicable)
+═══════════════════════════════════════════════════════════════════
+
+# Lancer les tests (si configuré)
+npm test
+
+# Lancer le linter
+npm run lint
+
+# Build de production
+npm run build
+
+# Dev server
+npm run dev
+
+
+📋 RACCOURCIS CLAVIER DANS CLARAVERSE
+═══════════════════════════════════════════════════════════════════
+
+Ctrl + Clic droit          → Ouvrir menu contextuel
+Colonnes > Figer colonne   → Figer jusqu'à colonne active
+Colonnes > Annuler Figer   → Retirer le figement
+
+(Futurs raccourcis planifiés)
+Ctrl + Shift + F           → Figer/Annuler figement
+Ctrl + Shift + L           → Figer lignes
+
+
+📋 COMMANDES POUR CRÉER UNE DÉMO
+═══════════════════════════════════════════════════════════════════
+
+// Créer une table de démonstration
+const demoContainer = document.createElement('div');
+demoContainer.innerHTML = `
+  <div style="max-width: 800px; margin: 20px; overflow-x: auto;">
+    <table style="border-collapse: collapse;">
+      <tr>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">ID</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">Nom</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">Compte</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">N</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">N-1</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">Écart</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">Contrôle</th>
+        <th style="border: 1px solid #ddd; padding: 10px; background: #380101; color: white;">Statut</th>
+      </tr>
+      ${Array.from({length: 10}, (_, i) => `
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 10px;">${i+1}</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">Client ${i+1}</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">401${i.toString().padStart(3, '0')}</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">${(15000 + i*1000).toLocaleString()} €</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">${(12000 + i*800).toLocaleString()} €</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">${((15000 + i*1000) - (12000 + i*800)).toLocaleString()} €</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">${i % 2 === 0 ? 'OK' : 'KO'}</td>
+          <td style="border: 1px solid #ddd; padding: 10px;">${i % 3 === 0 ? 'Validé' : 'En cours'}</td>
+        </tr>
+      `).join('')}
+    </table>
+  </div>
+`;
+document.body.appendChild(demoContainer);
+
+// Appliquer le figement sur cette table
+const demoTable = demoContainer.querySelector('table');
+window.ensureScrollContainer(demoTable);
+window.applyFreezePanes(demoTable, 0, 3);
+console.log('✅ Table de démo créée avec figement sur 3 colonnes');
+
+
+═══════════════════════════════════════════════════════════════════
+✨ Ces commandes vous permettent de tester et déboguer rapidement !
+═══════════════════════════════════════════════════════════════════

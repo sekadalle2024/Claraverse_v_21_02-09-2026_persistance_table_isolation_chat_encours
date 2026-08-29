@@ -1,0 +1,206 @@
+================================================================================
+⚡ SOLUTION IMMÉDIATE - EXPORT LIASSE (06 AVRIL 2026)
+================================================================================
+
+🎯 PROBLÈME PRINCIPAL IDENTIFIÉ:
+
+Le code actuel dans export_liasse.py remplit correctement les cellules, MAIS:
+- Il utilise les colonnes H et I pour l'ACTIF
+- Selon les captures d'écran, il devrait utiliser E, F, G (pour N) et H (pour N-1)
+- Les données brut et amortissement ne sont PAS calculées dans le backend
+
+================================================================================
+💡 SOLUTION LA PLUS SIMPLE (Sans modifier le backend)
+================================================================================
+
+OPTION 1: Vérifier d'abord les colonnes réelles du template
+───────────────────────────────────────────────────────────────────────────────
+
+Avant de modifier quoi que ce soit, il faut VÉRIFIER dans le template Excel
+"Liasse_officielle_revise.xlsx" quelles sont les VRAIES colonnes:
+
+1. Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+2. Aller dans l'onglet ACTIF
+3. Noter les colonnes exactes pour:
+   - Valeurs brutes N
+   - Amortissements N
+   - Valeurs nettes N
+   - Valeurs nettes N-1
+
+HYPOTHÈSE ACTUELLE (à vérifier):
+- Colonne E: Brut N
+- Colonne F: Amortissement N
+- Colonne G: Net N
+- Colonne H: Net N-1
+
+OU (selon le code actuel):
+- Colonne H: Net N
+- Colonne I: Net N-1
+
+================================================================================
+💡 SOLUTION RAPIDE SI H et I SONT CORRECTS
+================================================================================
+
+Si les colonnes H (N) et I (N-1) sont les bonnes colonnes pour les valeurs
+NETTES, alors le problème n'est PAS dans export_liasse.py mais dans:
+
+1. Le TEMPLATE Excel lui-même (colonnes brut et amort n'existent pas?)
+2. Ou les CAPTURES D'ÉCRAN montrent un template différent
+
+DANS CE CAS:
+→ Le code actuel est CORRECT
+→ Il faut juste remplir les totalisations (AZ, BQ, BZ, CZ, DZ)
+→ Et corriger le TFT
+
+================================================================================
+💡 SOLUTION POUR LES TOTALISATIONS (PRIORITÉ 1)
+================================================================================
+
+Les totalisations sont FACILES à ajouter car les données existent déjà.
+
+ÉTAPE 1: Identifier les postes de totalisation dans le code actuel
+───────────────────────────────────────────────────────────────────────────────
+
+Les postes de totalisation ont des REF spécifiques:
+- AZ: TOTAL ACTIF IMMOBILISÉ
+- BQ: TOTAL ACTIF CIRCULANT
+- BZ: TOTAL TRÉSORERIE-ACTIF
+- CZ: TOTAL ÉCARTS DE CONVERSION-ACTIF
+- DZ: TOTAL GÉNÉRAL ACTIF
+
+ÉTAPE 2: Calculer les totaux
+───────────────────────────────────────────────────────────────────────────────
+
+Ajouter dans export_liasse.py, AVANT le remplissage des onglets:
+
+```python
+# Calculer les totalisations pour l'ACTIF
+def calculer_totalisations_actif(bilan_actif_dict):
+    """Calcule les totalisations du bilan actif"""
+    totalisations = {}
+    
+    # AZ: TOTAL ACTIF IMMOBILISÉ (AD à AQ)
+    refs_immobilise = ['AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AP', 'AQ']
+    total_n = sum(extraire_montant(bilan_actif_dict.get(r, {})) for r in refs_immobilise)
+    total_n1 = sum(extraire_montant_n1(bilan_actif_dict.get(r, {})) for r in refs_immobilise)
+    totalisations['AZ'] = {'montant_n': total_n, 'montant_n1': total_n1}
+    
+    # BQ: TOTAL ACTIF CIRCULANT (BA à BK)
+    refs_circulant = ['BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK']
+    total_n = sum(extraire_montant(bilan_actif_dict.get(r, {})) for r in refs_circulant)
+    total_n1 = sum(extraire_montant_n1(bilan_actif_dict.get(r, {})) for r in refs_circulant)
+    totalisations['BQ'] = {'montant_n': total_n, 'montant_n1': total_n1}
+    
+    # BZ: TOTAL TRÉSORERIE-ACTIF (BT, BU, BV)
+    refs_tresorerie = ['BT', 'BU', 'BV']
+    total_n = sum(extraire_montant(bilan_actif_dict.get(r, {})) for r in refs_tresorerie)
+    total_n1 = sum(extraire_montant_n1(bilan_actif_dict.get(r, {})) for r in refs_tresorerie)
+    totalisations['BZ'] = {'montant_n': total_n, 'montant_n1': total_n1}
+    
+    # CZ: TOTAL ÉCARTS DE CONVERSION-ACTIF (CA, CB)
+    refs_ecarts = ['CA', 'CB']
+    total_n = sum(extraire_montant(bilan_actif_dict.get(r, {})) for r in refs_ecarts)
+    total_n1 = sum(extraire_montant_n1(bilan_actif_dict.get(r, {})) for r in refs_ecarts)
+    totalisations['CZ'] = {'montant_n': total_n, 'montant_n1': total_n1}
+    
+    # DZ: TOTAL GÉNÉRAL ACTIF (AZ + BQ + BZ + CZ)
+    total_n = (totalisations['AZ']['montant_n'] + totalisations['BQ']['montant_n'] + 
+               totalisations['BZ']['montant_n'] + totalisations['CZ']['montant_n'])
+    total_n1 = (totalisations['AZ']['montant_n1'] + totalisations['BQ']['montant_n1'] + 
+                totalisations['BZ']['montant_n1'] + totalisations['CZ']['montant_n1'])
+    totalisations['DZ'] = {'montant_n': total_n, 'montant_n1': total_n1}
+    
+    return totalisations
+
+# Calculer et ajouter les totalisations au dict
+totalisations_actif = calculer_totalisations_actif(bilan_actif_dict)
+bilan_actif_dict.update(totalisations_actif)
+```
+
+ÉTAPE 3: Les totalisations seront automatiquement remplies
+───────────────────────────────────────────────────────────────────────────────
+
+Une fois ajoutées au dict, elles seront remplies automatiquement par le
+scanner de REF existant!
+
+================================================================================
+💡 SOLUTION POUR LE TFT (PRIORITÉ 2)
+================================================================================
+
+Le TFT est vierge car le mapping des colonnes est peut-être incorrect.
+
+VÉRIFICATION:
+1. Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+2. Aller dans l'onglet TFT
+3. Noter les colonnes exactes pour N et N-1
+
+CODE ACTUEL:
+```python
+# TFT: N en I, N-1 en K
+compteur, erreurs = remplir_onglet_par_scan(onglet_tft, tft_dict, 'I', 'K')
+```
+
+SI LES COLONNES SONT DIFFÉRENTES:
+→ Modifier 'I' et 'K' par les bonnes colonnes
+
+================================================================================
+🚀 PLAN D'ACTION IMMÉDIAT (30 MINUTES)
+================================================================================
+
+ÉTAPE 1: VÉRIFIER LE TEMPLATE (5 min)
+   [ ] Ouvrir py_backend/Liasse_officielle_revise.xlsx
+   [ ] Noter les colonnes exactes pour ACTIF (brut, amort, net N, net N-1)
+   [ ] Noter les colonnes exactes pour TFT (N, N-1)
+   [ ] Noter les colonnes exactes pour PASSIF (N, N-1)
+   [ ] Noter les colonnes exactes pour RESULTAT (N, N-1)
+
+ÉTAPE 2: AJOUTER LES TOTALISATIONS (15 min)
+   [ ] Copier la fonction calculer_totalisations_actif() dans export_liasse.py
+   [ ] L'appeler avant le remplissage des onglets
+   [ ] Faire de même pour PASSIF si nécessaire
+
+ÉTAPE 3: CORRIGER LE TFT SI NÉCESSAIRE (5 min)
+   [ ] Vérifier les colonnes dans le template
+   [ ] Modifier le code si les colonnes sont différentes
+
+ÉTAPE 4: TESTER (5 min)
+   [ ] Exécuter un export
+   [ ] Vérifier le fichier Excel généré
+   [ ] Confirmer que les totalisations sont remplies
+   [ ] Confirmer que le TFT est rempli
+
+================================================================================
+📝 FICHIER À MODIFIER
+================================================================================
+
+UN SEUL FICHIER: py_backend/export_liasse.py
+
+MODIFICATIONS:
+1. Ajouter la fonction calculer_totalisations_actif() (ligne ~400)
+2. Appeler cette fonction avant le remplissage (ligne ~460)
+3. Vérifier/corriger le mapping TFT (ligne ~520)
+
+================================================================================
+💡 POURQUOI CETTE SOLUTION EST LA MEILLEURE
+================================================================================
+
+1. SIMPLE: Un seul fichier à modifier
+2. RAPIDE: 30 minutes maximum
+3. SANS RISQUE: Ne touche pas au backend
+4. TESTABLE: Résultats immédiats
+5. INCRÉMENTALE: On peut ajouter brut/amort plus tard si nécessaire
+
+================================================================================
+🎯 PROCHAINE ÉTAPE IMMÉDIATE
+================================================================================
+
+Ouvrir le template Excel pour vérifier les colonnes:
+
+   start py_backend/Liasse_officielle_revise.xlsx
+
+Puis noter les colonnes exactes pour chaque onglet.
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 18:00
+Agent: Kiro AI Assistant
+================================================================================

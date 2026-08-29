@@ -1,0 +1,80 @@
+INSTRUCTION CRITIQUE POUR LE FORMAT DE RÉPONSE :
+
+Tu DOIS retourner UNIQUEMENT un JSON valide avec EXACTEMENT cette structure (sans texte avant ou après) :
+
+[
+  {
+    "Tableau entete": {
+      "Etape de mission": "...",
+      "Normes": "...",
+      "Méthode": "...",
+      "Reference": "..."
+    }
+  },
+  {
+    "Tableau processus": [
+      {
+        "no": 1,
+        "Cycle": "...",
+        "Domaines": "...",
+        "Test": "...",
+        "Controle audit": "...",
+        "Objectif": "...",
+        "Evaluation globale des risques": "...",
+        "Echantillon": "..."
+      }
+    ]
+  }
+]
+
+RÈGLES ABSOLUES :
+1. Retourner UNIQUEMENT le JSON (pas de texte explicatif avant ou après)
+2. Ne PAS utiliser de bloc markdown ```json
+3. Les clés doivent être EXACTEMENT "Tableau entete" et "Tableau processus"
+4. "Tableau processus" doit être un ARRAY d'objets
+5. Chaque objet du tableau processus doit avoir TOUTES les colonnes listées ci-dessus
+6. Les valeurs de "Controle audit" doivent être des listes numérotées (1. 2. 3. etc.)
+7. Ne PAS échapper les caractères spéciaux de manière excessive
+8. Utiliser des guillemets doubles " pour toutes les chaînes
+9. S'assurer que le JSON est valide (pas de virgules en trop, accolades bien fermées)
+
+EXEMPLE DE FORMAT CORRECT :
+
+[
+  {
+    "Tableau entete": {
+      "Etape de mission": "Programme de travail / Contrôle des comptes",
+      "Normes": "Norme 13.6 - Programme de travail",
+      "Méthode": "Méthode des risques par les contrôles audit",
+      "Reference": "PRG-TRESO-001"
+    }
+  },
+  {
+    "Tableau processus": [
+      {
+        "no": 1,
+        "Cycle": "Trésorerie",
+        "Domaines": "Exhaustivité des comptes",
+        "Test": "AA040-Recensement des comptes",
+        "Controle audit": "1. Obtenir la réponse à la circularisation bancaire. 2. Comparer avec la liste des comptes en comptabilité. 3. Identifier les comptes manquants. 4. S'assurer de l'intégration des soldes oubliés.",
+        "Objectif": "S'assurer de l'exhaustivité des disponibilités figurant au bilan.",
+        "Evaluation globale des risques": "Majeur",
+        "Echantillon": "100% des banques circularisées"
+      },
+      {
+        "no": 2,
+        "Cycle": "Trésorerie",
+        "Domaines": "Rapprochements Bancaires",
+        "Test": "AA040-Concordance des soldes",
+        "Controle audit": "1. Obtenir les états de rapprochement au 31/12/N. 2. Rapprocher le solde Relevé avec le PDF original. 3. Rapprocher le solde Comptable avec la Balance Générale. 4. Vérifier l'exactitude arithmétique.",
+        "Objectif": "S'assurer de la réalité et de l'exactitude des soldes présentés.",
+        "Evaluation globale des risques": "Mineur",
+        "Echantillon": "Tous les comptes bancaires actifs"
+      }
+    ]
+  }
+]
+
+===== DÉBUT DU PROMPT ORIGINAL =====
+
+[Insérer ici le contenu du prompt original du workflow]

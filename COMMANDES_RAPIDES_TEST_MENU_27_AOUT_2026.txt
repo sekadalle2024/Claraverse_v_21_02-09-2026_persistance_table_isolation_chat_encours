@@ -1,0 +1,129 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║  ⚡ COMMANDES RAPIDES - TEST MENU CONTEXTUEL                     ║
+║  Date: 27 août 2026                                              ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  1️⃣  REDÉMARRER LE SERVEUR                                    │
+└───────────────────────────────────────────────────────────────┘
+
+cd h:/ClaraVerse
+npm run dev
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  2️⃣  OUVRIR L'APPLICATION                                     │
+└───────────────────────────────────────────────────────────────┘
+
+http://localhost:5173
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  3️⃣  VIDER LE CACHE NAVIGATEUR                                │
+└───────────────────────────────────────────────────────────────┘
+
+Ctrl + Shift + R    (Windows/Linux)
+Cmd + Shift + R     (Mac)
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  4️⃣  OUVRIR LA CONSOLE DÉVELOPPEUR                            │
+└───────────────────────────────────────────────────────────────┘
+
+F12                 (Tous systèmes)
+Ctrl + Shift + I    (Windows/Linux)
+Cmd + Option + I    (Mac)
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  5️⃣  VÉRIFIER LA MODIFICATION                                 │
+└───────────────────────────────────────────────────────────────┘
+
+Dans la console du navigateur (F12), tapez:
+
+console.log("Menu.js version:", document.getElementById('contextual-table-menu-advanced') ? 'Chargé' : 'Non chargé');
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  6️⃣  TESTS RAPIDES (Dans l'ordre)                             │
+└───────────────────────────────────────────────────────────────┘
+
+✅ TEST A: Passer la souris sur une table
+   → Le menu NE DOIT PAS s'ouvrir
+
+✅ TEST B: Attendre 2 secondes sur la table
+   → Le menu NE DOIT TOUJOURS PAS s'ouvrir
+
+✅ TEST C: Faire clic droit sur la table
+   → Le menu s'ouvre ✓
+
+✅ TEST D: Cliquer "Insérer ligne"
+   → Une ligne est ajoutée ✓
+
+✅ TEST E: Clic gauche en dehors du menu
+   → Le menu se ferme ✓
+
+✅ TEST F: Ouvrir le menu puis appuyer sur Échap
+   → Le menu se ferme ✓
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  7️⃣  EN CAS DE PROBLÈME                                       │
+└───────────────────────────────────────────────────────────────┘
+
+❌ Si le menu s'ouvre encore au survol:
+
+1. Stop le serveur: Ctrl + C
+2. Vérifier le fichier:
+   notepad h:/ClaraVerse/public/menu.js
+3. Ligne ~9638 doit être commentée
+4. Relancer: npm run dev
+5. Vider cache: Ctrl + Shift + R
+
+
+❌ Si rien ne fonctionne:
+
+1. Ouvrir la console (F12)
+2. Chercher des erreurs JavaScript
+3. Noter le message d'erreur exact
+4. Consulter:
+   00_CORRECTION_MENU_CONTEXTUEL_SURVOL_27_AOUT_2026.txt
+
+
+┌───────────────────────────────────────────────────────────────┐
+│  8️⃣  VÉRIFICATION FINALE                                      │
+└───────────────────────────────────────────────────────────────┘
+
+Checklist de validation:
+
+□ Serveur npm démarré sans erreur
+□ Application ouverte dans le navigateur
+□ Cache navigateur vidé
+□ Test A: Survol → Pas de menu ✅
+□ Test B: Survol 2s → Toujours pas de menu ✅
+□ Test C: Clic droit → Menu s'ouvre ✅
+□ Test D: Action menu → Fonctionne ✅
+□ Test E: Clic dehors → Menu se ferme ✅
+□ Test F: Échap → Menu se ferme ✅
+
+Si tous les tests sont ✅ → CORRECTION VALIDÉE ! 🎉
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  📚 DOCUMENTATION COMPLÈTE                                        ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+Guide détaillé:
+└─ 00_CORRECTION_MENU_CONTEXTUEL_SURVOL_27_AOUT_2026.txt
+
+Guide de test:
+└─ QUICK_TEST_MENU_CONTEXTUEL_27_AOUT_2026.txt
+
+Synthèse visuelle:
+└─ SYNTHESE_VISUELLE_CORRECTION_MENU_27_AOUT_2026.txt
+
+Index complet:
+└─ 00_INDEX_CORRECTION_MENU_SURVOL_27_AOUT_2026.md
+
+═══════════════════════════════════════════════════════════════════

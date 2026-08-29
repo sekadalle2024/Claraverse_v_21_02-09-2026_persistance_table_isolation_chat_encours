@@ -1,0 +1,94 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ COMMANDES RAPIDES - TEST TIMEOUT CLARAAPI
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le frontend
+npm run dev
+
+# Ouvrir le navigateur
+# http://localhost:5173
+
+# Ouvrir la console (F12)
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 VÉRIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier le timeout actuel (en console)
+claraApiService.getN8nTimeout()
+# → Résultat attendu: 180000 (3 minutes en ms)
+
+# Vérifier le timeout en secondes
+claraApiService.getN8nTimeout() / 1000
+# → Résultat attendu: 180 (3 minutes)
+
+# Vérifier le timeout en minutes
+claraApiService.getN8nTimeout() / 60000
+# → Résultat attendu: 3
+
+═══════════════════════════════════════════════════════════════════════════════
+🧪 TESTS
+═══════════════════════════════════════════════════════════════════════════════
+
+# Test 1: Réduire le timeout pour test rapide (10 secondes)
+claraApiService.setN8nTimeout(10000);
+
+# Test 2: Envoyer une requête vers un workflow lent
+# (Utiliser l'interface Claraverse)
+
+# Test 3: Attendre 10 secondes et vérifier le message
+
+# Test 4: Restaurer le timeout normal
+claraApiService.setN8nTimeout(3 * 60 * 1000);
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 AJUSTEMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+# Augmenter le timeout à 5 minutes
+claraApiService.setN8nTimeout(5 * 60 * 1000);
+
+# Augmenter le timeout à 10 minutes
+claraApiService.setN8nTimeout(10 * 60 * 1000);
+
+# Réduire le timeout à 1 minute
+claraApiService.setN8nTimeout(1 * 60 * 1000);
+
+# Réduire le timeout à 30 secondes (pour test)
+claraApiService.setN8nTimeout(30000);
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier les diagnostics TypeScript
+npm run type-check
+
+# Ou avec PowerShell
+Get-Content src/services/claraApiService.ts | Select-String "n8nTimeout"
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 LOGS
+═══════════════════════════════════════════════════════════════════════════════
+
+# Au démarrage, vous devriez voir dans la console:
+✅ ClaraApiService initialisé avec endpoint par défaut: https://...
+⏱️ Timeout configuré: 180 secondes
+
+# En cas de timeout, vous devriez voir:
+⏱️ Timeout atteint (3 minutes), annulation de la requête...
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ VÉRIFICATIONS FINALES
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Le timeout est à 180000 ms (3 minutes)
+✓ Le message de notification est en français
+✓ Le numéro WhatsApp est affiché: +225 05 44 13 07 98
+✓ Le tableau d'informations techniques est présent
+✓ Aucune erreur de compilation
+
+═══════════════════════════════════════════════════════════════════════════════

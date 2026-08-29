@@ -1,0 +1,229 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    RECAP SESSION - VERIFICATION GITHUB                   ║
+║    17 AVRIL 2026                                         ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+📅 DATE: 17 Avril 2026
+⏰ CONTEXTE: Continuation après transfert de contexte
+
+═══════════════════════════════════════════════════════════
+
+🎯 PROBLEME INITIAL
+
+L'utilisateur a essayé d'exécuter manuellement:
+```
+curl -s "https://api.github.com/repos/..." | ConvertFrom-Json
+```
+
+PowerShell a demandé des paramètres (Uri:) car `curl` est un
+alias pour `Invoke-WebRequest` qui nécessite des paramètres.
+
+═══════════════════════════════════════════════════════════
+
+✅ SOLUTION APPORTEE
+
+1. CORRECTION DU SCRIPT
+   ─────────────────────
+   Fichier: Doc render deploy/verifier-fichiers-github.ps1
+   
+   Changement:
+   - Avant: Invoke-RestMethod (peut échouer)
+   - Après: Invoke-WebRequest + ConvertFrom-Json (plus robuste)
+
+2. CREATION DE GUIDES DETAILLES
+   ────────────────────────────
+   
+   a) COMMENCER_ICI_VERIFICATION_17_AVRIL_2026.txt
+      → Point de départ principal
+      → Choix entre 2 méthodes (script ou navigateur)
+      → Liens vers tous les guides
+   
+   b) COMMANDES_A_COPIER_COLLER.txt
+      → Commandes exactes à copier-coller
+      → Pas de modification nécessaire
+      → Exemple d'exécution
+   
+   c) GUIDE_VISUEL_VERIFICATION_GITHUB.txt
+      → Guide visuel complet
+      → Captures d'écran textuelles
+      → Méthode script + méthode navigateur
+      → Résolution problèmes courants
+   
+   d) 00_EXECUTER_SCRIPT_VERIFICATION_MAINTENANT.txt
+      → Instructions détaillées script PowerShell
+      → Explication de ce que fait le script
+      → Solutions alternatives
+
+3. MISE A JOUR DE L'INDEX
+   ───────────────────────
+   Fichier: Doc render deploy/00_INDEX_COMPLET_17_AVRIL_2026.md
+   
+   Ajout:
+   - Section "COMMENCER ICI (NOUVEAU)"
+   - Section "Script de Vérification (NOUVEAU)"
+   - Section "Nouveaux Guides de Vérification"
+
+═══════════════════════════════════════════════════════════
+
+📁 FICHIERS CREES
+
+1. COMMENCER_ICI_VERIFICATION_17_AVRIL_2026.txt
+   → Guide principal de démarrage
+
+2. COMMANDES_A_COPIER_COLLER.txt
+   → Commandes PowerShell prêtes à l'emploi
+
+3. GUIDE_VISUEL_VERIFICATION_GITHUB.txt
+   → Guide visuel complet avec exemples
+
+4. 00_EXECUTER_SCRIPT_VERIFICATION_MAINTENANT.txt
+   → Instructions détaillées pour le script
+
+5. 00_RECAP_SESSION_VERIFICATION_GITHUB_17_AVRIL_2026.txt
+   → Ce fichier (récapitulatif de la session)
+
+═══════════════════════════════════════════════════════════
+
+📝 FICHIERS MODIFIES
+
+1. Doc render deploy/verifier-fichiers-github.ps1
+   → Correction de la méthode API (Invoke-WebRequest)
+
+2. Doc render deploy/00_INDEX_COMPLET_17_AVRIL_2026.md
+   → Ajout des nouveaux guides dans l'index
+
+═══════════════════════════════════════════════════════════
+
+🎓 EXPLICATION DU PROBLEME
+
+Quand l'utilisateur tape:
+```
+curl -s "https://api.github.com/repos/..." | ConvertFrom-Json
+```
+
+PowerShell interprète:
+1. `curl` = alias de `Invoke-WebRequest`
+2. `-s` = paramètre inconnu (ignoré)
+3. L'URL est passée comme argument positionnel
+4. Mais `Invoke-WebRequest` attend `-Uri` explicitement
+5. PowerShell demande: "Uri:" (paramètre manquant)
+
+SOLUTION:
+Utiliser le script qui gère tout automatiquement:
+```
+& ".\Doc render deploy\verifier-fichiers-github.ps1"
+```
+
+═══════════════════════════════════════════════════════════
+
+✅ CONFIRMATION
+
+Les fichiers runtime.txt et requirements_render.txt SONT
+déjà sur GitHub backend.
+
+Preuve:
+- git ls-tree HEAD → fichiers présents
+- git status → "Everything up-to-date"
+- Commit: "Fix: Force Python 3.11..."
+
+Le problème de l'utilisateur est probablement:
+1. Cache du navigateur (ne voit pas les fichiers)
+2. Confusion avec la commande PowerShell
+
+═══════════════════════════════════════════════════════════
+
+🚀 PROCHAINES ETAPES POUR L'UTILISATEUR
+
+1. EXECUTER LE SCRIPT
+   ──────────────────
+   Commande: & ".\Doc render deploy\verifier-fichiers-github.ps1"
+   
+   OU
+   
+   Ouvrir: COMMANDES_A_COPIER_COLLER.txt
+   Copier-coller les commandes
+
+2. VERIFIER LE RESULTAT
+   ────────────────────
+   Le script affichera:
+   ✓ [OK] runtime.txt PRESENT
+   ✓ [OK] requirements_render.txt PRESENT
+   ✓ [OK] main.py PRESENT
+
+3. ALLER SUR RENDER
+   ────────────────
+   Dashboard: https://dashboard.render.com/
+   Vérifier les logs de build
+   Chercher "Using Python version 3.11.9"
+
+4. SI PAS DE REBUILD AUTOMATIQUE
+   ─────────────────────────────
+   "Manual Deploy" → "Deploy latest commit"
+
+═══════════════════════════════════════════════════════════
+
+📊 STRUCTURE DES GUIDES
+
+COMMENCER_ICI_VERIFICATION_17_AVRIL_2026.txt
+    ↓
+    ├─→ METHODE A: Script PowerShell
+    │   └─→ 00_EXECUTER_SCRIPT_VERIFICATION_MAINTENANT.txt
+    │       └─→ COMMANDES_A_COPIER_COLLER.txt
+    │
+    └─→ METHODE B: Navigateur Web
+        └─→ GUIDE_VISUEL_VERIFICATION_GITHUB.txt
+
+Tous les guides pointent vers:
+- Doc render deploy/verifier-fichiers-github.ps1 (script)
+- Doc render deploy/PRECAUTIONS_STRUCTURE_REPO_17_AVRIL_2026.md (contexte)
+- 00_DIAGNOSTIC_FICHIERS_GITHUB_17_AVRIL_2026.txt (diagnostic)
+- ACTION_IMMEDIATE_GITHUB_17_AVRIL_2026.txt (actions)
+
+═══════════════════════════════════════════════════════════
+
+🎯 OBJECTIF ATTEINT
+
+✓ Script de vérification corrigé et fonctionnel
+✓ Guides détaillés créés pour l'utilisateur
+✓ Commandes prêtes à copier-coller
+✓ Guide visuel avec exemples
+✓ Index mis à jour avec tous les nouveaux fichiers
+✓ Explication claire du problème PowerShell
+
+L'utilisateur a maintenant:
+- Un script qui fonctionne
+- Des commandes à copier-coller
+- Des guides visuels détaillés
+- Une alternative navigateur web
+- Une compréhension du problème
+
+═══════════════════════════════════════════════════════════
+
+📞 SUPPORT UTILISATEUR
+
+Si l'utilisateur a encore des problèmes:
+
+1. Lire: COMMENCER_ICI_VERIFICATION_17_AVRIL_2026.txt
+2. Copier-coller: COMMANDES_A_COPIER_COLLER.txt
+3. Guide visuel: GUIDE_VISUEL_VERIFICATION_GITHUB.txt
+4. Alternative: Ouvrir GitHub dans le navigateur
+
+═══════════════════════════════════════════════════════════
+
+✅ STATUT FINAL
+
+Problème: Commande PowerShell curl demande des paramètres
+Solution: Script automatique + guides détaillés
+Fichiers: 5 nouveaux guides créés
+Modifications: 2 fichiers mis à jour
+Résultat: L'utilisateur peut maintenant vérifier facilement
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+Session: Continuation après transfert de contexte
+Durée: ~15 minutes
+
+═══════════════════════════════════════════════════════════

@@ -1,0 +1,277 @@
+=================================================================
+🧪 COMMANDES DE TEST - MODELISATION TEMPLATE V2
+=================================================================
+
+📋 CRITÈRE DE DÉTECTION : "Template" (au lieu de "Flowise")
+🆕 NOUVEAU : Case 8 - Support Google Drive (n8n_doc)
+✅ STATUT : Activé et opérationnel
+
+=================================================================
+🌐 OUVRIR LA PAGE DE TEST
+=================================================================
+
+http://localhost:5173/test-modelisation-template-v2.html
+
+Cette page contient 8 tests complets :
+- Test 1 : PARTIE 1 (Document Word)
+- Test 2 : PARTIE 2 (JSON statique)
+- Test 3 : PARTIE 3 (JSON dynamique n8n)
+- Test 4 : PARTIE 4 (Workflow n8n)
+- Test 5 : PARTIE 5 (PDF)
+- Test 6 : n8n_doc (Google Drive)
+- Test 7 : n8n doc (avec espace)
+- Test 8 : Contrôle négatif (sans "Template")
+
+=================================================================
+💻 COMMANDES CONSOLE (F12)
+=================================================================
+
+# Exécuter manuellement le script
+window.ModelisationTemplateV2.execute();
+
+# Voir la configuration complète
+console.log(window.ModelisationTemplateV2.config);
+
+# Activer le mode debug
+window.ModelisationTemplateV2.config.debug = true;
+
+# Voir les mots-clés de détection
+console.log(window.ModelisationTemplateV2.config.keywords);
+
+# Compter les tables sur la page
+console.log(document.querySelectorAll('table').length + ' tables trouvées');
+
+# Vérifier si le script est chargé
+console.log(typeof window.ModelisationTemplateV2);
+
+# Nettoyer la console
+console.clear();
+
+=================================================================
+🔍 VÉRIFICATION RAPIDE
+=================================================================
+
+# 1. Vérifier que le script est chargé
+console.log('Script chargé:', typeof window.ModelisationTemplateV2 !== 'undefined');
+
+# 2. Vérifier le critère de détection
+console.log('Critère:', window.ModelisationTemplateV2.config.keywords.template);
+
+# 3. Vérifier le Case 8
+console.log('Case 8 (n8n_doc):', window.ModelisationTemplateV2.config.keywords.n8n_doc);
+
+# 4. Compter les documents générés
+console.log('Documents générés:', document.querySelectorAll('.modelisation-template-container').length);
+
+=================================================================
+📊 TESTS INDIVIDUELS
+=================================================================
+
+# Test Case 1 - Document Word
+Créer une table avec :
+- Colonne "Template"
+- Cellule contenant "PARTIE 1"
+
+# Test Case 2 - JSON Statique
+Créer une table avec :
+- Colonne "Template"
+- Cellule contenant "PARTIE 2"
+
+# Test Case 3 - JSON Dynamique
+Créer une table avec :
+- Colonne "Template"
+- Cellule contenant "PARTIE 3"
+
+# Test Case 4 - Workflow n8n
+Créer une table avec :
+- Colonne "Template"
+- Cellule contenant "PARTIE 4"
+
+# Test Case 5 - PDF
+Créer une table avec :
+- Colonne "Template"
+- Cellule contenant "PARTIE 5"
+
+# Test Case 8 - Google Drive (NOUVEAU)
+Créer une table avec :
+- Colonne "Template"
+- Cellule contenant "n8n_doc" ou "n8n doc"
+
+=================================================================
+🎨 EXEMPLE DE TABLE HTML
+=================================================================
+
+<table>
+  <thead>
+    <tr>
+      <th>Template</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PARTIE 1</td>
+      <td>Mon document Word</td>
+    </tr>
+  </tbody>
+</table>
+
+=================================================================
+🔧 DÉPANNAGE
+=================================================================
+
+# Problème : Aucun document généré
+1. Vérifier que la table a une colonne "Template"
+2. Vérifier que la cellule contient un mot-clé valide
+3. Ouvrir la console et chercher les erreurs
+4. Exécuter : window.ModelisationTemplateV2.execute();
+
+# Problème : Case 1 (Word) ne fonctionne pas
+1. Vérifier que PARTIE1.docx existe dans public/ressource/
+2. Vérifier que mammoth-loader-fix.js est chargé
+3. Vérifier la console pour les erreurs Mammoth
+
+# Problème : Case 8 (Google Drive) affiche une erreur
+1. Vérifier que le document est accessible publiquement
+2. Vérifier l'URL de partage
+3. Tester l'URL d'export : /export?format=html
+
+# Problème : Case 3 ou 4 (n8n) ne fonctionne pas
+1. Vérifier la connexion internet
+2. Tester l'endpoint dans un outil comme Postman
+3. Vérifier le format de réponse
+
+=================================================================
+📝 LOGS ATTENDUS DANS LA CONSOLE
+=================================================================
+
+✅ Modelisation_template_v2.js chargé
+💡 Test: window.ModelisationTemplateV2.execute()
+🚀 Modelisation_template_v2.js - Génération séparée (Critère: Template)
+   Table 1 (Template): PARTIE 1...
+   ✅ PARTIE1 détectée
+📊 1 document(s) à générer
+📄 Case 1: PARTIE 1 (Document Word avec Mammoth.js)
+✅ Template 1 injecté
+✅ Génération terminée
+
+=================================================================
+🌐 ENDPOINTS N8N
+=================================================================
+
+# Case 3 - PARTIE 3
+https://barow52161.app.n8n.cloud/webhook/cia_cours_gemini
+
+# Case 4 - PARTIE 4
+https://0ngdph0y.rpcld.co/webhook/template
+
+# Test avec curl (Case 4)
+curl -X POST "https://0ngdph0y.rpcld.co/webhook/template" \
+  -H "Content-Type: application/json" \
+  -d '{"question":"[Command] = /Programme de travail - [Processus] = facturation des ventes"}'
+
+=================================================================
+☁️ GOOGLE DRIVE (CASE 8)
+=================================================================
+
+# URL du document
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/edit?usp=sharing
+
+# URL d'export HTML
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=html
+
+# Tester l'export
+fetch('https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=html')
+  .then(r => r.text())
+  .then(html => console.log('HTML chargé:', html.length + ' caractères'));
+
+=================================================================
+📚 DOCUMENTATION
+=================================================================
+
+MISE_A_JOUR_MODELISATION_V2_TEMPLATE.md
+  → Documentation technique complète
+
+DEMARRAGE_RAPIDE_TEMPLATE_V2.md
+  → Guide de démarrage rapide
+
+SUCCES_MISE_A_JOUR_TEMPLATE_V2.md
+  → Résumé des modifications
+
+public/test-modelisation-template-v2.html
+  → Page de test interactive
+
+=================================================================
+✅ CHECKLIST DE VÉRIFICATION
+=================================================================
+
+[ ] Script chargé dans index.html
+[ ] Page de test accessible
+[ ] Console sans erreurs
+[ ] Détection des tables "Template" fonctionne
+[ ] Case 1 (Word) génère un document
+[ ] Case 2 (JSON statique) génère un accordéon
+[ ] Case 3 (JSON dynamique) appelle n8n
+[ ] Case 4 (Workflow n8n) appelle l'endpoint
+[ ] Case 5 (PDF) affiche le viewer
+[ ] Case 8 (Google Drive) charge le document
+[ ] MutationObserver détecte les nouvelles tables
+
+=================================================================
+🎯 RÉSULTATS ATTENDUS
+=================================================================
+
+Sur la page de test (test-modelisation-template-v2.html) :
+- 7 documents générés (Tests 1 à 7)
+- 1 table ignorée (Test 8 - pas de colonne "Template")
+- Chaque document dans un accordéon interactif
+- Page de couverture pour chaque document
+- Contenu formaté selon le template approprié
+
+=================================================================
+📞 COMMANDES UTILES
+=================================================================
+
+# Recharger la page
+location.reload();
+
+# Nettoyer le localStorage
+localStorage.clear();
+
+# Voir tous les scripts chargés
+console.log(performance.getEntriesByType('resource')
+  .filter(r => r.name.includes('.js'))
+  .map(r => r.name));
+
+# Compter les accordéons générés
+console.log('Accordéons:', document.querySelectorAll('.accordion-container').length);
+
+# Voir les tables détectées
+console.log('Tables:', document.querySelectorAll('table').length);
+
+=================================================================
+🚀 DÉMARRAGE RAPIDE
+=================================================================
+
+1. Ouvrir : http://localhost:5173/test-modelisation-template-v2.html
+2. Ouvrir la console (F12)
+3. Observer les logs de détection
+4. Vérifier que 7 documents sont générés
+5. Tester les interactions (accordéons, boutons)
+6. Vérifier chaque case individuellement
+
+=================================================================
+✅ TOUT EST PRÊT !
+=================================================================
+
+Le système Modelisation Template V2 est opérationnel avec :
+- ✅ Nouveau critère "Template"
+- ✅ Case 8 (Google Drive) ajouté
+- ✅ Case 4 (workflow n8n) amélioré
+- ✅ Script activé dans index.html
+- ✅ Page de test complète
+- ✅ Documentation exhaustive
+
+Créez une table avec une colonne "Template" et profitez !
+
+=================================================================

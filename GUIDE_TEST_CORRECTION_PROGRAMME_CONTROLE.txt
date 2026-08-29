@@ -1,0 +1,137 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 GUIDE DE TEST - CORRECTION PROGRAMME CONTROLE COMPTES
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 31 Mars 2026
+⏱️ Durée estimée: 2-3 minutes
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 1: REDÉMARRER L'APPLICATION (si nécessaire)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si l'application Clara est déjà en cours d'exécution:
+
+1. Arrêter l'application (Ctrl+C dans le terminal)
+2. Redémarrer avec:
+   .\start-claraverse.ps1
+
+Ou simplement rafraîchir la page dans le navigateur (Ctrl+F5)
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 2: OUVRIR LA CONSOLE DU NAVIGATEUR
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir l'application Clara dans le navigateur
+2. Appuyer sur F12 pour ouvrir les outils de développement
+3. Aller dans l'onglet "Console"
+4. Effacer les logs existants (icône poubelle)
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 3: ENVOYER LA COMMANDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans l'application Clara, envoyer:
+
+Programme_controle_comptes
+
+Avec les paramètres:
+- Processus: Trésorerie
+- Niveau de risque R: 1
+- Assertion: Validité
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 4: VÉRIFIER LES LOGS DE LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans la console (F12), chercher les messages suivants:
+
+✅ Messages attendus:
+   🔧 FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ: Tableau entete + Tableau processus
+   📋 Traitement de 'Tableau entete' (type: header)
+   📋 Traitement de 'Tableau processus' (type: data_array, 10 items)
+
+❌ Messages à NE PAS voir:
+   ⚠️ Structure non-tableau trouvée, conversion générique
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 5: VÉRIFIER L'AFFICHAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+L'affichage devrait montrer:
+
+✅ TABLEAU D'EN-TÊTE:
+┌─────────────────────┬──────────────────────────────────────────┐
+│ Rubrique            │ Description                              │
+├─────────────────────┼──────────────────────────────────────────┤
+│ Etape de mission    │ Programme de travail / Contrôle...       │
+│ Normes              │ Norme 13.6 - Programme de travail        │
+│ Méthode             │ Méthode des contrôles audit...           │
+│ Reference           │ PRG-TRESO-001                            │
+└─────────────────────┴──────────────────────────────────────────┘
+
+✅ TABLEAU DES PROCESSUS:
+┌────┬────────────┬──────────────┬─────────────┬────────────────┐
+│ no │ Cycle      │ Domaines     │ Test        │ Controle audit │
+├────┼────────────┼──────────────┼─────────────┼────────────────┤
+│ 1  │ Trésorerie │ Trésorerie...│ AA02-...    │ 1. Obtenir...  │
+│ 2  │ Trésorerie │ Trésorerie...│ AA02-...    │ 1. Collecter...│
+│ ...│ ...        │ ...          │ ...         │ ...            │
+└────┴────────────┴──────────────┴─────────────┴────────────────┘
+
+❌ À NE PAS VOIR:
+**Tableau entete**:**Etape de mission**: Programme de travail...
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPE 6: TEST ALTERNATIF AVEC LE SCRIPT POWERSHELL
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour tester uniquement le webhook (sans l'interface):
+
+.\test-webhook-avec-parametres.ps1
+
+Vérifier que la réponse contient:
+✅ "data": { "Tableau entete": {...}, "Tableau processus": [...] }
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 DIAGNOSTIC EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+Si le texte brut persiste:
+
+1. Vérifier que le fichier src/services/claraApiService.ts a bien été modifié
+   - Chercher "FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ" dans le fichier
+
+2. Vérifier que l'application a bien été redémarrée
+   - Le code TypeScript doit être recompilé
+
+3. Vérifier les logs de la console
+   - Si "⚠️ Structure non-tableau trouvée" apparaît, la détection n'a pas fonctionné
+
+4. Vérifier la structure des données du webhook
+   - Exécuter: .\test-webhook-avec-parametres.ps1
+   - Confirmer: [{ data: { "Tableau entete": {...}, "Tableau processus": [...] } }]
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+Le test est réussi si:
+
+✅ Les logs montrent "FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ"
+✅ Deux tableaux Markdown sont affichés (entête + processus)
+✅ Les tableaux ont des bordures et des colonnes alignées
+✅ Aucun texte brut du type "**Tableau entete**:**Etape de mission**:..."
+
+═══════════════════════════════════════════════════════════════════════════════
+  📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+Fichiers de référence:
+- 00_CORRECTION_APPLIQUEE_FORMAT_PROGRAMME_CONTROLE.txt
+- src/services/claraApiService.ts (ligne ~508)
+- test-webhook-avec-parametres.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Créé le: 31 Mars 2026
+Statut: ✅ Prêt pour les tests

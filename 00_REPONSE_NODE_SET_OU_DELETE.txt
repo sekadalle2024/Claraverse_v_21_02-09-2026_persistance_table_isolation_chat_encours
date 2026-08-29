@@ -1,0 +1,146 @@
+═══════════════════════════════════════════════════════════════════════════════
+   NODE SET OU EDIT FIELD : À GARDER OU DELETE ?
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RÉPONSE RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ DELETE le node "Set" ou "Edit Field"
+
+✅ GARDER uniquement le node "Code" (Extract Variables for RAG)
+
+📋 POURQUOI ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Set" ne peut PAS extraire les variables depuis la structure complexe
+User_message car :
+
+1. La syntaxe N8N dans "Set" est limitée pour les structures imbriquées
+2. User_message est un array d'objets avec des clés dynamiques
+3. Il faudrait une syntaxe très complexe et fragile
+
+Le node "Code" est MEILLEUR car :
+
+✅ Peut parcourir l'array User_message
+✅ Peut extraire dynamiquement les clés
+✅ Peut gérer les variations de noms (Message, message, Cycle, cycle, etc.)
+✅ Plus flexible et maintenable
+✅ Inclut des logs pour debugging
+
+🔧 ARCHITECTURE FINALE RECOMMANDÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9
+  ↓
+Code integrate7
+  ↓
+Extract Variables for RAG (NODE CODE) ← GARDER CELUI-CI
+  ↓
+Alea16
+  ↓
+Agent RAG révision des comptes1
+  ↓
+code RAG4
+
+❌ NE PAS GARDER :
+   - Node "Set Variables RAG"
+   - Node "Edit Field"
+
+✅ GARDER :
+   - Node "Extract Variables for RAG" (Code JavaScript)
+
+📝 ÉTAPES DE NETTOYAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Vérifier le node "Extract Variables for RAG"
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur le node "Extract Variables for RAG"
+   2. Vérifiez qu'il contient le code JavaScript de n8n_node_extract_variables_rag.js
+   3. Testez-le pour voir l'output
+
+ÉTAPE 2 : Supprimer le node "Set" (si vous l'avez créé)
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur le node "Set Variables RAG" ou "Edit Field"
+   2. Appuyez sur Delete ou clic droit → Delete
+   3. Confirmez la suppression
+
+ÉTAPE 3 : Vérifier les connexions
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Assurez-vous que le flux est :
+   Code integrate7 → Extract Variables for RAG → Alea16 → Agent RAG
+
+ÉTAPE 4 : Tester le workflow complet
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Exécutez le workflow
+   2. Vérifiez l'output de "Extract Variables for RAG"
+   3. Vérifiez que l'agent RAG reçoit les 4 variables
+
+🔍 COMPARAISON : NODE SET VS NODE CODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NODE SET (Edit Field)
+─────────────────────────────────────────────────────────────────────────
+
+❌ Syntaxe limitée pour structures complexes
+❌ Difficile à maintenir
+❌ Pas de logs pour debugging
+❌ Ne peut pas parcourir des arrays dynamiquement
+❌ Syntaxe très longue et fragile :
+   {{ $json.data[0].User_message.find(item => ...) }}
+
+NODE CODE (JavaScript)
+─────────────────────────────────────────────────────────────────────────
+
+✅ Syntaxe JavaScript complète
+✅ Facile à maintenir et modifier
+✅ Logs intégrés pour debugging
+✅ Peut parcourir des arrays avec for...of
+✅ Gestion des variations de noms (case insensitive)
+✅ Code clair et lisible
+
+💡 EXEMPLE DE DIFFÉRENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AVEC NODE SET (compliqué et fragile) :
+─────────────────────────────────────────────────────────────────────────
+
+user_message: {{ $json.data[0].User_message.find(item => Object.keys(item)[0].toLowerCase().includes('message'))?.[Object.keys($json.data[0].User_message.find(item => Object.keys(item)[0].toLowerCase().includes('message')))[0]] || "Message non fourni" }}
+
+⚠️ Cette syntaxe est :
+- Très longue
+- Difficile à lire
+- Fragile (peut casser facilement)
+- Impossible à debugger
+
+AVEC NODE CODE (simple et clair) :
+─────────────────────────────────────────────────────────────────────────
+
+for (const item of userMsgArray) {
+    const key = Object.keys(item)[0];
+    const value = item[key];
+    
+    if (key.toLowerCase().includes('message')) {
+        result.user_message = value;
+    }
+}
+
+✅ Cette syntaxe est :
+- Courte et claire
+- Facile à lire
+- Robuste
+- Facile à debugger avec console.log
+
+🎯 CONCLUSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ DELETE : Node "Set Variables RAG" ou "Edit Field"
+✅ GARDER : Node "Extract Variables for RAG" (Code JavaScript)
+
+Le node Code est la solution optimale pour extraire les variables depuis
+la structure User_message.
+
+═══════════════════════════════════════════════════════════════════════════════

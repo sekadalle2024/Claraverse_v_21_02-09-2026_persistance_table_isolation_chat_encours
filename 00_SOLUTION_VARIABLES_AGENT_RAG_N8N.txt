@@ -1,0 +1,179 @@
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTION : VARIABLES NON REÇUES PAR L'AGENT RAG N8N - 29 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+L'agent RAG affiche [undefined] pour toutes les variables :
+- [cycle_detecte] = [undefined]
+- [user_message] = [undefined]
+- [constat] = [undefined]
+- [anomalie] = [undefined]
+
+✅ CAUSE RACINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Les variables N8N ne sont PAS interpolées correctement dans le prompt.
+Vous utilisez la syntaxe statique au lieu de la syntaxe dynamique N8N.
+
+❌ MAUVAISE SYNTAXE (ce que vous avez) :
+[cycle_detecte] = [undefined]
+
+✅ BONNE SYNTAXE (ce qu'il faut) :
+[cycle_detecte] = {{ $json.cycle || "Non détecté" }}
+
+🔧 SOLUTION COMPLÈTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. SYNTAXE N8N POUR LES VARIABLES
+   ─────────────────────────────────────────────────────────────────────────
+
+   Dans N8N, pour injecter des variables dynamiques, utilisez :
+   
+   {{ $json.nom_variable }}              → Valeur simple
+   {{ $json.nom_variable || "défaut" }}  → Avec valeur par défaut
+   {{ $('Node Name').item.json.var }}    → Depuis un node spécifique
+
+2. CORRECTION DU PROMPT AGENT RAG
+   ─────────────────────────────────────────────────────────────────────────
+
+   REMPLACEZ les lignes suivantes dans votre prompt :
+
+   ❌ AVANT :
+   [user_message] = [undefined]
+   [cycle_detecte] = [undefined]
+   [constat] = [undefined]
+   [anomalie] = [undefined]
+
+   ✅ APRÈS :
+   [user_message] = {{ $json.user_message || $json.message || "Message non fourni" }}
+   [cycle_detecte] = {{ $json.cycle || "Non détecté" }}
+   [constat] = {{ $json.constat || "Non fourni" }}
+   [anomalie] = {{ $json.anomalie || "Non fournie" }}
+
+3. DANS LES QUERIES RAG
+   ─────────────────────────────────────────────────────────────────────────
+
+   ❌ AVANT :
+   Query → "compte [undefined] SYSCOHADA fonctionnement débit crédit"
+
+   ✅ APRÈS :
+   Query → "compte {{ $json.cycle || "comptable" }} SYSCOHADA fonctionnement débit crédit"
+
+📋 ÉTAPES D'IMPLÉMENTATION DANS N8N
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Vérifier le node précédent
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Assurez-vous que le node AVANT l'agent RAG envoie bien les données :
+   
+   {
+     "user_message": "...",
+     "cycle": "...",
+     "constat": "...",
+     "anomalie": "..."
+   }
+
+ÉTAPE 2 : Ouvrir le node Agent RAG
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur le node "Agent RAG"
+   2. Allez dans le champ "System Message" ou "Prompt"
+
+ÉTAPE 3 : Remplacer le prompt
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Copiez le contenu du fichier :
+   → n8n_prompt_agent_rag_variables_corrige.txt
+   
+   Et collez-le dans le champ prompt de votre agent RAG
+
+ÉTAPE 4 : Tester avec des données réelles
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Envoyez un test avec :
+   {
+     "user_message": "Facture fournisseur non comptabilisée",
+     "cycle": "Achats",
+     "constat": "Facture reçue mais pas enregistrée",
+     "anomalie": "Charge non comptabilisée"
+   }
+
+ÉTAPE 5 : Vérifier l'output
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Le prompt devrait maintenant afficher :
+   [cycle_detecte] = Achats
+   [user_message] = Facture fournisseur non comptabilisée
+   [constat] = Facture reçue mais pas enregistrée
+   [anomalie] = Charge non comptabilisée
+
+🎯 EXEMPLES DE SYNTAXE N8N COURANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Accès simple :
+   {{ $json.variable }}
+
+2. Avec valeur par défaut :
+   {{ $json.variable || "valeur_par_defaut" }}
+
+3. Depuis un node spécifique :
+   {{ $('Router').item.json.cycle }}
+
+4. Accès à un tableau :
+   {{ $json.items[0].nom }}
+
+5. Concaténation :
+   {{ $json.prenom + " " + $json.nom }}
+
+6. Condition ternaire :
+   {{ $json.cycle ? $json.cycle : "Non défini" }}
+
+🔍 DEBUGGING : COMMENT VÉRIFIER LES VARIABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ajouter un node "Set" AVANT l'agent RAG
+2. Afficher les variables :
+   {
+     "debug_user_message": "{{ $json.user_message }}",
+     "debug_cycle": "{{ $json.cycle }}",
+     "debug_constat": "{{ $json.constat }}",
+     "debug_anomalie": "{{ $json.anomalie }}"
+   }
+3. Exécuter et vérifier l'output du node Set
+
+⚠️ ERREURS COURANTES À ÉVITER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Utiliser des crochets statiques : [undefined]
+✅ Utiliser la syntaxe N8N : {{ $json.variable }}
+
+❌ Oublier les accolades doubles : { $json.variable }
+✅ Toujours doubler : {{ $json.variable }}
+
+❌ Mauvais nom de variable : {{ $json.cycles }}
+✅ Nom exact du JSON : {{ $json.cycle }}
+
+❌ Pas de valeur par défaut : {{ $json.cycle }}
+✅ Avec fallback : {{ $json.cycle || "Non détecté" }}
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ n8n_prompt_agent_rag_variables_corrige.txt
+   → Prompt complet avec syntaxe N8N corrigée
+
+✅ 00_SOLUTION_VARIABLES_AGENT_RAG_N8N.txt
+   → Ce fichier (guide complet)
+
+🚀 PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Copier le prompt corrigé dans N8N
+2. Tester avec des données réelles
+3. Vérifier que les variables s'affichent correctement
+4. Valider que l'agent RAG reçoit bien les informations
+
+═══════════════════════════════════════════════════════════════════════════════

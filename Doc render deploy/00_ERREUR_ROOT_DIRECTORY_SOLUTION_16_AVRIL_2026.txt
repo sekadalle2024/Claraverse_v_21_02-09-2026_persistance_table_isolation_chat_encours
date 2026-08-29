@@ -1,0 +1,184 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  ⚠️  ERREUR : ROOT DIRECTORY N'EXISTE PAS                    ║
+║                         SOLUTION IMMÉDIATE                                    ║
+║                         16 avril 2026                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🔴 ERREUR RENCONTRÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Root directory 'py_backend' does not exist, please check settings
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 DIAGNOSTIC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le dossier `py_backend` n'existe pas dans votre repository GitHub.
+
+Cela signifie que :
+1. Les modifications du fichier main.py n'ont pas été poussées sur GitHub
+2. Render ne peut pas trouver le dossier py_backend dans le commit 346cbc3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOLUTION IMMÉDIATE (2 OPTIONS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION 1 : ENLEVER LE ROOT DIRECTORY (PLUS RAPIDE) ⭐ RECOMMANDÉ
+────────────────────────────────────────────────────────────────────────────────
+
+Si votre code Python est à la RACINE du repository (pas dans un sous-dossier) :
+
+1. Dans Render, cliquez sur "Settings" (en haut à gauche)
+2. Cherchez la section "Root Directory"
+3. EFFACEZ le contenu du champ "Root Directory"
+4. Laissez-le VIDE
+5. Cliquez sur "Save Changes"
+6. Render va automatiquement redéployer
+
+OPTION 2 : POUSSER LES MODIFICATIONS SUR GITHUB
+────────────────────────────────────────────────────────────────────────────────
+
+Si votre code Python est vraiment dans un dossier py_backend/ :
+
+1. Ouvrez PowerShell dans votre projet
+2. Exécutez ces commandes :
+
+   git add .
+   git commit -m "fix: Ajout support PORT pour Render"
+   git push origin main
+
+3. Attendez que le push soit terminé
+4. Dans Render, cliquez sur "Manual Deploy" → "Deploy latest commit"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 QUELLE OPTION CHOISIR ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pour savoir quelle option utiliser, vérifiez la structure de votre repository :
+
+STRUCTURE 1 : Code à la racine (OPTION 1)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ Back-end-python-V0_03_03_2026/                                             │
+│ ├── main.py                    ← Fichier Python à la racine               │
+│ ├── requirements.txt           ← À la racine                               │
+│ ├── export_synthese_cac.py                                                 │
+│ └── ...                                                                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+👉 Utilisez OPTION 1 : Enlevez le Root Directory
+
+
+STRUCTURE 2 : Code dans py_backend/ (OPTION 2)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ Back-end-python-V0_03_03_2026/                                             │
+│ ├── py_backend/                ← Dossier contenant le code                │
+│ │   ├── main.py                                                            │
+│ │   ├── requirements.txt                                                   │
+│ │   └── ...                                                                │
+│ └── autres fichiers...                                                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+👉 Utilisez OPTION 2 : Poussez sur GitHub
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 GUIDE DÉTAILLÉ - OPTION 1 (ENLEVER ROOT DIRECTORY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Dans la page Render actuelle, cliquez sur "Settings" (en haut)
+
+2. Faites défiler jusqu'à la section "Build & Deploy"
+
+3. Cherchez le champ "Root Directory"
+   ┌──────────────────────────────────────────────────────────────────┐
+   │ Root Directory                                                   │
+   │ ┌────────────────────────────────────────────────────────────┐   │
+   │ │ py_backend                                                 │   │ ← EFFACEZ CECI
+   │ └────────────────────────────────────────────────────────────┘   │
+   └──────────────────────────────────────────────────────────────────┘
+
+4. Effacez "py_backend" et laissez le champ VIDE
+
+5. Faites défiler vers le bas et cliquez sur "Save Changes"
+
+6. Render va automatiquement redéployer
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 GUIDE DÉTAILLÉ - OPTION 2 (PUSH GITHUB)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvrez PowerShell dans le dossier de votre projet
+
+2. Vérifiez le statut :
+   git status
+
+3. Ajoutez tous les fichiers :
+   git add .
+
+4. Créez un commit :
+   git commit -m "fix: Ajout support PORT pour Render"
+
+5. Poussez sur GitHub :
+   git push origin main
+
+6. Attendez que le push soit terminé (quelques secondes)
+
+7. Retournez sur Render
+
+8. Cliquez sur "Manual Deploy" (en haut à droite)
+
+9. Sélectionnez "Deploy latest commit"
+
+10. Attendez le déploiement (3-5 minutes)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  CONFIGURATION MISE À JOUR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si vous utilisez OPTION 1 (enlever Root Directory), voici la configuration finale :
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ CHAMP                      │ VALEUR                                        │
+├────────────────────────────────────────────────────────────────────────────┤
+│ Name                       │ clara-backend-production                      │
+│ Language                   │ Python 3                                      │
+│ Branch                     │ main                                          │
+│ Region                     │ Frankfurt (EU Central)                        │
+│ Root Directory             │ (VIDE - laissez vide)                         │
+│ Build Command              │ pip install -r requirements.txt               │
+│ Start Command              │ python main.py --host 0.0.0.0 --port $PORT    │
+│ Environment Variables      │ PYTHONUNBUFFERED = 1                          │
+│                            │ PYTHONDONTWRITEBYTECODE = 1                   │
+│                            │ HOST = 0.0.0.0                                │
+│ Instance Type              │ Starter ou Free                               │
+└────────────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PROCHAINE ÉTAPE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Choisissez OPTION 1 ou OPTION 2 selon votre structure
+
+2. Suivez les étapes correspondantes
+
+3. Attendez le redéploiement
+
+4. Revenez me voir si vous rencontrez un autre problème
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 RECOMMANDATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Je recommande OPTION 1 (enlever Root Directory) car :
+✅ Plus rapide (pas besoin de push GitHub)
+✅ Pas de risque d'erreur Git
+✅ Redéploiement automatique
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

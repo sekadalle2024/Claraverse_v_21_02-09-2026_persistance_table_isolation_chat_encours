@@ -1,0 +1,152 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║   ⚡ COMMANDES RAPIDES - SAUVEGARDE NOUVEAU REPOSITORY                   ║
+║   📅 09 Mai 2026                                                         ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🚀 COMMANDE PRINCIPALE (COPIER-COLLER)                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+.\push-claraverse-v17-09-mai-2026-nouveau-repo.ps1
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📊 VÉRIFICATIONS AVANT LE PUSH                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+# Voir les fichiers modifiés
+git status
+
+# Compter les fichiers modifiés
+git status --short | Measure-Object | Select-Object -ExpandProperty Count
+
+# Voir le repository actuel
+git remote -v
+
+# Voir la branche actuelle
+git branch --show-current
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🔧 COMMANDES MANUELLES (SI BESOIN)                                      │
+└─────────────────────────────────────────────────────────────────────────┘
+
+# Changer le repository manuellement
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_17_09-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+# Vérifier la connexion au nouveau repository
+git ls-remote origin
+
+# Configuration Git optimale
+git config core.compression 0
+git config http.postBuffer 1048576000
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ✅ VÉRIFICATIONS APRÈS LE PUSH                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+# Vérifier l'état Git
+git status
+
+# Vérifier le repository distant
+git remote -v
+
+# Vérifier les derniers commits
+git log --oneline -10
+
+# Vérifier la branche
+git branch -a
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🔄 RESTAURER L'ANCIEN REPOSITORY (SI NÉCESSAIRE)                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+# Revenir à l'ancien repository
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_17_07-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+# Vérifier
+git remote -v
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🆘 DÉPANNAGE RAPIDE                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+# Tester la connexion Internet
+Test-Connection github.com -Count 4
+
+# Voir les logs Git détaillés
+$env:GIT_CURL_VERBOSE=1
+$env:GIT_TRACE=1
+git push -v
+
+# Annuler le dernier commit (si besoin)
+git reset --soft HEAD~1
+
+# Voir la taille du projet
+Get-ChildItem -Recurse | Measure-Object -Property Length -Sum | Select-Object @{Name="Size(MB)";Expression={[math]::Round($_.Sum/1MB,2)}}
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📦 PUSH MANUEL PAR PARTIES (ALTERNATIVE)                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+# Partie 1: Code Source
+git add src/
+git commit -m "Sauvegarde V17 - Partie 1: Code Source"
+git push -u origin v17_backup_final
+
+# Partie 2: Backend
+git add py_backend/
+git commit -m "Sauvegarde V17 - Partie 2: Backend"
+git push -u origin v17_backup_final
+
+# Partie 3: Public
+git add public/
+git commit -m "Sauvegarde V17 - Partie 3: Public"
+git push -u origin v17_backup_final
+
+# Partie 4: Documentation principale
+git add "Doc menu demarrer/" "Doc export rapport/" "Doc_Lead_Balance/" "Doc_Etat_Fin/"
+git commit -m "Sauvegarde V17 - Partie 4: Documentation"
+git push -u origin v17_backup_final
+
+# Partie 5: Autres docs
+git add *.md *.txt *.ps1 "Doc_Github_Issue/"
+git commit -m "Sauvegarde V17 - Partie 5: Autres docs"
+git push -u origin v17_backup_final
+
+# Partie 6: Reste
+git add .
+git commit -m "Sauvegarde V17 - Partie 6: Configuration"
+git push -u origin v17_backup_final
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🔗 LIENS UTILES                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Nouveau Repository:
+https://github.com/sekadalle2024/Claverse_windows__v_17_09-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+Ancien Repository (sauvegarde):
+https://github.com/sekadalle2024/Claverse_windows__v_17_07-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📝 NOTES IMPORTANTES                                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+• Durée estimée: 10-15 minutes
+• Ne pas interrompre le processus
+• Le script gère automatiquement les erreurs
+• En cas d'échec, l'ancien repository est restauré
+• Chaque partie fait < 30 MB pour éviter les timeouts
+
+═══════════════════════════════════════════════════════════════════════════

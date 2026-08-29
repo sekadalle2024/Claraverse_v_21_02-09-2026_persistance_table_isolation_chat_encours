@@ -1,0 +1,210 @@
+================================================================================
+DIAGNOSTIC - ERREUR "FAILED TO FETCH" PERSISTANTE
+Date: 06 Avril 2026
+================================================================================
+
+SITUATION:
+----------
+L'erreur "failed to fetch" persiste malgré la correction appliquée (cache global).
+
+CAUSES POSSIBLES:
+-----------------
+
+1️⃣  BACKEND NON REDÉMARRÉ
+    Le backend DOIT être complètement arrêté et redémarré pour prendre en compte
+    les modifications du code Python.
+    
+    Symptôme: Les modifications ne sont pas prises en compte
+    Solution: Arrêter complètement et redémarrer le backend
+
+2️⃣  ERREUR DE SYNTAXE PYTHON
+    Une erreur de syntaxe dans etats_financiers.py empêche le module de charger.
+    
+    Symptôme: Le backend démarre mais l'endpoint ne fonctionne pas
+    Solution: Tester l'import du module avec test_import_etats_financiers.py
+
+3️⃣  ERREUR DANS UN AUTRE MODULE
+    L'erreur peut venir d'un module importé (tableau_flux_tresorerie, annexes_liasse, etc.)
+    
+    Symptôme: Erreur lors de l'import ou de l'exécution
+    Solution: Vérifier les logs du backend
+
+4️⃣  PROBLÈME DE CORS OU RÉSEAU
+    Le frontend ne peut pas communiquer avec le backend.
+    
+    Symptôme: Erreur "failed to fetch" même si le backend fonctionne
+    Solution: Vérifier que le backend écoute sur http://localhost:8000
+
+5️⃣  ERREUR DANS LE TRAITEMENT DES DONNÉES
+    L'erreur se produit pendant le traitement de la balance, pas au démarrage.
+    
+    Symptôme: Le backend démarre OK mais plante lors du traitement
+    Solution: Vérifier les logs du backend lors de l'import de la balance
+
+================================================================================
+TESTS DE DIAGNOSTIC
+================================================================================
+
+TEST 1: Vérifier que le backend est redémarré
+----------------------------------------------
+Commande:
+  Get-Process -Name "python" | Select-Object Id, StartTime
+
+Vérifier:
+  - Le StartTime doit être APRÈS les modifications du code
+  - Si le StartTime est ancien, le backend n'a pas été redémarré
+
+Action:
+  1. Arrêter le backend (Ctrl+C dans la console)
+  2. Redémarrer: .\start-claraverse.ps1
+  3. Attendre le message "✅ Backend démarré"
+
+TEST 2: Tester l'import du module
+----------------------------------
+Commande:
+  cd py_backend
+  python test_import_etats_financiers.py
+
+Résultat attendu:
+  ✅ Module etats_financiers importé avec succès
+  ✅ Cache global disponible: True
+  ✅ Router disponible
+
+Si erreur:
+  - Lire le message d'erreur Python
+  - Corriger l'erreur de syntaxe
+  - Redémarrer le backend
+
+TEST 3: Tester l'accessibilité du backend
+------------------------------------------
+Commande:
+  .\test-backend-direct.ps1
+
+Résultat attendu:
+  ✅ Backend accessible (Status: 200)
+  ✅ Endpoint accessible
+
+Si erreur:
+  - Le backend n'est pas démarré
+  - Le backend écoute sur un autre port
+  - Problème de firewall
+
+TEST 4: Vérifier les logs du backend
+-------------------------------------
+Action:
+  1. Ouvrir la console où le backend tourne
+  2. Importer une balance depuis le frontend
+  3. Observer les logs en temps réel
+
+Messages à chercher:
+  ✅ "📊 Stockage des balances dans le cache global..."
+  ✅ "✅ Balances stockées dans le cache: N=XXX lignes"
+  
+  ❌ "ERROR"
+  ❌ "Exception"
+  ❌ "Traceback"
+
+Si erreur dans les logs:
+  - Lire le message d'erreur complet
+  - Identifier la ligne qui cause l'erreur
+  - Corriger et redémarrer
+
+TEST 5: Tester avec curl (sans frontend)
+-----------------------------------------
+Commande:
+  curl http://localhost:8000/docs
+
+Résultat attendu:
+  - Page HTML de la documentation FastAPI
+
+Si erreur:
+  - Le backend n'est pas accessible
+  - Vérifier le port et l'adresse
+
+================================================================================
+SOLUTIONS PAR CAUSE
+================================================================================
+
+SOLUTION 1: Backend non redémarré
+----------------------------------
+1. Arrêter le backend (Ctrl+C)
+2. Attendre que le processus se termine
+3. Redémarrer: .\start-claraverse.ps1
+4. Attendre "✅ Backend démarré sur http://localhost:8000"
+5. Réessayer l'import de la balance
+
+SOLUTION 2: Erreur de syntaxe
+------------------------------
+1. Exécuter: python py_backend/test_import_etats_financiers.py
+2. Lire le message d'erreur
+3. Corriger l'erreur dans etats_financiers.py
+4. Redémarrer le backend
+5. Réessayer
+
+SOLUTION 3: Erreur dans un autre module
+----------------------------------------
+1. Vérifier les logs du backend au démarrage
+2. Identifier le module qui cause l'erreur
+3. Corriger l'erreur dans ce module
+4. Redémarrer le backend
+5. Réessayer
+
+SOLUTION 4: Problème CORS/Réseau
+---------------------------------
+1. Vérifier que le backend écoute sur localhost:8000
+2. Vérifier que le frontend pointe vers localhost:8000
+3. Vérifier les paramètres CORS dans main.py
+4. Redémarrer le backend
+5. Rafraîchir le frontend (Ctrl+F5)
+
+SOLUTION 5: Erreur pendant le traitement
+-----------------------------------------
+1. Observer les logs du backend lors de l'import
+2. Identifier la ligne qui cause l'erreur
+3. Corriger l'erreur
+4. Redémarrer le backend
+5. Réessayer
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Tester l'import du module
+cd py_backend
+python test_import_etats_financiers.py
+
+# Tester l'accessibilité du backend
+.\test-backend-direct.ps1
+
+# Voir les processus Python
+Get-Process -Name "python"
+
+# Redémarrer le backend
+# 1. Ctrl+C dans la console du backend
+# 2. .\start-claraverse.ps1
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+1. Exécuter les tests de diagnostic dans l'ordre
+2. Identifier la cause exacte de l'erreur
+3. Appliquer la solution correspondante
+4. Redémarrer le backend
+5. Réessayer l'import de la balance
+
+================================================================================
+INFORMATIONS À FOURNIR
+================================================================================
+
+Si l'erreur persiste après tous les tests, fournir:
+
+1. Résultat de: python py_backend/test_import_etats_financiers.py
+2. Résultat de: .\test-backend-direct.ps1
+3. Logs du backend lors de l'import de la balance
+4. Message d'erreur exact dans le frontend
+5. Heure de démarrage du backend (Get-Process)
+
+================================================================================
+FIN DU DIAGNOSTIC
+================================================================================

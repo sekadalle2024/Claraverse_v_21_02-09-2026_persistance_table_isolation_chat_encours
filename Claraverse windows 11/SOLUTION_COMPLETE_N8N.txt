@@ -1,0 +1,103 @@
+🎯 SOLUTION COMPLÈTE - Envoi vers n8n
+========================================
+
+✅ DIAGNOSTIC TERMINÉ
+---------------------
+- Connexion n8n : OK (Status 200)
+- Envoi des données : OK
+- Problème : n8n renvoie une réponse VIDE (0 caractères)
+
+❌ CAUSE
+--------
+Le workflow n8n ne traite pas les données ou ne renvoie pas de réponse.
+
+
+🔧 SOLUTION (3 minutes)
+========================
+
+1. IMPORTER LE WORKFLOW N8N
+   ---------------------------
+   a) Ouvrez n8n : http://localhost:5678
+   b) Cliquez sur "+" (Nouveau workflow)
+   c) Cliquez sur "⋮" → "Import from File"
+   d) Sélectionnez : n8n-workflow-htlm-processor-minimal.json
+   e) Activez le workflow (toggle "Active")
+
+2. TESTER
+   -------
+   a) Ouvrez : http://localhost:3000/test-envoi-n8n-complet.html
+   b) Cliquez : "3️⃣ Envoi Complet"
+   c) Vérifiez : Vous devriez voir une réponse JSON maintenant !
+
+
+📊 RÉSULTAT ATTENDU
+===================
+
+Avant (actuel) :
+📥 Réponse N8N (0 caractères):
+
+Après (avec le workflow) :
+📥 Réponse N8N (XXX caractères):
+{
+  "success": true,
+  "message": "Données reçues et traitées avec succès",
+  "data": {
+    "tables_received": 3,
+    "size_kb": "1.41",
+    "processed_at": "..."
+  }
+}
+
+
+📁 FICHIERS CRÉÉS
+=================
+
+1. n8n-workflow-htlm-processor-minimal.json
+   → Workflow n8n prêt à l'emploi
+
+2. GUIDE_IMPORT_WORKFLOW_N8N.md
+   → Guide détaillé d'import
+
+3. DIAGNOSTIC_N8N_REPONSE_VIDE.md
+   → Diagnostic complet du problème
+
+4. test-envoi-n8n-complet.html
+   → Page de test
+
+
+🎯 ORDRE D'EXÉCUTION
+====================
+
+1. Importez le workflow n8n (2 min)
+2. Testez avec test-envoi-n8n-complet.html (30 sec)
+3. Si ça marche, testez dans votre application (30 sec)
+
+
+💡 ALTERNATIVE RAPIDE
+=====================
+
+Si vous ne voulez pas importer, créez manuellement dans n8n :
+
+1. Webhook (Path: htlm_processor)
+2. Function (Code: return { json: { success: true, message: "OK" } })
+3. Respond to Webhook
+
+C'est tout ! 3 nœuds suffisent.
+
+
+📞 VÉRIFICATION
+===============
+
+Après l'import, dans la console de test-envoi-n8n-complet.html,
+vous devriez voir :
+
+✅ 📡 Réponse - Status: 200
+✅ 📥 Réponse N8N (XXX caractères):  ← Plus de 0 !
+✅ 🎉 Les données ont été envoyées et traitées avec succès !
+
+
+🚀 PROCHAINE ÉTAPE
+==================
+
+Une fois que le test fonctionne, Flowise.js recevra aussi
+les réponses de n8n dans votre application !

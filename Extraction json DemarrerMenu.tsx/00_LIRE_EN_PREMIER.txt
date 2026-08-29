@@ -1,0 +1,231 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║         EXTRACTION JSON DU MENU DÉMARRER - DemarrerMenu.tsx                 ║
+║                                                                              ║
+║                     Projet: Claraverse / E-Audit                            ║
+║                     Date: 26 Mars 2026                                      ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 OBJECTIF
+═══════════
+
+Extraire le contenu complet du composant DemarrerMenu.tsx en format JSON structuré
+pour la documentation, l'onboarding client et le guide utilisateur.
+
+🏗️ STRUCTURE HIÉRARCHIQUE
+═══════════════════════════
+
+Suite E-Audit
+  └── Logiciel (E-audit pro, E-revision, E-cartographie, etc.)
+      └── Phase de mission (Préparation, Réalisation, Conclusion)
+          └── Étape (Collecte documentaire, Programme de travail, etc.)
+              └── Mode (Normal, Avancé, Demo, Document, Database)
+                  └── Variables ([Command], [Processus], [Nb ligne], etc.)
+
+📁 FICHIERS PRINCIPAUX
+═══════════════════════
+
+1. README.md                          - Documentation complète
+2. run-extraction.ps1                 - Script d'extraction PowerShell
+3. extract_menu_data.js               - Script Node.js
+4. extract_menu.py                    - Script Python
+5. suite_e_audit_structure.json       - Résultat JSON formaté
+6. exemple_structure_detaillee.json   - Exemple de structure
+
+🚀 DÉMARRAGE RAPIDE
+════════════════════
+
+Option 1: Script PowerShell (Recommandé)
+-----------------------------------------
+.\run-extraction.ps1
+
+Option 2: Node.js
+-----------------
+node extract_menu_data.js
+
+Option 3: Python
+----------------
+python extract_menu.py
+
+📊 CONTENU EXTRAIT
+═══════════════════
+
+LOGICIELS (6):
+  1. E-audit pro       - Audit interne professionnel
+  2. E-revision        - Révision comptable et CAC
+  3. E-cartographie    - Cartographie des risques
+  4. E-audit plan      - Planification des missions
+  5. E-CIA exam        - Préparation certification CIA
+  6. Bibliothèque      - Ressources documentaires
+
+PHASES E-AUDIT PRO (3):
+  1. Phase de préparation (7 étapes)
+     - Collecte documentaire
+     - Questionnaire prise de connaissance
+     - Cartographie des processus
+     - Cartographie des risques
+     - Référentiel de contrôle interne
+     - Rapport d'orientation
+     - Programme de travail
+
+  2. Phase de réalisation (1 étape)
+     - Feuille couverture
+
+  3. Phase de conclusion (6 étapes)
+     - FRAP
+     - Synthèse des FRAP
+     - Rapport provisoire
+     - Réunion de clôture
+     - Rapport final
+     - Suivi des recommandations
+
+PHASES E-REVISION (3):
+  1. Planification (5 étapes)
+     - Design
+     - Implementation
+     - Evaluation risque
+     - Feuille de couverture implementation
+     - Programme de contrôle des comptes
+
+  2. Revue analytique (2 étapes)
+     - Revue analytique générale
+     - Analyse des variations
+
+  3. Programme de contrôle (10 cycles comptables)
+     - Trésorerie (10+ tests)
+     - Ventes (11+ tests)
+     - Stocks (13+ tests)
+     - Immobilisations (13+ tests)
+     - Clients (10+ tests)
+     - Fournisseurs (10+ tests)
+     - Personnel (8+ tests)
+     - Capitaux propres (5+ tests)
+     - Provisions (5+ tests)
+     - Emprunts (5+ tests)
+
+🔧 VARIABLES EXTRAITES
+═══════════════════════
+
+Pour chaque mode, extraction de:
+  - [Command]           - Type de commande
+  - [Processus]         - Processus audité
+  - [Etape précédente]  - Étape précédente
+  - [Etape de mission]  - Étape actuelle
+  - [Modele]            - Modèle de table
+  - [Nb de lignes]      - Nombre de lignes
+  - [Variable 1/2]      - Variables personnalisées
+  - [Integration]       - Type d'intégration
+  - [Demo]              - Mode démonstration
+  - [Directive]         - Directives spécifiques
+
+📸 CAPTURES D'ÉCRAN
+════════════════════
+
+M1.png - Menu principal avec liste des logiciels
+M2.png - Phase de préparation E-audit pro
+M3.png - Phase de réalisation avec programme de travail
+M4.png - Phase de conclusion avec FRAP et rapports
+
+🎯 CAS D'USAGE
+═══════════════
+
+1. DOCUMENTATION PRODUIT
+   - Génération automatique de guides
+   - Documentation technique
+   - Référence des commandes
+
+2. ONBOARDING CLIENT
+   - Présentation structurée des fonctionnalités
+   - Parcours guidé par logiciel
+   - Exemples de commandes par étape
+
+3. FORMATION
+   - Support de formation structuré
+   - Exercices pratiques par phase
+   - Progression pédagogique
+
+4. DÉVELOPPEMENT
+   - Tests automatisés
+   - Validation des commandes
+   - Génération de mocks
+
+📝 FORMAT JSON EXEMPLE
+═══════════════════════
+
+{
+  "suite": {
+    "nom": "Suite E-Audit",
+    "logiciels": [
+      {
+        "id": "e-audit-pro",
+        "label": "E-audit pro",
+        "phases": [
+          {
+            "id": "phase-preparation",
+            "label": "Phase de préparation",
+            "etapes": [
+              {
+                "id": "collecte-documentaire",
+                "label": "Collecte documentaire",
+                "modes": [
+                  {
+                    "id": "normal",
+                    "label": "Normal",
+                    "variables": [
+                      {"nom": "Command", "valeur": "Etape de mission"},
+                      {"nom": "Processus", "valeur": "rapprochements bancaires"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+📚 DOCUMENTATION
+═════════════════
+
+README.md                    - Documentation complète du projet
+GUIDE_UTILISATION.md         - Guide d'utilisation des données JSON
+STRUCTURE_DETAILLEE.md       - Documentation de la structure JSON
+
+🔍 STATISTIQUES ATTENDUES
+═══════════════════════════
+
+Logiciels:        6
+Phases:           ~18-20
+Étapes:           ~65-70
+Modes:            ~120-150
+Variables:        ~500-800
+Tests (cycles):   ~100+
+
+🛠️ MAINTENANCE
+═══════════════
+
+Mise à jour après modification de DemarrerMenu.tsx:
+1. Relancer le script d'extraction
+2. Vérifier les nouvelles entrées
+3. Mettre à jour la documentation
+4. Valider la structure JSON
+
+Validation JSON:
+  node -e "JSON.parse(require('fs').readFileSync('suite_e_audit_structure.json'))"
+  python -m json.tool suite_e_audit_complete.json
+
+📞 SUPPORT
+═══════════
+
+Fichier source:  src/components/Clara_Components/DemarrerMenu.tsx
+Projet:          Claraverse / E-Audit
+Date création:   26 Mars 2026
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                        PRÊT À UTILISER !
+
+═══════════════════════════════════════════════════════════════════════════════

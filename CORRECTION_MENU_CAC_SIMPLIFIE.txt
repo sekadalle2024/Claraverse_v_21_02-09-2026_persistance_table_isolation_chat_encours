@@ -1,0 +1,143 @@
+═══════════════════════════════════════════════════════════════
+   CORRECTION MENU CAC SIMPLIFIÉ - VERSION FINALE
+═══════════════════════════════════════════════════════════════
+
+📅 Date: 25 Mars 2026
+
+✅ PROBLÈMES RÉSOLUS
+───────────────────────────────────────────────────────────────
+
+1. Menu trop complexe avec 3 actions séparées
+2. Message "Aucune table trouvée" - mauvais sélecteur
+3. Sélecteur générique 'table' au lieu du sélecteur Claraverse
+
+✅ SOLUTIONS
+───────────────────────────────────────────────────────────────
+
+1. MENU SIMPLIFIÉ
+   AVANT: 3 actions
+     - Export Synthèse CAC
+     - Export Points Révision Comptes
+     - Export Points Contrôle Interne
+   
+   APRÈS: 1 seule action
+     - Export Synthèse CAC (FRAP + Recos Révision + Recos CI)
+
+2. SÉLECTEURS CLARAVERSE (comme Flowise.js)
+   Utilise maintenant les mêmes sélecteurs que Flowise.js:
+   
+   CHAT_TABLES:
+     "table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg"
+   
+   PARENT_DIV:
+     "div.prose.prose-base.dark\\:prose-invert.max-w-none"
+   
+   ✅ Détecte uniquement les tables Claraverse
+   ✅ Ignore les autres tables HTML
+
+3. DÉTECTION AMÉLIORÉE
+   Essaie plusieurs conteneurs dans l'ordre:
+     1. div.prose.prose-base.dark:prose-invert.max-w-none
+     2. main
+     3. [role="main"]
+     4. document.body (fallback)
+   
+   + Logs détaillés du conteneur et sélecteur utilisés
+
+✅ MODIFICATIONS
+───────────────────────────────────────────────────────────────
+
+Fichier: public/menu.js
+
+1. Section menu (ligne ~173):
+   - Supprimé les 2 actions séparées
+   - Gardé une seule action claire
+
+2. Fonction exportSyntheseCAC (ligne ~7312):
+   - Ajout des sélecteurs Claraverse (comme Flowise.js)
+   - Amélioration de la détection du conteneur
+   - Utilisation du sélecteur spécifique pour les tables
+   - Ajout de logs détaillés pour déboguer
+   - Message d'erreur plus clair
+
+✅ SÉLECTEURS UTILISÉS
+───────────────────────────────────────────────────────────────
+
+AVANT:
+  chatContainer.querySelectorAll('table')
+  → Trouve TOUTES les tables HTML
+
+APRÈS:
+  chatContainer.querySelectorAll('table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg')
+  → Trouve UNIQUEMENT les tables Claraverse
+
+✅ UTILISATION
+───────────────────────────────────────────────────────────────
+
+1. Générer des tables dans le chat:
+   - Tables FRAP
+   - Tables Recos révision des comptes
+   - Tables Recos contrôle interne comptable
+
+2. Clic droit sur n'importe quelle table
+
+3. Menu: "Rapports CAC & Expert-Comptable" 🎓
+
+4. Cliquer: "📊 Export Synthèse CAC (FRAP + Recos Révision + Recos CI)"
+   OU
+   Raccourci: Ctrl+Shift+C
+
+5. Le système:
+   - Détecte automatiquement les tables Claraverse
+   - Collecte les 3 types de points
+   - Exporte tout dans un seul rapport Word
+   - Utilise le template
+   - Génère les sommaires
+
+✅ LOGS CONSOLE
+───────────────────────────────────────────────────────────────
+
+Vous verrez maintenant:
+
+🔍 [Export CAC] Conteneur trouvé: DIV.prose
+🔍 [Export CAC] Sélecteur tables: table.min-w-full.border.border-gray-200.dark\:border-gray-700.rounded-lg
+🔍 [Export CAC] 15 table(s) Claraverse trouvée(s)
+📊 [Export CAC] Points collectés:
+   - FRAP: 3
+   - Recos Révision: 2
+   - Recos CI: 1
+
+✅ AVANTAGES
+───────────────────────────────────────────────────────────────
+
+✓ Menu plus simple (1 action au lieu de 3)
+✓ Sélecteurs Claraverse (comme Flowise.js)
+✓ Détection précise des tables
+✓ Logs détaillés pour déboguer
+✓ Message d'erreur plus clair
+✓ Exporte automatiquement les 3 types
+✓ Cohérence avec le reste du code (Flowise.js)
+
+✅ TEST
+───────────────────────────────────────────────────────────────
+
+1. Rafraîchir la page (F5)
+2. Ouvrir la console (F12)
+3. Clic droit sur une table
+4. Vérifier qu'il n'y a qu'une seule action dans "Rapports CAC"
+5. Cliquer dessus
+6. Vérifier les logs dans la console:
+   - Conteneur trouvé
+   - Sélecteur utilisé
+   - Nombre de tables Claraverse
+   - Points collectés
+
+═══════════════════════════════════════════════════════════════
+
+✅ CORRECTION TERMINÉE
+
+Rafraîchissez la page (F5) pour voir les changements!
+
+Les tables seront maintenant détectées avec le même sélecteur que Flowise.js
+
+═══════════════════════════════════════════════════════════════

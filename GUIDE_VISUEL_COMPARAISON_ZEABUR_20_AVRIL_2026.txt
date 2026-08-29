@@ -1,0 +1,354 @@
+═══════════════════════════════════════════════════════════════════
+📊 GUIDE VISUEL - COMPARAISON AVANT/APRÈS
+═══════════════════════════════════════════════════════════════════
+Date: 20 avril 2026
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🔴 CONFIGURATION ACTUELLE (INCORRECTE)       │
+└─────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  SERVICE: Backend (pybackend.zeabur.app)                      ║
+║  ─────────────────────────────────────────────────────────    ║
+║                                                               ║
+║  Repository:     github.com/user/claraverse                   ║
+║  Branch:         master                                       ║
+║  Build Method:   Docker Compose                               ║
+║  Service Name:   frontend  ← ❌ ERREUR ICI !                  ║
+║  Port:           8080                                         ║
+║                                                               ║
+║  RÉSULTAT:                                                    ║
+║  → Build le service "frontend" du docker-compose.yml          ║
+║  → Logs montrent: npm ci, dist/assets/*.js                    ║
+║  → Backend ne fonctionne pas !                                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  SERVICE: Frontend (prclaravi.zeabur.app)                     ║
+║  ─────────────────────────────────────────────────────────    ║
+║                                                               ║
+║  Repository:     github.com/user/claraverse                   ║
+║  Branch:         master                                       ║
+║  Build Method:   Docker Compose                               ║
+║  Service Name:   frontend  ← ✅ Correct                       ║
+║  Port:           80                                           ║
+║                                                               ║
+║  RÉSULTAT:                                                    ║
+║  → Build le service "frontend" du docker-compose.yml          ║
+║  → Logs montrent: npm ci, Vite build                          ║
+║  → Frontend fonctionne (si nginx.conf supprimé)               ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🟢 CONFIGURATION CORRECTE                    │
+└─────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  SERVICE: Backend (pybackend.zeabur.app)                      ║
+║  ─────────────────────────────────────────────────────────    ║
+║                                                               ║
+║  Repository:     github.com/user/claraverse                   ║
+║  Branch:         master                                       ║
+║  Build Method:   Docker Compose                               ║
+║  Service Name:   backend   ← ✅ CORRIGÉ !                     ║
+║  Port:           8080                                         ║
+║                                                               ║
+║  RÉSULTAT:                                                    ║
+║  → Build le service "backend" du docker-compose.yml           ║
+║  → Logs montrent: pip install, uvicorn running                ║
+║  → Backend fonctionne ! ✅                                    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  SERVICE: Frontend (prclaravi.zeabur.app)                     ║
+║  ─────────────────────────────────────────────────────────    ║
+║                                                               ║
+║  Repository:     github.com/user/claraverse                   ║
+║  Branch:         master                                       ║
+║  Build Method:   Docker Compose                               ║
+║  Service Name:   frontend  ← ✅ Correct                       ║
+║  Port:           80                                           ║
+║                                                               ║
+║  RÉSULTAT:                                                    ║
+║  → Build le service "frontend" du docker-compose.yml          ║
+║  → Logs montrent: npm ci, Vite build                          ║
+║  → Frontend fonctionne ! ✅                                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════
+📋 COMPARAISON DES LOGS
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ LOGS BACKEND - AVANT (INCORRECT)                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ ❌ npm ci                                                       │
+│ ❌ added 1234 packages                                          │
+│ ❌ npm run build                                                │
+│ ❌ vite v5.0.0 building for production...                       │
+│ ❌ dist/assets/index-abc123.js                                  │
+│ ❌ dist/assets/vendor-def456.js                                 │
+│                                                                 │
+│ → C'est le FRONTEND qui est buildé ! ❌                         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ LOGS BACKEND - APRÈS (CORRECT)                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ ✅ Collecting packages...                                       │
+│ ✅ pip install -r requirements.txt                              │
+│ ✅ Successfully installed fastapi uvicorn pandas...             │
+│ ✅ Starting uvicorn...                                          │
+│ ✅ INFO:     Uvicorn running on http://0.0.0.0:8080            │
+│ ✅ INFO:     Application startup complete                       │
+│                                                                 │
+│ → C'est le BACKEND qui est buildé ! ✅                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ LOGS FRONTEND - TOUJOURS CORRECT                               │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ ✅ npm ci                                                       │
+│ ✅ added 1234 packages                                          │
+│ ✅ npm run build                                                │
+│ ✅ vite v5.0.0 building for production...                       │
+│ ✅ dist/assets/index-abc123.js                                  │
+│ ✅ dist/assets/vendor-def456.js                                 │
+│ ✅ Starting nginx...                                            │
+│                                                                 │
+│ → C'est le FRONTEND qui est buildé ! ✅                         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+🔍 EXPLICATION VISUELLE
+═══════════════════════════════════════════════════════════════════
+
+Votre fichier docker-compose.yml:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ docker-compose.yml                                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  services:                                                      │
+│                                                                 │
+│    backend:          ← Service #1: Backend Python              │
+│      build:                                                     │
+│        context: ./py_backend                                    │
+│        dockerfile: Dockerfile                                   │
+│      ports:                                                     │
+│        - "8080:8080"                                            │
+│                                                                 │
+│    frontend:         ← Service #2: Frontend React              │
+│      build:                                                     │
+│        context: .                                               │
+│        dockerfile: Dockerfile.frontend                          │
+│      ports:                                                     │
+│        - "80:80"                                                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+Zeabur doit savoir quel service builder:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ MAPPING ZEABUR → DOCKER-COMPOSE                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Service Zeabur "Backend"                                       │
+│  Service Name: backend  ──────────┐                            │
+│                                   │                             │
+│                                   ↓                             │
+│                          docker-compose.yml                     │
+│                          services:                              │
+│                            backend:  ← Build ce service         │
+│                                                                 │
+│  ─────────────────────────────────────────────────────────────  │
+│                                                                 │
+│  Service Zeabur "Frontend"                                      │
+│  Service Name: frontend ──────────┐                            │
+│                                   │                             │
+│                                   ↓                             │
+│                          docker-compose.yml                     │
+│                          services:                              │
+│                            frontend: ← Build ce service         │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+🎯 CHANGEMENT À FAIRE
+═══════════════════════════════════════════════════════════════════
+
+UN SEUL CHANGEMENT NÉCESSAIRE:
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  Service Zeabur: Backend (pybackend.zeabur.app)               ║
+║                                                               ║
+║  Settings → Build Configuration → Service Name               ║
+║                                                               ║
+║  ┌─────────────────────────────────────────────────────────┐ ║
+║  │                                                         │ ║
+║  │  Service Name:  [frontend ▼]  ← ❌ AVANT               │ ║
+║  │                                                         │ ║
+║  │                 ↓ CHANGER EN ↓                         │ ║
+║  │                                                         │ ║
+║  │  Service Name:  [backend  ▼]  ← ✅ APRÈS               │ ║
+║  │                                                         │ ║
+║  └─────────────────────────────────────────────────────────┘ ║
+║                                                               ║
+║  Puis: Save → Redeploy                                        ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════
+✅ RÉSULTAT ATTENDU APRÈS CORRECTION
+═════════════════════════════════��═════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ TEST 1: Backend Health Check                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ URL: https://pybackend.zeabur.app/health                       │
+│                                                                 │
+│ Résultat:                                                       │
+│ {                                                               │
+│   "status": "healthy"                                           │
+│ }                                                               │
+│                                                                 │
+│ Status: 200 OK ✅                                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ TEST 2: Frontend Application                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ URL: https://prclaravi.zeabur.app                              │
+│                                                                 │
+│ Résultat:                                                       │
+│ → Page d'accueil Claraverse s'affiche                          │
+│ → Menu de navigation visible                                   │
+│ → Bouton "Démarrer" fonctionnel                                │
+│ → Pas d'erreur dans la console                                 │
+│                                                                 │
+│ Status: 200 OK ✅                                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ TEST 3: Communication Frontend ↔ Backend                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Action: Cliquer sur un bouton qui appelle le backend           │
+│                                                                 │
+│ Résultat:                                                       │
+│ → Requête envoyée à https://pybackend.zeabur.app               │
+│ → Réponse reçue avec succès                                    │
+│ → Pas d'erreur CORS                                            │
+│ → Données affichées correctement                               │
+│                                                                 │
+│ Status: Fonctionnel ✅                                          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+📊 TABLEAU RÉCAPITULATIF
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────┬──────────────┬──────────────┬──────────────────┐
+│ Service     │ Service Name │ Port │ Build                     │
+├─────────────┼──────────────┼──────┼──────────────────────────┤
+│ Backend     │ backend      │ 8080 │ py_backend/Dockerfile    │
+│ (Zeabur)    │ ✅ CORRECT   │      │ pip install, uvicorn     │
+├─────────────┼──────────────┼──────┼──────────────────────────┤
+│ Frontend    │ frontend     │ 80   │ Dockerfile.frontend      │
+│ (Zeabur)    │ ✅ CORRECT   │      │ npm ci, Vite, Nginx      │
+└─────────────┴──────────────┴──────┴──────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+🎯 CHECKLIST VISUELLE
+═══════════════════════════════════════════════════════════════════
+
+AVANT DE CORRIGER:
+□ Lire ce guide
+□ Comprendre le problème
+□ Avoir accès au Dashboard Zeabur
+
+CORRECTION:
+□ Ouvrir Zeabur Dashboard
+□ Sélectionner le service Backend
+□ Aller dans Settings
+□ Changer Service Name: frontend → backend
+□ Cliquer Save
+□ Cliquer Redeploy
+□ Cocher "Clear Build Cache" si disponible
+
+VÉRIFICATION:
+□ Attendre 3-5 minutes (build en cours)
+□ Vérifier les logs Backend (pip install, uvicorn)
+□ Tester /health endpoint
+□ Tester l'application frontend
+□ Vérifier qu'il n'y a pas d'erreur CORS
+
+SUCCÈS:
+□ Backend retourne {"status": "healthy"}
+□ Frontend affiche l'application
+□ Communication frontend ↔ backend fonctionne
+□ Pas d'erreur dans les logs
+
+═══════════════════════════════════════════════════════════════════
+💡 ASTUCE MNÉMOTECHNIQUE
+═══════════════════════════════════════════════════════════════════
+
+Pour ne plus oublier:
+
+Service Zeabur "Backend"  → Service Name = "backend"
+Service Zeabur "Frontend" → Service Name = "frontend"
+
+C'est comme une étiquette sur une boîte:
+📦 Boîte "Backend"  → Étiquette "backend"
+📦 Boîte "Frontend" → Étiquette "frontend"
+
+Si vous mettez l'étiquette "frontend" sur la boîte "Backend",
+vous allez ouvrir la mauvaise boîte ! 📦❌
+
+═══════════════════════════════════════════════════════════════════
+🆘 SI VOUS ÊTES BLOQUÉ
+═══════════════════════════════════════════════════════════════════
+
+1. Vérifier que vous êtes sur le bon service:
+   → URL doit être pybackend.zeabur.app (pas prclaravi)
+
+2. Vérifier que Build Method = "Docker Compose":
+   → Pas "Dockerfile" ou "Buildpack"
+
+3. Vérifier que le repo et la branche sont corrects:
+   → Repository: github.com/votre-username/claraverse
+   → Branch: master
+
+4. Si le champ "Service Name" n'existe pas:
+   → Vérifier que Build Method = "Docker Compose"
+   → Le champ apparaît seulement avec Docker Compose
+
+5. Si le problème persiste après correction:
+   → Supprimer le service et le recréer
+   → Ou utiliser votre ancien repo backend séparé
+
+═══════════════════════════════════════════════════════════════════
+
+PROCHAINE ÉTAPE: Aller sur Zeabur et faire la correction ! 🚀
+
+═══════════════════════════════════════════════════════════════════

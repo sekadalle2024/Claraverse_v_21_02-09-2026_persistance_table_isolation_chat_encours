@@ -1,0 +1,67 @@
+============================================================
+   FIX V3.1 APPLIQUÉ - CORRECTION DÉCALAGE COLONNES CIA
+============================================================
+
+PROBLÈME IDENTIFIÉ:
+Le fichier fix-menu-cia-v3-final.js écrasait la fonction 
+showResultatFinal() de menu_cia.js mais n'affichait PAS 
+la colonne "reponse_cia", seulement "remarques".
+
+Cela causait le décalage des colonnes car:
+- reponse_cia restait masquée (display: none)
+- Les autres colonnes se décalaient visuellement
+
+CORRECTION APPLIQUÉE (fix-menu-cia-v3-final.js → V3.1):
+
+AVANT (bug):
+```javascript
+// 1. Afficher la colonne Remarques
+this.showColumn(table, "remarques");
+```
+
+APRÈS (corrigé):
+```javascript
+// 🔧 FIX V3.1: Afficher TOUTES les colonnes masquées
+this.showColumn(table, "reponse_cia");  // ← AJOUTÉ
+this.showColumn(table, "remarques");
+```
+
+============================================================
+                    ÉTAPES DE TEST
+============================================================
+
+1. VIDER LE CACHE DU NAVIGATEUR (OBLIGATOIRE!)
+   - Ctrl+Shift+R (ou Cmd+Shift+R sur Mac)
+   - Ou F12 > Network > cocher "Disable cache" > F5
+
+2. OUVRIR LA CONSOLE (F12 > Console)
+   Vous devriez voir:
+   - "🔧 FIX Menu CIA V3 FINAL - Démarrage"
+   - "✅ Menu CIA détecté, application des corrections V3"
+
+3. GÉNÉRER UN QUESTIONNAIRE CIA
+   - Via Flowise ou votre endpoint
+
+4. ACTIVER LE RÉSULTAT FINAL
+   - Clic droit sur une table CIA
+   - Cliquer sur "📊 Résultat final"
+
+5. VÉRIFIER LES LOGS CONSOLE
+   Vous devriez voir:
+   - "📊 FIX V3.1: Affichage du résultat final"
+   - "👁️ Affichage de la colonne reponse_cia"
+   - "👁️ Affichage de la colonne remarques"
+
+6. VÉRIFIER L'ORDRE DES COLONNES
+   L'ordre doit être:
+   Ref Question | Question | Option | Reponse CIA | Reponse User | Remarques | Score
+
+============================================================
+                 FICHIERS MODIFIÉS
+============================================================
+
+- public/fix-menu-cia-v3-final.js (V3 → V3.1)
+  - Ajout de: this.showColumn(table, "reponse_cia");
+  - Ajout de: this.mergeRemarquesColumn(table);
+
+============================================================

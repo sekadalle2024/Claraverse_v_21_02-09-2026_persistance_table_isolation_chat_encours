@@ -1,0 +1,93 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   ⚡ ACTION IMMÉDIATE - EXPORT SYNTHÈSE CAC                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📅 Date: 25 Mars 2026
+⚠️ Problème: "Aucune table Claraverse trouvée"
+
+═══════════════════════════════════════════════════════════════
+   SOLUTION RAPIDE (2 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+1️⃣ FORCER LE RECHARGEMENT DU FRONTEND
+   
+   Appuyez sur: Ctrl + Shift + R
+   
+   → Cela force le navigateur à recharger le nouveau code
+   → Le cache est vidé
+
+2️⃣ VÉRIFIER QUE DES TABLES EXISTENT
+   
+   Ouvrir la console (F12) et taper:
+   
+   document.querySelectorAll('table.min-w-full.border.border-gray-200').length
+   
+   Résultat:
+   - Si 0: Aucune table → Passer à l'étape 3
+   - Si > 0: Des tables existent → Passer à l'étape 4
+
+3️⃣ TESTER AVEC LE SCRIPT POWERSHELL
+   
+   Si aucune table n'existe, testez directement le backend:
+   
+   .\test-export-synthese-cac-final.ps1
+   
+   → Ce script envoie des données de test au backend
+   → Un fichier Word sera généré automatiquement
+   → Le fichier s'ouvrira automatiquement
+
+4️⃣ VÉRIFIER LES LOGS APRÈS CLIC
+   
+   Après avoir cliqué sur "Export Synthèse CAC":
+   
+   Ouvrir la console (F12) et chercher:
+   
+   🔍 [Export CAC] X table(s) Claraverse trouvée(s)
+   
+   - Si X = 0: Les tables n'ont pas les bonnes classes CSS
+   - Si X > 0: Les tables sont détectées → Vérifier les logs suivants
+
+═══════════════════════════════════════════════════════════════
+   COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════
+
+# Forcer le rechargement:
+Ctrl + Shift + R
+
+# Vérifier les tables (console F12):
+document.querySelectorAll('table.min-w-full.border.border-gray-200').length
+
+# Tester avec le script:
+.\test-export-synthese-cac-final.ps1
+
+# Vérifier le backend:
+http://localhost:5000/docs
+
+═══════════════════════════════════════════════════════════════
+   RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+Après le test avec le script PowerShell:
+
+✅ Fichier généré: synthese_cac_test_2026-03-25_XX-XX-XX.docx
+✅ Taille: ~50 KB
+✅ Le fichier s'ouvre automatiquement dans Word
+
+Contenu du fichier:
+✓ Section 2: OBSERVATIONS D'AUDIT (Recos Révision)
+  - Sommaire automatique
+  - Tous les champs (Description, Observation, Ajustement, Régularisation)
+
+✓ Section 3: POINTS DE CONTRÔLE INTERNE (FRAP + Recos CI)
+  - Sommaire automatique
+  - Tous les champs (Intitulé, Observation, Constat, Risque, Recommandation)
+
+═══════════════════════════════════════════════════════════════
+
+⚡ COMMENCEZ PAR L'ÉTAPE 1
+
+Appuyez sur Ctrl + Shift + R pour forcer le rechargement!
+
+═══════════════════════════════════════════════════════════════

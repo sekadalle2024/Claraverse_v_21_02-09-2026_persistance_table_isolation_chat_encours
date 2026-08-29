@@ -1,0 +1,198 @@
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTION FINALE : AGENT RAG AFFICHE [undefined]
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 DIAGNOSTIC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Le node "Extract Variables for RAG" fonctionne et extrait :
+   {
+     "cycle": "trésorerie",
+     "anomalie": "absence de manuel des procedures",
+     "user_message": "Message non fourni",
+     "constat": "À compléter"
+   }
+
+❌ L'agent RAG affiche [undefined] pour TOUTES les variables
+
+🔍 CAUSE RACINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Alea16" est ENTRE "Extract Variables for RAG" et "Agent RAG".
+
+Le node "Alea16" crée un nouveau JSON avec seulement :
+{
+  "alea": 2
+}
+
+Il ÉCRASE les variables extraites par "Extract Variables for RAG" !
+
+✅ SOLUTION : SUPPRIMER LE NODE "ALEA16"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Alea16" sert à choisir aléatoirement un modèle Gemini.
+Mais il écrase les données !
+
+OPTION 1 : Modifier le node "Alea16" pour PRÉSERVER les variables
+─────────────────────────────────────────────────────────────────────────
+
+Dans le node "Alea16", changez la configuration :
+
+Au lieu de :
+{
+  "assignments": [
+    {
+      "name": "alea",
+      "value": "={{ Math.floor(Math.random() * 4) + 1 }}",
+      "type": "number"
+    }
+  ]
+}
+
+Utilisez :
+{
+  "assignments": [
+    {
+      "name": "alea",
+      "value": "={{ Math.floor(Math.random() * 4) + 1 }}",
+      "type": "number"
+    },
+    {
+      "name": "user_message",
+      "value": "={{ $json.user_message }}",
+      "type": "string"
+    },
+    {
+      "name": "cycle",
+      "value": "={{ $json.cycle }}",
+      "type": "string"
+    },
+    {
+      "name": "constat",
+      "value": "={{ $json.constat }}",
+      "type": "string"
+    },
+    {
+      "name": "anomalie",
+      "value": "={{ $json.anomalie }}",
+      "type": "string"
+    }
+  ]
+}
+
+OPTION 2 : Connecter directement "Extract Variables" à "Agent RAG"
+─────────────────────────────────────────────────────────────────────────
+
+1. Déconnectez "Alea16" de "Agent RAG"
+2. Connectez "Extract Variables for RAG" directement à "Agent RAG"
+3. Connectez "Alea16" au sélecteur de modèle "Ohada save 14"
+
+Nouveau flux :
+Extract Variables for RAG → Agent RAG
+Alea16 → Ohada save 14 (Model Selector)
+
+
+📋 ÉTAPES DÉTAILLÉES (OPTION 1 - RECOMMANDÉE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Ouvrir le node "Alea16"
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Dans N8N, cliquez sur le node "Alea16"
+   2. Vous verrez 1 champ : "alea"
+
+ÉTAPE 2 : Ajouter les 4 variables
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur "Add Field" 4 fois
+   2. Configurez chaque champ :
+   
+   Field 2:
+   - Name: user_message
+   - Type: String
+   - Value: ={{ $json.user_message }}
+   
+   Field 3:
+   - Name: cycle
+   - Type: String
+   - Value: ={{ $json.cycle }}
+   
+   Field 4:
+   - Name: constat
+   - Type: String
+   - Value: ={{ $json.constat }}
+   
+   Field 5:
+   - Name: anomalie
+   - Type: String
+   - Value: ={{ $json.anomalie }}
+
+ÉTAPE 3 : Sauvegarder et tester
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Sauvegardez le node "Alea16"
+   2. Exécutez le workflow
+   3. Vérifiez l'output de "Alea16" :
+   
+   {
+     "alea": 2,
+     "user_message": "...",
+     "cycle": "trésorerie",
+     "constat": "...",
+     "anomalie": "absence de manuel des procedures"
+   }
+
+ÉTAPE 4 : Vérifier l'agent RAG
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Le prompt devrait maintenant afficher :
+   
+   [user_message] = ...
+   [cycle_detecte] = trésorerie
+   [constat] = ...
+   [anomalie] = absence de manuel des procedures
+
+🔧 ARCHITECTURE FINALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9
+  ↓
+Code integrate7
+  ↓
+Extract Variables for RAG (extrait les variables)
+  ↓
+Alea16 (ajoute alea + PRÉSERVE les variables) ← MODIFIER ICI
+  ↓
+Agent RAG (reçoit alea + toutes les variables)
+
+💡 POURQUOI LE NODE "ALEA16" ÉCRASAIT LES DONNÉES ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Set" (Edit Field) en mode "Manual Mapping" crée un NOUVEAU JSON.
+
+Si vous définissez seulement :
+{
+  "alea": 2
+}
+
+Il remplace TOUT le JSON précédent par ce nouveau JSON.
+
+Pour PRÉSERVER les données précédentes, vous devez EXPLICITEMENT les copier :
+{
+  "alea": 2,
+  "user_message": "{{ $json.user_message }}",
+  "cycle": "{{ $json.cycle }}",
+  ...
+}
+
+🎯 RÉSUMÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ PROBLÈME : Le node "Alea16" écrase les variables extraites
+✅ SOLUTION : Ajouter 4 champs dans "Alea16" pour préserver les variables
+
+Après cette modification, l'agent RAG recevra :
+- alea (pour le sélecteur de modèle)
+- user_message, cycle, constat, anomalie (pour le prompt)
+
+═══════════════════════════════════════════════════════════════════════════════

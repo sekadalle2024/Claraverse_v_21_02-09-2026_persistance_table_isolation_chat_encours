@@ -1,0 +1,181 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION ONGLETS BALANCE - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 05 Avril 2026 - 00h30
+🎯 OBJECTIF : Corriger la détection des onglets de balance avec espaces
+
+═══════════════════════════════════════════════════════════════════════════════
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ NOMS D'ONGLETS ACTUELS (avec espaces):
+   1. 'BALANCE N '     → Avec espace à la fin
+   2. 'BALANCE N-1 '   → Avec espace à la fin
+   3. 'BALANCE N-2'    → Sans espace
+
+✅ NOMS D'ONGLETS ATTENDUS (structure standard):
+   1. 'BALANCE N'      → Sans espace
+   2. 'BALANCE N-1'    → Sans espace
+   3. 'BALANCE N-2'    → Sans espace
+
+═══════════════════════════════════════════════════════════════════════════════
+SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 1. SCRIPT DE TEST CORRIGÉ
+   Fichier : py_backend/generer_test_etats_controle_html.py
+   
+   Modification :
+   ```python
+   # Avant (ne fonctionnait pas)
+   balance_n = pd.read_excel(fichier, sheet_name="BALANCE N")
+   balance_n1 = pd.read_excel(fichier, sheet_name="BALANCE N-1")
+   
+   # Après (fonctionne avec les espaces)
+   balance_n = pd.read_excel(fichier, sheet_name="BALANCE N ")
+   balance_n1 = pd.read_excel(fichier, sheet_name="BALANCE N-1 ")
+   ```
+
+✅ 2. BACKEND PRINCIPAL VÉRIFIÉ
+   Fichier : py_backend/etats_financiers.py
+   
+   Le backend utilise une détection automatique par INDEX d'onglet:
+   - Onglet 0 → Balance N
+   - Onglet 1 → Balance N-1
+   - Onglet 2 → Balance N-2
+   
+   ✓ Pas affecté par les espaces dans les noms
+   ✓ Fonctionne avec n'importe quel nom d'onglet
+   ✓ Plus robuste et flexible
+
+✅ 3. TEST RÉUSSI
+   Commande : python py_backend/generer_test_etats_controle_html.py
+   
+   Résultat :
+   ✅ Balance N chargée: 441 comptes
+   ✅ Balance N-1 chargée: 405 comptes
+   ✅ Fichier généré: C:\Users\LEADER\Desktop\test_etats_controle_html.html
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ py_backend/generer_test_etats_controle_html.py
+  - Noms d'onglets corrigés avec espaces
+  - Commentaire ajouté pour clarifier
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS VÉRIFIÉS (pas de modification nécessaire)
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ py_backend/etats_financiers.py
+  - Utilise la détection par index (sheet_name=0, 1, 2)
+  - Pas affecté par les espaces
+
+✓ py_backend/etats_controle_exhaustifs.py
+  - Fonctions de calcul (pas de chargement de fichier)
+  - Pas affecté
+
+✓ py_backend/html_etats_controle.py
+  - Génération HTML (pas de chargement de fichier)
+  - Pas affecté
+
+═══════════════════════════════════════════════════════════════════════════════
+RECOMMANDATION POUR L'AVENIR
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OPTION 1 : Nettoyer le fichier Excel (recommandé)
+   Action : Renommer les onglets pour enlever les espaces
+   - "BALANCE N " → "BALANCE N"
+   - "BALANCE N-1 " → "BALANCE N-1"
+   
+   Avantages :
+   ✓ Structure standard propre
+   ✓ Cohérence avec la documentation
+   ✓ Évite les erreurs futures
+
+🎯 OPTION 2 : Utiliser la détection par index (actuel)
+   Action : Toujours utiliser sheet_name=0, 1, 2
+   
+   Avantages :
+   ✓ Fonctionne avec n'importe quel nom
+   ✓ Plus robuste
+   ✓ Pas besoin de modifier le fichier Excel
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 1. VÉRIFIER LE FICHIER HTML GÉNÉRÉ
+   Emplacement : C:\Users\LEADER\Desktop\test_etats_controle_html.html
+   
+   À vérifier :
+   - Les 6 états de contrôle sont présents
+   - Les colonnes N et N-1 sont affichées
+   - Les montants sont corrects
+   - Les accordéons fonctionnent
+
+⏳ 2. INTÉGRER LES ÉTATS DE CONTRÔLE DANS LE BACKEND
+   Fichier : py_backend/etats_financiers.py (lignes 1740-1800)
+   
+   Actions :
+   - Utiliser les fonctions de py_backend/etats_controle_exhaustifs.py
+   - Appeler generate_all_etats_controle_html() de py_backend/html_etats_controle.py
+   - Remplacer le code actuel des états de contrôle
+
+⏳ 3. TESTER LE WORKFLOW COMPLET
+   - Démarrer le backend
+   - Uploader le fichier Excel
+   - Vérifier que les états de contrôle s'affichent dans le chat
+   - Vérifier que les accordéons fonctionnent
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ ESPACES DANS LES NOMS D'ONGLETS:
+- Excel permet les espaces à la fin des noms d'onglets
+- Ces espaces sont invisibles dans l'interface Excel
+- Ils causent des erreurs si on utilise les noms sans espaces
+- La détection par index évite ce problème
+
+⚠️ STRUCTURE STANDARD VS STRUCTURE ACTUELLE:
+- La documentation décrit la structure STANDARD (sans espaces)
+- Le fichier actuel a des espaces (probablement une erreur de saisie)
+- Les deux approches fonctionnent maintenant
+
+⚠️ BACKEND ROBUSTE:
+- Le backend principal utilise la détection par index
+- Plus robuste que la détection par nom
+- Fonctionne même si les onglets sont renommés
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier les noms d'onglets
+python -c "import pandas as pd; xls = pd.ExcelFile('py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls'); print('Onglets:'); [print(f'  {i}. \'{name}\'') for i, name in enumerate(xls.sheet_names, 1)]"
+
+# Générer le fichier HTML de test
+python py_backend/generer_test_etats_controle_html.py
+
+# Ouvrir le fichier HTML généré
+start C:\Users\LEADER\Desktop\test_etats_controle_html.html
+
+# Tester le backend complet
+Doc_Etat_Fin/Scripts/test-backend-simple.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+RÉSUMÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Problème identifié : Espaces dans les noms d'onglets
+✅ Solution appliquée : Script de test corrigé
+✅ Backend vérifié : Utilise la détection par index (robuste)
+✅ Test réussi : Fichier HTML généré avec 441 comptes (N) et 405 comptes (N-1)
+✅ Prochaine étape : Vérifier le fichier HTML et intégrer dans le backend
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

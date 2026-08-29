@@ -1,0 +1,74 @@
+============================================================
+   TEST CORRECTION ORDRE DES COLONNES - RÉSULTAT FINAL CIA
+============================================================
+
+PROBLÈME CORRIGÉ:
+- Les colonnes étaient décalées après activation de "Résultat Final"
+- Le contenu ne correspondait plus aux en-têtes
+
+CORRECTION APPLIQUÉE:
+- menu_cia.js v1.1 - Affichage de Reponse_cia ET Remarques
+
+============================================================
+                    ÉTAPES DE TEST
+============================================================
+
+1. VIDER LE CACHE DU NAVIGATEUR
+   - Ctrl+Shift+R (ou Cmd+Shift+R sur Mac)
+   - Ou F12 > Network > Disable cache
+
+2. OUVRIR UNE PAGE AVEC QUESTIONNAIRE CIA
+   - Générer un questionnaire via Flowise
+   - Attendre que les tables s'affichent
+
+3. VÉRIFIER L'ÉTAT INITIAL (AVANT)
+   Colonnes visibles attendues:
+   ✓ Ref Question
+   ✓ Question (fusionnée)
+   ✓ Option
+   ✓ Reponse User (avec checkboxes)
+   
+   Colonnes masquées:
+   ✗ Reponse CIA (masquée)
+   ✗ Remarques (masquée)
+
+4. ACTIVER LE RÉSULTAT FINAL
+   - Clic droit sur une table CIA
+   - Cliquer sur "📊 Résultat final"
+
+5. VÉRIFIER L'ÉTAT FINAL (APRÈS)
+   Colonnes visibles attendues (dans l'ordre):
+   ✓ Ref Question
+   ✓ Question (fusionnée)
+   ✓ Option
+   ✓ Reponse CIA (maintenant visible)
+   ✓ Reponse User (avec checkboxes)
+   ✓ Remarques (visible et fusionnée)
+   ✓ Score (fusionné avec résultat)
+
+============================================================
+                 VÉRIFICATION CONSOLE
+============================================================
+
+Ouvrir F12 > Console et vérifier les logs:
+
+🎯 [CIA Menu] 📊 Affichage du résultat final
+🎯 [CIA Menu] 👁️ Affichage de la colonne reponse_cia
+🎯 [CIA Menu] ✅ En-tête "Reponse CIA" affiché
+🎯 [CIA Menu] 👁️ Affichage de la colonne remarques
+🎯 [CIA Menu] ✅ En-tête "Remarques" affiché
+🎯 [CIA Menu] 🔗 Fusion des cellules Remarques
+🎯 [CIA Menu] ✅ Résultat final affiché
+
+============================================================
+                    RÉSULTAT ATTENDU
+============================================================
+
+✅ Les colonnes sont dans le bon ordre
+✅ Les en-têtes correspondent aux contenus
+✅ Reponse CIA est visible
+✅ Remarques est visible et fusionnée
+✅ Score est calculé et fusionné
+✅ Table Résultat Final affiche le score global
+
+============================================================

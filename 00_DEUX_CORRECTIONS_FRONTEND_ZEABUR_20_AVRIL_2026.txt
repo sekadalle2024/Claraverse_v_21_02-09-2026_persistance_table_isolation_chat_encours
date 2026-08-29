@@ -1,0 +1,225 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              ✅ 2 CORRECTIONS FRONTEND ZEABUR APPLIQUÉES                     ║
+║                        PRÊT POUR REDÉPLOIEMENT                               ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 RÉSUMÉ DES CORRECTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ CORRECTION 1: npm install                                                │
+├──────────────────────────────────────────────────────────────────────────┤
+│ Problème:  npm ci --only=production échouait                            │
+│ Erreur:    package-lock.json incompatible                               │
+│ Solution:  npm install --production=false                               │
+│ Fichier:   Dockerfile.frontend (ligne 18)                               │
+│ Statut:    ✅ Corrigé                                                    │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ CORRECTION 2: SDK manquant                                               │
+├──────────────────────────────────────────────────────────────────────────┤
+│ Problème:  Could not resolve "../../sdk/src/ClaraFlowRunner"           │
+│ Erreur:    Dossier sdk/ non copié dans Docker                          │
+│ Solution:  COPY sdk/ ./sdk/                                            │
+│ Fichier:   Dockerfile.frontend (ligne 24)                              │
+│ Statut:    ✅ Corrigé                                                   │
+└──────────────────────────────────────────────────────────────────────────┘
+
+🔧 MODIFICATIONS TECHNIQUES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fichier: Dockerfile.frontend
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ AVANT                                                                   │
+├─────────────────────────────────────────────────────────────────────────┤
+│ # Installer les dépendances                                            │
+│ RUN npm ci --only=production                                           │
+│                                                                         │
+│ # Copier le code source                                                │
+│ COPY src/ ./src/                                                       │
+│ COPY public/ ./public/                                                 │
+│ COPY index.html ./                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ APRÈS                                                                   │
+├─────────────────────────────────────────────────────────────────────────┤
+│ # Installer les dépendances                                            │
+│ RUN npm install --production=false                                     │
+│                                                                         │
+│ # Copier le code source                                                │
+│ COPY src/ ./src/                                                       │
+│ COPY public/ ./public/                                                 │
+│ COPY sdk/ ./sdk/                    ← NOUVEAU                         │
+│ COPY index.html ./                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+📁 STRUCTURE DU PROJET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Claraverse/
+├── src/
+│   └── components/
+│       ├── AgentRunnerSDK.tsx  → import '../../sdk/src/ClaraFlowRunner'
+│       └── AgentRunner.tsx     → import '../../sdk/src/ClaraFlowRunner'
+│
+├── sdk/                        ← Maintenant copié dans Docker ✅
+│   ├── src/
+│   │   └── ClaraFlowRunner.ts  ← Fichier nécessaire
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── public/
+├── Dockerfile.frontend         ← 2 corrections appliquées
+└── docker-compose.yml
+
+🎯 ACTION IMMÉDIATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ PUSH VERS GITHUB (2 minutes)
+
+   Ouvrir PowerShell et exécuter:
+   
+   .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+   Le script va:
+   ✓ Vérifier les fichiers modifiés
+   ✓ Créer un commit avec les 2 corrections
+   ✓ Pusher vers GitHub
+
+2️⃣ REDÉPLOYER SUR ZEABUR (5-10 minutes)
+
+   • Aller sur https://zeabur.com/dashboard
+   • Sélectionner le service "frontend"
+   • Cliquer sur "Redeploy"
+   • Attendre le build complet
+
+3️⃣ VÉRIFIER (1 minute)
+
+   • Ouvrir https://prclaravi.zeabur.app
+   • Vérifier le chargement
+   • Tester le menu "Démarrer"
+   • Vérifier la console (F12)
+
+📊 STATUT DES SERVICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Backend:
+   Status:  ✅ DÉPLOYÉ ET FONCTIONNEL
+   URL:     https://pybackend.zeabur.app
+   Port:    8080
+   Health:  OK
+
+Frontend:
+   Status:  ⏳ CORRECTIONS APPLIQUÉES (2/2)
+   URL:     https://prclaravi.zeabur.app (après redéploiement)
+   Port:    80
+   Build:   Prêt à réussir
+
+💡 POURQUOI CES CORRECTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Correction 1: npm install
+   • npm ci est strict et nécessite un package-lock.json exact
+   • npm install est tolérant et fonctionne toujours
+   • --production=false installe toutes les dépendances (nécessaire pour build)
+   • Le cache Docker compense la différence de vitesse
+
+Correction 2: SDK copié
+   • Le projet utilise un SDK local dans sdk/
+   • Les composants importent depuis ../../sdk/src/
+   • Sans copie, le build échoue avec "module not found"
+   • Nécessaire pour AgentRunnerSDK et AgentRunner
+
+🔄 WORKFLOW DE BUILD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. COPY package*.json → Fichiers de dépendances
+2. RUN npm install → Installation des dépendances
+3. COPY src/ public/ sdk/ → Code source complet
+4. RUN npm run build → Build avec Vite
+   ├─ Vite résout les imports
+   ├─ TypeScript compile
+   ├─ Bundling des assets
+   └─ Génération dist/
+5. COPY dist/ vers Nginx → Déploiement
+
+🎉 RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après redéploiement:
+
+✅ Build réussi
+   • npm install fonctionne
+   • SDK résolu correctement
+   • Tous les modules trouvés
+   • Build Vite complet
+
+✅ Application accessible
+   • Frontend: https://prclaravi.zeabur.app
+   • Backend: https://pybackend.zeabur.app
+   • Communication frontend ↔ backend OK
+
+✅ Fonctionnalités opérationnelles
+   • Menu Démarrer
+   • Tous les modes
+   • AgentRunner avec SDK
+   • Upload de fichiers
+   • Export de rapports
+
+✅ Déploiement automatique
+   • Push GitHub → Build automatique
+   • Déploiement sans intervention
+   • Rollback possible
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fichiers créés:
+   • 00_CORRECTION_FRONTEND_ZEABUR_20_AVRIL_2026.txt (correction 1)
+   • 00_CORRECTION_SDK_MANQUANT_ZEABUR_20_AVRIL_2026.txt (correction 2)
+   • 00_DEUX_CORRECTIONS_FRONTEND_ZEABUR_20_AVRIL_2026.txt (ce fichier)
+   • QUICK_FIX_FRONTEND_ZEABUR.txt (guide rapide mis à jour)
+
+Guides existants:
+   • COMMENCER_ICI_ZEABUR.txt
+   • VERIFICATION_DEPLOIEMENT_ZEABUR.md
+   • 00_INDEX_CORRECTION_FRONTEND_ZEABUR_20_AVRIL_2026.md
+
+⏱️ TEMPS ESTIMÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Analyse problème 1:     ✅ Terminé
+Solution problème 1:    ✅ Terminé
+Analyse problème 2:     ✅ Terminé
+Solution problème 2:    ✅ Terminé
+Documentation:          ✅ Terminé
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Push GitHub:            ⏳ 2 minutes
+Build Zeabur:           ⏳ 5-10 minutes
+Vérification:           ⏳ 1 minute
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TOTAL RESTANT:          8-13 minutes
+
+🔗 LIENS RAPIDES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend:  https://prclaravi.zeabur.app
+Backend:   https://pybackend.zeabur.app
+Dashboard: https://zeabur.com/dashboard
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    🚀 PRÊT POUR LE DÉPLOIEMENT !                            ║
+║                                                                              ║
+║              2 corrections appliquées, push et redéployez                    ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Date: 20 Avril 2026
+Version: 2.0 (2 corrections)
+Statut: ✅ Prêt pour déploiement

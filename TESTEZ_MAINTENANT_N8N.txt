@@ -1,0 +1,150 @@
+═══════════════════════════════════════════════════════
+🚀 TESTEZ N8N MAINTENANT - LOGS DÉTAILLÉS
+═══════════════════════════════════════════════════════
+
+✅ MODIFICATIONS APPLIQUÉES
+---------------------------
+• Flowise.js : Logs détaillés étape par étape
+• test-n8n-connection.html : Outil de test avec interface
+• Affichage du nombre de caractères reçus
+• Messages d'erreur explicites
+
+
+🎯 ÉTAPE 1: OUVRIR LA CONSOLE
+------------------------------
+Appuyez sur F12 dans votre navigateur
+Allez dans l'onglet "Console"
+
+
+🧪 ÉTAPE 2: TESTER
+------------------
+
+OPTION A - Fichier de Test (RECOMMANDÉ):
+  1. Ouvrez: public/test-n8n-connection.html
+  2. Cliquez sur "🚀 Tester la Connexion"
+  3. Regardez la console (F12)
+
+OPTION B - Console Directe:
+  Collez ce code dans la console:
+
+fetch('https://xomava4845.app.n8n.cloud/webhook/htlm_processor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ question: 'test' })
+})
+.then(r => r.text())
+.then(text => {
+  console.log('📏 TAILLE:', text.length, 'caractères');
+  console.log('📄 CONTENU:', text);
+})
+
+
+📊 CE QUE VOUS VERREZ
+---------------------
+
+Dans la console, vous verrez des logs détaillés:
+
+═══════════════════════════════════════════════════════
+📡 ENVOI VERS N8N
+═══════════════════════════════════════════════════════
+🎯 Endpoint: https://...
+📦 Taille payload: XXX caractères
+🔑 Mot-clé: ...
+⏱️ Durée requête: XXXms
+✅ Réponse reçue ! Statut: 200 OK
+📄 Lecture du body...
+📏 Taille reçue: XXX caractères  ← REGARDEZ ICI !
+📄 Premiers 200 caractères: ...
+🔍 Parsing JSON...
+✅ JSON parsé avec succès
+📊 Type: Object
+🔑 Clés: output
+═══════════════════════════════════════════════════════
+
+
+🎯 INDICATEUR CLÉ: TAILLE REÇUE
+--------------------------------
+
+✅ SI > 0 caractères:
+   Données reçues ! Le problème est ailleurs.
+
+❌ SI 0 caractères:
+   Réponse vide ! Problème dans n8n.
+   👉 Ajoutez un node "Respond to Webhook"
+
+
+🔍 DIAGNOSTIC RAPIDE
+--------------------
+
+Regardez la ligne:
+  📏 Taille reçue: XXX caractères
+
+• XXX > 0 = ✅ n8n renvoie des données
+• XXX = 0 = ❌ n8n ne renvoie rien
+
+
+🆘 SI RÉPONSE VIDE (0 caractères)
+---------------------------------
+
+CAUSE:
+  Votre workflow n8n ne contient pas de node
+  "Respond to Webhook" ou il n'est pas configuré.
+
+SOLUTION:
+  1. Ouvrez votre workflow dans n8n
+  2. Ajoutez un node "Respond to Webhook" à la fin
+  3. Configurez-le:
+     Response Body: { "output": "{{ $json.result }}" }
+  4. Sauvegardez et activez le workflow
+
+
+🆘 SI JSON INVALIDE
+-------------------
+
+CAUSE:
+  n8n renvoie du texte brut, pas du JSON
+
+SOLUTION:
+  Dans le node "Respond to Webhook":
+  • Response Mode: JSON
+  • Body doit être un objet JSON valide
+
+
+📁 FICHIERS CRÉÉS
+-----------------
+
+• public/test-n8n-connection.html
+  → Outil de test avec interface graphique
+
+• COMMANDES_RAPIDES_N8N.txt
+  → Commandes à copier-coller
+
+• GUIDE_LOGS_N8N.md
+  → Guide complet d'interprétation des logs
+
+• FIX_N8N_REPONSE_VIDE_FINAL.md
+  → Guide de résolution détaillé
+
+
+💡 CONSEIL
+----------
+
+Testez d'abord avec le fichier test-n8n-connection.html
+C'est plus simple et vous aurez tous les détails !
+
+
+🎉 RÉSULTAT ATTENDU
+-------------------
+
+Quand tout fonctionne, vous verrez:
+
+📏 Taille reçue: 456 caractères  ← > 0 !
+✅ JSON parsé avec succès
+📊 Type: Object
+🔑 Clés: output
+🎉 Traitement complet réussi
+
+
+═══════════════════════════════════════════════════════
+Consultez GUIDE_LOGS_N8N.md pour plus de détails
+═══════════════════════════════════════════════════════

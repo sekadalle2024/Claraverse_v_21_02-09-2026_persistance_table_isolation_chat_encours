@@ -1,0 +1,172 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  COMMANDES À COPIER-COLLER - TEST X-REF                      ║
+║                              28 avril 2026                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 COMMANDES PRÊTES À L'EMPLOI
+==============================
+
+1️⃣  TEST POWERSHELL (Windows)
+------------------------------
+.\test-workflow-afficher-xref.ps1
+
+
+2️⃣  TEST CURL (Linux/Mac/Git Bash)
+-----------------------------------
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+  -H "Content-Type: application/json" \
+  -d '{"index":"[I30]-AFRILAND","dossier":"Dossier CAC"}'
+
+
+3️⃣  TEST CURL (Windows PowerShell)
+-----------------------------------
+curl.exe -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" `
+  -H "Content-Type: application/json" `
+  -d '{\"index\":\"[I30]-AFRILAND\",\"dossier\":\"Dossier CAC\"}'
+
+
+4️⃣  TEST AVEC INVOKE-RESTMETHOD (PowerShell)
+---------------------------------------------
+$body = @{
+    index = "[I30]-AFRILAND"
+    dossier = "Dossier CAC"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "https://n8nsqlite.zeabur.app/webhook/cross_reference" `
+    -Method Post `
+    -ContentType "application/json" `
+    -Body $body
+
+
+5️⃣  TEST AVEC FETCH (JavaScript Console)
+-----------------------------------------
+fetch('https://n8nsqlite.zeabur.app/webhook/cross_reference', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    index: '[I30]-AFRILAND',
+    dossier: 'Dossier CAC'
+  })
+})
+.then(response => response.json())
+.then(data => console.log('Résultat:', data))
+.catch(error => console.error('Erreur:', error));
+
+
+6️⃣  TEST AVEC PYTHON
+---------------------
+import requests
+import json
+
+url = "https://n8nsqlite.zeabur.app/webhook/cross_reference"
+payload = {
+    "index": "[I30]-AFRILAND",
+    "dossier": "Dossier CAC"
+}
+
+response = requests.post(url, json=payload)
+print(json.dumps(response.json(), indent=2))
+
+
+7️⃣  OUVRIR N8N
+--------------
+start https://n8nsqlite.zeabur.app
+
+
+8️⃣  OUVRIR GOOGLE DRIVE
+------------------------
+start https://drive.google.com
+
+
+9️⃣  LIRE LA DOCUMENTATION
+--------------------------
+# Guide complet
+notepad 00_GUIDE_TEST_WORKFLOW_AFFICHER_XREF_28_AVRIL_2026.md
+
+# Quick Start
+notepad QUICK_START_TEST_AFFICHER_XREF.txt
+
+# Analyse technique
+notepad 00_ANALYSE_WORKFLOW_AFFICHER_XREF_28_AVRIL_2026.md
+
+
+🔟  VÉRIFIER LES FICHIERS CRÉÉS
+-------------------------------
+dir *XREF* | Format-Table Name, Length, LastWriteTime
+
+
+📊 TESTS SUPPLÉMENTAIRES
+========================
+
+TEST AVEC DOCUMENT INEXISTANT
+------------------------------
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+  -H "Content-Type: application/json" \
+  -d '{"index":"[I999]-DocumentInexistant","dossier":"Dossier CAC"}'
+
+
+TEST AVEC AUTRE DOCUMENT
+-------------------------
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+  -H "Content-Type: application/json" \
+  -d '{"index":"[I1]-Lead sheet trésorerie","dossier":"Dossier CAC"}'
+
+
+TEST AVEC CARACTÈRES SPÉCIAUX
+------------------------------
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+  -H "Content-Type: application/json" \
+  -d '{"index":"[I20]-Proces verbal inventaire de caisse","dossier":"Dossier CAC"}'
+
+
+🎯 COMMANDES DE VÉRIFICATION
+=============================
+
+VÉRIFIER LA CONNECTIVITÉ
+-------------------------
+Test-NetConnection n8nsqlite.zeabur.app -Port 443
+
+
+VÉRIFIER LES PROCESSUS N8N
+---------------------------
+# Si n8n est local
+Get-Process | Where-Object {$_.Name -like "*n8n*"}
+
+
+VÉRIFIER LES LOGS
+-----------------
+# Ouvrir la console du navigateur
+# F12 → Console
+
+
+📝 NOTES IMPORTANTES
+====================
+
+1. NOMENCLATURE DES FICHIERS
+   • Format strict: [Cross ref]-[Document]
+   • Exemple: [I30]-AFRILAND.pdf
+   • Pas d'espaces supplémentaires
+
+2. STRUCTURE GOOGLE DRIVE
+   • Dossier racine: "Dossier CAC"
+   • Sous-dossiers: Client-Exercice
+   • Cycles comptables: 10 dossiers
+
+3. PERMISSIONS
+   • Le workflow doit avoir accès en lecture
+   • Les credentials Google Drive doivent être valides
+   • Les liens de partage doivent être activés
+
+4. RÉSULTAT ATTENDU
+   • success: true
+   • file.id: ID du fichier
+   • file.webViewLink: Lien d'affichage
+   • file.mimeType: Type de fichier
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 ASTUCE: Copiez-collez directement les commandes dans votre terminal!
+
+═══════════════════════════════════════════════════════════════════════════════

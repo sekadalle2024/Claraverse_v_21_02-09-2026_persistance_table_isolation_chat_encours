@@ -1,0 +1,163 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   ✅ N8N V6 - DÉTECTION CHECKBOXES                           ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+📌 PROBLÈME RÉSOLU
+═══════════════════════════════════════════════════════════════
+
+❌ AVANT: Colonne "Reponse User" toujours vide ("")
+✅ APRÈS: Valeurs booléennes (true/false) selon l'état
+
+
+🎯 SOLUTION
+═══════════════════════════════════════════════════════════════
+
+Nouveau code n8n V6 qui:
+✅ Détecte les checkboxes dans le HTML
+✅ Lit l'attribut data-checked="true|false"
+✅ Lit l'attribut checked="checked"
+✅ Retourne true ou false dans le JSON
+
+
+📊 AVANT / APRÈS
+═══════════════════════════════════════════════════════════════
+
+AVANT (V5):
+{
+  "Option": "Hausse de l'inflation.",
+  "Reponse User": ""  ← Vide
+}
+
+APRÈS (V6):
+{
+  "Option": "Hausse de l'inflation.",
+  "Reponse User": true  ← Booléen
+}
+
+
+📂 FICHIER À UTILISER
+═══════════════════════════════════════════════════════════════
+
+n8n-code-javascript3-V6-CHECKBOX.js
+
+
+🚀 DÉPLOIEMENT (3 ÉTAPES)
+═══════════════════════════════════════════════════════════════
+
+1️⃣  Ouvrir le workflow n8n
+
+2️⃣  Sélectionner le node "HTML PROCESSOR"
+
+3️⃣  Remplacer le code par n8n-code-javascript3-V6-CHECKBOX.js
+
+
+🧪 TESTER
+═══════════════════════════════════════════════════════════════
+
+1. Envoyer une table CIA avec checkboxes
+2. Vérifier le JSON de sortie
+3. Confirmer: "Reponse User" = true ou false
+
+
+✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+JSON avec valeurs booléennes:
+
+{
+  "Processus - étape ...": [
+    {
+      "table 1": [
+        {
+          "Option": "Option A",
+          "Reponse User": false  ← Booléen
+        },
+        {
+          "Option": "Option B",
+          "Reponse User": true   ← Booléen
+        }
+      ]
+    }
+  ]
+}
+
+
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════
+
+Dans n8n, vérifier le type:
+
+typeof $json["..."]["table 1"][0]["Reponse User"]
+// → "boolean" ✅
+
+
+🎯 UTILISATION
+═══════════════════════════════════════════════════════════════
+
+// Filtrer les réponses cochées
+$json["table 1"].filter(row => row["Reponse User"] === true)
+
+// Compter les réponses
+$json["table 1"].filter(row => row["Reponse User"]).length
+
+// Trouver la réponse
+$json["table 1"].find(row => row["Reponse User"])?.Option
+
+
+🔄 COMPATIBILITÉ
+═══════════════════════════════════════════════════════════════
+
+✅ conso.js V5 (data-checked)
+✅ conso.js V6 (data-checked + checked)
+✅ Rétrocompatible
+✅ Cellules sans checkbox intactes
+
+
+📝 DÉTECTION
+═══════════════════════════════════════════════════════════════
+
+Méthode 1: data-checked="true|false" sur <td>
+Méthode 2: checked="checked" sur <input>
+Fallback: false par défaut
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+Code source:  n8n-code-javascript3-V6-CHECKBOX.js
+Guide:        FIX_N8N_V6_CHECKBOX_DETECTION.md
+Tests:        TEST_N8N_V6_CHECKBOX.txt
+Succès:       SUCCES_N8N_V6_CHECKBOX.md
+
+
+🎊 AVANTAGES
+═══════════════════════════════════════════════════════════════
+
+✅ Valeurs booléennes claires (true/false)
+✅ Filtrage facile des réponses cochées
+✅ Comptage précis
+✅ Compatible V5 et V6
+✅ Performance optimale
+✅ Robuste (fallback automatique)
+
+
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════
+
+❓ "Reponse User" toujours vide ?
+   → Vérifier que conso.js V6 est chargé
+
+❓ Toutes les checkboxes à false ?
+   → Vérifier les attributs data-checked ou checked
+
+❓ Erreur de parsing ?
+   → Activer DEBUG=true dans le code
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║  L'état des checkboxes est maintenant détecté dans n8n !     ║
+║  Utilisez n8n-code-javascript3-V6-CHECKBOX.js                ║
+╚═══════════════════════════════════════════════════════════════╝

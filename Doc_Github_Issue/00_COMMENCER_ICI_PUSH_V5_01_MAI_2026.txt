@@ -1,0 +1,111 @@
+================================================================
+  SAUVEGARDE CLARAVERSE V5 - 01 MAI 2026
+  GUIDE DE DEMARRAGE RAPIDE
+================================================================
+
+NOUVEAU REPOSITORY:
+https://github.com/sekadalle2024/claraverse_back-up_V2.git
+
+================================================================
+  METHODE RAPIDE (RECOMMANDEE)
+================================================================
+
+1. OUVRIR POWERSHELL dans le dossier du projet
+
+2. EXECUTER LE SCRIPT:
+   .\push-claraverse-v5-01-mai-2026.ps1
+
+3. ATTENDRE la fin du push (peut prendre quelques minutes)
+
+4. VERIFIER sur GitHub:
+   https://github.com/sekadalle2024/claraverse_back-up_V2
+
+================================================================
+  CE QUE LE SCRIPT FAIT AUTOMATIQUEMENT
+================================================================
+
+✓ Verifie que les credentials OAuth ne sont pas pousses
+✓ Configure Git pour les gros projets
+✓ Change le repository vers le nouveau
+✓ Ajoute tous les fichiers (sauf ceux dans .gitignore)
+✓ Cree un commit avec message descriptif
+✓ Push vers GitHub avec retry automatique
+
+================================================================
+  FICHIERS SECURISES (NON POUSSES)
+================================================================
+
+Les fichiers suivants sont automatiquement exclus:
+- .env.google-oauth.local
+- Tous les fichiers *CREDENTIALS*.txt
+- Tous les fichiers *OAUTH*.txt
+- Fichiers de configuration sensibles
+
+================================================================
+  EN CAS DE PROBLEME
+================================================================
+
+PROBLEME 1: "GitHub a detecte un secret"
+SOLUTION: 
+- Ouvrir le lien dans le message d'erreur
+- Cliquer sur "Allow secret"
+- Relancer le script
+
+PROBLEME 2: "Push echoue apres 3 tentatives"
+SOLUTION:
+- Verifier votre connexion internet
+- Verifier vos credentials GitHub
+- Utiliser: .\push-commits-multiples-v5.ps1
+
+PROBLEME 3: "Fichier trop volumineux"
+SOLUTION:
+- Utiliser: .\push-commits-multiples-v5.ps1
+- Ce script divise le push en plusieurs parties
+
+================================================================
+  VERIFICATION APRES LE PUSH
+================================================================
+
+1. Aller sur: https://github.com/sekadalle2024/claraverse_back-up_V2
+
+2. Verifier que:
+   ✓ Le dernier commit est "Sauvegarde ClaraVerse V5 - 01 Mai 2026"
+   ✓ Les fichiers sont presents
+   ✓ Aucun fichier de credentials n'est visible
+
+3. Verifier localement:
+   git status
+   git remote -v
+
+================================================================
+  COMMANDES UTILES
+================================================================
+
+# Voir l'etat actuel
+git status
+
+# Voir le repository distant
+git remote -v
+
+# Voir l'historique des commits
+git log --oneline -5
+
+# Annuler le dernier commit (si necessaire)
+git reset --soft HEAD~1
+
+================================================================
+  PROCHAINES ETAPES
+================================================================
+
+Apres la sauvegarde reussie:
+
+1. Verifier le repository sur GitHub
+2. Tester le deploiement si necessaire
+3. Documenter les changements importants
+
+================================================================
+
+BESOIN D'AIDE?
+Voir: Doc_Github_Issue/SOLUTION_PROJET_2.2GB_20_AVRIL_2026.md
+
+================================================================

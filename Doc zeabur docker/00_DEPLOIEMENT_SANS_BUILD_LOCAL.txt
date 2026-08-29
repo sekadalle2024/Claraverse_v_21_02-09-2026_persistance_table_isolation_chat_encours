@@ -1,0 +1,180 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║          🚀 DÉPLOIEMENT ZEABUR SANS BUILD DOCKER LOCAL                   ║
+║              Guide Rapide - 3 Étapes Simples                             ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+📅 Date: 20 Avril 2026
+🎯 Objectif: Déployer Frontend ET Backend sur Zeabur avec Docker Compose
+⚠️  IMPORTANT: Netlify n'est PLUS utilisé - Tout est sur Zeabur maintenant
+
+═══════════════════════════════════════════════════════════════════════════
+✅ FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════
+
+À la racine du projet:
+  ✓ docker-compose.yml          (Configuration des 2 services)
+  ✓ Dockerfile.frontend          (Build React + Nginx)
+
+Dans py_backend/:
+  ✓ Dockerfile                   (Adapté pour Zeabur - port 8080)
+
+═══════════════════════════════════════════════════════════════════════════
+🚀 DÉPLOIEMENT EN 3 ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: PUSH VERS GITHUB (2 minutes)                                │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   Exécuter le script automatique:                                    │
+│   .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1              │
+│                                                                       │
+│   OU manuellement:                                                   │
+│   git add docker-compose.yml Dockerfile.frontend                     │
+│   git add py_backend/Dockerfile                                      │
+│   git commit -m "feat: Docker Compose pour Zeabur"                   │
+│   git push origin main                                                │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: CONFIGURATION ZEABUR (5 minutes)                            │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   A. Créer un projet                                                 │
+│      • Aller sur https://zeabur.com/dashboard                        │
+│      • New Project → "claraverse-production"                         │
+│                                                                       │
+│   B. Ajouter le service Backend                                      │
+│      • Add Service → Git Repository                                  │
+│      • Choisir votre repo                                            │
+│      • Build Method: Docker Compose                                  │
+│      • Service: backend                                              │
+│      • Port: 8080                                                    │
+│      • Domain: pybackend.zeabur.app                                  │
+│                                                                       │
+│   C. Ajouter le service Frontend                                     │
+│      • Add Service → Git Repository                                  │
+│      • Même repo                                                     │
+│      • Build Method: Docker Compose                                  │
+│      • Service: frontend                                             │
+│      • Port: 80                                                      │
+│      • Domain: prclaravi.zeabur.app                                  │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: DÉPLOIEMENT (10-15 minutes)                                 │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   • Cliquer "Deploy" sur chaque service                              │
+│   • Zeabur va:                                                       │
+│     1. Cloner le repository GitHub                                   │
+│     2. Lire docker-compose.yml                                       │
+│     3. Builder les images Docker                                     │
+│     4. Déployer les conteneurs                                       │
+│                                                                       │
+│   • Suivre les logs de build dans Zeabur                            │
+│   • Attendre que les services soient "Running"                       │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+✅ VALIDATION
+═══════════════════════════════════════════════════════════════════════════
+
+Test Backend:
+  curl https://pybackend.zeabur.app/health
+
+Test Frontend:
+  curl https://prclaravi.zeabur.app/health
+
+Ouvrir l'application:
+  https://prclaravi.zeabur.app
+
+Vérifier le switch backend (Console navigateur F12):
+  Backend URL: https://pybackend.zeabur.app
+
+═══════════════════════════════════════════════════════════════════════════
+🔄 WORKFLOW DE DÉVELOPPEMENT CONTINU
+═══════════════════════════════════════════════════════════════════════════
+
+1. Développer localement (SANS Docker):
+   • Frontend: npm run dev (localhost:5173)
+   • Backend: python main.py (localhost:5000)
+
+2. Tester localement
+
+3. Commit et push:
+   git add .
+   git commit -m "feat: nouvelle fonctionnalité"
+   git push origin main
+
+4. Zeabur redéploie automatiquement (10-15 minutes)
+
+5. Vérifier en production:
+   https://prclaravi.zeabur.app
+
+═══════════════════════════════════════════════════════════════════════════
+📊 ARCHITECTURE DÉPLOYÉE
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                    ZEABUR PRODUCTION (Frontend + Backend)            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌──────────────────┐         ┌──────────────────┐                │
+│  │   Frontend       │────────▶│   Backend        │                │
+│  │   React + Nginx  │         │   FastAPI        │                │
+│  │   Port: 80       │         │   Port: 8080     │                │
+│  └──────────────────┘         └──────────────────┘                │
+│         │                              │                            │
+│         └──────────────────────────────┘                            │
+│              zeabur-network                                         │
+│                                                                      │
+│  URLs DE PRODUCTION:                                                │
+│  • Frontend: https://prclaravi.zeabur.app                           │
+│  • Backend: https://pybackend.zeabur.app                            │
+│                                                                      │
+│  ⚠️  NETLIFY N'EST PLUS UTILISÉ                                     │
+│  Switch Backend: Détection automatique localhost vs Zeabur         │
+└─────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+⚠️ POINTS IMPORTANTS
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Pas besoin de Docker sur votre PC
+✓ Zeabur build les images automatiquement
+✓ Switch backend fonctionne automatiquement
+✓ Déploiement automatique à chaque push
+✓ Temps de build: 10-15 minutes
+
+⚠ Coût: 2 services = 2x ressources Zeabur
+⚠ Vérifier le plan tarifaire
+
+═══════════════════════════════════════════════════════════════════════════
+📖 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════
+
+Guide détaillé:
+  .\Doc zeabur docker\03_GUIDE_DEPLOIEMENT_ZEABUR_SANS_BUILD_LOCAL.md
+
+Script de push:
+  .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════════════════
+
+Exécuter maintenant:
+
+  .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+Puis suivre les instructions affichées.
+
+═══════════════════════════════════════════════════════════════════════════
+
+Bonne chance avec votre déploiement! 🚀

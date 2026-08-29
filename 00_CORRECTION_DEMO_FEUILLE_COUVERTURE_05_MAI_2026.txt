@@ -1,0 +1,98 @@
+═══════════════════════════════════════════════════════════════════════
+  CORRECTION POSITION [Demo] = Activate - FEUILLE COUVERTURE
+  E-audit Pro - Phase de réalisation
+  Date: 05 Mai 2026
+═══════════════════════════════════════════════════════════════════════
+
+PROBLÈME RÉSOLU :
+─────────────────
+Dans le mode Demo de l'étape "Feuille couverture" (E-audit Pro),
+la ligne [Demo] = Activate était placée AVANT [Nb de lignes] = 25.
+
+Elle doit être placée APRÈS [Nb de lignes] = 25 (en dernière position).
+
+
+STRUCTURE AVANT (INCORRECTE) :
+───────────────────────────────
+  command: `[Command] = Couverture
+  [Processus] = Controle des rapprochements bancaires
+  [Contrôle] = voir table 2
+  [Contexte de base]
+  [Modelisation] : les informations des rapprochements bancaires
+  [Integration] = Implementation_programme_controle
+  [Demo] = Activate          ← MAUVAISE POSITION
+  [Nb de lignes] = 25`
+
+
+STRUCTURE APRÈS (CORRECTE) :
+────────────────────────────
+  command: `[Command] = Couverture
+  [Processus] = Controle des rapprochements bancaires
+  [Contrôle] = voir table 2
+  [Contexte de base]
+  [Modelisation] : les informations des rapprochements bancaires
+  [Integration] = Implementation_programme_controle
+  [Nb de lignes] = 25
+  [Demo] = Activate`         ← BONNE POSITION
+
+
+FICHIERS CRÉÉS :
+────────────────
+✓ Doc menu demarrer/Scripts/fix_demo_position_feuille_couverture_e_audit_pro.py
+  → Script Python de correction
+
+✓ test-fix-demo-feuille-couverture.ps1
+  → Script PowerShell de test et validation
+
+✓ 00_CORRECTION_DEMO_FEUILLE_COUVERTURE_05_MAI_2026.txt
+  → Ce fichier (documentation)
+
+
+EXÉCUTION :
+───────────
+1. Exécuter le script de test :
+   .\test-fix-demo-feuille-couverture.ps1
+
+2. Le script va :
+   - Créer un backup automatique
+   - Appliquer la correction
+   - Vérifier le résultat
+
+
+VÉRIFICATION MANUELLE :
+───────────────────────
+1. Relancer l'application : npm run dev
+
+2. Ouvrir le menu Demarrer
+
+3. Naviguer vers :
+   E-audit Pro > Phase de réalisation > Feuille couverture
+
+4. Sélectionner le mode "Demo"
+
+5. Vérifier que la commande générée a [Demo] = Activate en DERNIÈRE ligne
+
+
+FICHIERS SUPPRIMÉS :
+────────────────────
+Les 12 fichiers créés par erreur lors de l'analyse initiale incorrecte
+ont été supprimés :
+  ✓ add_demo_mode_feuille_couverture_e_audit_pro.py
+  ✓ test-add-demo-feuille-couverture.ps1
+  ✓ AJOUT_MODE_DEMO_FEUILLE_COUVERTURE_E_AUDIT_PRO_05_MAI_2026.md
+  ✓ Et 9 autres fichiers de documentation
+
+
+CONTEXTE :
+──────────
+Cette correction fait suite à une clarification de l'utilisateur.
+L'analyse initiale était incorrecte : l'étape "Feuille couverture"
+a DÉJÀ plusieurs modes (Normal, Avancé, Demo, Methodo audit, etc.).
+
+Le problème était simplement un déplacement de ligne dans le mode Demo
+existant, pas l'ajout de nouveaux modes.
+
+
+═══════════════════════════════════════════════════════════════════════
+  FIN DE LA DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════

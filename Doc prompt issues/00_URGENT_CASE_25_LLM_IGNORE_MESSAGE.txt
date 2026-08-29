@@ -1,0 +1,176 @@
+═══════════════════════════════════════════════════════════════════════════
+  🔴 URGENT - CASE 25 : LLM IGNORE LE MESSAGE UTILISATEUR
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME CRITIQUE
+═══════════════════════════════════════════════════════════════════════════
+
+Message envoyé: Cycle RH - Recrutement DG
+Réponse reçue:  Cycle Achats - Bons de Commande
+
+→ Le LLM génère du contenu mais IGNORE COMPLÈTEMENT le message utilisateur
+
+PROGRESSION DU PROBLÈME
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✅ Router corrigé → Case 25 détecté
+2. ✅ Endpoint correct appelé
+3. ❌ Workflow retournait contenu sur "caisse" → Corrigé
+4. ❌ Workflow retournait placeholders → Corrigé
+5. ❌ Workflow retourne contenu réel MAIS sur mauvais cycle → PROBLÈME ACTUEL
+
+CAUSE PROBABLE
+═══════════════════════════════════════════════════════════════════════════
+
+Le message utilisateur n'est PAS passé au LLM, ou le LLM l'ignore.
+
+Possibilités:
+1. Message utilisateur non extrait du webhook
+2. Message utilisateur non inclus dans le prompt
+3. Prompt système trop directif (contient exemple détaillé sur Achats/BC)
+
+SOLUTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: DÉBUGGER LA RÉCEPTION DU MESSAGE
+───────────────────────────────────────────────────────────────────────────
+
+Dans n8n, AVANT le node LLM, ajouter un node "Code":
+
+```javascript
+const webhook = $input.item.json;
+
+console.log("=== DEBUG ===");
+console.log("question:", webhook.question);
+console.log("data:", webhook.data);
+console.log("body:", webhook.body);
+console.log("message:", webhook.message);
+console.log("Full:", JSON.stringify(webhook, null, 2));
+
+return { json: webhook };
+```
+
+→ Exécuter le workflow et vérifier les logs
+
+ÉTAPE 2: EXTRAIRE LE MESSAGE CORRECTEMENT
+───────────────────────────────────────────────────────────────────────────
+
+```javascript
+const webhook = $input.item.json;
+
+const userMessage = webhook.question 
+                 || webhook.data 
+                 || webhook.body 
+                 || webhook.message
+                 || JSON.stringify(webhook);
+
+console.log("Message extrait:", userMessage);
+
+return { json: { userMessage: userMessage } };
+```
+
+ÉTAPE 3: PROMPT ULTRA-SIMPLE
+───────────────────────────────────────────────────────────────────────────
+
+```javascript
+const userMessage = $input.item.json.userMessage;
+
+const systemPrompt = `Tu es un expert en contrôle interne SYSCOHADA.
+
+MISSION: Analyser le message utilisateur et générer des recommandations.
+
+RÈGLES:
+1. Lis le message utilisateur
+2. Identifie le CYCLE (RH, Achats, Ventes, etc.)
+3. Identifie l'ANOMALIE
+4. Génère du contenu SPÉCIFIQUE à ce cycle et cette anomalie
+
+FORMAT JSON:
+{
+  "Etape mission - Programme": [
+    {"Intitule": "..."},
+    {"Observation": "..."},
+    {"Constat": "..."},
+    {"Risque": "..."},
+    {"Recommendation": "..."}
+  ]
+}`;
+
+const fullPrompt = `${systemPrompt}
+
+MESSAGE UTILISATEUR:
+${userMessage}
+
+GÉNÈRE LA RÉPONSE JSON:`;
+
+console.log("Prompt complet:", fullPrompt);
+
+return { json: { prompt: fullPrompt } };
+```
+
+ÉTAPE 4: VÉRIFIER LE NODE LLM
+───────────────────────────────────────────────────────────────────────────
+
+Configuration:
+- Model: gpt-4 ou gemini-pro
+- Temperature: 0.3
+- Prompt: {{ $json.prompt }}
+- System Message: (VIDE)
+
+ÉTAPE 5: TESTER
+───────────────────────────────────────────────────────────────────────────
+
+Message:
+[VAE] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Nature de test] = [Rapprochement]
+[Assertion] = validité
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+Résultat attendu:
+✅ Parle de RH (pas Achats)
+✅ Parle de Recrutement (pas BC)
+✅ Parle du DG (pas fournisseurs)
+
+FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. DIAGNOSTIC_FINAL_CASE_25_LLM_IGNORE_MESSAGE.md
+   → Analyse complète du problème avec solution détaillée
+
+2. 00_URGENT_CASE_25_LLM_IGNORE_MESSAGE.txt (ce fichier)
+   → Guide rapide pour corriger le problème
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir le diagnostic:
+   code DIAGNOSTIC_FINAL_CASE_25_LLM_IGNORE_MESSAGE.md
+
+2. Ouvrir n8n:
+   start https://t22wtwxl.rpcld.app
+
+3. Workflow à modifier:
+   recos_contrôle_interne_comptable
+
+CHECKLIST
+═══════════════════════════════════════════════════════════════════════════
+
+[ ] Node debug ajouté pour voir le message reçu
+[ ] Logs vérifiés pour identifier où est le message
+[ ] Message utilisateur correctement extrait
+[ ] Prompt système simplifié (pas d'exemples détaillés)
+[ ] Message utilisateur INCLUS dans le prompt
+[ ] Logs du prompt complet vérifiés
+[ ] Test effectué avec message RH
+[ ] Réponse parle de RH (pas Achats)
+
+PRIORITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+🔴 CRITIQUE - Le workflow génère du contenu mais ignore le message utilisateur
+
+═══════════════════════════════════════════════════════════════════════════

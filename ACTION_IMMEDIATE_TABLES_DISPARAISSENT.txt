@@ -1,0 +1,90 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  🚨 PROBLÈME IDENTIFIÉ - Tables Disparaissent                ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+Le diagnostic a révélé le VRAI problème :
+
+❌ Les tables CIA disparaissent après actualisation
+✅ 22 tables CIA sont sauvegardées dans localStorage
+✅ conso.js fonctionne correctement
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CAUSE
+
+Vous avez désactivé Flowise.
+→ Flowise ne crée plus les tables
+→ Pas de tables = Pas de checkboxes à restaurer
+
+═══════════════════════════════════════════════════════════════
+
+✅ SOLUTION 1 : Réactiver Flowise (RECOMMANDÉ)
+
+1. Réactivez Flowise
+2. Actualisez la page (Ctrl+F5)
+3. Les tables seront créées automatiquement
+4. Les checkboxes seront restaurées automatiquement
+
+C'EST LA SOLUTION LA PLUS SIMPLE !
+
+═══════════════════════════════════════════════════════════════
+
+✅ SOLUTION 2 : Restaurer les Tables Manuellement
+
+Si vous ne pouvez pas réactiver Flowise :
+
+1. Le script est déjà créé : public/restaurer-tables-cia-complet.js
+
+2. Ajoutez-le dans index.html :
+
+   <script src="/restaurer-tables-cia-complet.js"></script>
+
+3. Actualisez la page
+
+4. Les tables seront recréées depuis localStorage
+
+═══════════════════════════════════════════════════════════════
+
+🧪 TEST IMMÉDIAT
+
+Dans la console, tapez :
+
+document.querySelectorAll('table').length
+
+Si le résultat est 0 :
+→ Les tables ne sont pas créées
+→ Utilisez Solution 1 ou 2
+
+Si le résultat est > 0 :
+→ Les tables existent
+→ Le problème est ailleurs (contactez-moi)
+
+═══════════════════════════════════════════════════════════════
+
+💡 POURQUOI CE PROBLÈME ?
+
+Le système fonctionne en 2 étapes :
+
+1. Flowise crée les tables (HTML)
+2. conso.js restaure les checkboxes (état)
+
+Si Flowise est désactivé :
+→ Étape 1 ne se produit pas
+→ Pas de tables à restaurer à l'étape 2
+
+═══════════════════════════════════════════════════════════════
+
+📞 BESOIN D'AIDE ?
+
+Dites-moi :
+1. Pouvez-vous réactiver Flowise ? OUI / NON
+2. Combien de tables voyez-vous ? (résultat de la commande ci-dessus)
+3. Voulez-vous utiliser Solution 2 ? OUI / NON
+
+═══════════════════════════════════════════════════════════════
+
+Date : 26 novembre 2025
+Fichiers : SOLUTION_TABLES_DISPARAISSENT_ACTUALISATION.md
+           public/restaurer-tables-cia-complet.js

@@ -1,0 +1,214 @@
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                  🚀 ACTIVER L'INSTANCE KOYEB - GUIDE RAPIDE                  ║
+║                         Clara Backend Python                                  ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+⚠️ STATUT ACTUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+Instance: back-end-python-v0-03-03-2026
+Statut: No running instances (ENDORMIE)
+Type: Free (avec sleep mode après 65 min d'inactivité)
+URL: https://proud-del-saasauditnterne-9f15de46.koyeb.app/
+
+
+🚀 ACTIVATION RAPIDE (3 MÉTHODES)
+═══════════════════════════════════════════════════════════════════════════════
+
+MÉTHODE 1: Via Navigateur (Le plus simple)
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ 1. Ouvrir dans le navigateur:                                           │
+   │    https://proud-del-saasauditnterne-9f15de46.koyeb.app/docs           │
+   │                                                                         │
+   │ 2. Attendre 30-60 secondes (cold start)                                │
+   │                                                                         │
+   │ 3. L'interface Swagger s'affiche → Instance activée !                  │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+MÉTHODE 2: Via Script PowerShell (Automatique)
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ .\Doc Koyeb deploy\Scripts\activate-koyeb-instance.ps1                 │
+   └─────────────────────────────────────────────────────────────────────────┘
+   
+   Le script:
+   ✅ Teste l'endpoint racine
+   ✅ Vérifie le health check
+   ✅ Teste Swagger
+   ✅ Ouvre le navigateur automatiquement
+   ✅ Affiche le temps de réponse
+
+MÉTHODE 3: Via PowerShell Manuel
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Invoke-WebRequest -Uri "https://proud-del-saasauditnterne-9f15de46.koyeb.app/docs" │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+⏱️ TEMPS DE DÉMARRAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+Cold Start (instance endormie):
+   • Durée: 30-60 secondes
+   • Processus:
+     1. Koyeb détecte la requête
+     2. Démarre le conteneur Docker
+     3. Charge FastAPI
+     4. Health check
+     5. Route le trafic
+
+Warm Start (instance active):
+   • Durée: < 1 seconde
+   • Réponse immédiate
+
+
+🔍 VÉRIFICATION DE L'ACTIVATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Test 1: Endpoint racine
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Invoke-WebRequest -Uri "https://proud-del-saasauditnterne-9f15de46.koyeb.app/" │
+   └─────────────────────────────────────────────────────────────────────────┘
+   Réponse attendue: Code 200
+
+Test 2: Swagger UI
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Ouvrir: https://proud-del-saasauditnterne-9f15de46.koyeb.app/docs      │
+   └─────────────────────────────────────────────────────────────────────────┘
+   Résultat: Interface Swagger avec tous les endpoints
+
+Test 3: Health Check (si disponible)
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Invoke-WebRequest -Uri "https://proud-del-saasauditnterne-9f15de46.koyeb.app/health" │
+   └─────────────────────────────────────────────────────────────────────────┘
+   Réponse: {"status": "healthy", ...}
+
+
+📊 SURVEILLANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Dashboard Koyeb:
+   https://app.koyeb.com/services/back-end-python-v0-03-03-2026
+   
+   Onglets:
+   • Overview: Statut de l'instance
+   • Metrics: CPU, mémoire, requêtes
+   • Console: Logs en temps réel
+   • Settings: Configuration
+
+Via CLI Koyeb (optionnel):
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ # Voir le statut                                                        │
+   │ koyeb service get back-end-python-v0-03-03-2026                        │
+   │                                                                         │
+   │ # Voir les logs                                                         │
+   │ koyeb service logs back-end-python-v0-03-03-2026 --follow              │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+🚨 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+Problème: L'instance ne démarre pas (timeout après 60s)
+
+Solutions:
+   1. Vérifier les logs de build
+      ┌──────────────────────────────────────────────────────────────────────┐
+      │ koyeb service logs back-end-python-v0-03-03-2026 --type build       │
+      └──────────────────────────────────────────────────────────────────────┘
+
+   2. Vérifier les logs d'application
+      ┌──────────────────────────────────────────────────────────────────────┐
+      │ koyeb service logs back-end-python-v0-03-03-2026 --follow           │
+      └──────────────────────────────────────────────────────────────────────┘
+
+   3. Redéployer manuellement
+      • Aller sur le dashboard
+      • Cliquer sur "Redeploy" (bouton vert)
+      • Attendre 2-3 minutes
+
+   4. Vérifier le repository Github
+      https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+      • Dockerfile présent ?
+      • requirements.txt à jour ?
+      • main.py correct ?
+
+
+💡 BONNES PRATIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Informer l'utilisateur du cold start
+   "Démarrage du serveur en cours... (~30 secondes)"
+
+2. Configurer un timeout approprié
+   Premier appel: 60 secondes
+   Appels suivants: 10 secondes
+
+3. Ajouter un endpoint /health
+   Pour vérifier facilement l'état de l'instance
+
+4. Surveiller les logs
+   Pour détecter les problèmes rapidement
+
+
+🔄 MAINTENIR L'INSTANCE ACTIVE
+═══════════════════════════════════════════════════════════════════════════════
+
+L'instance reste active tant qu'elle reçoit des requêtes.
+Elle se rendort après 65 minutes d'inactivité.
+
+Options:
+   1. Accepter le sleep mode (gratuit)
+      • Première requête: 30-60s
+      • Requêtes suivantes: < 1s
+
+   2. Upgrade vers instance payante
+      • Pas de sleep mode
+      • Démarrage instantané
+      • Coût: ~$5-10/mois
+      • Dashboard > Settings > Instance type
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Guide détaillé:
+   Doc Koyeb deploy/GUIDE_ACTIVATION_INSTANCE_KOYEB.md
+
+Script d'activation:
+   Doc Koyeb deploy/Scripts/activate-koyeb-instance.ps1
+
+Configuration actuelle:
+   Doc Koyeb deploy/00_CONFIGURATION_ACTUELLE_KOYEB.txt
+
+
+🔗 LIENS RAPIDES
+═══════════════════════════════════════════════════════════════════════════════
+
+Dashboard:
+   https://app.koyeb.com/services/back-end-python-v0-03-03-2026
+
+API URL:
+   https://proud-del-saasauditnterne-9f15de46.koyeb.app/
+
+Swagger:
+   https://proud-del-saasauditnterne-9f15de46.koyeb.app/docs
+
+Repository Github:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                    ✅ PRÊT À ACTIVER L'INSTANCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Méthode recommandée:
+   1. Exécuter: .\Doc Koyeb deploy\Scripts\activate-koyeb-instance.ps1
+   2. Attendre 30-60 secondes
+   3. Swagger s'ouvre automatiquement dans le navigateur
+
+Ou simplement ouvrir dans le navigateur:
+   https://proud-del-saasauditnterne-9f15de46.koyeb.app/docs
+
+Bon démarrage ! 🚀

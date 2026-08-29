@@ -1,0 +1,280 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║   📋 COMMANDES GIT - SAUVEGARDE CLARAVERSE V17                            ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+🚀 COMMANDES PRINCIPALES (COPIER-COLLER)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Étape 1: Ajouter tous les fichiers
+git add .
+
+# Étape 2: Exécuter le script de push
+.\push-claraverse-v17-07-mai-2026.ps1
+
+
+🔍 COMMANDES DE VÉRIFICATION (AVANT LE PUSH)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier la branche actuelle
+git branch
+
+# Vérifier la branche active
+git branch --show-current
+
+# Vérifier l'état Git
+git status
+
+# Vérifier le repository distant
+git remote -v
+
+# Vérifier les fichiers modifiés
+git status --short
+
+# Vérifier les derniers commits
+git log --oneline -5
+
+
+🌐 COMMANDES DE CONNEXION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Tester la connexion Internet
+Test-Connection github.com -Count 4
+
+# Vérifier l'accès au repository distant
+git ls-remote origin
+
+# Vérifier la configuration du remote
+git remote show origin
+
+
+⚙️ COMMANDES DE CONFIGURATION (Automatiques dans le script)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Désactiver la compression
+git config core.compression 0
+
+# Augmenter le buffer HTTP à 1 GB
+git config http.postBuffer 1048576000
+
+# Désactiver le timeout
+git config http.lowSpeedTime 999999
+
+# Désactiver la limite de vitesse
+git config http.lowSpeedLimit 0
+
+# Configurer le remote
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_17_07-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+
+✅ COMMANDES DE VÉRIFICATION (APRÈS LE PUSH)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier le statut final
+git status
+
+# Vérifier les commits créés
+git log --oneline -6
+
+# Vérifier que tout est à jour
+git status --short
+
+# Vérifier le remote
+git ls-remote origin
+
+# Vérifier la branche distante
+git branch -r
+
+
+🔄 COMMANDES DE BRANCHE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Lister toutes les branches
+git branch
+
+# Changer de branche
+git checkout v17_backup_final
+
+# Vérifier la branche actuelle
+git branch --show-current
+
+# Voir les branches distantes
+git branch -r
+
+# Voir toutes les branches (locales et distantes)
+git branch -a
+
+
+🆘 COMMANDES DE DÉPANNAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Annuler le dernier commit (garder les fichiers)
+git reset --soft HEAD~1
+
+# Annuler tous les changements non commités
+git reset --hard HEAD
+
+# Voir les fichiers ignorés
+git status --ignored
+
+# Nettoyer les fichiers non suivis
+git clean -fd
+
+# Vérifier la configuration Git
+git config --list
+
+# Voir l'historique détaillé
+git log --stat
+
+# Voir les différences
+git diff
+
+
+📊 COMMANDES D'INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir la taille du repository
+git count-objects -vH
+
+# Voir les fichiers suivis
+git ls-files
+
+# Voir les fichiers ignorés
+git ls-files --others --ignored --exclude-standard
+
+# Voir les branches avec derniers commits
+git branch -v
+
+# Voir l'historique graphique
+git log --graph --oneline --all
+
+
+🔒 COMMANDES DE SÉCURITÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier les fichiers sensibles
+git status | Select-String "CREDENTIALS"
+git status | Select-String ".env"
+
+# Voir ce qui sera commité
+git diff --cached
+
+# Voir les fichiers dans le dernier commit
+git show --name-only
+
+# Vérifier le .gitignore
+cat .gitignore
+
+
+📝 COMMANDES DE COMMIT (Si besoin manuel)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Créer un commit
+git commit -m "Message du commit"
+
+# Modifier le dernier commit
+git commit --amend -m "Nouveau message"
+
+# Voir le dernier commit
+git show
+
+# Voir les fichiers du dernier commit
+git show --name-only
+
+
+🚀 COMMANDES DE PUSH (Si besoin manuel)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Push simple
+git push origin v17_backup_final
+
+# Push avec upstream
+git push -u origin v17_backup_final
+
+# Push force (ATTENTION: Dangereux!)
+git push --force origin v17_backup_final
+
+# Push toutes les branches
+git push --all origin
+
+
+🔄 COMMANDES DE SYNCHRONISATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Récupérer les changements distants
+git fetch origin
+
+# Récupérer et fusionner
+git pull origin v17_backup_final
+
+# Voir les différences avec le distant
+git diff origin/v17_backup_final
+
+
+💡 COMMANDES UTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir l'aide Git
+git help
+
+# Voir l'aide d'une commande
+git help commit
+
+# Voir la version de Git
+git --version
+
+# Voir les alias configurés
+git config --get-regexp alias
+
+
+🎯 WORKFLOW COMPLET (Résumé)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. Vérifications préalables
+git branch --show-current
+git status
+git remote -v
+
+# 2. Ajouter les fichiers
+git add .
+
+# 3. Exécuter le script
+.\push-claraverse-v17-07-mai-2026.ps1
+
+# 4. Vérifications finales
+git status
+git log --oneline -6
+
+
+⚠️ COMMANDES À ÉVITER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ git push --force (Peut écraser l'historique)
+❌ git reset --hard (Perd les changements non commités)
+❌ git clean -fdx (Supprime tous les fichiers non suivis)
+❌ git rebase (Peut causer des conflits)
+
+
+📚 RESSOURCES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Documentation Git: https://git-scm.com/doc
+GitHub Docs: https://docs.github.com
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║   💡 CONSEIL: Utilisez le script automatisé                               ║
+║                                                                           ║
+║   .\push-claraverse-v17-07-mai-2026.ps1                                  ║
+║                                                                           ║
+║   Il gère tout automatiquement !                                         ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+Date: 07 Mai 2026
+Projet: ClaraVerse V17
+Branche: v17_backup_final

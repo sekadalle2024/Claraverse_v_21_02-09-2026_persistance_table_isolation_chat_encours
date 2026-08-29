@@ -1,0 +1,116 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  ✅ CORRECTION FRONTEND ZEABUR - 20 AVRIL 2026                ║
+║                         PROBLÈME npm ci RÉSOLU                                ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Erreur Build Frontend Zeabur:
+   npm ci --only=production échoue
+   Message: "npm-shrinkwrap.json with lockfileVersion >= 1"
+   
+🔍 Cause Racine:
+   - npm ci nécessite un package-lock.json valide
+   - Le fichier existe mais peut être incompatible avec la version npm dans le container
+   - npm ci est strict et ne tolère aucune divergence
+
+✅ SOLUTION APPLIQUÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 Modification: Dockerfile.frontend
+
+AVANT:
+   RUN npm ci --only=production
+
+APRÈS:
+   RUN npm install --production=false
+
+💡 Pourquoi cette solution:
+   ✓ npm install est plus tolérant que npm ci
+   ✓ Fonctionne avec ou sans package-lock.json
+   ✓ --production=false installe toutes les dépendances (dev + prod)
+   ✓ Nécessaire pour le build (vite, typescript, etc.)
+
+🎯 PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ PUSH VERS GITHUB
+   .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+2️⃣ REDÉPLOYER SUR ZEABUR
+   - Aller sur https://zeabur.com/dashboard
+   - Sélectionner le service "frontend"
+   - Cliquer sur "Redeploy"
+   - Attendre le build (5-10 minutes)
+
+3️⃣ VÉRIFIER LE DÉPLOIEMENT
+   - Frontend: https://prclaravi.zeabur.app
+   - Backend: https://pybackend.zeabur.app
+   - Test: Ouvrir le frontend et vérifier le menu
+
+📊 STATUT ACTUEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Backend:  DÉPLOYÉ ET FONCTIONNEL
+   - Port: 8080
+   - Health: OK
+   - URL: https://pybackend.zeabur.app
+
+⏳ Frontend: EN ATTENTE DE REDÉPLOIEMENT
+   - Correction appliquée
+   - Prêt pour push GitHub
+   - Redéploiement nécessaire
+
+🔧 CONFIGURATION ZEABUR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend Service:
+   Build Method: Docker Compose
+   Service: frontend
+   Port: 80
+   Domain: prclaravi.zeabur.app
+   Root Directory: /
+
+Backend Service:
+   Build Method: Docker Compose
+   Service: backend
+   Port: 8080
+   Domain: pybackend.zeabur.app
+   Root Directory: /
+
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Voir aussi:
+   - Doc zeabur docker/00_DEPLOIEMENT_SANS_BUILD_LOCAL.txt
+   - Doc zeabur docker/03_GUIDE_DEPLOIEMENT_ZEABUR_SANS_BUILD_LOCAL.md
+   - GUIDE_MISE_A_JOUR_DEPENDANCES.md
+
+💡 NOTES IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  npm ci vs npm install:
+    - npm ci: Rapide, strict, nécessite package-lock.json exact
+    - npm install: Plus lent, tolérant, crée/met à jour package-lock.json
+    
+✅  Pour Docker:
+    - npm install est recommandé pour éviter les problèmes de compatibilité
+    - Le cache Docker compense la différence de vitesse
+    
+🔄  Workflow de déploiement:
+    1. Développement local → npm install
+    2. Push GitHub → Zeabur détecte les changements
+    3. Build Docker → npm install dans le container
+    4. Déploiement automatique
+
+🎉 RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après redéploiement:
+   ✅ Frontend build réussi
+   ✅ Application accessible sur https://prclaravi.zeabur.app
+   ✅ Communication frontend ↔ backend fonctionnelle
+   ✅ Déploiement automatique à chaque push GitHub
+
+═══════════════════════════════════════════════════════════════════════════════

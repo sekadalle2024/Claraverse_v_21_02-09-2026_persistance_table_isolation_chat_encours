@@ -1,0 +1,228 @@
+═══════════════════════════════════════════════════════════════════════════
+  INTÉGRATION HEATMAP RISQUE - CASE 34
+  Date: 02 Avril 2026
+═══════════════════════════════════════════════════════════════════════════
+
+✅ TRAVAIL ACCOMPLI
+═══════════════════════════════════════════════════════════════════════════
+
+1. COMPOSANT REACT CRÉÉ
+   📁 src/components/Clara_Components/HeatmapRisqueAccordionRenderer.tsx
+   
+   Fonctionnalités:
+   - Menu accordéon à 3 sections:
+     • Page de couverture (en-tête de la cartographie)
+     • Heatmap de criticité interactive (9 cellules)
+     • Tableau détaillé des risques
+   
+   - Heatmap interactive:
+     • Grille 3x3 (Probabilité x Impact)
+     • Code couleur automatique:
+       * Vert = Faible
+       * Jaune/Orange = Moyen
+       * Rouge = Élevé
+     • Compteur de risques par cellule
+     • Détails au clic sur chaque cellule
+   
+   - Tableau des risques:
+     • Affichage complet de tous les risques
+     • Badges colorés pour Probabilité, Impact, Criticité
+     • Bordure gauche colorée selon criticité
+
+2. FICHIER CSS CRÉÉ
+   📁 src/components/Clara_Components/HeatmapRisqueAccordionRenderer.css
+   
+   Caractéristiques:
+   - Design moderne avec dégradés
+   - Animations fluides
+   - Responsive (mobile, tablette, desktop)
+   - Support du mode sombre
+   - Effets hover et transitions
+
+3. CLARAAPI SERVICE MIS À JOUR
+   📁 src/services/claraApiService.ts
+   
+   Modifications:
+   - Ajout du FORMAT 8: HEATMAP RISQUE
+   - Détection automatique de la structure:
+     • "Etape mission - Cartographie"
+     • Table 1: En-tête (objet)
+     • Table 2: Risques (array)
+   - Marqueur: __HEATMAP_RISQUE_ACCORDION__
+   - Endpoint: heatmap_risque
+
+4. MESSAGE CONTENT RENDERER MIS À JOUR
+   📁 src/components/Clara_Components/MessageContentRenderer.tsx
+   
+   Modifications:
+   - Import du composant HeatmapRisqueAccordionRenderer
+   - Traitement du marqueur __HEATMAP_RISQUE_ACCORDION__
+   - Rendu du composant dans un container dédié
+
+═══════════════════════════════════════════════════════════════════════════
+  FORMAT DE DONNÉES ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Structure JSON de la réponse n8n:
+
+[
+  {
+    "data": {
+      "Etape mission - Cartographie": [
+        {
+          "table 1": {
+            "Etape de mission": "Cartographie des risques",
+            "Norme": "13.2 Évaluation des risques",
+            "Méthode": "Méthode des risques par les contrôles",
+            "Reference": "Cartographie-002"
+          }
+        },
+        {
+          "table 2": [
+            {
+              "no": 1,
+              "operationnel": "Caissier",
+              "Risques": "Risque de détournement d'espèces...",
+              "Probabilite": "Moyen",
+              "Impact": "Élevé",
+              "Criticite": "Élevé",
+              "controle audit": "Vérifier que chaque encaissement..."
+            },
+            ...
+          ]
+        }
+      ]
+    }
+  }
+]
+
+Valeurs acceptées pour Probabilité, Impact, Criticité:
+- "Élevé"
+- "Moyen"
+- "Faible"
+
+═══════════════════════════════════════════════════════════════════════════
+  LOGIQUE DE CALCUL DE CRITICITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Matrice de criticité (Probabilité x Impact):
+
+                 Impact
+              F    M    E
+         ┌─────┬─────┬─────┐
+       E │  M  │  E  │  E  │
+Prob   M │  F  │  M  │  E  │
+       F │  F  │  F  │  M  │
+         └─────┴─────┴─────┘
+
+Légende:
+F = Faible (Vert)
+M = Moyen (Jaune/Orange)
+E = Élevé (Rouge)
+
+═══════════════════════════════════════════════════════════════════════════
+  UTILISATION
+═══════════════════════════════════════════════════════════════════════════
+
+1. DANS LE CHAT CLARAVERSE
+   
+   Taper: "Heatmap" ou "heatmap"
+   
+   Le router détectera automatiquement le Case 34 et appellera:
+   https://t22wtwxl.rpcld.app/webhook/heatmap_risque
+
+2. WORKFLOW N8N
+   
+   Le workflow doit retourner la structure JSON ci-dessus avec:
+   - Une clé contenant "etape" et "cartographie"
+   - Un array avec au moins 2 tables
+   - Table 1: Objet avec les métadonnées
+   - Table 2: Array d'objets risques
+
+3. AFFICHAGE FRONT-END
+   
+   Le composant affichera automatiquement:
+   - Section 1: Page de couverture (ouverte par défaut)
+   - Section 2: Heatmap interactive
+   - Section 3: Tableau détaillé
+
+═══════════════════════════════════════════════════════════════════════════
+  FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+NOUVEAUX FICHIERS:
+1. src/components/Clara_Components/HeatmapRisqueAccordionRenderer.tsx
+2. src/components/Clara_Components/HeatmapRisqueAccordionRenderer.css
+
+FICHIERS MODIFIÉS:
+1. src/services/claraApiService.ts
+   - Ajout FORMAT 8 dans normalizeN8nResponse()
+   - Lignes ~1160-1220
+
+2. src/components/Clara_Components/MessageContentRenderer.tsx
+   - Import HeatmapRisqueAccordionRenderer
+   - Traitement __HEATMAP_RISQUE_ACCORDION__
+   - Lignes ~25 et ~1270-1285
+
+═══════════════════════════════════════════════════════════════════════════
+  TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+1. TEST ENDPOINT N8N
+   
+   curl -X POST "https://t22wtwxl.rpcld.app/webhook/heatmap_risque" \
+     -H "Content-Type: application/json" \
+     -d '{"question": "heatmap"}'
+
+2. TEST DANS CLARAVERSE
+   
+   a) Démarrer Claraverse:
+      npm run dev
+   
+   b) Dans le chat, taper:
+      "Heatmap"
+   
+   c) Vérifier:
+      - Le router détecte Case 34
+      - L'appel API est effectué
+      - Le composant s'affiche correctement
+      - Les 3 sections accordéon fonctionnent
+      - La heatmap est interactive
+      - Les couleurs sont correctes
+
+3. TEST RESPONSIVE
+   
+   - Tester sur mobile (< 768px)
+   - Tester sur tablette (768px - 1200px)
+   - Tester sur desktop (> 1200px)
+
+4. TEST MODE SOMBRE
+   
+   - Activer le mode sombre
+   - Vérifier les couleurs et contrastes
+
+═══════════════════════════════════════════════════════════════════════════
+  PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Tester l'intégration complète
+2. Vérifier le workflow n8n
+3. Ajuster les couleurs si nécessaire
+4. Ajouter des fonctionnalités supplémentaires si demandé:
+   - Export PDF de la heatmap
+   - Filtres par criticité
+   - Recherche dans les risques
+   - Statistiques détaillées
+
+═══════════════════════════════════════════════════════════════════════════
+  NOTES TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════
+
+- Le composant est entièrement autonome
+- Pas de dépendances externes supplémentaires
+- Compatible avec l'architecture existante
+- Suit les conventions de code du projet
+- CSS modulaire et maintenable
+- TypeScript strict pour la sécurité des types
+
+═══════════════════════════════════════════════════════════════════════════

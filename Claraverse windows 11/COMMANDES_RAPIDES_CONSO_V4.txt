@@ -1,0 +1,244 @@
+═══════════════════════════════════════════════════════════════
+  ⚡ COMMANDES RAPIDES - CONSO.JS V4
+═══════════════════════════════════════════════════════════════
+
+📋 COPIER-COLLER CES COMMANDES DANS LA CONSOLE DU NAVIGATEUR
+
+═══════════════════════════════════════════════════════════════
+  ✅ VÉRIFICATIONS RAPIDES
+═══════════════════════════════════════════════════════════════
+
+1️⃣ Vérifier l'absence de tables de consolidation
+───────────────────────────────────────────────────────────────
+document.querySelectorAll('.claraverse-conso-table').length
+// Résultat attendu: 0
+
+
+2️⃣ Vérifier que le processeur est chargé
+───────────────────────────────────────────────────────────────
+window.claraverseProcessor !== undefined
+// Résultat attendu: true
+
+
+3️⃣ Vérifier localStorage
+───────────────────────────────────────────────────────────────
+localStorage.getItem('claraverse_tables_data') !== null
+// Résultat attendu: true (si des données existent)
+
+
+4️⃣ Compter les tables dans le DOM
+───────────────────────────────────────────────────────────────
+document.querySelectorAll('table').length
+// Résultat: nombre de tables totales
+
+
+═══════════════════════════════════════════════════════════════
+  🗑️ NETTOYAGE
+═══════════════════════════════════════════════════════════════
+
+5️⃣ Supprimer toutes les tables de consolidation
+───────────────────────────────────────────────────────────────
+window.claraverseProcessor?.removeAllConsoTables()
+// Résultat: Log de confirmation dans la console
+
+
+6️⃣ Forcer la suppression manuelle (si nécessaire)
+───────────────────────────────────────────────────────────────
+document.querySelectorAll('.claraverse-conso-table').forEach(t => t.remove());
+console.log('✅ Tables supprimées manuellement');
+
+
+═══════════════════════════════════════════════════════════════
+  🔍 DIAGNOSTIC
+═══════════════════════════════════════════════════════════════
+
+7️⃣ Afficher les données sauvegardées
+───────────────────────────────────────────────────────────────
+const data = localStorage.getItem('claraverse_tables_data');
+if (data) {
+  const parsed = JSON.parse(data);
+  console.log('📦 Tables sauvegardées:', Object.keys(parsed).length);
+  console.log('Détails:', parsed);
+} else {
+  console.log('ℹ️ Aucune donnée sauvegardée');
+}
+
+
+8️⃣ Analyser les types de tables
+───────────────────────────────────────────────────────────────
+const tables = document.querySelectorAll('table');
+let modelized = 0, cia = 0, standard = 0;
+tables.forEach(t => {
+  const headers = Array.from(t.querySelectorAll('th, td'))
+    .map(h => h.textContent.toLowerCase());
+  if (headers.some(h => /assertion|conclusion/.test(h))) modelized++;
+  else if (headers.some(h => /reponse[_\s]?user/.test(h))) cia++;
+  else standard++;
+});
+console.log(`📊 Tables: ${modelized} modelisées, ${cia} CIA, ${standard} standard`);
+
+
+9️⃣ Vérifier les fonctions désactivées
+───────────────────────────────────────────────────────────────
+const processor = window.claraverseProcessor;
+if (processor) {
+  console.log('Fonctions de consolidation:');
+  console.log('- createConsolidationTable:', typeof processor.createConsolidationTable);
+  console.log('- scheduleConsolidation:', typeof processor.scheduleConsolidation);
+  console.log('- performConsolidation:', typeof processor.performConsolidation);
+  console.log('Fonctions de nettoyage:');
+  console.log('- removeExistingConsoTables:', typeof processor.removeExistingConsoTables);
+  console.log('- removeAllConsoTables:', typeof processor.removeAllConsoTables);
+}
+
+
+🔟 Validation complète (script complet)
+───────────────────────────────────────────────────────────────
+// Copier-coller le contenu de: public/test-conso-v4-validation.js
+// Ou charger le fichier dans la console
+
+
+═══════════════════════════════════════════════════════════════
+  💾 GESTION DES DONNÉES
+═══════════════════════════════════════════════════════════════
+
+1️⃣1️⃣ Sauvegarder manuellement une table
+───────────────────────────────────────────────────────────────
+const table = document.querySelector('table');
+if (table && window.claraverseProcessor) {
+  window.claraverseProcessor.saveTableData(table);
+  console.log('✅ Table sauvegardée');
+}
+
+
+1️⃣2️⃣ Restaurer toutes les tables
+───────────────────────────────────────────────────────────────
+if (window.claraverseProcessor) {
+  window.claraverseProcessor.restoreAllTablesData();
+  console.log('✅ Tables restaurées');
+}
+
+
+1️⃣3️⃣ Vider toutes les données sauvegardées
+───────────────────────────────────────────────────────────────
+localStorage.removeItem('claraverse_tables_data');
+console.log('🗑️ Données supprimées');
+
+
+1️⃣4️⃣ Exporter les données
+───────────────────────────────────────────────────────────────
+const data = localStorage.getItem('claraverse_tables_data');
+if (data) {
+  console.log('📤 Données exportées:');
+  console.log(data);
+  // Pour copier dans le presse-papier:
+  navigator.clipboard.writeText(data).then(() => {
+    console.log('✅ Copié dans le presse-papier');
+  });
+}
+
+
+═══════════════════════════════════════════════════════════════
+  🧪 TESTS INTERACTIFS
+═══════════════════════════════════════════════════════════════
+
+1️⃣5️⃣ Tester un menu déroulant
+───────────────────────────────────────────────────────────────
+// 1. Trouver une cellule Assertion
+const cell = document.querySelector('td[title*="assertion"]');
+if (cell) {
+  console.log('✅ Cellule trouvée, cliquez dessus pour tester');
+  cell.style.border = '3px solid red'; // Mettre en évidence
+} else {
+  console.log('❌ Aucune cellule Assertion trouvée');
+}
+
+
+1️⃣6️⃣ Tester une checkbox CIA
+───────────────────────────────────────────────────────────────
+const checkbox = document.querySelector('td input[type="checkbox"]');
+if (checkbox) {
+  console.log('✅ Checkbox trouvée');
+  checkbox.parentElement.style.border = '3px solid blue';
+} else {
+  console.log('❌ Aucune checkbox trouvée');
+}
+
+
+1️⃣7️⃣ Simuler un changement et vérifier la sauvegarde
+───────────────────────────────────────────────────────────────
+const cell = document.querySelector('td[title*="assertion"]');
+if (cell) {
+  const oldValue = cell.textContent;
+  cell.textContent = 'TEST';
+  setTimeout(() => {
+    const data = localStorage.getItem('claraverse_tables_data');
+    console.log('💾 Sauvegarde:', data ? 'OK' : 'ÉCHEC');
+    cell.textContent = oldValue; // Restaurer
+  }, 1000);
+}
+
+
+═══════════════════════════════════════════════════════════════
+  📊 RAPPORT COMPLET
+═══════════════════════════════════════════════════════════════
+
+1️⃣8️⃣ Générer un rapport complet
+───────────────────────────────────────────────────────────────
+console.log('═══════════════════════════════════════════════════════════');
+console.log('  📊 RAPPORT CONSO.JS V4');
+console.log('═══════════════════════════════════════════════════════════');
+console.log('');
+console.log('✅ Tables de consolidation:', document.querySelectorAll('.claraverse-conso-table').length);
+console.log('✅ Processeur chargé:', window.claraverseProcessor !== undefined);
+console.log('✅ Tables totales:', document.querySelectorAll('table').length);
+console.log('✅ Données localStorage:', localStorage.getItem('claraverse_tables_data') ? 'Présentes' : 'Absentes');
+console.log('');
+console.log('═══════════════════════════════════════════════════════════');
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 VALIDATION FINALE
+═══════════════════════════════════════════════════════════════
+
+1️⃣9️⃣ Validation en une commande
+───────────────────────────────────────────────────────────────
+(function() {
+  const checks = {
+    'Tables de consolidation': document.querySelectorAll('.claraverse-conso-table').length === 0,
+    'Processeur chargé': window.claraverseProcessor !== undefined,
+    'LocalStorage OK': (() => {
+      try {
+        localStorage.setItem('test', 'ok');
+        const ok = localStorage.getItem('test') === 'ok';
+        localStorage.removeItem('test');
+        return ok;
+      } catch { return false; }
+    })()
+  };
+  
+  console.log('🎯 VALIDATION CONSO.JS V4:');
+  Object.entries(checks).forEach(([name, passed]) => {
+    console.log(`${passed ? '✅' : '❌'} ${name}`);
+  });
+  
+  const allPassed = Object.values(checks).every(v => v);
+  console.log('');
+  console.log(allPassed ? '🎉 VALIDATION RÉUSSIE!' : '⚠️ VALIDATION PARTIELLE');
+  
+  return checks;
+})();
+
+
+═══════════════════════════════════════════════════════════════
+  💡 ASTUCES
+═══════════════════════════════════════════════════════════════
+
+• Pour recharger sans cache: Ctrl+Shift+R (ou Cmd+Shift+R sur Mac)
+• Pour ouvrir la console: F12 ou Ctrl+Shift+I
+• Pour effacer la console: clear() ou Ctrl+L
+• Pour copier un résultat: copy(variable)
+
+═══════════════════════════════════════════════════════════════
+
+Toutes les commandes sont prêtes à être copiées-collées! ⚡

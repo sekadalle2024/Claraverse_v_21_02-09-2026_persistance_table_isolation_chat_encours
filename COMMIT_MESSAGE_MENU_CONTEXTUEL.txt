@@ -1,0 +1,51 @@
+fix: Correction menu contextuel Lead Balance et Etat Fin
+
+Résout les problèmes de menu contextuel pour les features Lead Balance et Etat Fin
+
+Problèmes résolus:
+- Lead Balance: Menu contextuel ne s'ouvrait pas automatiquement
+- Lead Balance: Clic sur cellule ne fonctionnait pas
+- Etat Fin: Clic sur cellule ne fonctionnait pas
+
+Solutions appliquées:
+- Ajout déclenchement automatique pour Lead Balance
+- Ajout gestionnaire de clic sur cellule pour Lead Balance et Etat Fin
+- Amélioration UX avec curseur pointer et tooltip
+- Protection contre clics multiples
+
+Fichiers modifiés:
+- public/LeadBalanceAutoTrigger.js
+  * Ajout fonction addCellClickHandler()
+  * Modification scanAndProcess() pour déclencher automatiquement
+  * Ajout indicateurs visuels (curseur, tooltip)
+  * Protection contre clics multiples
+
+- public/EtatFinAutoTrigger.js
+  * Ajout fonction addCellClickHandler()
+  * Modification scanAndProcess() pour ajouter gestionnaire de clic
+  * Ajout indicateurs visuels (curseur, tooltip)
+  * Protection contre clics multiples
+
+Documentation créée:
+- Doc_Lead_Balance/DIAGNOSTIC_MENU_CONTEXTUEL_03_AVRIL_2026.md
+- Doc_Lead_Balance/00_INDEX_MENU_CONTEXTUEL.md
+- 00_LIRE_EN_PREMIER_MENU_CONTEXTUEL.txt
+- 00_CORRECTION_MENU_CONTEXTUEL_LEAD_ETAT_03_AVRIL_2026.txt
+- QUICK_START_CORRECTION_MENU_CONTEXTUEL.txt
+- SYNTHESE_VISUELLE_CORRECTION_MENU_CONTEXTUEL.md
+- 00_SYNTHESE_FINALE_MENU_CONTEXTUEL_03_AVRIL_2026.txt
+- LISTE_FICHIERS_CORRECTION_MENU_CONTEXTUEL_03_AVRIL_2026.md
+- INDEX_CORRECTION_MENU_CONTEXTUEL_03_AVRIL_2026.md
+
+Scripts créés:
+- test-menu-contextuel-lead-etat.ps1
+
+Tests:
+- Lead Balance: Déclenchement automatique ✅
+- Lead Balance: Clic sur cellule ✅
+- Etat Fin: Déclenchement automatique ✅
+- Etat Fin: Clic sur cellule ✅
+
+Résultat:
+Les deux features fonctionnent maintenant de manière identique et cohérente
+avec une expérience utilisateur fluide et intuitive.

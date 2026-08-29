@@ -1,0 +1,346 @@
+═══════════════════════════════════════════════════════════════════════════════
+DIAGNOSTIC : PROBLÈME D'AFFICHAGE FRONTEND ÉTATS FINANCIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 04 Avril 2026
+🎯 OBJECTIF : Résoudre le problème d'affichage des états financiers N et N-1 dans le frontend
+
+═══════════════════════════════════════════════════════════════════════════════
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ SYMPTÔME :
+Le backend calcule correctement les états financiers pour N, N-1 et N-2, mais le 
+frontend n'affiche pas ces données dans l'accordéon du chat.
+
+✅ CE QUI FONCTIONNE :
+1. Backend calcule N, N-1 et N-2 correctement
+2. Backend génère le HTML avec les accordéons
+3. Backend retourne le HTML dans la réponse JSON
+4. Le fichier de balance démo contient 3 onglets : "BALANCE 2018", "BALANCE 2017", "BALANCE 2016"
+
+❌ CE QUI NE FONCTIONNE PAS :
+1. Le HTML généré n'est pas affiché dans le chat
+2. Les accordéons ne s'affichent pas
+3. Les données N et N-1 ne sont pas visibles pour l'utilisateur
+
+═══════════════════════════════════════════════════════════════════════════════
+ARCHITECTURE DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : DÉCLENCHEMENT
+┌─────────────────────────────────────────────────────────────────────────┐
+│ User tape "Etat fin" dans le chat                                       │
+│   ↓                                                                      │
+│ claraApiService.ts (Case 24) détecte "Etat fin"                        │
+│   ↓                                                                      │
+│ Génère une table déclencheuse avec classe "etat-fin-trigger"           │
+│   ↓                                                                      │
+│ Retourne SENTINEL_ETAT_FIN                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 2 : UPLOAD AUTOMATIQUE
+┌─────────────────────────────────────────────────────────────────────────┐
+│ EtatFinAutoTrigger.js détecte la table                                  │
+│   ↓                                                                      │
+│ Ouvre dialogue fichier automatiquement                                  │
+│   ↓                                                                      │
+│ User sélectionne fichier Balance Excel                                  │
+│   ↓                                                                      │
+│ Encode en base64                                                         │
+│   ↓                                                                      │
+│ POST /etats-financiers/process-excel                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 3 : TRAITEMENT BACKEND ✅ FONCTIONNE
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Reçoit fichier base64                                                    │
+│   ↓                                                                      │
+│ Décode et lit Excel (Balance N, N-1, N-2)                              │
+│   ↓                                                                      │
+│ Charge correspondances_syscohada.json                                    │
+│   ↓                                                                      │
+│ Calcule états financiers au format liasse (N et N-1)                   │
+│   ↓                                                                      │
+│ Génère HTML avec accordéons via generate_section_html_liasse()         │
+│   ↓                                                                      │
+│ Retourne JSON : { success: true, html: "...", results: {...} }         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 4 : AFFICHAGE FRONTEND ❌ PROBLÈME ICI
+┌─────────────────────────────────────────────────────────────────────────┐
+│ EtatFinAutoTrigger.js reçoit la réponse                                │
+│   ↓                                                                      │
+│ Fonction replaceTableWithResults(table, html) est appelée              │
+│   ↓                                                                      │
+│ ❓ Le HTML est-il correctement inséré dans le DOM ?                    │
+│   ↓                                                                      │
+│ ❓ Les accordéons sont-ils visibles ?                                  │
+│   ↓                                                                      │
+│ ❓ Les événements click sont-ils attachés ?                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 1. BACKEND CALCULE N-2
+   - Fichier : py_backend/etats_financiers.py (ligne 1500+)
+   - Fonction : process_balance_to_liasse_format()
+   - Résultat : montant_n2 calculé correctement (ex: -316,115,230 pour résultat net)
+
+✅ 2. BACKEND AFFICHE 2 COLONNES (N et N-1)
+   - Fichier : py_backend/etats_financiers_v2.py
+   - Fonction : generate_section_html_liasse()
+   - Résultat : HTML généré avec 2 colonnes "EXERCICE N" et "EXERCICE N-1"
+   - N-2 est utilisé pour les calculs mais PAS affiché
+
+✅ 3. BACKEND RETOURNE LE HTML
+   - Endpoint : /etats-financiers/process-excel
+   - Réponse : EtatsFinanciersResponse avec success=True, html="...", results={...}
+
+❌ 4. FRONTEND AFFICHE LES DONNÉES
+   - Fichier : public/EtatFinAutoTrigger.js
+   - Fonction : replaceTableWithResults(table, html)
+   - Problème : Le HTML n'est pas visible dans le chat
+
+═══════════════════════════════════════════════════════════════════════════════
+ANALYSE DU CODE FRONTEND
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIER : public/EtatFinAutoTrigger.js
+
+FONCTION replaceTableWithResults(table, html) :
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. Trouve le div parent avec classe "prose prose-base"                  │
+│ 2. Crée un conteneur pour les résultats                                 │
+│ 3. Ajoute un titre "📊 États Financiers SYSCOHADA"                     │
+│ 4. Insère le HTML des résultats                                         │
+│ 5. Remplace le contenu du div parent                                    │
+│ 6. Attache les événements des accordéons après 100ms                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+CODE ACTUEL (lignes 180-220) :
+```javascript
+function replaceTableWithResults(table, html) {
+    console.group("🔄 REMPLACEMENT DE LA TABLE");
+
+    const parentDiv = table.closest(CONFIG.SELECTORS.PARENT_DIV);
+    // CONFIG.SELECTORS.PARENT_DIV = "div.prose.prose-base.dark\\:prose-invert.max-w-none"
+
+    if (!parentDiv) {
+        console.error("❌ Div parent non trouvée!");
+        console.groupEnd();
+        return false;
+    }
+
+    console.log("📍 Div parent trouvée");
+
+    // Créer un conteneur pour les résultats
+    const container = document.createElement('div');
+    container.className = 'etat-fin-results';
+    container.style.cssText = 'margin-top: 20px;';
+
+    // Ajouter un titre
+    const title = document.createElement('h3');
+    title.textContent = '📊 États Financiers SYSCOHADA';
+    title.style.cssText = 'margin: 0 0 16px 0; color: #333; font-size: 18px; font-weight: 600;';
+    container.appendChild(title);
+
+    // Ajouter le HTML des résultats
+    const resultsContainer = document.createElement('div');
+    resultsContainer.innerHTML = html;
+    container.appendChild(resultsContainer);
+
+    // Remplacer le contenu de la div parent
+    parentDiv.innerHTML = '';
+    parentDiv.appendChild(container);
+
+    // Attacher les événements des accordéons APRÈS l'insertion dans le DOM
+    setTimeout(() => {
+        const headers = parentDiv.querySelectorAll('.section-header-ef');
+        console.log(`📋 États Financiers: ${headers.length} accordéons trouvés`);
+        
+        headers.forEach((header) => {
+            header.addEventListener('click', function() {
+                console.log('🖱️ Clic sur accordéon:', this.textContent.trim());
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content) {
+                    content.classList.toggle('active');
+                }
+            });
+        });
+        
+        console.log('✅ Événements des accordéons attachés');
+    }, 100);
+
+    console.log("✅ Table remplacée avec les résultats");
+    console.groupEnd();
+
+    return true;
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+HYPOTHÈSES SUR LE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE 1 : Le sélecteur CSS du div parent est incorrect
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Sélecteur actuel : "div.prose.prose-base.dark\\:prose-invert.max-w-none"│
+│ Problème possible : Le sélecteur ne trouve pas le bon élément          │
+│ Solution : Vérifier la structure HTML réelle du chat                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+HYPOTHÈSE 2 : Le HTML est inséré mais les styles CSS ne sont pas appliqués
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Le backend génère le CSS inline dans le HTML                            │
+│ Problème possible : Le CSS est bloqué ou écrasé par d'autres styles    │
+│ Solution : Vérifier que le CSS est bien présent dans le HTML inséré    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+HYPOTHÈSE 3 : Les accordéons sont fermés par défaut
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Les accordéons ont la classe "section-content-ef" sans "active"        │
+│ Problème possible : Le contenu est masqué (max-height: 0)              │
+│ Solution : Ouvrir le premier accordéon par défaut                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+HYPOTHÈSE 4 : Le HTML est inséré dans le mauvais endroit
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Le div parent est trouvé mais n'est pas visible dans le chat           │
+│ Problème possible : Le chat a une structure différente                  │
+│ Solution : Inspecter le DOM réel du chat                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+PLAN D'ACTION
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : TESTER LE BACKEND ISOLÉMENT
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Script : Doc_Etat_Fin/Scripts/test-workflow-complet.ps1                │
+│ Action : Envoyer une requête POST au backend et sauvegarder le HTML    │
+│ Résultat attendu : Fichier HTML sur le bureau avec les accordéons      │
+│ Commande : .\Doc_Etat_Fin\Scripts\test-workflow-complet.ps1            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 2 : INSPECTER LE DOM DU CHAT
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Action : Ouvrir les DevTools et inspecter la structure du chat         │
+│ Vérifier :                                                               │
+│   - La table "Etat fin" est-elle présente ?                            │
+│   - Quel est le div parent de la table ?                               │
+│   - Le sélecteur CSS est-il correct ?                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 3 : AJOUTER DES LOGS DE DÉBOGAGE
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Fichier : public/EtatFinAutoTrigger.js                                 │
+│ Action : Ajouter des console.log pour tracer l'exécution               │
+│ Vérifier :                                                               │
+│   - La réponse du backend est-elle reçue ?                             │
+│   - Le HTML est-il présent dans la réponse ?                           │
+│   - La fonction replaceTableWithResults est-elle appelée ?             │
+│   - Le div parent est-il trouvé ?                                      │
+│   - Le HTML est-il inséré ?                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 4 : TESTER AVEC UN HTML SIMPLIFIÉ
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Action : Remplacer le HTML complexe par un simple <div>Test</div>      │
+│ Objectif : Vérifier que l'insertion fonctionne                         │
+│ Si ça marche : Le problème vient du HTML généré                        │
+│ Si ça ne marche pas : Le problème vient de l'insertion                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 5 : VÉRIFIER LES ÉVÉNEMENTS DES ACCORDÉONS
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Action : Vérifier que les événements click sont attachés               │
+│ Vérifier :                                                               │
+│   - Les headers avec classe "section-header-ef" sont trouvés ?         │
+│   - Les événements click sont attachés ?                               │
+│   - Le clic sur un header ouvre l'accordéon ?                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMANDES DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TESTER LE BACKEND :
+   .\Doc_Etat_Fin\Scripts\test-workflow-complet.ps1
+
+2. VÉRIFIER LES CALCULS N-1 ET N-2 :
+   .\Doc_Etat_Fin\Scripts\test-affichage-n-n1.ps1
+
+3. DÉMARRER LE BACKEND :
+   python py_backend/main.py
+
+4. TESTER DANS L'APPLICATION :
+   - Ouvrir l'application dans le navigateur
+   - Taper "Etat fin" dans le chat
+   - Sélectionner le fichier "py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls"
+   - Ouvrir les DevTools (F12)
+   - Vérifier les logs dans la console
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS CONCERNÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+FRONTEND :
+- public/EtatFinAutoTrigger.js (gestion de l'upload et affichage)
+- src/services/claraApiService.ts (Case 24: détection "Etat fin")
+- index.html (inclusion du script EtatFinAutoTrigger.js)
+
+BACKEND :
+- py_backend/etats_financiers.py (endpoint /etats-financiers/process-excel)
+- py_backend/etats_financiers_v2.py (génération HTML format liasse)
+- py_backend/tableau_flux_tresorerie_v2.py (calcul TFT)
+- py_backend/correspondances_syscohada.json (mapping postes/comptes)
+
+DOCUMENTATION :
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+- Doc_Etat_Fin/00_INDEX_COMPLET_V2.md
+- Doc_Etat_Fin/Documentation/00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+
+SCRIPTS DE TEST :
+- Doc_Etat_Fin/Scripts/test-workflow-complet.ps1 (NOUVEAU)
+- Doc_Etat_Fin/Scripts/test-affichage-n-n1.ps1
+- Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES IMMÉDIATES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Créer le script de test du workflow complet
+2. ⏳ Exécuter le script pour vérifier que le backend fonctionne
+3. ⏳ Inspecter le DOM du chat pour vérifier la structure
+4. ⏳ Ajouter des logs de débogage dans EtatFinAutoTrigger.js
+5. ⏳ Tester le workflow complet dans l'application
+6. ⏳ Identifier la cause exacte du problème
+7. ⏳ Appliquer la correction
+8. ⏳ Tester à nouveau
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ N-2 DOIT ÊTRE UTILISÉ MAIS PAS AFFICHÉ
+   - N-2 est utilisé pour calculer les variations de N-1
+   - Seules 2 colonnes sont affichées : N et N-1
+   - Format liasse officielle SYSCOHADA prévoit 2 colonnes obligatoires
+
+⚠️ FICHIER DE BALANCE DÉMO
+   - Fichier : py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   - Onglets : "BALANCE 2018", "BALANCE 2017", "BALANCE 2016"
+   - PAS "BALANCE N", "BALANCE N-1", "BALANCE N-2"
+
+⚠️ DÉTECTION AUTOMATIQUE DES ONGLETS
+   - Le backend détecte automatiquement les onglets par pattern matching
+   - Patterns : "Balance N", "balance n", "BALANCE N", etc.
+   - Si pas trouvé, utilise le premier onglet comme Balance N
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════════

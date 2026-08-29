@@ -1,0 +1,260 @@
+═══════════════════════════════════════════════════════════════════════════════
+   📋 COMMANDES RAPIDES : DÉPLOIEMENT HUGGING FACE
+═══════════════════════════════════════════════════════════════════════════════
+
+Copiez-collez ces commandes dans PowerShell pour déployer rapidement.
+
+═══════════════════════════════════════════════════════════════════════════════
+   🚀 DÉPLOIEMENT AUTOMATIQUE (RECOMMANDÉ)
+═══════════════════════════════════════════════════════════════════════════════
+
+# 1. Aller dans le dossier py_backend
+cd py_backend
+
+# 2. Exécuter le script de déploiement
+..\Doc Hugging Face deploy\deploy-huggingface.ps1
+
+# 3. Suivre les instructions à l'écran
+
+═══════════════════════════════════════════════════════════════════════════════
+   📝 DÉPLOIEMENT MANUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+# 1. Aller dans le dossier py_backend
+cd py_backend
+
+# 2. Initialiser Git (si pas déjà fait)
+git init
+
+# 3. Ajouter le remote Hugging Face
+# Remplacer [USERNAME] par votre nom d'utilisateur HF
+git remote add hf https://huggingface.co/spaces/[USERNAME]/claraverse-backend
+
+# 4. Configurer Git
+git config user.name "Votre Nom"
+git config user.email "votre@email.com"
+
+# 5. Ajouter tous les fichiers
+git add .
+
+# 6. Créer un commit
+git commit -m "Initial deployment: Claraverse backend"
+
+# 7. Pousser vers Hugging Face
+git push hf main
+
+# Entrer vos credentials quand demandé :
+# Username: [votre-username-huggingface]
+# Password: [votre-token-huggingface]
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔄 MISE À JOUR DU DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+# Après avoir fait des modifications :
+
+# 1. Aller dans py_backend
+cd py_backend
+
+# 2. Ajouter les modifications
+git add .
+
+# 3. Créer un commit
+git commit -m "Update: description des changements"
+
+# 4. Pousser vers Hugging Face
+git push hf main
+
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+# Tester l'endpoint de santé (remplacer [USERNAME])
+curl https://[USERNAME]-claraverse-backend.hf.space/health
+
+# Ou dans PowerShell :
+Invoke-WebRequest -Uri "https://[USERNAME]-claraverse-backend.hf.space/health"
+
+# Ouvrir la documentation dans le navigateur
+start https://[USERNAME]-claraverse-backend.hf.space/docs
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔧 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier la version de Git
+git --version
+
+# Vérifier les remotes configurés
+git remote -v
+
+# Voir le statut Git
+git status
+
+# Voir l'historique des commits
+git log --oneline
+
+# Supprimer le remote Hugging Face (si besoin de reconfigurer)
+git remote remove hf
+
+# Forcer le push (attention : écrase l'historique distant)
+git push hf main --force
+
+═══════════════════════════════════════════════════════════════════════════════
+   🐳 TESTS LOCAUX AVEC DOCKER
+═══════════════════════════════════════════════════════════════════════════════
+
+# Construire l'image Docker localement
+docker build -t claraverse-backend .
+
+# Lancer le container
+docker run -p 7860:7860 claraverse-backend
+
+# Tester l'API localement
+curl http://localhost:7860/health
+
+# Ouvrir la documentation locale
+start http://localhost:7860/docs
+
+# Arrêter le container
+docker ps  # Noter le CONTAINER ID
+docker stop [CONTAINER_ID]
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔐 GESTION DES CREDENTIALS
+═══════════════════════════════════════════════════════════════════════════════
+
+# Configurer le cache des credentials Git (Windows)
+git config --global credential.helper wincred
+
+# Ou utiliser le store (stocke en clair - attention)
+git config --global credential.helper store
+
+# Supprimer les credentials stockés
+git credential-wincred erase
+# Puis entrer : host=huggingface.co
+
+═══════════════════════════════════════════════════════════════════════════════
+   📊 MONITORING
+═══════════════════════════════════════════════════════════════════════════════
+
+# Ouvrir le Space sur Hugging Face
+start https://huggingface.co/spaces/[USERNAME]/claraverse-backend
+
+# Voir les logs de build
+# → Aller sur le Space → Onglet "Logs" → "Build logs"
+
+# Voir les logs du container
+# → Aller sur le Space → Onglet "Logs" → "Container logs"
+
+═══════════════════════════════════════════════════════════════════════════════
+   🗑️ NETTOYAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Supprimer les fichiers non suivis par Git
+git clean -fd
+
+# Supprimer le dossier .git (réinitialiser Git)
+Remove-Item -Recurse -Force .git
+
+# Supprimer les images Docker locales
+docker rmi claraverse-backend
+
+# Supprimer tous les containers arrêtés
+docker container prune
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔍 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier les fichiers volumineux
+Get-ChildItem -Recurse | Where-Object {$_.Length -gt 10MB} | Select-Object FullName, @{Name="Size(MB)";Expression={[math]::Round($_.Length/1MB,2)}}
+
+# Vérifier le contenu de .dockerignore
+Get-Content .dockerignore
+
+# Vérifier le contenu de requirements.txt
+Get-Content requirements.txt
+
+# Tester l'import des modules Python
+python -c "import fastapi; import uvicorn; import pandas; print('OK')"
+
+═══════════════════════════════════════════════════════════════════════════════
+   📝 TEMPLATES DE COMMIT
+═══════════════════════════════════════════════════════════════════════════════
+
+# Déploiement initial
+git commit -m "Initial deployment: Claraverse backend API"
+
+# Mise à jour des dépendances
+git commit -m "Update: dependencies in requirements.txt"
+
+# Correction de bug
+git commit -m "Fix: [description du bug corrigé]"
+
+# Nouvelle fonctionnalité
+git commit -m "Feature: [description de la fonctionnalité]"
+
+# Optimisation
+git commit -m "Optimize: [description de l'optimisation]"
+
+# Documentation
+git commit -m "Docs: update README and documentation"
+
+═══════════════════════════════════════════════════════════════════════════════
+   🌐 URLS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+# Créer un nouveau Space
+https://huggingface.co/new-space
+
+# Gérer les tokens
+https://huggingface.co/settings/tokens
+
+# Votre Space (remplacer [USERNAME])
+https://huggingface.co/spaces/[USERNAME]/claraverse-backend
+
+# API déployée (remplacer [USERNAME])
+https://[USERNAME]-claraverse-backend.hf.space
+
+# Documentation API (remplacer [USERNAME])
+https://[USERNAME]-claraverse-backend.hf.space/docs
+
+# Forum Hugging Face
+https://discuss.huggingface.co/
+
+# Documentation Spaces
+https://huggingface.co/docs/hub/spaces
+
+═══════════════════════════════════════════════════════════════════════════════
+   💡 ASTUCES
+═══════════════════════════════════════════════════════════════════════════════
+
+# Créer un alias pour le déploiement rapide
+Set-Alias -Name deploy-hf -Value "..\Doc Hugging Face deploy\deploy-huggingface.ps1"
+
+# Utiliser ensuite simplement :
+deploy-hf
+
+# Créer une fonction PowerShell pour tester rapidement
+function Test-HFApi {
+    param([string]$Username)
+    $url = "https://$Username-claraverse-backend.hf.space/health"
+    Invoke-WebRequest -Uri $url | Select-Object StatusCode, Content
+}
+
+# Utiliser :
+Test-HFApi -Username "votre-username"
+
+═══════════════════════════════════════════════════════════════════════════════
+   📞 AIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus d'informations, consulter :
+
+→ 00_COMMENCER_ICI_HUGGINGFACE.txt    (Guide complet)
+→ QUICK_START_HUGGINGFACE.txt         (Démarrage rapide)
+→ GUIDE_DEPLOIEMENT_HUGGINGFACE.md    (Guide détaillé)
+→ TROUBLESHOOTING_HUGGINGFACE.md      (Dépannage)
+
+═══════════════════════════════════════════════════════════════════════════════

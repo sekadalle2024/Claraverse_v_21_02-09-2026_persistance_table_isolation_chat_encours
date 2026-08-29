@@ -1,0 +1,83 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🔧 FIX - CONFUSION COLONNES SCORE ET REMARQUES            ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+                    🎯 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════
+
+Au démarrage (avant de cliquer sur "Résultat final"):
+❌ Les colonnes Score et Remarques sont confondues
+❌ Leur contenu est mélangé
+✅ La colonne Score existe déjà mais est vide
+
+CAUSE:
+conso.js fusionne automatiquement les cellules des tables CIA
+et confond les colonnes Score et Remarques.
+
+
+═══════════════════════════════════════════════════════════════
+                    💡 SOLUTION
+═══════════════════════════════════════════════════════════════
+
+Empêcher conso.js de fusionner les colonnes Score et Remarques
+dans les tables CIA (tables avec colonne Reponse_user).
+
+APPROCHE:
+1. Détecter les tables CIA dans conso.js
+2. Ne PAS fusionner les colonnes Score et Remarques
+3. Laisser ces colonnes intactes pour le menu CIA
+
+
+═══════════════════════════════════════════════════════════════
+                    📋 MODIFICATION À FAIRE
+═══════════════════════════════════════════════════════════════
+
+Dans conso.js, ajouter une vérification pour ne pas fusionner
+les colonnes Score et Remarques des tables CIA.
+
+Fichier: public/conso.js
+Fonction: mergeCells ou fusionner les cellules
+
+
+═══════════════════════════════════════════════════════════════
+                    🔍 DIAGNOSTIC
+═══════════════════════════════════════════════════════════════
+
+Pour confirmer le problème:
+
+1. Ouvrir: http://localhost:5173/test-menu-cia-simple.html
+2. Console (F12)
+3. Observer les colonnes Score et Remarques
+4. Vérifier si leur contenu est mélangé
+
+
+═══════════════════════════════════════════════════════════════
+                    📊 STRUCTURE ATTENDUE
+═══════════════════════════════════════════════════════════════
+
+Ordre des colonnes:
+1. Ref_question
+2. Question
+3. Option
+4. Reponse_cia (masquée)
+5. Remarques (masquée, puis affichée par menu CIA)
+6. Score (vide au démarrage, remplie par menu CIA)
+7. Reponse_user (checkbox)
+
+IMPORTANT:
+- Remarques contient le texte d'explication
+- Score contient 0 ou 1 (calculé par menu CIA)
+- Ces deux colonnes NE DOIVENT PAS être fusionnées
+
+
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🔧 FIX EN COURS DE CRÉATION                                ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+Version: FIX CONFUSION COLONNES
+Date: 10 Décembre 2024

@@ -1,0 +1,128 @@
+================================================================================
+✅ MISE À JOUR RÉUSSIE - CORRESPONDANCES TFT SYSCOHADA RÉVISÉ
+================================================================================
+Date: 08 Avril 2026
+Expert: Joël Mabudu
+
+MISSION ACCOMPLIE
+-----------------
+Le fichier correspondances_syscohada.json a été mis à jour avec succès avec 
+toutes les rubriques du Tableau des Flux de Trésorerie (TFT) SYSCOHADA Révisé.
+
+TRAVAIL EFFECTUÉ
+----------------
+✅ Analyse des 3 captures d'écran du TFT
+✅ Analyse du code Python (etats_financiers.py et tableau_flux_tresorerie.py)
+✅ Identification des 25 rubriques du TFT
+✅ Mapping des comptes SYSCOHADA pour chaque rubrique
+✅ Mise à jour du fichier correspondances_syscohada.json
+✅ Test de validation réussi
+
+STRUCTURE DU TFT AJOUTÉE
+-------------------------
+
+A. TRÉSORERIE D'OUVERTURE (1 rubrique)
+   ZA - Trésorerie nette au 1er janvier
+        Comptes: 50, 51, 52, 53, 54, 57, 58, 56
+
+B. FLUX OPÉRATIONNELS (6 rubriques)
+   FA - Capacité d'Autofinancement Globale (CAFG)
+        Comptes: 13, 681, 691, 697, 851, 781, 791, 797, 861, 81, 82, 865
+   FB - Variation d'actif circulant HAO
+        Comptes: 48
+   FC - Variation des stocks
+        Comptes: 31, 32, 33, 34, 35, 36, 37, 38
+   FD - Variation des créances
+        Comptes: 40, 41, 42, 43, 44, 45, 46, 47, 48
+   FE - Variation du passif circulant
+        Comptes: 40, 42, 43, 44, 45, 46, 47, 48
+   ZB - Total flux opérationnels (Calcul)
+
+C. FLUX D'INVESTISSEMENT (6 rubriques)
+   FF - Décaissements immobilisations incorporelles
+        Comptes: 21
+   FG - Décaissements immobilisations corporelles
+        Comptes: 22, 23, 24
+   FH - Décaissements immobilisations financières
+        Comptes: 26, 27
+   FI - Encaissements cessions immobilisations
+        Comptes: 82
+   FJ - Encaissements cessions immobilisations financières
+        Comptes: 826
+   ZC - Total flux investissement (Calcul)
+
+D. FLUX CAPITAUX PROPRES (5 rubriques)
+   FK - Augmentations de capital
+        Comptes: 101
+   FL - Subventions d'investissement reçues
+        Comptes: 14
+   FM - Prélèvements sur le capital
+        Comptes: 101
+   FN - Dividendes versés
+        Comptes: 46
+   ZD - Total flux capitaux propres (Calcul)
+
+E. FLUX CAPITAUX ÉTRANGERS (4 rubriques)
+   FO - Nouveaux emprunts
+        Comptes: 161, 162, 1661, 1662
+   FP - Autres dettes financières
+        Comptes: 16, 18
+   FQ - Remboursements
+        Comptes: 161, 162, 1661, 1662, 16, 18
+   ZE - Total flux capitaux étrangers (Calcul)
+
+F-H. TOTAUX ET CLÔTURE (3 rubriques)
+   ZF - Total flux financement (D+E) (Calcul)
+   ZG - Variation trésorerie (B+C+F) (Calcul)
+   ZH - Trésorerie nette au 31 décembre
+        Comptes: 50, 51, 52, 53, 54, 57, 58, 56
+
+TOTAL: 25 RUBRIQUES TFT
+
+FICHIERS MODIFIÉS
+-----------------
+✅ py_backend/correspondances_syscohada.json
+
+FICHIERS CRÉÉS
+--------------
+✅ test-correspondances-tft.py (script de validation)
+✅ 00_MISE_A_JOUR_TFT_CORRESPONDANCES_08_AVRIL_2026.txt
+
+TEST DE VALIDATION
+------------------
+✅ Toutes les 25 rubriques présentes
+✅ Tous les comptes clés identifiés
+✅ Structure conforme au SYSCOHADA Révisé
+✅ Compatible avec etats_financiers.py
+
+NOTES TECHNIQUES
+----------------
+(1) Variation actif circulant HAO et variation passif circulant:
+    - Les variations sont calculées entre N et N-1
+    - Signe négatif pour augmentation d'actif (emploi)
+    - Signe positif pour augmentation de passif (ressource)
+
+(2) Emprunts:
+    - Comptes 161, 162: Emprunts obligataires
+    - Comptes 1661, 1662: Emprunts et dettes auprès des établissements
+
+(3) Autres dettes financières:
+    - Compte 16: Autres emprunts et dettes assimilées
+    - Compte 18: Dettes liées à des participations
+
+PROCHAINES ÉTAPES
+-----------------
+Le fichier correspondances_syscohada.json est maintenant complet avec:
+✅ Bilan Actif
+✅ Bilan Passif
+✅ Compte de Résultat (Charges)
+✅ Compte de Résultat (Produits)
+✅ Tableau des Flux de Trésorerie (TFT)
+
+Il peut être utilisé pour:
+- Générer automatiquement les états financiers
+- Calculer le TFT à partir de la balance
+- Effectuer les contrôles de cohérence
+- Exporter la liasse fiscale complète
+
+================================================================================

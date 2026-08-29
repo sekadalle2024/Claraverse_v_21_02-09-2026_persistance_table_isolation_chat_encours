@@ -1,0 +1,168 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║          ⚠️  ACTION IMMÉDIATE : RENDER UTILISE L'ANCIEN COMMIT               ║
+║                    16 avril 2026 - 15h45                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🔴 PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Render essaie de déployer l'ANCIEN commit (346cbc3) au lieu du NOUVEAU (6451fcc)
+
+Erreur : "Root directory 'py_backend' does not exist"
+
+POURQUOI ?
+   → Render est connecté à l'ANCIEN repository GitHub
+   → Le nouveau repository (Back-end-python-V0_03_03_2026) contient le nouveau commit
+   → Mais Render pointe toujours vers l'ancien repository
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ SOLUTION : RECONNECTER RENDER AU NOUVEAU REPOSITORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : ALLER DANS SETTINGS
+   ────────────────────────────────────────────────────────────────────────────
+   
+   1. Allez sur : https://dashboard.render.com
+   2. Cliquez sur votre service : clara-backend-production
+   3. Cliquez sur "Settings" (en haut)
+
+ÉTAPE 2 : CHANGER LE REPOSITORY GITHUB
+   ────────────────────────────────────────────────────────────────────────────
+   
+   Dans la section "Build & Deploy", cherchez :
+   
+   ┌──────────────────────────────────────────────────────────────────────────┐
+   │ Repository                                                               │
+   │ ┌────────────────────────────────────────────────────────────────────┐   │
+   │ │ sekadalle2024 / [ancien-repository]                                │   │
+   │ └────────────────────────────────────────────────────────────────────┘   │
+   │                                                                          │
+   │ [Change Repository] ← CLIQUEZ ICI                                        │
+   └──────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 3 : SÉLECTIONNER LE NOUVEAU REPOSITORY
+   ────────────────────────────────────────────────────────────────────────────
+   
+   Dans la liste, sélectionnez :
+   
+   ✅ sekadalle2024 / Back-end-python-V0_03_03_2026
+
+ÉTAPE 4 : CONFIGURER ROOT DIRECTORY
+   ────────────────────────────────────────────────────────────────────────────
+   
+   ⚠️  IMPORTANT : Effacez "py_backend" du champ Root Directory
+   
+   ┌──────────────────────────────────────────────────────────────────────────┐
+   │ Root Directory                                                           │
+   │ ┌────────────────────────────────────────────────────────────────────┐   │
+   │ │                                                                    │   │
+   │ │ (LAISSEZ VIDE)                                                     │   │
+   │ │                                                                    │   │
+   │ └────────────────────────────────────────────────────────────────────┘   │
+   └──────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 5 : VÉRIFIER LA BRANCH
+   ────────────────────────────────────────────────────────────────────────────
+   
+   ┌──────────────────────────────────────────────────────────────────────────┐
+   │ Branch                                                                   │
+   │ ┌────────────────────────────────────────────────────────────────────┐   │
+   │ │ master                                                             │   │
+   │ └────────────────────────────────────────────────────────────────────┘   │
+   └──────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 6 : SAUVEGARDER
+   ────────────────────────────────────────────────────────────────────────────
+   
+   Cliquez sur "Save Changes" (en bas de la page)
+
+ÉTAPE 7 : DÉPLOYER
+   ────────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur "Manual Deploy" (en haut à droite)
+   2. Sélectionnez "Deploy latest commit"
+   3. Attendez le déploiement (3-5 minutes)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 RÉCAPITULATIF DES CHANGEMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AVANT :
+   Repository : [ancien-repository]
+   Commit : 346cbc3
+   Root Directory : py_backend
+   Résultat : ❌ Erreur "py_backend does not exist"
+
+APRÈS :
+   Repository : Back-end-python-V0_03_03_2026
+   Commit : 6451fcc (automatique)
+   Root Directory : (VIDE)
+   Résultat : ✅ Déploiement réussi
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 POURQUOI CETTE SOLUTION ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le nouveau repository GitHub (Back-end-python-V0_03_03_2026) contient :
+   ✅ Commit 6451fcc avec tous les fichiers du backend à la racine
+   ✅ main.py avec support PORT
+   ✅ requirements.txt
+   ✅ Pas de sous-dossier py_backend
+
+L'ancien repository contenait tout le projet Claraverse avec py_backend/ comme sous-dossier.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  SI VOUS NE TROUVEZ PAS "CHANGE REPOSITORY"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION A : Supprimer et recréer le service
+   ────────────────────────────────────────────────────────────────────────────
+   
+   1. Dans Render Dashboard, cliquez sur votre service
+   2. Allez dans Settings
+   3. Tout en bas, cliquez "Delete Service"
+   4. Confirmez la suppression
+   5. Créez un nouveau service :
+      - Cliquez "New +" → "Web Service"
+      - Sélectionnez le repository : Back-end-python-V0_03_03_2026
+      - Suivez les instructions dans VALEURS_A_COPIER_COLLER_RENDER.txt
+
+OPTION B : Déconnecter et reconnecter GitHub
+   ────────────────────────────────────────────────────────────────────────────
+   
+   1. Allez dans Account Settings (icône en haut à droite)
+   2. Cliquez sur "Connected Accounts"
+   3. Déconnectez GitHub
+   4. Reconnectez GitHub
+   5. Retournez dans votre service et changez le repository
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ APRÈS LE DÉPLOIEMENT RÉUSSI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Vous verrez dans les logs :
+
+==> Cloning from https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+==> Checking out commit 6451fcc in branch master
+==> Installing dependencies from requirements.txt
+==> Starting server on 0.0.0.0:$PORT
+==> Live ✅
+
+Testez l'API :
+   curl https://clara-backend-production.onrender.com/health
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📞 BESOIN D'AIDE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si vous ne trouvez pas l'option "Change Repository" :
+   → Utilisez l'OPTION A (supprimer et recréer le service)
+   → C'est plus rapide et plus propre
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

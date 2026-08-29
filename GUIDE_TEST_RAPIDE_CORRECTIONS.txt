@@ -1,0 +1,200 @@
+================================================================================
+🧪 GUIDE DE TEST RAPIDE - CORRECTIONS EXPORT LIASSE
+05 AVRIL 2026
+================================================================================
+
+Les corrections ont été appliquées et vérifiées. Voici comment tester rapidement
+que tout fonctionne correctement.
+
+================================================================================
+📋 ÉTAPE 1: REDÉMARRER LE BACKEND
+================================================================================
+
+Pour que les corrections soient prises en compte, redémarrez le backend:
+
+```powershell
+# Arrêter le backend (Ctrl+C dans le terminal où il tourne)
+
+# Redémarrer le backend
+cd py_backend
+python main.py
+```
+
+Attendez le message: "✅ Backend démarré sur http://localhost:8000"
+
+================================================================================
+📋 ÉTAPE 2: CHARGER UNE BALANCE
+================================================================================
+
+1. Ouvrir l'application frontend dans le navigateur
+2. Aller dans le menu "États Financiers" ou "Lead Balance"
+3. Charger un fichier de balance (Balance_demo.xlsx ou votre propre balance)
+4. Attendre que les états financiers soient générés
+
+VÉRIFICATION:
+✅ Les états financiers s'affichent correctement
+✅ Le menu accordéon montre les 16 états de contrôle
+✅ Les valeurs sont présentes dans tous les onglets
+
+================================================================================
+📋 ÉTAPE 3: EXPORTER LA LIASSE
+================================================================================
+
+1. Cliquer sur le bouton "Exporter Liasse Fiscale" ou équivalent
+2. Attendre le téléchargement du fichier Excel
+3. Ouvrir le fichier Excel téléchargé
+
+VÉRIFICATION RAPIDE:
+✅ Le fichier s'ouvre sans erreur
+✅ Plusieurs onglets sont présents
+
+================================================================================
+📋 ÉTAPE 4: VÉRIFIER LES 16 ÉTATS DE CONTRÔLE
+================================================================================
+
+Dans le fichier Excel téléchargé:
+
+1. Chercher l'onglet "Contrôle de cohérence"
+2. Vérifier qu'il contient 6 sections:
+   - SECTION 1: CONTRÔLES BILAN ACTIF (3 états)
+   - SECTION 2: CONTRÔLES BILAN PASSIF (3 états)
+   - SECTION 3: CONTRÔLES COMPTE DE RÉSULTAT (3 états)
+   - SECTION 4: CONTRÔLES TABLEAU DES FLUX DE TRÉSORERIE (3 états)
+   - SECTION 5: CONTRÔLES SENS DES COMPTES (2 états)
+   - SECTION 6: CONTRÔLES ÉQUILIBRE BILAN (2 états)
+
+TOTAL ATTENDU: 16 états de contrôle
+
+✅ SI OUI: PROBLÈME 1 RÉSOLU
+❌ SI NON: Voir section "Dépannage" ci-dessous
+
+================================================================================
+📋 ÉTAPE 5: VÉRIFIER LES VALEURS DANS LES ONGLETS
+================================================================================
+
+Dans le fichier Excel téléchargé:
+
+1. Aller dans l'onglet "ACTIF"
+   ✅ Vérifier que les colonnes N et N-1 contiennent des valeurs
+   ✅ Pas de cellules vides (sauf si montant = 0)
+
+2. Aller dans l'onglet "PASSIF"
+   ✅ Vérifier que les colonnes N et N-1 contiennent des valeurs
+   ✅ Pas de cellules vides (sauf si montant = 0)
+
+3. Aller dans l'onglet "RESULTAT"
+   ✅ Vérifier que les colonnes N et N-1 contiennent des valeurs
+   ✅ Pas de cellules vides (sauf si montant = 0)
+
+✅ SI TOUTES LES VALEURS SONT PRÉSENTES: PROBLÈME 2 RÉSOLU
+❌ SI DES CELLULES SONT VIDES: Voir section "Dépannage" ci-dessous
+
+================================================================================
+📋 ÉTAPE 6: VÉRIFIER LA COHÉRENCE AVEC LE FRONTEND
+================================================================================
+
+Comparer les valeurs entre le frontend et l'export Excel:
+
+1. Dans le frontend, ouvrir le menu accordéon "États de Contrôle"
+2. Noter quelques valeurs (ex: Total Actif N, Total Passif N)
+3. Dans l'Excel, vérifier que ces mêmes valeurs apparaissent
+
+✅ SI LES VALEURS SONT IDENTIQUES: Cohérence confirmée
+❌ SI LES VALEURS DIFFÈRENT: Voir section "Dépannage" ci-dessous
+
+================================================================================
+🔧 DÉPANNAGE
+================================================================================
+
+PROBLÈME: Moins de 16 états de contrôle
+SOLUTION:
+1. Vérifier que le backend a bien été redémarré
+2. Vérifier les logs du backend pour des erreurs
+3. Vérifier que le fichier generer_onglet_controle_coherence.py est bien modifié
+4. Exécuter: cd py_backend && python test_corrections_simple.py
+
+PROBLÈME: Cellules vides dans ACTIF/PASSIF/RESULTAT
+SOLUTION:
+1. Vérifier que le backend a bien été redémarré
+2. Vérifier les logs du backend pour des erreurs
+3. Vérifier que le fichier export_liasse.py est bien modifié
+4. Exécuter: cd py_backend && python test_corrections_simple.py
+
+PROBLÈME: Valeurs différentes entre frontend et Excel
+SOLUTION:
+1. Vérifier que la même balance a été utilisée
+2. Vérifier qu'aucune modification n'a été faite entre les deux exports
+3. Comparer les logs du backend pour identifier les différences
+
+PROBLÈME: Erreur lors de l'export
+SOLUTION:
+1. Vérifier les logs du backend (terminal où main.py tourne)
+2. Vérifier que le fichier template existe (Liasse_officielle_revise.xlsx)
+3. Vérifier les permissions d'écriture
+4. Essayer avec une balance plus simple
+
+================================================================================
+📊 SCRIPT DE VÉRIFICATION AUTOMATIQUE
+================================================================================
+
+Pour vérifier automatiquement que les corrections sont appliquées:
+
+```powershell
+cd py_backend
+python test_corrections_simple.py
+```
+
+Ce script vérifie:
+✅ Les 16 fonctions sont utilisées dans generer_onglet_controle_coherence.py
+✅ La fonction remplir_onglet_dynamique() existe dans export_liasse.py
+✅ Tous les fichiers requis sont présents
+
+RÉSULTAT ATTENDU:
+✅ PROBLÈME 1 CORRIGÉ: Les 16 fonctions sont utilisées
+✅ PROBLÈME 2 CORRIGÉ: Approche dynamique utilisée pour tous les onglets
+
+================================================================================
+📝 CHECKLIST DE TEST COMPLÈTE
+================================================================================
+
+□ Backend redémarré
+□ Balance chargée dans le frontend
+□ États financiers générés correctement
+□ Export liasse effectué sans erreur
+□ Fichier Excel téléchargé et ouvert
+□ Onglet "Contrôle de cohérence" présent
+□ 16 états de contrôle visibles (6 sections)
+□ Onglet ACTIF rempli (colonnes N et N-1)
+□ Onglet PASSIF rempli (colonnes N et N-1)
+□ Onglet RESULTAT rempli (colonnes N et N-1)
+□ Valeurs cohérentes entre frontend et Excel
+□ Aucune erreur dans les logs du backend
+
+SI TOUTES LES CASES SONT COCHÉES: ✅ CORRECTIONS VALIDÉES
+
+================================================================================
+🎯 RÉSULTAT ATTENDU
+================================================================================
+
+Après ces tests, vous devriez avoir:
+
+1. ✅ Un fichier Excel avec 16 états de contrôle dans l'onglet "Contrôle de cohérence"
+2. ✅ Toutes les valeurs renseignées dans les onglets ACTIF, PASSIF, RESULTAT
+3. ✅ Cohérence totale entre le frontend et l'export Excel
+4. ✅ Aucune erreur dans les logs du backend
+
+Si c'est le cas: 🎉 LES CORRECTIONS FONCTIONNENT PARFAITEMENT !
+
+================================================================================
+📞 SUPPORT
+================================================================================
+
+Si les problèmes persistent:
+1. Consulter: 00_CONFIRMATION_CORRECTIONS_APPLIQUEES_05_AVRIL_2026.txt
+2. Consulter: 00_CORRECTIONS_APPLIQUEES_COMPLET_05_AVRIL_2026.txt
+3. Consulter: Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+4. Exécuter le script de diagnostic: python test_corrections_simple.py
+
+================================================================================
+Dernière mise à jour: 05 AVRIL 2026 - 18h30
+================================================================================

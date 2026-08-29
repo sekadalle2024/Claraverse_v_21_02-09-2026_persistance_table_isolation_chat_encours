@@ -1,0 +1,131 @@
+=================================================================
+🧪 TEST IMMÉDIAT - n8n_doc Google Drive
+=================================================================
+
+✅ SOLUTION DÉJÀ IMPLÉMENTÉE !
+Le script google-drive-downloader.js est actif et télécharge
+automatiquement les documents Google Drive.
+
+=================================================================
+🎯 TESTEZ MAINTENANT
+=================================================================
+
+1. Ouvrez votre navigateur :
+   http://localhost:5173/test-modelisation-template-v2.html
+
+2. Ouvrez la console (F12)
+
+3. Cherchez "Test 6" ou "Test 7" (n8n_doc)
+
+=================================================================
+✅ RÉSULTAT ATTENDU
+=================================================================
+
+Dans la console, vous devriez voir :
+
+📥 Google Drive Downloader - Chargement...
+🚀 Recherche initiale de tables n8n_doc...
+✅ Table n8n_doc détectée (index X)
+📄 Viewer Google Drive injecté
+📥 Téléchargement du document Google Drive...
+✅ Document téléchargé: XXXX caractères
+✅ Document affiché avec succès
+
+=================================================================
+🎨 INTERFACE GÉNÉRÉE
+=================================================================
+
+Vous verrez un accordéon avec :
+
+┌─────────────────────────────────────────┐
+│  📖 Page de Couverture         [－]     │
+│  ☁️ Document Google Drive               │
+│  n8n_doc - Partage Cloud                │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  📄 Contenu du Document        [－]     │
+├─────────────────────────────────────────┤
+│  [🔗 Ouvrir dans Google Docs]           │
+│  [⬇️ Télécharger (PDF)]                 │
+├─────────────────────────────────────────┤
+│  [Contenu HTML du document]             │
+│  Texte formaté, images, etc.            │
+└─────────────────────────────────────────┘
+
+=================================================================
+💻 COMMANDES CONSOLE (si besoin)
+=================================================================
+
+# Forcer l'exécution manuelle
+window.googleDriveDownloader.execute();
+
+# Télécharger un document spécifique
+window.googleDriveDownloader.download('1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I');
+
+# Voir la configuration
+console.log(window.googleDriveDownloader.config);
+
+=================================================================
+🔍 VÉRIFICATIONS
+=================================================================
+
+✅ Le document se télécharge automatiquement
+✅ Le contenu HTML s'affiche directement (pas d'iframe)
+✅ Aucune erreur CORS
+✅ Le texte est lisible et formaté
+✅ Les boutons fonctionnent
+
+=================================================================
+⚠️ SI ÇA NE FONCTIONNE PAS
+=================================================================
+
+1. Vérifiez que le document est partagé publiquement :
+   https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/edit?usp=sharing
+
+2. Vérifiez dans la console s'il y a des erreurs
+
+3. Testez manuellement :
+   window.googleDriveDownloader.execute();
+
+4. Vérifiez que le proxy CORS fonctionne :
+   https://api.allorigins.win/raw?url=https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=html
+
+=================================================================
+📊 DOCUMENT ID ACTUEL
+=================================================================
+
+Doc ID: 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+
+Pour changer le document, modifiez dans :
+public/google-drive-downloader.js
+
+const CONFIG = {
+    docId: 'VOTRE_NOUVEAU_DOC_ID_ICI',
+    ...
+};
+
+=================================================================
+🎉 AVANTAGES DE CETTE SOLUTION
+=================================================================
+
+✅ Téléchargement direct du document
+✅ Affichage natif (pas d'iframe bloqué)
+✅ Contournement CORS via proxy
+✅ Contenu recherchable (Ctrl+F)
+✅ Texte sélectionnable et copiable
+✅ Contrôle total du DOM
+✅ Personnalisation CSS possible
+
+=================================================================
+📚 DOCUMENTATION COMPLÈTE
+=================================================================
+
+SOLUTION_TELECHARGEMENT_GOOGLE_DRIVE.md
+TEST_TELECHARGEMENT_GOOGLE_DRIVE.txt
+SUCCES_TELECHARGEMENT_GOOGLE_DRIVE.md
+
+=================================================================
+Date : 13 décembre 2025
+Statut : ✅ PRÊT À TESTER
+=================================================================

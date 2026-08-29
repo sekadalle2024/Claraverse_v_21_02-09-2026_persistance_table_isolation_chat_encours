@@ -1,0 +1,115 @@
+═══════════════════════════════════════════════════════════════════
+  ✅ CORRECTION MODES TEMPLATE - 10 AVRIL 2026
+═══════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+───────────
+Corriger la structure des modes pour les 9 templates de la section
+Template dans la Bibliothèque d'E-audit pro.
+
+❌ PROBLÈME INITIAL
+───────────────────
+Les étapes Template utilisaient une structure avec `command` direct
+au lieu d'une structure avec `modes`.
+
+✅ SOLUTION APPLIQUÉE
+─────────────────────
+Transformation de chaque étape pour ajouter 2 modes :
+• Mode Normal
+• Mode Guide des commandes
+
+📋 STRUCTURE AVANT
+──────────────────
+{
+  id: 'template-unicolonne',
+  label: 'Template table unicolonne et ligne',
+  icon: <FileText className="w-4 h-4" />,
+  command: `[Logiciel] = E-audit pro
+[Etape de mission] = Bibliothèque
+[Section] = Template
+[Commande] = Template_table_unicolonne
+[Nb de lignes] = 50`
+}
+
+📋 STRUCTURE APRÈS
+──────────────────
+{
+  id: 'template-unicolonne',
+  label: 'Template table unicolonne et ligne',
+  icon: <FileText className="w-4 h-4" />,
+  modes: [
+    {
+      id: 'normal',
+      label: 'Normal',
+      command: `[Logiciel] = E-audit pro
+[Etape de mission] = Bibliothèque
+[Section] = Template
+[Commande] = Template_table_unicolonne
+[Nb de lignes] = 50`
+    },
+    {
+      id: 'guide-commandes',
+      label: 'Guide des commandes',
+      command: `[Logiciel] = E-audit pro
+[Etape de mission] = Bibliothèque
+[Section] = Template
+[Commande] = Template_table_unicolonne
+[Guide des commandes] = Activate
+[Nb de lignes] = 50`
+    }
+  ]
+}
+
+✅ TEMPLATES CORRIGÉS (9)
+─────────────────────────
+1. ✓ Template table unicolonne et ligne
+2. ✓ Template table simple
+3. ✓ Template table etape de mission
+4. ✓ Template table feuille couverture et test audit
+5. ✓ Template table Frap
+6. ✓ Template table synthèses des frap
+7. ✓ Template table rapport provisoire
+8. ✓ Template table rapport final
+9. ✓ Template table suivi des recos
+
+🔧 MODES AJOUTÉS
+────────────────
+Pour chaque template :
+
+[Mode Normal]
+→ Commande de base sans variable supplémentaire
+
+[Mode Guide des commandes]
+→ Commande de base + [Guide des commandes] = Activate
+
+📁 FICHIERS CRÉÉS
+─────────────────
+✓ Doc menu demarrer/Scripts/fix_template_modes.py
+✓ test-correction-modes-template.ps1
+✓ 00_CORRECTION_MODES_TEMPLATE_10_AVRIL_2026.txt
+
+🔧 FICHIER MODIFIÉ
+──────────────────
+✓ src/components/Clara_Components/DemarrerMenu.tsx
+
+✅ VÉRIFICATION
+───────────────
+✓ Aucune erreur de syntaxe TypeScript
+✓ 9 templates corrigés
+✓ 18 modes ajoutés (2 par template)
+✓ Structure conforme aux spécifications
+
+🚀 COMMANDE D'EXÉCUTION
+───────────────────────
+python "Doc menu demarrer/Scripts/fix_template_modes.py"
+
+ou
+
+.\test-correction-modes-template.ps1
+
+💾 SAUVEGARDE
+─────────────
+Une sauvegarde automatique est créée avant modification :
+DemarrerMenu_backup_modes_YYYYMMDD_HHmmss.tsx
+
+═══════════════════════════════════════════════════════════════════

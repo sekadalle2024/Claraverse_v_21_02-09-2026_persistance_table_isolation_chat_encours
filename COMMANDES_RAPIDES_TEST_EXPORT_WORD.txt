@@ -1,0 +1,59 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ COMMANDES RAPIDES - TEST EXPORT TEMPLATE WORD
+═══════════════════════════════════════════════════════════════════════════════
+
+
+🧪 TESTER DANS LA CONSOLE DU NAVIGATEUR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. VÉRIFIER SI DOCX EST CHARGÉ
+────────────────────────────────────────────────────────────────────────────
+
+window.docx
+
+✅ Si chargé: Affiche Object { Document: ..., Packer: ..., ... }
+❌ Si non chargé: Affiche undefined
+
+
+2. VÉRIFIER LES WRAPPERS DATA-CONTAINER-ID
+────────────────────────────────────────────────────────────────────────────
+
+document.querySelectorAll('[data-container-id]').length
+
+✅ Affiche le nombre de wrappers (ex: 3 si 3 tables)
+
+
+3. VÉRIFIER LES TABLES DANS LE MESSAGE
+────────────────────────────────────────────────────────────────────────────
+
+// Sélectionner une table
+const table = document.querySelector('table');
+
+// Trouver le wrapper
+const wrapper = table.closest('[data-container-id]');
+console.log('Wrapper:', wrapper.getAttribute('data-container-id'));
+
+// Trouver le conteneur parent
+let parent = wrapper.parentElement;
+while (parent && parent !== document.body) {
+  const count = parent.querySelectorAll('[data-container-id]').length;
+  console.log('Parent:', parent.className, 'Wrappers:', count);
+  if (count > 1) break;
+  parent = parent.parentElement;
+}
+
+// Compter les tables
+const tables = parent.querySelectorAll('table');
+console.log('Tables trouvées:', tables.length);
+
+
+4. FORCER LE RECHARGEMENT DE DOCX
+────────────────────────────────────────────────────────────────────────────
+
+delete window.docx;
+const script = document.createElement('script');
+script.src = 'https://unpkg.com/docx@8.5.0/build/index.umd.js';
+document.head.appendChild(script);
+
+
+═══════════════════════════════════════════════════════════════════════════════

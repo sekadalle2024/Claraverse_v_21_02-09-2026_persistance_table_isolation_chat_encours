@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════════
+  TEST - Correction Affichage Tables Recos Revision
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+-----------
+Vérifier que TOUTES les tables (1-6) s'affichent en Markdown
+
+📝 CORRECTION APPLIQUÉE
+-----------------------
+Fichier : src/services/claraApiService.ts
+Méthode : detectTableType()
+Changement : Suppression de la condition hasHeaderKeywords
+
+✅ ÉTAPES DE TEST
+-----------------
+
+1. REDÉMARRER LE FRONTEND
+   → Arrêter le serveur (Ctrl+C)
+   → Relancer : npm run dev
+   → Attendre le message "Local: http://localhost:5173"
+
+2. OUVRIR L'APPLICATION
+   → Navigateur : http://localhost:5173
+   → Ouvrir la console (F12)
+
+3. ENVOYER UN MESSAGE TEST
+   → Dans le chat, envoyer :
+     "Recos_revision [test AA040 caisse]"
+
+4. VÉRIFIER L'AFFICHAGE
+   → ✅ Table 1 : Format Markdown (4 lignes)
+   → ✅ Table 2 : Format Markdown (1 ligne "Intitule")
+   → ✅ Table 3 : Format Markdown (1 ligne "Description")
+   → ✅ Table 4 : Format Markdown (1 ligne "Observation")
+   → ✅ Table 5 : Format Markdown (1 ligne "Ajustement")
+   → ✅ Table 6 : Format Markdown (1 ligne "Regularisation")
+
+5. VÉRIFIER LA CONSOLE
+   → Rechercher : "✅ FORMAT 4 DETECTE"
+   → Rechercher : "🔄 Début de la conversion en Markdown"
+   → Rechercher : "✅ Conversion terminée"
+   → Pas d'erreurs JavaScript
+
+📊 RÉSULTAT ATTENDU
+-------------------
+
+Toutes les tables doivent avoir ce format :
+
+┌─────────────────────────────────────────────┐
+│ Rubrique          │ Description             │
+├───────────────────┼─────────────────────────┤
+│ Etape de mission  │ Recommendations...      │
+│ Norme             │ Norme ISA               │
+│ Méthode           │ Méthode de la...        │
+│ Reference         │ Recos révision-AA040    │
+└─────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────┐
+│ Rubrique          │ Description             │
+├───────────────────┼─────────────────────────┤
+│ Intitule          │ Dépenses de caisse...   │
+└─────────────────────────────────────────────┘
+
+... (tables 3-6 similaires)
+
+❌ PROBLÈME SI...
+-----------------
+
+Si les tables 2-6 s'affichent encore en JSON :
+  table 2: Intitule: Dépenses de caisse...
+
+→ Le frontend n'a pas été redémarré
+→ Le cache du navigateur n'a pas été vidé
+→ La modification n'a pas été sauvegardée
+
+🔧 SOLUTION EN CAS DE PROBLÈME
+-------------------------------
+
+1. Vider le cache du navigateur (Ctrl+Shift+Delete)
+2. Redémarrer le frontend (npm run dev)
+3. Recharger la page (Ctrl+F5)
+4. Vérifier que le fichier claraApiService.ts a bien été modifié
+
+📁 FICHIERS DE RÉFÉRENCE
+-------------------------
+- CORRECTION_DETECTION_TABLES_CLARAAPI.md (explication complète)
+- src/services/claraApiService.ts (fichier modifié)
+
+💡 ASTUCE
+---------
+Ouvrir la console du navigateur (F12) pour voir les logs de détection :
+- "📋 Table X/6: "table Y" (type: header)"
+- "🔄 Conversion de [nom table] avec X lignes"
+
+═══════════════════════════════════════════════════════════════
+Date : 24 Mars 2026
+Statut : ✅ Prêt pour test
+═══════════════════════════════════════════════════════════════

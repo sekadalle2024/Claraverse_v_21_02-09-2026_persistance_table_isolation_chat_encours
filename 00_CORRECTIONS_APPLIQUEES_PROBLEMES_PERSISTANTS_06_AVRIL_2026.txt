@@ -1,0 +1,128 @@
+================================================================================
+CORRECTIONS APPLIQUÉES - PROBLÈMES PERSISTANTS EXPORT LIASSE
+Date: 06 Avril 2026
+================================================================================
+
+CONTEXTE:
+---------
+Suite aux tests de l'utilisateur, 3 problèmes persistent dans l'export de la liasse:
+1. Colonnes BRUT et AMORTISSEMENT vides dans le Bilan ACTIF
+2. Totalisations manquantes pour l'exercice N (lignes AZ, BQ, BZ, CZ, DZ)
+3. Menu accordéon frontend manque les colonnes BRUT et AMORT pour N
+
+CORRECTIONS APPLIQUÉES:
+-----------------------
+
+✅ CORRECTION 1: Ajout des balances à results_liasse
+   Fichier: py_backend/etats_financiers.py
+   Ligne: ~1553
+   
+   PROBLÈME:
+   - Les balances N et N-1 n'étaient pas transmises à export_liasse.py
+   - Sans les balances, impossible de calculer BRUT et AMORTISSEMENT
+   
+   SOLUTION:
+   - Ajout de balance_n_df, balance_n1_df, balance_n2_df à results_liasse
+   - Ces DataFrames sont maintenant disponibles dans export_liasse.py
+   - La fonction enrichir_actif_avec_brut_amortissement() peut maintenant fonctionner
+   
+   CODE AJOUTÉ:
+   ```python
+   # CORRECTION PROBLÈME 1: Ajouter les balances à results_liasse pour l'export
+   logger.info("📊 Ajout des balances à results_liasse pour l'export...")
+   results_liasse['balance_n_df'] = balance_df
+   results_liasse['balance_n1_df'] = balance_n1_df
+   if balance_n2_df is not None:
+       results_liasse['balance_n2_df'] = balance_n2_df
+   logger.info(f"✅ Balances ajoutées: N={len(balance_df)} lignes, N-1={len(balance_n1_df) if balance_n1_df is not None else 0} lignes")
+   ```
+
+✅ CORRECTION 2: Totalisations déjà calculées et ajoutées
+   Fichier: py_backend/export_liasse.py
+   Lignes: ~665-670
+   
+   VÉRIFICATION:
+   - Les totalisations sont calculées par calculer_totalisations_actif()
+   - Elles sont ajoutées au dict AVANT le remplissage: bilan_actif_dict.update(totalisations_actif)
+   - Les totalisations incluent maintenant brut_n, amort_n, brut_n1, amort_n1
+   
+   CODE EXISTANT (VÉRIFIÉ):
+   ```python
+   # Calculer et ajouter les totalisations
+   logger.info("📊 Calcul des totalisations...")
+   totalisations_actif = calculer_totalisations_actif(bilan_actif_dict)
+   bilan_actif_dict.update(totalisations_actif)  # ✅ Ajout AVANT remplissage
+   
+   totalisations_passif = calculer_totalisations_passif(bilan_passif_dict)
+   bilan_passif_dict.update(totalisations_passif)
+   ```
+
+✅ CORRECTION 3: Colonnes du template vérifiées
+   Fichier: py_backend/export_liasse.py
+   Ligne: ~710
+   
+   VÉRIFICATION:
+   - Les colonnes utilisées sont F, G, H, I (pas E, F, G, H)
+   - F = BRUT N
+   - G = AMORTISSEMENT N
+   - H = NET N
+   - I = NET N-1
+   
+   CODE EXISTANT (VÉRIFIÉ):
+   ```python
+   compteur, erreurs = remplir_onglet_actif_avec_brut_amort(
+       onglet_actif, bilan_actif_dict, 
+       col_brut_n='F', col_amort_n='G', col_net_n='H', col_net_n1='I'
+   )
+   ```
+
+FLUX DE DONNÉES CORRIGÉ:
+-------------------------
+
+1. etats_financiers.py:
+   - Charge les balances N, N-1, N-2
+   - Calcule les états financiers
+   - ✅ NOUVEAU: Ajoute les balances à results_liasse
+   - Retourne results_liasse avec balances
+
+2. export_liasse.py:
+   - Reçoit results_liasse avec balances
+   - ✅ Extrait balance_n_df et balance_n1_df
+   - ✅ Appelle enrichir_actif_avec_brut_amortissement()
+   - ✅ Calcule les totalisations (avec brut/amort)
+   - ✅ Remplit l'onglet ACTIF avec 4 colonnes (F, G, H, I)
+
+TESTS À EFFECTUER:
+------------------
+
+1. Redémarrer le backend:
+   .\start-claraverse.ps1
+
+2. Importer la balance de test:
+   py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+3. Générer les états financiers
+
+4. Exporter la liasse officielle
+
+5. Vérifier dans le fichier Excel:
+   ✓ Onglet ACTIF - Colonne F (BRUT) remplie
+   ✓ Onglet ACTIF - Colonne G (AMORTISSEMENT) remplie
+   ✓ Onglet ACTIF - Colonne H (NET N) remplie
+   ✓ Onglet ACTIF - Colonne I (NET N-1) remplie
+   ✓ Lignes de totalisation (AZ, BQ, BZ, CZ, DZ) remplies
+
+PROBLÈME 3 (FRONTEND):
+----------------------
+Le menu accordéon frontend nécessite une modification séparée.
+Fichier à modifier: src/components/Clara_Components/[Composant Menu Accordéon]
+
+PROCHAINES ÉTAPES:
+------------------
+1. Tester les corrections backend (problèmes 1 et 2)
+2. Si OK, modifier le frontend pour afficher BRUT et AMORT (problème 3)
+3. Vérifier le TFT (toujours vide selon l'utilisateur)
+
+================================================================================
+FIN DU DOCUMENT
+================================================================================

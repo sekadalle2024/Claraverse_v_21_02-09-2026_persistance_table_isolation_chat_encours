@@ -1,0 +1,133 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION - POSITIONNEMENT CROSS RÉFÉRENCE HORIZONTALE
+═══════════════════════════════════════════════════════════════════════════════
+Date: 25 avril 2026
+Statut: ✅ CORRIGÉ
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Le module standalone `public/papier-travail-cross-ref-horizontale.js` insérait
+la table Cross référence AU-DESSUS de la table principale, alors qu'elle doit
+être EN DESSOUS.
+
+COMPORTEMENT INCORRECT:
+┌─────────────────────────────────────┐
+│  Cross référence (INCORRECT)        │  ← Devrait être en bas
+└─────────────────────────────────────┘
+┌─────────────────────────────────────┐
+│  Table principale                   │
+└─────────────────────────────────────┘
+
+COMPORTEMENT CORRECT:
+┌─────────────────────────────────────┐
+│  Schéma de calcul                   │
+└─────────────────────────────────────┘
+┌─────────────────────────────────────┐
+│  Table principale                   │
+└─────────────────────────────────────┘
+┌─────────────────────────────────────┐
+│  Cross référence (CORRECT)          │  ← Position correcte
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CORRECTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Fichier: public/papier-travail-cross-ref-horizontale.js
+Méthode: createCrossRefHorizontale()
+Ligne: ~374
+
+AVANT (incorrect):
+```javascript
+// Insérer au-dessus de la table principale
+tablePrincipale.parentNode.insertBefore(crossRefTable, tablePrincipale);
+```
+
+APRÈS (correct):
+```javascript
+// Insérer EN DESSOUS de la table principale
+if (tablePrincipale.nextSibling) {
+  tablePrincipale.parentNode.insertBefore(crossRefTable, tablePrincipale.nextSibling);
+} else {
+  tablePrincipale.parentNode.appendChild(crossRefTable);
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 STATUT DES FICHIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ public/menu.js
+   → Déjà correct pour le positionnement (ligne 10999-11003)
+   → Utilise insertBefore(nextSibling) ou appendChild()
+   → Alignement des colonnes implémenté (lignes 10387-10430)
+
+✅ public/papier-travail-cross-ref-horizontale.js
+   → CORRIGÉ pour le positionnement (ligne 374)
+   → Maintenant utilise insertBefore(nextSibling) ou appendChild()
+   → AJOUTÉ: Méthodes d'alignement des colonnes
+     - findEcartColumnIndex() (ligne ~345)
+     - calculateEmptyColumnsCount() (ligne ~365)
+   → MODIFIÉ: buildCrossRefTable() pour utiliser l'alignement (ligne ~550)
+
+✅ public/papier-travail-schema-calcul.js
+   → Correct pour le positionnement (ligne 421)
+   → Insère AU-DESSUS avec insertBefore(tablePrincipale)
+   → AJOUTÉ: Méthodes d'alignement des colonnes
+     - findEcartColumnIndex() (ligne ~395)
+     - calculateEmptyColumnsCount() (ligne ~415)
+   → MODIFIÉ: buildSchemaTable() pour utiliser l'alignement (ligne ~600)
+
+═══════════════════════════════════════════════════════════════════════════════
+📐 ORDRE FINAL DES TABLES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Schéma de calcul       → AU-DESSUS (ABOVE)
+2. Table principale       → Au milieu
+3. Cross référence        → EN DESSOUS (BELOW)
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 DOCUMENTATION MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Doc papier de travail javascript/ARCHITECTURE_FINALE_24_AVRIL_2026.md
+   → Ajout section "Positionnement des tables"
+   → Ajout section "Corrections (25 avril 2026)"
+   → Diagramme visuel de l'ordre des tables
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 RÉSULTAT
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ La Cross référence horizontale est maintenant correctement positionnée
+   EN DESSOUS de la table principale dans TOUS les fichiers
+
+✅ L'alignement des colonnes fonctionne correctement dans TOUS les fichiers:
+   - Même nombre de colonnes que la table principale
+   - Variables/références alignées sur la colonne "Ecart"
+   - Colonnes vides ajoutées avant et après pour l'alignement parfait
+
+✅ Architecture cohérente entre menu.js et modules standalone
+
+✅ Modules standalone maintenant COMPLETS:
+   - Positionnement correct (ABOVE pour Schéma, BELOW pour Cross ref)
+   - Alignement des colonnes implémenté
+   - Détection de la colonne "Ecart"
+   - Calcul automatique des colonnes vides
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour tester:
+1. Créer une table avec "Nature de test" = "Rapprochement"
+2. Ajouter un Schéma de calcul (Ctrl+Shift+K)
+3. Ajouter une Cross référence (Ctrl+Shift+H)
+4. Vérifier l'ordre:
+   - Schéma de calcul en haut
+   - Table principale au milieu
+   - Cross référence en bas
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,60 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION FORMATAGE TABLES 2-6 CASE 25
+  Date: 29 Mars 2026 - 21h30
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME
+───────────────────────────────────────────────────────────────────────────
+Les tables 2-6 s'affichaient mais SANS formatage:
+- "Intitule", "Observation", "Constat" en texte normal
+- Pas de mise en gras des en-têtes
+
+SOLUTION IMPLÉMENTÉE
+───────────────────────────────────────────────────────────────────────────
+Utiliser un TABLEAU MARKDOWN 1 COLONNE au lieu de HTML ou Markdown simple.
+
+AVANT (HTML - ne fonctionnait pas):
+<h3 style="...">Intitule</h3>
+Absence de contrôles inopinés...
+
+APRÈS (Tableau Markdown - fonctionne):
+| **Intitule** |
+|────────────--|
+| Absence de contrôles inopinés... |
+
+FICHIER MODIFIÉ
+───────────────────────────────────────────────────────────────────────────
+src/services/claraApiService.ts
+→ Fonction convertHeaderTableToMarkdown() (ligne ~650)
+
+AVANTAGES
+───────────────────────────────────────────────────────────────────────────
+✅ Cohérence visuelle avec la table 1
+✅ En-tête en gras garanti par Markdown
+✅ Compatible avec ReactMarkdown
+✅ Pas besoin de modifier le workflow n8n
+
+TEST RAPIDE
+───────────────────────────────────────────────────────────────────────────
+.\test-formatage-tables-case25.ps1
+
+OU MANUELLEMENT:
+1. .\stop-claraverse.ps1; .\start-claraverse.ps1
+2. Ouvrir http://localhost:5173
+3. Envoyer: [Command] : Recos contrôle interne comptable
+            [Cycle] : trésorerie
+            [test] : AA010
+            [Anomalie] = Absence de contrôles inopinés
+4. Vérifier que les en-têtes sont EN GRAS
+
+DOCUMENTATION COMPLÈTE
+───────────────────────────────────────────────────────────────────────────
+Doc prompt issues/00_SOLUTION_FINALE_FORMATAGE_TABLES_29_MARS_2026.txt
+
+STATUT
+───────────────────────────────────────────────────────────────────────────
+✅ Solution implémentée
+✅ Aucune erreur TypeScript
+⏳ Tests à effectuer
+
+═══════════════════════════════════════════════════════════════════════════

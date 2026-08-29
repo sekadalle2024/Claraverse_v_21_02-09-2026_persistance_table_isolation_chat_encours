@@ -1,0 +1,195 @@
+================================================================================
+  REDEPLOIEMENT NETLIFY - CLARAVERSE
+  27 Mars 2026
+================================================================================
+
+🎯 OBJECTIF
+-----------
+Redéployer les nouvelles mises à jour de l'application Claraverse sur Netlify
+après les modifications des modes et corrections.
+
+⏱️ DURÉE ESTIMÉE
+----------------
+10-15 minutes (build + déploiement)
+
+✅ PRÉ-REQUIS VÉRIFIÉS
+----------------------
+✓ Node.js 20+ installé
+✓ npm installé
+✓ Netlify CLI installé globalement
+✓ Authentification Netlify configurée
+✓ Dossier deploiement-netlify avec scripts prêts
+✓ Configuration netlify.toml optimisée
+✓ .gitignore correctement configuré
+
+================================================================================
+  OPTION 1 : DEPLOIEMENT UN CLIC (RECOMMANDÉ) ⭐
+================================================================================
+
+1. À la racine du projet, double-cliquez sur :
+   → DEPLOYER_NETLIFY.bat
+
+2. Attendez 10-15 minutes
+
+3. Vérifiez le site : https://prclaravi.netlify.app
+
+C'est tout ! 🎉
+
+================================================================================
+  OPTION 2 : DEPLOIEMENT VIA POWERSHELL
+================================================================================
+
+Étape 1 : Vérifier la configuration (30 secondes)
+-------------------------------------------------
+cd deploiement-netlify
+.\verifier-avant-redeploiement.ps1
+
+Résultat attendu :
+✓ Node.js: v20.x.x
+✓ npm: 10.x.x
+✓ Netlify CLI: 17.x.x
+✓ Authentification: OK
+✓ Fichiers essentiels: OK
+✓ Espace disque: X GB disponible
+
+Étape 2 : Déployer (10-15 minutes)
+-----------------------------------
+.\deploy.ps1 -Message "Mise à jour des modes et corrections - 27 Mars 2026"
+
+Attendez les messages :
+[1/5] Verifications preliminaires...
+[2/5] Nettoyage...
+[3/5] Build de production...
+[4/5] Verifications post-build...
+[5/5] Deploiement sur Netlify...
+
+Étape 3 : Vérifier le déploiement (2 minutes)
+----------------------------------------------
+1. Accédez au site : https://prclaravi.netlify.app
+2. Vérifiez les nouvelles fonctionnalités
+3. Testez les modes ajoutés
+4. Vérifiez la console pour les erreurs
+
+================================================================================
+  OPTION 3 : DEPLOIEMENT RAPIDE (si le build est déjà fait)
+================================================================================
+
+cd deploiement-netlify
+.\deploy-rapide.ps1 -Message "Mise à jour rapide"
+
+Durée : 3-5 minutes
+
+================================================================================
+  INFORMATIONS DE DÉPLOIEMENT
+================================================================================
+
+Site Production
+---------------
+URL : https://prclaravi.netlify.app
+Dashboard : https://app.netlify.com/projects/prclaravi
+Nom du projet : prclaravi
+
+Métriques Normales
+------------------
+Temps de build : 2-3 minutes
+Temps d'upload : 5-8 minutes
+Taille du build : ~50 MB
+Nombre de fichiers : ~1200
+
+Fichiers Exclus du Déploiement
+-------------------------------
+node_modules/ (dépendances)
+venv_claraverse/ (environnement Python)
+py_backend/ (backend Python - non déployé)
+.git/ (historique Git)
+Fichiers de test et temporaires
+
+================================================================================
+  MODIFICATIONS DÉPLOYÉES
+================================================================================
+
+Nouveaux Modes Ajoutés
+----------------------
+✓ Mode Synthèse Mission
+✓ Mode Analyse Variations
+✓ Mode E-Révision
+✓ Mode Suivi Recommandations
+✓ Mode Contrôles Comptes
+
+Améliorations
+-------------
+✓ Menu "Démarrer" réorganisé
+✓ Nouvelles fonctionnalités d'export
+✓ Corrections de détection de tables
+✓ Optimisations de performance
+
+Fichiers Modifiés
+-----------------
+✓ src/components/Clara_Components/DemarrerMenu.tsx
+✓ src/components/Clara_Components/CyclesComptablesSidebar.tsx
+✓ Fichiers de documentation
+✓ Scripts de déploiement
+
+================================================================================
+  DÉPANNAGE RAPIDE
+================================================================================
+
+Problème : "Node.js non installé"
+Solution : Installer Node.js depuis https://nodejs.org/
+
+Problème : "Non authentifié sur Netlify"
+Solution : Exécuter : netlify login
+
+Problème : "Build échoue"
+Solution : Vérifier les erreurs avec : npm run build
+
+Problème : "Out of memory"
+Solution : Redémarrer l'ordinateur
+
+Problème : "Déploiement échoue"
+Solution : Vérifier la connexion Internet et l'authentification
+
+Problème : "Site ne se met pas à jour"
+Solution : Vider le cache du navigateur (Ctrl+Shift+Del)
+
+================================================================================
+  DOCUMENTATION SUPPLÉMENTAIRE
+================================================================================
+
+Guides Disponibles
+------------------
+deploiement-netlify/GUIDE_UTILISATION.md - Guide complet
+deploiement-netlify/MEMO_PROBLEMES_SOLUTIONS.md - Solutions testées
+deploiement-netlify/COMMANDES_UTILES.md - Commandes de dépannage
+deploiement-netlify/HISTORIQUE_DEPLOIEMENTS.md - Journal des déploiements
+
+Ressources Externes
+-------------------
+Documentation Netlify : https://docs.netlify.com/
+Netlify CLI Reference : https://cli.netlify.com/
+Netlify Community : https://answers.netlify.com/
+
+================================================================================
+  PRÊT À DÉPLOYER !
+================================================================================
+
+Commande Recommandée
+--------------------
+cd deploiement-netlify
+.\deploy.ps1 -Message "Mise à jour des modes et corrections - 27 Mars 2026"
+
+Prochaines Étapes
+-----------------
+1. ✅ Exécuter la commande ci-dessus
+2. ✅ Attendre 10-15 minutes
+3. ✅ Vérifier le site : https://prclaravi.netlify.app
+4. ✅ Tester les nouvelles fonctionnalités
+5. ✅ Consulter l'historique : deploiement-netlify/HISTORIQUE_DEPLOIEMENTS.md
+
+================================================================================
+  BON DÉPLOIEMENT ! 🚀
+================================================================================
+
+Version : 1.0
+Date : 27 Mars 2026
+Statut : ✅ Prêt pour le déploiement

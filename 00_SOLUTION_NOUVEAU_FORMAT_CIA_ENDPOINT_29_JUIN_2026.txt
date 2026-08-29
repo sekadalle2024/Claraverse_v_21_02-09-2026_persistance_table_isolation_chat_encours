@@ -1,0 +1,206 @@
+═══════════════════════════════════════════════════════════════════════════
+✅ SOLUTION NOUVEAU FORMAT CIA ENDPOINT N8N
+═══════════════════════════════════════════════════════════════════════════
+
+📅 Date: 29 Juin 2026
+🎯 Objectif: Permettre à ClaraApiService.tsx de reconnaître et traiter le nouveau 
+             format de réponse JSON retourné par l'endpoint n8n "Programme de travail"
+
+═══════════════════════════════════════════════════════════════════════════
+📋 CONTEXTE
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME:
+---------
+L'endpoint n8n "https://fpb7ab9h.rpcl.app/webhook-test/integration" retourne 
+une réponse dans un format différent des autres endpoints:
+
+Format reçu:
+[{
+  "output": "`json\n{\"Sous-section A\": \"...\", \"Sub-items\": [...]}\n```"
+}]
+
+Le JSON est encapsulé dans:
+1. Un array [{...}]
+2. Une propriété "output"
+3. Des backticks markdown `json ... ```
+4. Parfois des échappements excessifs (\\n, \\", etc.)
+
+RÉSULTAT ACTUEL:
+---------------
+ClaraApiService.tsx ne détecte pas ce format et affiche une erreur :
+{
+  "error": "Unexpected token '`', \"`json\n{\"... is not valid JSON",
+  "raw": "..."
+}
+
+═══════════════════════════════════════════════════════════════════════════
+✅ SOLUTION IMPLÉMENTÉE
+═══════════════════════════════════════════════════════════════════════════
+
+EMPLACEMENT:
+-----------
+Fichier: src/services/claraApiService.ts
+Fonction: normalizeN8nResponse()
+Ligne: ~1400 (avant FORMAT 5: CIA COURS & METHODO AUDIT)
+
+NOUVEAU FORMAT DÉTECTÉ:
+-----------------------
+FORMAT 9: NOUVEAU FORMAT CIA (Case 49 style) — Array with "output" containing 
+          "Sous-section" structure
+
+ÉTAPES DE TRAITEMENT:
+--------------------
+
+1️⃣ DÉTECTION
+   ✓ Vérifie si result est un array avec result[0].output
+   ✓ Vérifie si output contient "```json" ou commence par "`json"
+
+2️⃣ NETTOYAGE
+   ✓ Retire le backtick simple initial ("`json")
+   ✓ Retire les triples backticks (```json et ```)
+   ✓ Retire les backticks résiduels (^`+ et `+$)
+
+3️⃣ PARSING
+   ✓ Parse le JSON nettoyé avec JSON.parse()
+   ✓ Log les informations de structure pour debug
+
+4️⃣ VÉRIFICATION STRUCTURE
+   ✓ Vérifie si parsedData contient "Sous-section"
+   ✓ Convertit en array si nécessaire (attendu par CiaAccordionRenderer)
+
+5️⃣ DÉTERMINATION DU TYPE
+   ✓ Analyse le contenu de "Sous-section" pour détecter:
+      - Méthodologie Audit: contient "étape", "rôle"
+      - CIA Cours: autres contenus
+
+6️⃣ CONVERSION POUR AFFICHAGE
+   ✓ Encapsule dans le marqueur approprié:
+      - __CIA_METHODO_ACCORDION__ pour méthodologie
+      - __CIA_ACCORDION__ pour cours CIA
+   ✓ Retourne avec métadonnées complètes
+
+═══════════════════════════════════════════════════════════════════════════
+📊 STRUCTURE ATTENDUE
+═══════════════════════════════════════════════════════════════════════════
+
+ENTRÉE (endpoint n8n):
+---------------------
+[{
+  "output": "`json\n{
+    \"Sous-section A\": \"Le Modèle des Trois Lignes de l'IIA...\",
+    \"Sub-items\": [
+      {
+        \"Sub-item A1\": \"La Première Ligne...\",
+        \"Items\": [
+          {
+            \"Item A1.1\": \"Définition et Rôle Principal\",
+            \"Rubrique\": \"quoi\",
+            \"Contenu\": \"La première ligne de défense...\"
+          }
+        ]
+      }
+    ]
+  }\n```"
+}]
+
+SORTIE (pour CiaAccordionRenderer):
+----------------------------------
+[{
+  "Sous-section": "Le Modèle des Trois Lignes de l'IIA...",
+  "Sub-items": [
+    {
+      "Sub-item A1": "La Première Ligne...",
+      "Items": [
+        {
+          "Item A1.1": "Définition et Rôle Principal",
+          "Rubrique": "quoi",
+          "Contenu": "La première ligne de défense..."
+        }
+      ]
+    }
+  ]
+}]
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TEST
+═══════════════════════════════════════════════════════════════════════════
+
+COMMANDE TEST:
+-------------
+Dans Claraverse, taper:
+[Command] = /Programme de travail - [Processus] = facturation des ventes
+
+RÉSULTAT ATTENDU:
+----------------
+✓ Détection du FORMAT 9
+✓ Logs dans la console:
+  "🔧 FORMAT 9 NOUVEAU CIA: output avec JSON Sous-section dans bloc markdown"
+  "✅ JSON parsé avec succès"
+  "✅ FORMAT 9 CIA DETECTE: Structure Sous-section/Sub-items trouvée"
+
+✓ Affichage d'un accordéon CIA structuré avec:
+  - Page de couverture
+  - Sections expandables
+  - Sous-items avec icônes
+  - Items avec badges de rubrique (quoi, pourquoi, exemple, etc.)
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 GESTION DES ERREURS
+═══════════════════════════════════════════════════════════════════════════
+
+ERREUR DE PARSING:
+-----------------
+Si le JSON ne peut pas être parsé:
+✓ Catch l'erreur
+✓ Log les détails dans la console
+✓ Retourne un message d'erreur formaté avec:
+  - Message d'erreur clair
+  - Aperçu du contenu brut (premiers 500 caractères)
+  - Métadonnées pour debug
+
+FALLBACK:
+--------
+Si la structure "Sous-section" n'est pas trouvée:
+✓ Continue avec le traitement FORMAT 4 existant
+✓ Log l'avertissement dans la console
+
+═══════════════════════════════════════════════════════════════════════════
+📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════
+
+1. COMPATIBILITÉ:
+   ✓ N'impacte pas les formats existants
+   ✓ S'insère avant FORMAT 5 pour être prioritaire
+   ✓ Compatible avec tous les endpoints CIA existants
+
+2. ROBUSTESSE:
+   ✓ Gère les backticks simples et triples
+   ✓ Gère les échappements excessifs
+   ✓ Gère les objets et les arrays
+   ✓ Détecte automatiquement le type (CIA / Méthodologie)
+
+3. LOGGING:
+   ✓ Logs détaillés pour faciliter le debug
+   ✓ Affiche la structure des données
+   ✓ Indique le format détecté
+
+4. MÉTADONNÉES:
+   ✓ format: "cia_methodo_accordion" ou "cia_accordion"
+   ✓ extractedFromMarkdown: true
+   ✓ newFormat: true (nouveau marqueur)
+   ✓ totalSections: nombre de sections
+
+═══════════════════════════════════════════════════════════════════════════
+✅ RÉSULTAT
+═══════════════════════════════════════════════════════════════════════════
+
+ClaraApiService.tsx peut maintenant:
+✓ Détecter le nouveau format avec "output" et backticks markdown
+✓ Nettoyer et parser le JSON correctement
+✓ Vérifier la structure Sous-section/Sub-items
+✓ Déterminer automatiquement le type (CIA / Méthodologie)
+✓ Convertir pour affichage dans CiaAccordionRenderer
+✓ Gérer les erreurs de manière robuste
+
+═══════════════════════════════════════════════════════════════════════════

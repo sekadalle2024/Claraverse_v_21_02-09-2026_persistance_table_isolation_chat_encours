@@ -1,0 +1,243 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║         SOLUTION FINALE - WORKFLOW CODE V3 - 12 AVRIL 2026                 ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ SOLUTION ROBUSTE AVEC NODES CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+Le workflow V3 utilise des nodes Code au lieu de nodes HTTP Request.
+Cette approche évite tous les problèmes de compatibilité avec n8n 2.15.1.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIER CRÉÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Doc cross ref documentaire menu/WORKFLOW_N8N_XREF_CODE_SOLUTION_V3.json
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 ARCHITECTURE DU WORKFLOW V3
+═══════════════════════════════════════════════════════════════════════════════
+
+Le workflow contient 12 nodes :
+
+1. Cross References Form (Form Trigger)
+   └─> Formulaire d'upload avec 6 champs
+
+2. Rechercher Dossier CAC (Code)
+   └─> Utilise $http.request() pour chercher "Dossier CAC"
+
+3. Dossier CAC existe? (IF)
+   ├─> OUI : Continue vers recherche dossier client
+   └─> NON : Crée le dossier CAC
+
+4. Créer Dossier CAC (Code)
+   └─> Utilise $http.request() pour créer le dossier
+
+5. Préparer Recherche Client (Code)
+   └─> Prépare les données pour la recherche
+
+6. Rechercher Dossier Client (Code)
+   └─> Utilise $http.request() pour chercher le dossier client
+
+7. Dossier Client existe? (IF)
+   ├─> OUI : Continue vers recherche cycle
+   └─> NON : Crée le dossier client + cycles
+
+8. Créer Dossier Client (Code)
+   └─> Utilise $http.request() pour créer le dossier client
+
+9. Créer Cycles (Code)
+   └─> Utilise une boucle pour créer les 10 cycles
+
+10. Préparer Recherche Cycle (Code)
+    └─> Prépare les données pour la recherche du cycle
+
+11. Rechercher Cycle (Code)
+    └─> Utilise $http.request() pour chercher le cycle
+
+12. Upload Fichier (Code)
+    └─> Utilise $http.request() avec multipart pour uploader
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ AVANTAGES DE LA SOLUTION CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Contrôle total sur les requêtes HTTP
+✅ Pas de problème de compatibilité avec les versions de n8n
+✅ Gestion directe de l'authentification OAuth2
+✅ Code JavaScript standard et lisible
+✅ Facile à déboguer et à modifier
+✅ Fonctionne avec n8n 2.15.1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔑 CONFIGURATION OAUTH2
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Créer un credential Google OAuth2 dans n8n :
+   
+   Settings > Credentials > New Credential > Google OAuth2 API
+   
+   Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+   Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+   OAuth Redirect URL: https://hkj0631c.rpcl.app/rest/oauth2-credential/callback
+   
+   Scopes:
+   - https://www.googleapis.com/auth/drive
+   - https://www.googleapis.com/auth/drive.file
+
+2. Connecter le compte Google
+
+3. Assigner le credential aux nodes Code :
+   - Rechercher Dossier CAC
+   - Créer Dossier CAC
+   - Rechercher Dossier Client
+   - Créer Dossier Client
+   - Créer Cycles
+   - Rechercher Cycle
+   - Upload Fichier
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 IMPORTATION DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir n8n dans le navigateur
+
+2. Cliquer sur "+" pour créer un nouveau workflow
+
+3. Cliquer sur "⋮" (menu) > "Import from File"
+
+4. Sélectionner : WORKFLOW_N8N_XREF_CODE_SOLUTION_V3.json
+
+5. Configurer les credentials OAuth2 pour chaque node Code
+
+6. Activer le workflow
+
+7. Tester avec le formulaire
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 COMMENT ÇA FONCTIONNE
+═══════════════════════════════════════════════════════════════════════════════
+
+Chaque node Code utilise :
+
+1. await this.getCredentials('googleOAuth2Api')
+   → Récupère le token OAuth2
+
+2. credentials.oauthTokenData.access_token
+   → Extrait le token d'accès
+
+3. await $http.request({ ... })
+   → Fait la requête HTTP à l'API Google Drive
+
+4. headers: { 'Authorization': `Bearer ${accessToken}` }
+   → Authentifie la requête
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 TEST DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Activer le workflow
+
+2. Copier l'URL du formulaire
+
+3. Ouvrir dans un navigateur
+
+4. Remplir :
+   - Client: Orange
+   - Exercice: 2025
+   - Cycle comptable: Trésorerie
+   - Cross référence: I1
+   - Document: Lead sheet trésorerie
+   - Files: Sélectionner un fichier
+
+5. Soumettre
+
+6. Vérifier dans Google Drive :
+   ✓ Dossier CAC créé
+   ✓ Dossier Orange-2025 créé
+   ✓ 10 cycles créés
+   ✓ Fichier uploadé : [I1]-Lead sheet trésorerie
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME : Erreur "Cannot read credentials"
+SOLUTION : Assigner le credential OAuth2 à tous les nodes Code
+
+PROBLÈME : Erreur 401 Unauthorized
+SOLUTION : Reconnecter le compte Google dans le credential
+
+PROBLÈME : Erreur 403 Forbidden
+SOLUTION : Vérifier les scopes Google Drive
+
+PROBLÈME : Le fichier n'est pas uploadé
+SOLUTION : Vérifier que le formulaire accepte bien les fichiers
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 STRUCTURE GOOGLE DRIVE
+═══════════════════════════════════════════════════════════════════════════════
+
+Google Drive (root)
+└── Dossier CAC/
+    └── Orange-2025/
+        ├── Capitaux propres/
+        ├── Charge d'exploitation/
+        ├── Client/
+        ├── Fournisseur/
+        ├── Immobilisations/
+        ├── Impôt et taxes/
+        ├── Personnel/
+        ├── Stock/
+        ├── Trésorerie/
+        │   └── [I1]-Lead sheet trésorerie.xlsx
+        └── Ventes/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ POURQUOI CETTE SOLUTION FONCTIONNE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Pas de dépendance aux nodes HTTP Request v4.2
+2. ✅ Utilise l'API JavaScript standard de n8n
+3. ✅ Gestion directe de l'authentification
+4. ✅ Code lisible et maintenable
+5. ✅ Compatible avec toutes les versions de n8n
+6. ✅ Facile à déboguer (console.log dans le code)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Importer le workflow V3 dans n8n
+2. ✅ Configurer les credentials OAuth2
+3. ✅ Tester avec un document
+4. ⏳ Intégrer dans le menu contextuel de Claraverse
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 FICHIERS DE LA SESSION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. WORKFLOW_N8N_XREF_CODE_SOLUTION_V3.json
+   → Workflow final avec nodes Code
+
+2. 00_SOLUTION_FINALE_CODE_V3_12_AVRIL_2026.txt
+   → Ce fichier de documentation
+
+3. 00_ERREUR_PERSISTANTE_ANALYSE_12_AVRIL_2026.txt
+   → Analyse du problème HTTP Request
+
+═══════════════════════════════════════════════════════════════════════════════

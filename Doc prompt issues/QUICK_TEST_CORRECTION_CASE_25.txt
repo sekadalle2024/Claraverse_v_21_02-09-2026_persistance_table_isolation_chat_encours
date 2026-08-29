@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════
+  GUIDE TEST RAPIDE - CORRECTION CASE 25
+  29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPES DE TEST
+═══════════════════════════════════════════════════════════════════════════
+
+1. REDÉMARRER L'APPLICATION
+   
+   PowerShell:
+   .\stop-claraverse.ps1
+   .\start-claraverse.ps1
+
+2. OUVRIR LA CONSOLE DU NAVIGATEUR
+   
+   - F12 ou Ctrl+Shift+I
+   - Onglet "Console"
+
+3. ENVOYER LE MESSAGE TEST CASE 25
+   
+   Copier-coller dans le chat:
+   
+   [Command] : Frap
+   [Cycle] : RH
+   [test] : AA010
+   [reference] : test sur la validation des procedure RH
+   [Assertion] = validité
+   [Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+4. VÉRIFIER LA NOTIFICATION
+   
+   Notification affichée en haut à droite:
+   ✅ Doit afficher: "Case 25 : recos_controle_interne"
+   ✅ URL: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+
+5. VÉRIFIER LA CONSOLE
+   
+   Logs attendus:
+   ═══════════════════════════════════════════════════════════════════════
+   🔀 ROUTER N8N - INFORMATION DE ROUTING
+   ═══════════════════════════════════════════════════════════════════════
+   📌 Case détecté: Case 25
+   📍 Route: recos_controle_interne
+   📍 URL: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+   ═══════════════════════════════════════════════════════════════════════
+
+6. VÉRIFIER LA RÉPONSE
+   
+   Format attendu:
+   ✅ Tables HTML avec en-têtes rouges
+   ✅ Rubriques: Intitule, Observation, Constat, Risque, Recommendation
+   ✅ Contenu spécifique au contrôle interne comptable
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Notification affiche "Case 25"
+[✅] Console log affiche "Case 25"
+[✅] URL endpoint contient "recos_contrôle_interne_comptable"
+[✅] Réponse au format HTML avec tables
+[✅] Contenu correspond au contrôle interne (pas au format standard)
+
+═══════════════════════════════════════════════════════════════════════════
+❌ SI LE TEST ÉCHOUE
+═══════════════════════════════════════════════════════════════════════════
+
+SYMPTÔME 1: Notification affiche "Case 1" au lieu de "Case 25"
+→ Le router n'a pas détecté le mot-clé
+→ Vérifier que le message contient exactement "Recos contrôle interne comptable"
+
+SYMPTÔME 2: Notification affiche "Case 25" mais réponse au format standard
+→ L'endpoint Case 1 est appelé au lieu de Case 25
+→ Vérifier que les modifications dans claraApiService.ts sont bien prises en compte
+→ Redémarrer l'application (Ctrl+C puis .\start-claraverse.ps1)
+
+SYMPTÔME 3: Erreur 404 ou timeout
+→ Le workflow n8n n'est pas accessible
+→ Vérifier que n8n est démarré
+→ Vérifier l'URL de l'endpoint
+
+═══════════════════════════════════════════════════════════════════════════
+📊 TESTS COMPLÉMENTAIRES
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 2: Case 1 Standard (pour vérifier qu'on n'a pas cassé Case 1)
+
+Message:
+[Command] : Frap
+[Cycle] : Ventes
+[test] : VE001
+
+Résultat attendu:
+✅ Notification: "Case 1 : default"
+✅ Format: Tableau markdown standard
+
+TEST 3: Case 8 Notification (pour vérifier qu'on n'a pas cassé Case 8)
+
+Message:
+Bonjour, comment utiliser la suite?
+
+Résultat attendu:
+✅ Notification: "Case 8 : notification"
+✅ Message: Guide utilisateur
+
+═══════════════════════════════════════════════════════════════════════════
+📝 RAPPORT DE TEST
+═══════════════════════════════════════════════════════════════════════════
+
+Date du test: _____________________
+Testeur: _____________________
+
+Test Case 25:
+[ ] Notification correcte
+[ ] Console log correcte
+[ ] Endpoint correct
+[ ] Format réponse correct
+[ ] Contenu correct
+
+Test Case 1:
+[ ] Notification correcte
+[ ] Format réponse correct
+
+Test Case 8:
+[ ] Notification correcte
+[ ] Message correct
+
+Commentaires:
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════════════════

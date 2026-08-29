@@ -1,0 +1,298 @@
+═══════════════════════════════════════════════════════════════════
+🎯 CORRECTION ZEABUR - À FAIRE MAINTENANT
+═══════════════════════════════════════════════════════════════════
+Date: 20 avril 2026
+Temps: 5 minutes
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🚨 PROBLÈME IDENTIFIÉ                        │
+└─────────────────────────────────────────────────────────────────┘
+
+BACKEND BUILD LE FRONTEND AU LIEU DU BACKEND !
+
+Preuve dans les logs Backend:
+❌ dist/assets/*.js  ← Fichiers JavaScript du frontend
+❌ npm ci            ← Installation npm (frontend)
+
+Au lieu de:
+✅ pip install       ← Installation Python (backend)
+✅ uvicorn running   ← Serveur FastAPI
+
+═══════════════════════════════════════════════════════════════════
+✅ SOLUTION (5 MINUTES)
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: OUVRIR ZEABUR DASHBOARD                               │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Aller sur: https://zeabur.com/dashboard
+
+2. Cliquer sur votre projet
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: CORRIGER LE SERVICE BACKEND                           │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Cliquer sur le service "Backend" (pybackend.zeabur.app)
+
+2. Cliquer sur "Settings" ou "Configuration"
+
+3. Trouver la section "Build Configuration"
+
+4. Localiser le champ "Service Name"
+
+5. CHANGER LA VALEUR:
+
+   ╔═══════════════════════════════════════════════════════════╗
+   ║                                                           ║
+   ║  Service Name:  [frontend ▼]  ← ❌ INCORRECT             ║
+   ║                                                           ║
+   ║                 ↓ CHANGER EN ↓                           ║
+   ║                                                           ║
+   ║  Service Name:  [backend  ▼]  ← ✅ CORRECT               ║
+   ║                                                           ║
+   ╚═══════════════════════════════════════════════════════════╝
+
+6. Cliquer sur "Save" ou "Update"
+
+7. Cliquer sur "Redeploy" ou "Rebuild"
+
+8. ⚠️ IMPORTANT: Si l'option existe, cocher "Clear Build Cache"
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: VÉRIFIER LE SERVICE FRONTEND                          │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Cliquer sur le service "Frontend" (prclaravi.zeabur.app)
+
+2. Cliquer sur "Settings"
+
+3. VÉRIFIER que:
+
+   ╔═══════════════════════════════════════════════════════════╗
+   ║                                                           ║
+   ║  Service Name:  [frontend ▼]  ← ✅ Doit être "frontend"  ║
+   ║                                                           ║
+   ║  Port:          [80       ]    ← ✅ Doit être 80         ║
+   ║                                                           ║
+   ╚═══════════════════════════════════════════════════════════╝
+
+4. Si incorrect, corriger et cliquer "Redeploy"
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 4: ATTENDRE LE BUILD (3-5 MINUTES)                       │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Aller dans l'onglet "Logs" du service Backend
+
+2. Attendre de voir:
+
+   ✅ "Collecting packages..."
+   ✅ "pip install"
+   ✅ "Successfully installed"
+   ✅ "uvicorn running"
+
+3. NE DOIT PAS voir:
+   
+   ❌ "npm ci"
+   ❌ "dist/assets/*.js"
+   ❌ "Vite build"
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 5: TESTER LES URLS                                       │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Tester le Backend:
+   
+   URL: https://pybackend.zeabur.app/health
+   
+   Résultat attendu:
+   {
+     "status": "healthy"
+   }
+
+2. Tester le Frontend:
+   
+   URL: https://prclaravi.zeabur.app
+   
+   Résultat attendu:
+   → Application Claraverse s'affiche
+
+═══════════════════════════════════════════════════════════════════
+🔍 POURQUOI CE PROBLÈME ?
+═══════════════════════════════════════════════════════════════════
+
+Votre fichier docker-compose.yml définit 2 services:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ docker-compose.yml                                              │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  services:                                                      │
+│    backend:          ← Service pour le backend Python          │
+│      build: ./py_backend                                        │
+│      ports: 8080:8080                                           │
+│                                                                 │
+│    frontend:         ← Service pour le frontend React          │
+│      build: .                                                   │
+│      ports: 80:80                                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+Zeabur doit savoir QUEL service builder pour chaque déploiement.
+
+Le paramètre "Service Name" indique à Zeabur:
+"Build le service X du docker-compose.yml"
+
+Si vous mettez Service Name = "frontend" pour le Backend:
+→ Zeabur va builder le service "frontend" du docker-compose.yml
+→ Résultat: Backend build le frontend ! ❌
+
+C'est comme commander une pizza et recevoir un burger ! 🍕→🍔
+
+═══════════════════════════════════════════════════════════════════
+✅ CONFIGURATION CORRECTE
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SERVICE BACKEND (pybackend.zeabur.app)                          │
+├─────────────────────────────────────────────────────────────────┤
+│ Repository:     github.com/votre-username/claraverse           │
+│ Branch:         master                                          │
+│ Build Method:   Docker Compose                                  │
+│ Service Name:   backend          ← ⚠️ IMPORTANT !              │
+│ Port:           8080                                            │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SERVICE FRONTEND (prclaravi.zeabur.app)                         │
+├─────────────────────────────────────────────────────────────────┤
+│ Repository:     github.com/votre-username/claraverse           │
+│ Branch:         master                                          │
+│ Build Method:   Docker Compose                                  │
+│ Service Name:   frontend         ← ⚠️ IMPORTANT !              │
+│ Port:           80                                              │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+📊 CHECKLIST DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════
+
+AVANT LE DÉPLOIEMENT:
+□ Fichier nginx.conf supprimé à la racine (✅ Déjà fait)
+□ docker-compose.yml présent à la racine
+□ Dockerfile.frontend présent à la racine
+□ py_backend/Dockerfile présent
+□ Code push sur GitHub branch master
+
+CONFIGURATION ZEABUR BACKEND:
+□ Build Method = "Docker Compose"
+□ Service Name = "backend"  ← ⚠️ CRITIQUE !
+□ Port = 8080
+□ Repository = correct
+□ Branch = master
+
+CONFIGURATION ZEABUR FRONTEND:
+□ Build Method = "Docker Compose"
+□ Service Name = "frontend"
+□ Port = 80
+□ Repository = correct
+□ Branch = master
+
+APRÈS LE DÉPLOIEMENT:
+□ Logs Backend montrent "pip install"
+□ Logs Backend montrent "uvicorn running"
+□ Logs Frontend montrent "npm ci"
+□ Logs Frontend montrent "Vite build"
+□ Backend /health retourne JSON
+□ Frontend affiche l'application
+□ Pas d'erreur CORS
+
+═══════════════════════════════════════════════════════════════════
+🆘 SI LE PROBLÈME PERSISTE
+═══════════════════════════════════════════════════════════════════
+
+1. VÉRIFIER LES LOGS COMPLETS
+   → Aller dans Zeabur → Service Backend → Logs
+   → Copier les 50 premières lignes
+   → Chercher les erreurs
+
+2. FORCER UN REBUILD COMPLET
+   → Zeabur Dashboard → Service Backend
+   → Settings → Danger Zone
+   → "Delete Service" puis recréer
+
+3. UTILISER L'ANCIEN REPO BACKEND
+   → Créer un nouveau service dans Zeabur
+   → Pointer vers votre ancien repo backend (py_backend seul)
+   → Build Method = Dockerfile (pas Docker Compose)
+   → Port = 8080
+
+4. VÉRIFIER LES VARIABLES D'ENVIRONNEMENT
+   → Backend doit avoir: CORS_ORIGINS=https://prclaravi.zeabur.app
+   → Frontend doit avoir: VITE_BACKEND_URL=https://pybackend.zeabur.app
+
+═══════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════
+
+Pour plus de détails:
+
+1. START_HERE_DEPLOIEMENT_ZEABUR.txt
+   → Guide de démarrage rapide
+
+2. ACTION_IMMEDIATE_ZEABUR.txt
+   → Solution ultra-rapide (2 minutes)
+
+3. REPONSES_QUESTIONS_DEPLOIEMENT_ZEABUR.md
+   → Réponses à vos 4 questions
+
+4. CONFIGURATION_ZEABUR_ETAPE_PAR_ETAPE.md
+   → Configuration complète détaillée
+
+5. GUIDE_VISUEL_CORRECTION_ZEABUR.md
+   → Comparaisons avant/après avec visuels
+
+6. Doc zeabur docker/Scripts/verifier-config-zeabur.ps1
+   → Script de vérification automatique
+
+═══════════════════════════════════════════════════════════════════
+🎉 APRÈS LE SUCCÈS
+═══════════════════════════════════════════════════════════════════
+
+Une fois que tout fonctionne:
+
+✅ Backend: https://pybackend.zeabur.app/health
+   → Retourne: {"status": "healthy"}
+
+✅ Frontend: https://prclaravi.zeabur.app
+   → Affiche l'application Claraverse
+
+✅ Pas d'erreur CORS
+
+✅ Application fonctionnelle en production
+
+Félicitations ! Votre application est déployée ! 🚀🎉
+
+═══════════════════════════════════════════════════════════════════
+💡 ASTUCE POUR PLUS TARD
+═══════════════════════════════════════════════════════════════════
+
+Pour automatiser les déploiements futurs:
+
+1. Installer la CLI Zeabur:
+   npm install -g @zeabur/cli
+
+2. Login:
+   zeabur auth login
+
+3. Déployer en une commande:
+   zeabur deploy --project-id=xxx --service=backend
+   zeabur deploy --project-id=xxx --service=frontend
+
+═══════════════════════════════════════════════════════════════════
+
+PROCHAINE ÉTAPE: Aller sur Zeabur et changer le Service Name ! 🚀
+
+═══════════════════════════════════════════════════════════════════

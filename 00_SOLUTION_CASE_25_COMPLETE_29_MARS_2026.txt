@@ -1,0 +1,235 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION CASE 25 COMPLÈTE - VERSION 9.0
+  Date: 29 Mars 2026 - 20h30
+═══════════════════════════════════════════════════════════════════════════
+
+RÉSUMÉ ULTRA-RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n retourne maintenant un NOUVEAU FORMAT où toutes les 6 tables
+sont dans UN SEUL objet au lieu d'un array de 6 objets séparés.
+
+✅ SOLUTION IMPLÉMENTÉE: Détection automatique du nouveau format Case 25
+✅ LOGS AJOUTÉS: Débogage complet des messages envoyés/reçus
+✅ DOCUMENTATION CRÉÉE: 4 nouveaux fichiers
+
+PROCHAINE ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════
+
+1. REDÉMARRER LE SERVEUR
+   .\stop-claraverse.ps1
+   .\start-claraverse.ps1
+
+2. TESTER CASE 25
+   Message:
+   [Command] : Recos contrôle interne comptable
+   [Cycle] : trésorerie
+   [test] : AA010
+   [reference] : test sur la validation du compte caisse
+   [Anomalie] = Absence de contrôles inopinés de la caisse
+
+3. VÉRIFIER L'AFFICHAGE
+   ✅ 6 tables affichées
+   ✅ Contenu parle de Trésorerie
+   ✅ Contenu mentionne l'anomalie
+
+MODIFICATIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════
+
+FICHIER: src/services/claraApiService.ts
+
+1. normalizeN8nResponse() (ligne ~743)
+   → Extraction automatique de response.body[0].data
+   → Transformation en [{data: {...}}] pour FORMAT 4
+
+2. convertStructuredDataToMarkdown() (ligne ~500)
+   → Détection automatique du nouveau format Case 25
+   → Tri des tables par numéro (1, 2, 3, 4, 5, 6)
+   → Traitement de toutes les 6 tables
+
+3. sendChatMessage() (ligne ~1410)
+   → Logs détaillés du message envoyé à n8n
+
+4. sendChatMessage() (ligne ~1470)
+   → Logs détaillés de la réponse reçue de n8n
+
+DOCUMENTATION CRÉÉE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Doc prompt issues/00_CORRECTION_FORMAT_TABLES_CASE_25_29_MARS_2026.txt ⭐ NOUVEAU
+   → Solution technique pour le nouveau format avec toutes les tables dans un objet
+
+2. Doc prompt issues/00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt
+   → Solution technique complète avec logs attendus
+
+3. Doc prompt issues/COMMANDES_TEST_CASE_25_FINAL.txt
+   → Guide de test étape par étape avec dépannage
+
+4. Doc prompt issues/00_RECAP_FINAL_SESSION_29_MARS_2026.txt
+   → Récapitulatif ultra-rapide de la session
+
+5. Doc prompt issues/README.md
+   → Mis à jour avec les nouveaux fichiers
+
+LOGS ATTENDUS DANS LA CONSOLE (F12)
+═══════════════════════════════════════════════════════════════════════════
+
+1. ROUTER
+   🔀 ROUTER N8N - INFORMATION DE ROUTING
+   📍 Case détecté: Case 25 : recos_controle_interne
+
+2. MESSAGE ENVOYÉ
+   📤 MESSAGE ENVOYÉ À N8N
+   🌐 Endpoint: .../webhook/recos_contrôle_interne_comptable
+   📦 Request Body: {"question": "[Command] : ..."}
+
+3. RÉPONSE REÇUE
+   📥 RÉPONSE REÇUE DE N8N
+   📦 Réponse complète: {"response": {"body": [...]}}
+
+4. EXTRACTION
+   🔧 FORMAT WEBHOOK N8N: Extraction de response.body[0].data
+   ✅ Extraction de response.body[0].data réussie
+
+5. TRAITEMENT
+   ✅ FORMAT 4 DETECTE: Nouveau format "Programme de travail"
+   🔄 Début de la conversion en Markdown...
+   ✅ Conversion terminée
+
+6. SUCCÈS
+   ✅✅✅ Contenu extrait avec succès
+
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Après redémarrage du serveur:
+
+✅ Table 1 (En-tête 2 colonnes):
+   | Rubrique | Description |
+   |----------|-------------|
+   | **Etape de mission** | Recos contrôle interne comptable |
+   | **Norme** | 14.3 Évaluation des constats |
+   | **Méthode** | Méthode des ... |
+   | **Reference** | Frap-AA010 |
+
+✅ Table 2 (Intitule):
+   **Intitule**
+   [Titre de l'anomalie sur le recrutement du DG]
+
+✅ Table 3 (Observation):
+   **Observation**
+   [Description du contexte RH et recrutement...]
+
+✅ Table 4 (Constat):
+   **Constat**
+   [Constat sur l'inexistence de procédure...]
+
+✅ Table 5 (Risque):
+   **Risque**
+   [Risques liés à l'absence de procédure...]
+
+✅ Table 6 (Recommendation):
+   **Recommendation**
+   [Recommandations pour formaliser la procédure...]
+
+VÉRIFICATIONS CRITIQUES
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Le contenu parle de RH (pas Achats, pas Ventes, pas Trésorerie)
+✅ Le contenu parle de Recrutement (pas autre chose)
+✅ Le contenu parle du DG (pas fournisseurs, pas clients)
+✅ Le contenu mentionne l'inexistence de procédure
+✅ Pas de placeholders littéraux ([Titre de l'anomalie...])
+
+DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Case 25 non détecté
+→ Vérifier que le message contient "[Command]" ou "[VAE]"
+→ Redémarrer le serveur
+
+PROBLÈME: Erreur "response.body[0] ne contient pas de propriété 'data'"
+→ Vérifier le workflow n8n en mode manuel
+→ Ouvrir n8n et vérifier les logs d'exécution
+
+PROBLÈME: Seule la table 1 s'affiche
+→ Vérifier que le workflow n8n génère bien les 6 tables
+→ Ouvrir n8n et tester en mode manuel
+
+PROBLÈME: Contenu sur mauvais cycle
+→ Vérifier que le workflow n8n reçoit bien le message utilisateur
+→ Ouvrir n8n et vérifier les logs du node "Recos controle interne comptable2"
+
+FICHIERS DE RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════
+
+📁 Doc prompt issues/
+   ├── 00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt ⭐ NOUVEAU
+   ├── COMMANDES_TEST_CASE_25_FINAL.txt ⭐ NOUVEAU
+   ├── 00_RECAP_FINAL_SESSION_29_MARS_2026.txt ⭐ NOUVEAU
+   ├── 00_SOLUTION_FINALE_CASE_25_29_MARS_2026.txt
+   ├── 00_WORKFLOW_N8N_FONCTIONNE_MODE_MANUEL_29_MARS_2026.txt
+   └── README.md (mis à jour)
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le serveur
+.\stop-claraverse.ps1; .\start-claraverse.ps1
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+# Voir les modifications
+git diff src/services/claraApiService.ts
+
+# Voir la documentation
+code "Doc prompt issues/00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt"
+code "Doc prompt issues/COMMANDES_TEST_CASE_25_FINAL.txt"
+
+TEMPS ESTIMÉ
+═══════════════════════════════════════════════════════════════════════════
+
+- Redémarrage serveur: 30 secondes
+- Test Case 25: 2 minutes
+- Vérification: 2 minutes
+- Tests supplémentaires: 5 minutes
+
+TOTAL: ~10 minutes
+
+STATUT FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Extraction response.body[0].data: IMPLÉMENTÉE
+✅ Logs détaillés: AJOUTÉS
+✅ Documentation: CRÉÉE
+✅ Diagnostics TypeScript: AUCUNE ERREUR
+⏳ Tests: À EFFECTUER
+
+PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════════════════
+
+Redémarrer le serveur et tester avec le message Case 25.
+
+Si les 6 tables s'affichent avec le contenu correct:
+→ Case 25 fonctionne complètement ✅
+→ Commit et push sur GitHub
+
+Si problème:
+→ Consulter COMMANDES_TEST_CASE_25_FINAL.txt (section Dépannage)
+→ Vérifier les logs dans la console (F12)
+→ Ouvrir n8n et vérifier les logs d'exécution
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 20h00
+Version: 8.0 (extraction response.body[0].data)
+Priorité: CRITIQUE
+Statut: SOLUTION IMPLÉMENTÉE - PRÊT POUR LES TESTS
+
+TOUT EST PRÊT. REDÉMARRER LE SERVEUR ET TESTER.
+
+═══════════════════════════════════════════════════════════════════════════

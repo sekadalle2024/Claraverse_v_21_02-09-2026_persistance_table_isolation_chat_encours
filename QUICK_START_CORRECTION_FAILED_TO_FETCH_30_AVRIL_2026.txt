@@ -1,0 +1,51 @@
+⚡ QUICK START - CORRECTION "FAILED TO FETCH" XREF
+==================================================
+
+🎯 OBJECTIF
+-----------
+Corriger l'erreur "failed to fetch" pour le document [I30]-AFRILAND
+
+📋 ACTIONS IMMÉDIATES (5 minutes)
+----------------------------------
+
+1️⃣ TESTER L'ENDPOINT N8N
+```powershell
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" `
+  -H "Content-Type: application/json" `
+  -d '{"index":"[I30]-AFRILAND","dossier":"Dossier CAC"}'
+```
+
+2️⃣ VÉRIFIER LE WORKFLOW DANS N8N
+- Aller sur: https://n8nsqlite.zeabur.app
+- Vérifier que le workflow est ACTIF (toggle ON)
+- Vérifier les credentials Google Drive
+
+3️⃣ EXÉCUTER LE SCRIPT DE TEST
+```powershell
+.\test-workflow-afficher-xref.ps1
+```
+
+🔧 SI ÇA NE FONCTIONNE PAS
+--------------------------
+
+PROBLÈME 1: Workflow inactif
+→ Activer le workflow dans n8n
+
+PROBLÈME 2: Credentials manquants
+→ Configurer Google Drive OAuth2 dans n8n
+
+PROBLÈME 3: Fichier introuvable
+→ Vérifier que [I30]-AFRILAND existe dans "Dossier CAC"
+
+PROBLÈME 4: Erreur CORS
+→ Vérifier les headers dans les nodes "Respond"
+
+📁 FICHIERS CRÉÉS
+-----------------
+✓ 00_DIAGNOSTIC_FAILED_TO_FETCH_XREF_30_AVRIL_2026.txt
+✓ 00_SOLUTION_COMPLETE_FAILED_TO_FETCH_30_AVRIL_2026.txt
+✓ QUICK_START_CORRECTION_FAILED_TO_FETCH_30_AVRIL_2026.txt
+
+📞 PROCHAINE ÉTAPE
+------------------
+Exécuter: .\test-workflow-afficher-xref.ps1

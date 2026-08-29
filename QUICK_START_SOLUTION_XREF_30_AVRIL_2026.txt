@@ -1,0 +1,59 @@
+⚡ QUICK START - SOLUTION XREF "FAILED TO FETCH"
+================================================
+Date: 30 avril 2026
+
+🎯 PROBLÈME
+-----------
+Erreur "failed to fetch" lors du test du workflow n8n pour afficher [I30]-AFRILAND
+
+✅ SOLUTION EN 3 ÉTAPES
+-----------------------
+
+ÉTAPE 1: Importer le workflow corrigé
+--------------------------------------
+1. Aller sur https://n8nsqlite.zeabur.app
+2. Cliquer sur "+" → "Import from File"
+3. Sélectionner: Doc cross ref documentaire menu/workflow_n8n_ouvrir_xref_AVEC_PARTAGE.json
+4. Cliquer "Import"
+
+ÉTAPE 2: Configurer les credentials
+------------------------------------
+Pour les 3 nodes Google Drive:
+- Sélectionner "Google Drive OAuth2 API"
+- Si besoin, créer avec:
+  * Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+  * Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+  * Scope: https://www.googleapis.com/auth/drive
+- Cliquer "Connect my account"
+
+ÉTAPE 3: Activer et tester
+---------------------------
+1. Activer le workflow (switch en haut à droite)
+2. Exécuter le test:
+
+```powershell
+.\test-workflow-afficher-xref.ps1
+```
+
+✅ RÉSULTAT ATTENDU
+-------------------
+Document trouve avec succes!
+  Nom: [I30]-AFRILAND.pdf
+  Lien d'affichage: https://drive.google.com/file/d/.../view?usp=sharing
+
+🔑 DIFFÉRENCE CLÉ
+-----------------
+Le nouveau workflow inclut un node "Partager Fichier" qui:
+✓ Partage automatiquement le fichier en lecture publique
+✓ Génère un lien accessible depuis Claraverse
+✓ Résout l'erreur "failed to fetch"
+
+📁 FICHIERS CRÉÉS
+-----------------
+1. 00_DIAGNOSTIC_FAILED_TO_FETCH_XREF_30_AVRIL_2026.txt
+2. workflow_n8n_ouvrir_xref_AVEC_PARTAGE.json
+3. 00_SOLUTION_FAILED_TO_FETCH_XREF_30_AVRIL_2026.txt
+4. GUIDE_IMPORT_WORKFLOW_PARTAGE_30_AVRIL_2026.md
+5. QUICK_START_SOLUTION_XREF_30_AVRIL_2026.txt (ce fichier)
+
+🚀 PRÊT À UTILISER!

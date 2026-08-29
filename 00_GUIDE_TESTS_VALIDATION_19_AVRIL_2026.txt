@@ -1,0 +1,206 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║  📋 GUIDE DE TESTS - VALIDATION DÉPLOIEMENT                             ║
+║     19 Avril 2026 - Après déploiement Zeabur                           ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+
+⏰ TIMING
+═══════════════════════════════════════════════════════════════════════════
+
+Attendre 5 minutes après le dernier commit (22h30) avant de tester.
+Heure de test recommandée : 22h35 ou plus tard
+
+
+✅ TEST 1 : VÉRIFIER BACKENDCONFIG.JS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir : https://prclaravi.netlify.app
+
+2. Ouvrir la console (F12)
+
+3. Taper ces commandes :
+
+   console.log(window.CLARA_BACKEND_URL);
+   console.log(window.CLARA_IS_LOCAL_DEV);
+
+4. Résultats attendus :
+   ✅ window.CLARA_BACKEND_URL = "https://pybackend.zeabur.app"
+   ✅ window.CLARA_IS_LOCAL_DEV = false
+
+5. Si les résultats sont corrects → Passer au TEST 2
+   Si les résultats sont incorrects → Vider le cache (Ctrl+Shift+R)
+
+
+✅ TEST 2 : VÉRIFIER ENDPOINT ZEABUR
+═══════════════════════════════════════════════════════════════════════════
+
+1. Dans la console, taper :
+
+   fetch('https://pybackend.zeabur.app/')
+     .then(r => r.json())
+     .then(d => console.log(d));
+
+2. Résultat attendu :
+   ✅ {
+        "message": "Clara Backend API v1.0",
+        "status": "running",
+        ...
+      }
+
+3. Si erreur 404 → Zeabur n'a pas encore terminé le déploiement
+   Attendre 2-3 minutes et réessayer
+
+
+✅ TEST 3 : TESTER CASE 24 (ÉTATS FINANCIERS)
+═══════════════════════════════════════════════════════════════════════════
+
+1. Sur https://prclaravi.netlify.app, créer une nouvelle table
+
+2. Dans la première cellule de l'en-tête, écrire : Etat_fin
+
+3. Cliquer sur une cellule sous l'en-tête
+
+4. Uploader un fichier Excel (balance comptable)
+
+5. Résultats attendus :
+   ✅ Pas d'erreur "Failed to fetch"
+   ✅ Message de traitement affiché
+   ✅ États financiers générés et affichés
+   ✅ Accordéons cliquables
+
+6. Si erreur "Failed to fetch" :
+   - Vérifier TEST 1 et TEST 2
+   - Vérifier les logs de la console (F12)
+   - Attendre 2-3 minutes et réessayer
+
+
+✅ TEST 4 : TESTER CASE 21 (LEAD BALANCE)
+═══════════════════════════════════════════════════════════════════════════
+
+1. Créer une nouvelle table
+
+2. Dans la première cellule de l'en-tête, écrire : Lead_balance
+
+3. Cliquer sur une cellule sous l'en-tête
+
+4. Uploader un fichier de balance
+
+5. Résultats attendus :
+   ✅ Pas d'erreur "Failed to fetch"
+   ✅ Traitement réussi
+   ✅ Résultats affichés correctement
+
+6. Si erreur "Failed to fetch" :
+   - Vérifier TEST 1 et TEST 2
+   - Vérifier les logs de la console (F12)
+
+
+🔍 DIAGNOSTIC EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════
+
+Si les tests échouent, vérifier dans cet ordre :
+
+1. CACHE NAVIGATEUR
+   ─────────────────
+   - Faire Ctrl + Shift + R pour vider le cache
+   - Ou ouvrir en navigation privée
+
+2. ZEABUR LOGS
+   ────────────
+   - Aller sur https://zeabur.com/
+   - Ouvrir le projet backend
+   - Consulter les logs de déploiement
+   - Vérifier que l'endpoint /etats-financiers/process-excel existe
+
+3. CONSOLE NAVIGATEUR
+   ───────────────────
+   - Ouvrir F12
+   - Onglet Console
+   - Chercher les erreurs en rouge
+   - Noter le message d'erreur exact
+
+4. NETWORK TAB
+   ───────────
+   - F12 → Onglet Network
+   - Refaire l'upload
+   - Cliquer sur la requête qui échoue
+   - Vérifier :
+     * Status Code (doit être 200, pas 404 ou 500)
+     * Response Headers (CORS)
+     * Response Body (message d'erreur)
+
+
+📊 RÉSULTATS ATTENDUS FINAUX
+═══════════════════════════════════════════════════════════════════════════
+
+Si tous les tests passent :
+
+✅ backendConfig.js fonctionne correctement
+✅ Le switch dynamique local/cloud opère
+✅ Zeabur a bien déployé la nouvelle version
+✅ Les endpoints /etats-financiers/process-excel existent
+✅ CORS est configuré correctement
+✅ Case 21 et Case 24 sont fonctionnelles
+✅ Le problème "Failed to fetch" est résolu
+
+
+🚨 SI UN TEST ÉCHOUE
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 1 échoue (backendConfig.js) :
+  → Vider le cache navigateur
+  → Vérifier que le déploiement Netlify est terminé
+  → Vérifier que index.html contient bien la ligne 10
+
+TEST 2 échoue (endpoint Zeabur) :
+  → Attendre 2-3 minutes supplémentaires
+  → Vérifier les logs Zeabur
+  → Vérifier que le commit GitHub est bien arrivé
+
+TEST 3 ou 4 échoue (Cases 21/24) :
+  → Vérifier TEST 1 et TEST 2 d'abord
+  → Consulter les logs de la console
+  → Vérifier le Network tab pour voir la requête exacte
+  → Vérifier les logs Zeabur pour voir l'erreur côté serveur
+
+
+📝 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════
+
+Test backend depuis PowerShell :
+  curl https://pybackend.zeabur.app/
+
+Test avec le script Python :
+  cd py_backend
+  python test_zeabur_etat_fin.py
+
+Vérifier les commits :
+  git log --oneline -5
+
+Vérifier l'état Git :
+  git status
+
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════════════
+
+Avant de considérer le déploiement comme réussi :
+
+□ TEST 1 : window.CLARA_BACKEND_URL = "https://pybackend.zeabur.app"
+□ TEST 2 : Endpoint Zeabur répond (HTTP 200)
+□ TEST 3 : Case 24 fonctionne sans "Failed to fetch"
+□ TEST 4 : Case 21 fonctionne sans "Failed to fetch"
+□ Pas d'erreurs dans la console navigateur
+□ Accordéons cliquables et fonctionnels
+□ Export des résultats fonctionne
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+Date : 19 Avril 2026 - 22h30
+Status : ⏰ EN ATTENTE DE VALIDATION (après 5 minutes)
+
+═══════════════════════════════════════════════════════════════════════════

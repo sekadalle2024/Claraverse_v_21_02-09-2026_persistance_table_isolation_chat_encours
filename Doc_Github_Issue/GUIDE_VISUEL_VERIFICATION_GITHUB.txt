@@ -1,0 +1,265 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    GUIDE VISUEL - VERIFICATION GITHUB                    ║
+║    17 AVRIL 2026                                         ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🎯 METHODE 1: SCRIPT POWERSHELL (RECOMMANDE)
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 1: OUVRIR POWERSHELL
+───────────────────────────
+
+Vous êtes déjà dans PowerShell ✓
+
+Vous devriez voir quelque chose comme:
+┌─────────────────────────────────────────────────────────┐
+│ PS H:\ClaraVerse>                                       │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 2: COPIER-COLLER CETTE COMMANDE
+──────────────────────────────────────
+
+& ".\Doc render deploy\verifier-fichiers-github.ps1"
+
+┌─────────────────────────────────────────────────────────┐
+│ PS H:\ClaraVerse> & ".\Doc render deploy\verifier-fich │
+│ iers-github.ps1"                                        │
+│                                                         │
+│ ========================================                │
+│   VERIFICATION FICHIERS GITHUB                          │
+│ ========================================                │
+│                                                         │
+│ Repository: Back-end-python-V0_03_03_2026              │
+│ URL API: https://api.github.com/repos/...              │
+│                                                         │
+│ Recuperation de la liste des fichiers...               │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 3: LIRE LE RESULTAT
+──────────────────────────
+
+CAS A: FICHIERS PRESENTS ✓
+┌─────────────────────────────────────────────────────────┐
+│ FICHIERS A LA RACINE DU REPOSITORY:                     │
+│ ====================================                    │
+│                                                         │
+│ [FILE] .dockerignore                                    │
+│ [FILE] .gitignore                                       │
+│ [FILE] main.py                                          │
+│ [FILE] requirements_render.txt                          │
+│ [FILE] runtime.txt                                      │
+│ [DIR]  Doc calcul notes annexes                         │
+│                                                         │
+│ ========================================                │
+│   VERIFICATION DES FICHIERS CLES                        │
+│ ========================================                │
+│                                                         │
+│ [OK] runtime.txt PRESENT                                │
+│ [OK] requirements_render.txt PRESENT                    │
+│ [OK] main.py PRESENT                                    │
+│                                                         │
+│ ========================================                │
+│   TOUS LES FICHIERS SONT PRESENTS!                      │
+│ ========================================                │
+│                                                         │
+│ Les fichiers sont bien sur GitHub backend.              │
+│                                                         │
+│ PROCHAINES ETAPES:                                      │
+│ 1. Aller sur Render: https://dashboard.render.com/     │
+│ 2. Verifier les logs de build                           │
+│ 3. Chercher 'Using Python version 3.11.9'               │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+CAS B: FICHIERS MANQUANTS ✗
+┌─────────────────────────────────────────────────────────┐
+│ [MANQUANT] runtime.txt NON TROUVE                       │
+│ [MANQUANT] requirements_render.txt NON TROUVE           │
+│                                                         │
+│ ========================================                │
+│   FICHIERS MANQUANTS!                                   │
+│ ========================================                │
+│                                                         │
+│ Certains fichiers ne sont pas sur GitHub.               │
+│ Executer le script de push:                             │
+│ .\Doc render deploy\push-runtime-fix-maintenant.ps1     │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════
+
+🎯 METHODE 2: NAVIGATEUR WEB (ALTERNATIVE)
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 1: OUVRIR LE LIEN
+────────────────────────
+
+https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+┌─────────────────────────────────────────────────────────┐
+│ [Navigateur Web]                                        │
+│                                                         │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ https://github.com/sekadalle2024/Back-end-python... │ │
+│ └─────────────────────────────────────────────────────┘ │
+│                                                         │
+│ sekadalle2024 / Back-end-python-V0_03_03_2026          │
+│                                                         │
+│ [Code] [Issues] [Pull requests] [Actions]              │
+│                                                         │
+│ master ▼  [Add file ▼] [<> Code ▼]                     │
+│                                                         │
+│ Latest commit: Fix: Force Python 3.11...               │
+│                                                         │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ Name                              Last commit       │ │
+│ │ ─────────────────────────────────────────────────  │ │
+│ │ 📁 Doc calcul notes annexes       2 hours ago      │ │
+│ │ 📄 .dockerignore                  2 hours ago      │ │
+│ │ 📄 .gitignore                     2 hours ago      │ │
+│ │ 📄 main.py                        2 hours ago      │ │
+│ │ 📄 requirements_render.txt        1 hour ago  ← ✓  │ │
+│ │ 📄 runtime.txt                    1 hour ago  ← ✓  │ │
+│ └─────────────────────────────────────────────────────┘ │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 2: RAFRAICHIR LA PAGE
+────────────────────────────
+
+Si vous ne voyez pas runtime.txt et requirements_render.txt:
+
+Windows: Appuyer sur Ctrl + F5
+Mac: Appuyer sur Cmd + Shift + R
+
+Cela force le navigateur à recharger depuis GitHub
+(sans utiliser le cache)
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 3: VERIFIER LES FICHIERS
+───────────────────────────────
+
+Vous devez voir À LA RACINE (pas dans un sous-dossier):
+
+✓ runtime.txt
+✓ requirements_render.txt
+✓ main.py
+
+Si vous voyez un dossier "py_backend/", vous êtes sur le
+MAUVAIS repository (le projet complet au lieu du backend seul)
+
+═══════════════════════════════════════════════════════════
+
+🔗 VERIFICATION DIRECTE DES FICHIERS
+
+═══════════════════════════════════════════════════════════
+
+Si vous voulez voir le CONTENU des fichiers:
+
+RUNTIME.TXT:
+https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026/blob/master/runtime.txt
+
+Contenu attendu:
+┌─────────────────────────────────────────────────────────┐
+│ python-3.11.9                                           │
+└─────────────────────────────────────────────────────────┘
+
+REQUIREMENTS_RENDER.TXT:
+https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026/blob/master/requirements_render.txt
+
+Contenu attendu (extrait):
+┌─────────────────────────────────────────────────────────┐
+│ # FastAPI et serveur                                    │
+│ fastapi==0.115.0                                        │
+│ uvicorn[standard]==0.32.0                               │
+│ ...                                                     │
+│ # Validation - Version compatible sans compilation Rust │
+│ pydantic==2.6.4                                         │
+│ pydantic-core==2.16.3                                   │
+│ ...                                                     │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════
+
+🚀 APRES VERIFICATION
+
+═══════════════════════════════════════════════════════════
+
+Une fois que vous confirmez que les fichiers sont sur GitHub:
+
+1. ALLER SUR RENDER
+   ────────────────
+   https://dashboard.render.com/
+
+2. TROUVER VOTRE SERVICE BACKEND
+   ─────────────────────────────
+   Cliquer sur le service Python backend
+
+3. VERIFIER LES LOGS
+   ─────────────────
+   Onglet "Logs" ou "Events"
+   
+   Chercher dans les logs récents:
+   ✓ "Using Python version 3.11.9"
+   ✓ "Successfully installed pydantic-2.6.4"
+
+4. SI PAS DE REBUILD AUTOMATIQUE
+   ─────────────────────────────
+   Bouton "Manual Deploy" → "Deploy latest commit"
+
+═══════════════════════════════════════════════════════════
+
+⚠️  PROBLEMES COURANTS
+
+═══════════════════════════════════════════════════════════
+
+PROBLEME 1: "Je ne vois pas les fichiers sur GitHub"
+─────────────────────────────────────────────────────
+SOLUTION:
+- Rafraîchir avec Ctrl+F5
+- Vider le cache du navigateur
+- Essayer en navigation privée
+- Attendre 2-3 minutes
+
+PROBLEME 2: "Le script PowerShell demande des paramètres"
+──────────────────────────────────────────────────────────
+SOLUTION:
+- NE PAS copier-coller la commande curl manuellement
+- Utiliser le script: & ".\Doc render deploy\verifier-fichiers-github.ps1"
+
+PROBLEME 3: "Je vois un dossier py_backend/"
+─────────────────────────────────────────────
+SOLUTION:
+- Vous êtes sur le mauvais repository
+- Aller sur: Back-end-python-V0_03_03_2026
+- PAS sur: Claverse_windows__v8_17-04-2026_V5-Export_CAC-V0-Public
+
+═══════════════════════════════════════════════════════════
+
+✅ CONFIRMATION
+
+Git confirme que les fichiers sont sur GitHub:
+- Commit: "Fix: Force Python 3.11 and use pre-compiled pydantic wheels for Render"
+- Status: "Everything up-to-date"
+
+Si vous ne les voyez pas, c'est un problème de cache navigateur,
+PAS un problème Git.
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+
+═══════════════════════════════════════════════════════════

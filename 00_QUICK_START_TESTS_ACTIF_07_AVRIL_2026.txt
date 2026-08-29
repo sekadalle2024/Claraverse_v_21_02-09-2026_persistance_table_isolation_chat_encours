@@ -1,0 +1,224 @@
+═══════════════════════════════════════════════════════════════════════════
+  🚀 QUICK START - TESTS ACTIF BRUT/AMORT/NET
+═══════════════════════════════════════════════════════════════════════════
+
+Date: 07 Avril 2026
+Objectif: Tester rapidement l'intégration ACTIF BRUT/AMORT/NET
+
+═══════════════════════════════════════════════════════════════════════════
+⚡ TEST ULTRA-RAPIDE (1 commande)
+═══════════════════════════════════════════════════════════════════════════
+
+```powershell
+.\test-integration-actif-backend.ps1
+```
+
+Résultat attendu:
+✅ Import module réussi
+✅ Import etats_financiers réussi
+✅ Test complet réussi
+✅ Fichier HTML généré: test_actif_brut_amort.html
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TESTS DÉTAILLÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. TEST MODULE STANDALONE
+   ──────────────────────
+   ```powershell
+   conda activate claraverse_backend
+   python test_actif_brut_amort.py
+   ```
+   
+   Résultat:
+   - Console: Affichage des calculs détaillés
+   - Fichier: test_actif_brut_amort.html
+   - Navigateur: Ouverture automatique du HTML
+
+2. TEST IMPORT MODULE
+   ─────────────────
+   ```powershell
+   python -c "from py_backend.calculer_actif_brut_amort import enrichir_actif_avec_brut_amort; print('✅ OK')"
+   ```
+
+3. TEST IMPORT ETATS_FINANCIERS
+   ─────────────────────────────
+   ```powershell
+   python -c "from py_backend.etats_financiers import process_balance_to_etats_financiers; print('✅ OK')"
+   ```
+
+4. TEST ENDPOINT API
+   ──────────────────
+   Terminal 1:
+   ```powershell
+   cd py_backend
+   python main.py
+   ```
+   
+   Terminal 2 (Postman ou curl):
+   ```bash
+   curl -X POST http://127.0.0.1:5000/etats-financiers/process-excel \
+     -H "Content-Type: application/json" \
+     -d @test-data.json
+   ```
+
+5. TEST FRONTEND COMPLET
+   ─────────────────────
+   ```powershell
+   # Terminal 1: Backend
+   cd py_backend
+   python main.py
+   
+   # Terminal 2: Frontend (si nécessaire)
+   npm run dev
+   ```
+   
+   Navigateur:
+   1. Ouvrir http://localhost:3000 (ou port frontend)
+   2. Aller dans États Financiers
+   3. Cliquer sur cellule "Etat_fin"
+   4. Sélectionner: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   5. Vérifier tableau 7 colonnes
+
+═══════════════════════════════════════════════════════════════════════════
+✅ VÉRIFICATIONS
+═══════════════════════════════════════════════════════════════════════════
+
+CONSOLE BACKEND:
+───────────────
+```
+📊 Traitement de la balance pour états financiers
+🔍 Colonnes détectées: {...}
+📊 Enrichissement ACTIF avec colonnes BRUT, AMORT, NET...
+📊 Calcul ACTIF avec colonnes BRUT, AMORT ET DEPREC, NET
+✅ Calcul ACTIF terminé:
+   AF - Brevets: BRUT=23,125,988, AMORT=23,125,987, NET=1
+   AZ - TOTAL ACTIF IMMOBILISÉ: BRUT=..., AMORT=..., NET=...
+📊 Utilisation du HTML ACTIF enrichi (BRUT, AMORT, NET)
+```
+
+FICHIER HTML:
+────────────
+- Tableau avec 7 colonnes visible
+- Valeurs correctes affichées
+- Style CSS appliqué
+
+NAVIGATEUR:
+──────────
+- Accordéon "🏢 BILAN - ACTIF" cliquable
+- Tableau 7 colonnes s'affiche
+- Valeurs correctes:
+  * AF: BRUT=23,125,988 | AMORT=23,125,987 | NET=1
+  * AZ: Somme des postes AA à AS
+  * BZ: Total général
+
+CONSOLE NAVIGATEUR (F12):
+────────────────────────
+```javascript
+window.lastEtatsFinanciersResults.actif_detaille
+// Doit afficher l'objet avec tous les postes
+```
+
+═══════════════════════════════════════════════════════════════════════════
+🐛 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+ERREUR: Module not found
+───────────────────────
+```powershell
+# Vérifier l'environnement
+conda activate claraverse_backend
+conda list | grep pandas
+
+# Vérifier le chemin
+cd Claraverse
+python -c "import sys; print(sys.path)"
+```
+
+ERREUR: Fichier balance non trouvé
+──────────────────────────────────
+```powershell
+# Vérifier le fichier
+ls "py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls"
+
+# Utiliser chemin absolu si nécessaire
+python test_actif_brut_amort.py
+```
+
+ERREUR: Colonnes non détectées
+──────────────────────────────
+```powershell
+# Vérifier les noms d'onglets (avec espaces!)
+# "BALANCE N " (avec espace à la fin)
+# "BALANCE N-1 " (avec espace à la fin)
+```
+
+TABLEAU VIDE DANS LE NAVIGATEUR
+───────────────────────────────
+1. Vérifier console backend: logs "Enrichissement ACTIF"
+2. Vérifier Network tab: results.actif_html existe
+3. Vérifier console navigateur: erreurs JavaScript
+4. Vérifier DOM: .actif-detaille-container existe
+
+═══════════════════════════════════════════════════════════════════════════
+📊 VALEURS DE RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════
+
+Balance démo: P000 -BALANCE DEMO N_N-1_N-2.xls
+
+POSTES ACTIF:
+────────────
+AF - Brevets, licences, logiciels
+  BRUT:           23,125,988
+  AMORT ET DEPREC: 23,125,987
+  NET:                     1
+
+AZ - TOTAL ACTIF IMMOBILISÉ
+  BRUT:           [somme AA à AS]
+  AMORT ET DEPREC: [somme amortissements]
+  NET:            [BRUT - AMORT]
+
+BZ - TOTAL GÉNÉRAL
+  BRUT:           [AZ.brut + BP.brut + BT.brut + BU.brut]
+  AMORT ET DEPREC: [AZ.amort]
+  NET:            [BRUT - AMORT]
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Module s'importe sans erreur
+[✅] Tests standalone réussissent
+[✅] Fichier HTML généré correctement
+[✅] Tableau 7 colonnes visible
+[✅] Valeurs BRUT/AMORT/NET correctes
+[✅] Totalisations AZ, BP, BT, BZ correctes
+[✅] Accordéons cliquables
+[✅] Style CSS appliqué
+
+═══════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════
+
+GUIDES:
+──────
+- Doc_Etat_Fin/Doc Bilan Actif/README.md
+- Doc_Etat_Fin/Doc Bilan Actif/00_INTEGRATION_BACKEND_COMPLETE_07_AVRIL_2026.txt
+- Doc_Etat_Fin/Doc Bilan Actif/00_GUIDE_INTEGRATION_FRONTEND_07_AVRIL_2026.txt
+
+RÉCAPITULATIFS:
+──────────────
+- 00_RECAP_SESSION_INTEGRATION_ACTIF_07_AVRIL_2026.txt
+- 00_MISSION_ACCOMPLIE_INTEGRATION_ACTIF_07_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════
+🚀 COMMANDE RECOMMANDÉE
+═══════════════════════════════════════════════════════════════════════════
+
+```powershell
+.\test-integration-actif-backend.ps1
+```
+
+Puis tester dans le navigateur!
+
+═══════════════════════════════════════════════════════════════════════════

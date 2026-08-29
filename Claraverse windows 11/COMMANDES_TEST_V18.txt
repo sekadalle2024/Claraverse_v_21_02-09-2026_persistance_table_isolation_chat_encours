@@ -1,0 +1,222 @@
+═══════════════════════════════════════════════════════════════
+🚀 COMMANDES RAPIDES POUR TESTER FLOWISE.JS V18.0
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: RECHARGER L'APPLICATION
+────────────────────────────────────
+
+1. Appuyer sur: Ctrl+F5 (Windows) ou Cmd+Shift+R (Mac)
+2. Ouvrir la console: F12 ou Ctrl+Shift+I
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 2: VÉRIFIER QUE LE SCRIPT EST CHARGÉ
+──────────────────────────────────────────────
+
+Dans la console, vous devriez voir:
+
+═══════════════════════════════════════════════════════
+🎉 Flowise.js V18.0 chargé avec succès!
+═══════════════════════════════════════════════════════
+
+Si vous ne voyez PAS ce message:
+→ Le script n'est pas chargé
+→ Vérifier index.html ligne 49
+→ Vérifier que public/Flowise.js existe
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 3: TESTER LA CONNEXION N8N
+────────────────────────────────────
+
+Copier-coller dans la console:
+
+window.ClaraverseN8nV17.testN8nConnection()
+
+Résultat attendu:
+✅ Connexion réussie!
+📦 Réponse: {...}
+
+Si erreur:
+❌ Vérifier que n8n est démarré
+❌ Vérifier l'endpoint dans CONFIG.N8N_ENDPOINT_URL
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 4: FORCER UN SCAN MANUEL
+──────────────────────────────────
+
+Copier-coller dans la console:
+
+window.ClaraverseN8nV17.scanAndProcess()
+
+Résultat attendu:
+═══════════════════════════════════════════════════════
+🔍 SCAN DES TABLES DANS LE DOM
+═══════════════════════════════════════════════════════
+├─ Tables totales trouvées: X
+├─ Sélecteur utilisé: table.min-w-full.border...
+└─ Analyse en cours...
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 5: VOIR LE CACHE
+──────────────────────────
+
+Copier-coller dans la console:
+
+window.ClaraverseN8nV17.getCacheInfo()
+
+Résultat attendu:
+📊 Informations du cache:
+   entries: 5
+   size: 12345 caractères
+   data: {...}
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 6: VIDER LE CACHE (SI NÉCESSAIRE)
+───────────────────────────────────────────
+
+Copier-coller dans la console:
+
+window.ClaraverseN8nV17.clearAllCache()
+
+Résultat attendu:
+🗑️ Cache complet supprimé
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 7: CRÉER UNE TABLE FLOWISE
+────────────────────────────────────
+
+Dans votre chat, créer une table avec:
+
+| Flowise |
+|---------|
+| Gestion stratégique |
+
+Dès que la table apparaît, observer la console:
+
+🔔 MUTATION DÉTECTÉE
+├─ Nombre de mutations: 1
+└─ Analyse en cours...
+
+═══════════════════════════════════════════════════════
+🎯 TRAITEMENT TABLE FLOWISE DÉCLENCHÉE
+═══════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: EXTRACTION DU MOT-CLÉ
+✅ Mot-clé extrait: "Gestion stratégique"
+
+... (10 étapes au total)
+
+═══════════════════════════════════════════════════════
+🎉 TRAITEMENT COMPLET RÉUSSI
+═══════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 8: DIAGNOSTIC SI PROBLÈME
+───────────────────────────────────
+
+Si le traitement s'arrête à une étape:
+
+ÉTAPE 1 échoue:
+→ La table n'a pas l'en-tête "Flowise" exact
+→ Vérifier l'orthographe et la casse
+
+ÉTAPE 2 échoue:
+→ Impossible de marquer la table
+→ Vérifier la structure DOM
+
+ÉTAPE 3 échoue:
+→ Pas de message utilisateur trouvé
+→ Normal si pas de message avant la table
+
+ÉTAPE 4 échoue:
+→ Aucune table Rubrique+Description trouvée
+→ Vérifier que vos tables ont ces en-têtes
+→ Vérifier que le mot-clé est dans la colonne Description
+
+ÉTAPE 5 échoue:
+→ Erreur d'appel à n8n
+→ Vérifier que n8n est démarré
+→ Vérifier l'endpoint
+
+ÉTAPE 6 échoue:
+→ Réponse n8n vide ou invalide
+→ Vérifier la configuration du workflow n8n
+→ Vérifier "Respond to Webhook"
+
+ÉTAPE 7 échoue:
+→ Impossible d'extraire les tables de la réponse
+→ Vérifier le format de la réponse n8n
+
+ÉTAPE 8 échoue:
+→ Conteneur cible introuvable
+→ Vérifier la structure DOM
+
+ÉTAPE 9 échoue:
+→ Erreur d'intégration des tables
+→ Vérifier les logs d'erreur JavaScript
+
+ÉTAPE 10 échoue:
+→ Erreur de suppression de la table
+→ Vérifier les logs d'erreur JavaScript
+
+═══════════════════════════════════════════════════════════════
+
+📋 COMMANDES AVANCÉES
+──────────────────────
+
+// Voir la configuration complète
+console.log(window.ClaraverseN8nV17.CONFIG)
+
+// Voir la version
+console.log(window.ClaraverseN8nV17.version)
+
+// Tester l'extraction du mot-clé d'une table
+const table = document.querySelector('table')
+window.ClaraverseN8nV17.extractDynamicKeyword(table)
+
+// Générer des variations d'un mot-clé
+window.ClaraverseN8nV17.generateKeywordVariations("Gestion stratégique")
+
+═══════════════════════════════════════════════════════════════
+
+💡 ASTUCES
+──────────
+
+1. Garder la console ouverte en permanence
+2. Filtrer les logs par "Flowise" ou "═══" pour voir uniquement les logs importants
+3. Copier les logs complets pour partager en cas de problème
+4. Vider le cache si comportement étrange
+5. Recharger avec Ctrl+F5 après chaque modification
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CHECKLIST RAPIDE
+────────────────────
+
+□ Script chargé (voir logs d'initialisation)
+□ MutationObserver actif (voir logs)
+□ Scan initial effectué (voir logs)
+□ Connexion n8n OK (tester avec testN8nConnection)
+□ Table Flowise créée avec en-tête exact
+□ Mot-clé présent dans tables Rubrique+Description
+□ Workflow n8n configuré correctement
+□ "Respond to Webhook" activé dans n8n
+
+═══════════════════════════════════════════════════════════════
+
+📝 NOTES
+────────
+
+- Les logs sont maintenant TRÈS détaillés
+- Chaque étape est tracée avec timestamp
+- Les erreurs sont clairement identifiées
+- Le format structuré facilite la lecture
+- Les statistiques permettent de suivre le processus
+
+═══════════════════════════════════════════════════════════════

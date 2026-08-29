@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test XRefSidebar React Component</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #380101;
+      margin-bottom: 10px;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .test-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .test-section h2 {
+      color: #380101;
+      font-size: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-section p {
+      color: #666;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #380101, #2A0101);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(56, 1, 1, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+    }
+
+    .status {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      border-left: 4px solid #380101;
+    }
+
+    .status-title {
+      font-weight: 600;
+      color: #380101;
+      margin-bottom: 8px;
+    }
+
+    .status-content {
+      color: #666;
+      font-size: 14px;
+      font-family: 'Courier New', monospace;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .info-box strong {
+      color: #1976d2;
+    }
+
+    .warning-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .warning-box strong {
+      color: #f57c00;
+    }
+
+    code {
+      background: #f8f9fa;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #e83e8c;
+    }
+
+    .demo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .demo-table th,
+    .demo-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .demo-table th {
+      background: #380101;
+      color: white;
+      font-weight: 600;
+    }
+
+    .demo-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .demo-table tr:hover {
+      background: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Test XRefSidebar React Component</h1>
+    <p class="subtitle">Test du composant React de la barre latérale X-Ref documentaire</p>
+
+    <div class="info-box">
+      <strong>ℹ️ Information:</strong> Cette page teste l'intégration du composant React XRefSidebar avec le menu contextuel JavaScript. Les boutons ci-dessous simulent les actions du menu.
+    </div>
+
+    <!-- Test 1: Affichage basique -->
+    <div class="test-section">
+      <h2>📋 Test 1: Affichage Basique</h2>
+      <p>Ouvre la sidebar avec 3 documents de démonstration.</p>
+      <button class="btn" onclick="testBasicDisplay()">
+        📋 Afficher X-Ref (3 documents)
+      </button>
+      <div class="status" id="status1" style="display: none;">
+        <div class="status-title">Événement dispatché:</div>
+        <div class="status-content" id="status1-content"></div>
+      </div>
+    </div>
+
+    <!-- Test 2: Recherche -->
+    <div class="test-section">
+      <h2>🔍 Test 2: Recherche</h2>
+      <p>Ouvre la sidebar avec un terme de recherche pré-rempli.</p>
+      <button class="btn btn-secondary" onclick="testSearch()">
+        🔍 Rechercher "inventaire"
+      </button>
+      <div class="status" id="status2" style="display: none;">
+        <div class="status-title">Événement dispatché:</div>
+        <div class="status-content" id="status2-content"></div>
+      </div>
+    </div>
+
+    <!-- Test 3: Beaucoup de documents -->
+    <div class="test-section">
+      <h2>📊 Test 3: Performance</h2>
+      <p>Teste l'affichage avec 20 documents pour vérifier la performance.</p>
+      <button class="btn btn-success" onclick="testManyDocuments()">
+        📊 Afficher 20 documents
+      </button>
+      <div class="status" id="status3" style="display: none;">
+        <div class="status-title">Événement dispatché:</div>
+        <div class="status-content" id="status3-content"></div>
+      </div>
+    </div>
+
+    <!-- Test 4: Fermeture -->
+    <div class="test-section">
+      <h2>❌ Test 4: Fermeture</h2>
+      <p>Ferme la sidebar si elle est ouverte.</p>
+      <button class="btn" onclick="testClose()">
+        ❌ Fermer la sidebar
+      </button>
+      <div class="status" id="status4" style="display: none;">
+        <div class="status-title">Événement dispatché:</div>
+        <div class="status-content" id="status4-content"></div>
+      </div>
+    </div>
+
+    <!-- Données de démonstration -->
+    <div class="test-section">
+      <h2>📄 Données de Démonstration</h2>
+      <p>Voici les documents utilisés pour les tests:</p>
+      <table class="demo-table">
+        <thead>
+          <tr>
+            <th>Cross Ref</th>
+            <th>Document</th>
+            <th>Client</th>
+            <th>Cycle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>I1</td>
+            <td>Lead sheet trésorerie</td>
+            <td>Orange</td>
+            <td>Trésorerie</td>
+          </tr>
+          <tr>
+            <td>I20</td>
+            <td>Procès verbal inventaire de caisse</td>
+            <td>Orange</td>
+            <td>Trésorerie</td>
+          </tr>
+          <tr>
+            <td>I150</td>
+            <td>Balance générale</td>
+            <td>Orange</td>
+            <td>Général</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ Important:</strong> Pour que ce test fonctionne, le composant <code>XRefSidebarWrapper</code> doit être intégré dans l'application React principale. Ce fichier HTML simule uniquement les événements JavaScript.
+    </div>
+  </div>
+
+  <script>
+    // Données de démonstration
+    const demoDocuments = [
+      {
+        crossRef: 'I1',
+        document: 'Lead sheet trésorerie',
+        client: 'Orange',
+        exercice: '2025',
+        cycle: 'Trésorerie',
+        dateUpload: '2026-04-12'
+      },
+      {
+        crossRef: 'I20',
+        document: 'Procès verbal inventaire de caisse',
+        client: 'Orange',
+        exercice: '2025',
+        cycle: 'Trésorerie',
+        dateUpload: '2026-04-12'
+      },
+      {
+        crossRef: 'I150',
+        document: 'Balance générale',
+        client: 'Orange',
+        exercice: '2025',
+        cycle: 'Général',
+        dateUpload: '2026-04-12'
+      }
+    ];
+
+    // Test 1: Affichage basique
+    function testBasicDisplay() {
+      console.log('📋 Test 1: Affichage basique');
+      
+      const event = new CustomEvent('xref:open', {
+        detail: {
+          documents: demoDocuments,
+          title: 'Cross-Références Documentaires'
+        }
+      });
+      
+      document.dispatchEvent(event);
+      
+      showStatus('status1', event.detail);
+    }
+
+    // Test 2: Recherche
+    function testSearch() {
+      console.log('🔍 Test 2: Recherche');
+      
+      const event = new CustomEvent('xref:open', {
+        detail: {
+          documents: demoDocuments,
+          searchTerm: 'inventaire',
+          title: 'Résultats pour "inventaire"'
+        }
+      });
+      
+      document.dispatchEvent(event);
+      
+      showStatus('status2', event.detail);
+    }
+
+    // Test 3: Beaucoup de documents
+    function testManyDocuments() {
+      console.log('📊 Test 3: Performance avec 20 documents');
+      
+      const cycles = ['Trésorerie', 'Ventes', 'Stocks', 'Immobilisations', 'Clients', 'Fournisseurs'];
+      const manyDocuments = [];
+      
+      for (let i = 1; i <= 20; i++) {
+        manyDocuments.push({
+          crossRef: `I${i}`,
+          document: `Document de test ${i}`,
+          client: 'Orange',
+          exercice: '2025',
+          cycle: cycles[i % cycles.length],
+          dateUpload: '2026-04-12'
+        });
+      }
+      
+      const event = new CustomEvent('xref:open', {
+        detail: {
+          documents: manyDocuments,
+          title: 'Test Performance (20 documents)'
+        }
+      });
+      
+      document.dispatchEvent(event);
+      
+      showStatus('status3', { ...event.detail, documents: `${manyDocuments.length} documents` });
+    }
+
+    // Test 4: Fermeture
+    function testClose() {
+      console.log('❌ Test 4: Fermeture');
+      
+      const event = new CustomEvent('xref:close');
+      document.dispatchEvent(event);
+      
+      showStatus('status4', { action: 'close' });
+    }
+
+    // Afficher le statut
+    function showStatus(statusId, data) {
+      const statusDiv = document.getElementById(statusId);
+      const contentDiv = document.getElementById(`${statusId}-content`);
+      
+      statusDiv.style.display = 'block';
+      contentDiv.textContent = JSON.stringify(data, null, 2);
+    }
+
+    // Écouter les événements de retour
+    document.addEventListener('xref:closed', () => {
+      console.log('✅ Sidebar fermée');
+    });
+
+    document.addEventListener('xref:document:opened', (event) => {
+      console.log('✅ Document ouvert:', event.detail);
+    });
+
+    // Message de bienvenue
+    console.log('🧪 Page de test XRefSidebar chargée');
+    console.log('📋 Utilisez les boutons pour tester les différentes fonctionnalités');
+  </script>
+</body>
+</html>

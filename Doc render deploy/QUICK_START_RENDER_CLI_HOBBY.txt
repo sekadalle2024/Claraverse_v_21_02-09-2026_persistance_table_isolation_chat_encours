@@ -1,0 +1,178 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              🚀 QUICK START - RENDER CLI (PLAN HOBBY)                        ║
+║                    Déploiement en 5 minutes                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 PRÉREQUIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Node.js installé (pour npm)
+✅ Compte Render créé (render.com)
+✅ Repository GitHub connecté
+✅ Backend Python prêt (py_backend/)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 DÉPLOIEMENT EN 3 ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ INSTALLER RENDER CLI
+
+   npm install -g render-cli
+   render --version
+
+2️⃣ SE CONNECTER
+
+   render login
+   # Suivez les instructions dans le navigateur
+
+3️⃣ DÉPLOYER (AUTOMATIQUE)
+
+   .\Doc` Koyeb` deploy\Scripts\deploy-render-cli.ps1
+
+   OU (MANUEL)
+
+   render services create
+   render deploy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 PLAN HOBBY - TARIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Plan Gratuit ($0/mois) + Coûts Compute:
+
+┌─────────────────┬──────────────┬─────────────────┐
+│ Plan            │ Prix         │ Cold Start      │
+├─────────────────┼──────────────┼─────────────────┤
+│ Free            │ $0           │ Oui (15 min)    │
+│ Starter         │ $7/mois      │ Non             │
+│ Standard        │ $25/mois     │ Non             │
+└─────────────────┴──────────────┴─────────────────┘
+
+💡 ASTUCE: Utilisez le plan Free + UptimeRobot (gratuit) pour éviter le cold start!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ÉVITER LE COLD START (PLAN FREE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Créez un compte sur uptimerobot.com (gratuit)
+2. Ajoutez un monitor HTTP(s):
+   - URL: https://votre-service.onrender.com/health
+   - Interval: 5 minutes
+3. Votre backend reste actif 24/7 gratuitement!
+
+📖 Guide complet: Doc Koyeb deploy/ASTUCE_EVITER_COLD_START_RENDER_16_AVRIL_2026.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ render.yaml                                    # Configuration Render
+✅ Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RENDER_CLI_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/Scripts/deploy-render-cli.ps1
+✅ Doc Koyeb deploy/ASTUCE_EVITER_COLD_START_RENDER_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/00_INDEX_DEPLOIEMENT_RENDER_16_AVRIL_2026.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 COMMANDES ESSENTIELLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir les services
+render services list
+
+# Voir les logs
+render logs --tail
+
+# Redéployer
+render deploy
+
+# Suspendre (économiser)
+render services suspend clara-backend-hobby
+
+# Reprendre
+render services resume clara-backend-hobby
+
+# Obtenir l'URL
+render services get clara-backend-hobby
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧪 TESTER L'API
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Obtenir l'URL
+$url = render services get clara-backend-hobby --format json | ConvertFrom-Json | Select-Object -ExpandProperty url
+
+# Tester
+curl "$url/health"
+curl "$url/api/health"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION COMPLÈTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 Guide complet:
+   Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RENDER_CLI_16_AVRIL_2026.md
+
+📋 Index navigation:
+   Doc Koyeb deploy/00_INDEX_DEPLOIEMENT_RENDER_16_AVRIL_2026.md
+
+💡 Éviter cold start:
+   Doc Koyeb deploy/ASTUCE_EVITER_COLD_START_RENDER_16_AVRIL_2026.md
+
+🤖 Script automatique:
+   Doc Koyeb deploy/Scripts/deploy-render-cli.ps1
+
+🌐 Docs officielles:
+   https://render.com/docs/cli
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔄 ALTERNATIVES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si Render ne convient pas:
+
+1️⃣ Railway ($5 crédit gratuit)
+   📖 Doc Koyeb deploy/00_DEPLOIEMENT_RAILWAY_CLI_16_AVRIL_2026.txt
+
+2️⃣ Koyeb (nécessite carte bancaire)
+   📖 Doc Koyeb deploy/README.md
+
+3️⃣ Fly.io (gratuit avec limites)
+   🌐 https://fly.io
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Avant déploiement:
+□ Node.js installé
+□ Compte Render créé
+□ Repository GitHub connecté
+□ render.yaml créé
+□ requirements.txt vérifié
+
+Pendant déploiement:
+□ Render CLI installé
+□ Authentification réussie
+□ Service créé
+□ Variables d'environnement configurées
+□ Premier déploiement lancé
+
+Après déploiement:
+□ Service actif
+□ API testée
+□ Logs vérifiés
+□ URL notée
+□ UptimeRobot configuré (si plan Free)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 PRÊT À DÉPLOYER !
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Lancez le script automatique:
+
+   .\Doc` Koyeb` deploy\Scripts\deploy-render-cli.ps1
+
+Ou suivez le guide complet pour un déploiement manuel.
+
+Bonne chance ! 🚀

@@ -1,0 +1,141 @@
+================================================================================
+       SOLUTION : DUPLICATIONS D'ACCORDEONS N8N_DOC
+       Fichier: public/Modelisation_template_v2.js
+       Date: 13 décembre 2025
+================================================================================
+
+PROBLEME RENCONTRE
+------------------
+Lors de l'affichage du document n8n_doc (Google Drive), plusieurs accordéons 
+identiques apparaissaient dans la même div, créant des duplications visuelles.
+
+Le document était téléchargé une seule fois, mais l'interface affichait 
+plusieurs menus accordéon avec le même contenu.
+
+
+CAUSE RACINE IDENTIFIEE
+-----------------------
+Le script Modelisation_template_v2.js utilisait un MutationObserver pour 
+détecter les nouvelles tables dans le DOM. Ce mécanisme causait plusieurs 
+problèmes :
+
+1. EXECUTIONS SIMULTANEES
+   - La fonction executeModelisation() pouvait être appelée plusieurs fois
+     en parallèle sans protection
+   - Chaque appel créait un nouvel accordéon
+
+2. DETECTION INSUFFISANTE DES TABLES TRAITEES
+   - La vérification existante (nextElementSibling) ne fonctionnait pas 
+     correctement si le conteneur était injecté ailleurs
+   - Pas de marquage persistant des tables déjà traitées
+
+3. MUTATIONOBSERVER TROP REACTIF
+   - Le MutationObserver se déclenchait même pour les éléments que le 
+     script lui-même créait
+   - Délai de 500ms insuffisant pour éviter les appels multiples
+
+
+SOLUTION IMPLEMENTEE
+--------------------
+
+1. VERROU D'EXECUTION (isExecuting)
+   ```javascript
+   let isExecuting = false;
+   
+   async function executeModelisation() {
+       if (isExecuting) {
+           console.log('⏳ Exécution déjà en cours, skip');
+           return;
+       }
+       isExecuting = true;
+       // ... traitement ...
+       isExecuting = false;
+   }
+   ```
+
+2. WEAKSET POUR TRACKER LES TABLES
+   ```javascript
+   const processedTables = new WeakSet();
+   
+   // Vérification
+   if (processedTables.has(detection.table)) {
+       continue; // Skip
+   }
+   
+   // Marquage
+   processedTables.add(detection.table);
+   ```
+
+3. ATTRIBUT DATA SUR LES TABLES
+   ```javascript
+   // Vérification
+   if (detection.table.hasAttribute('data-template-processed')) {
+       continue;
+   }
+   
+   // Marquage AVANT génération
+   detection.table.setAttribute('data-template-processed', 'true');
+   ```
+
+4. DEBOUNCE SUR LE MUTATIONOBSERVER
+   ```javascript
+   let debounceTimer = null;
+   
+   // Dans le MutationObserver
+   if (debounceTimer) {
+       clearTimeout(debounceTimer);
+   }
+   debounceTimer = setTimeout(() => {
+       executeModelisation();
+       debounceTimer = null;
+   }, 800);
+   ```
+
+5. IGNORER NOS PROPRES INJECTIONS
+   ```javascript
+   if (node.classList && node.classList.contains('modelisation-template-container')) {
+       return; // Ignorer nos propres créations
+   }
+   ```
+
+
+POINTS CLES DE LA SOLUTION
+--------------------------
+- Marquage AVANT génération : La table est marquée comme traitée avant de 
+  générer le template, pas après. Cela évite les race conditions.
+
+- Double vérification : WeakSet (mémoire) + data-attribute (DOM) pour une 
+  protection maximale.
+
+- Debounce augmenté : 800ms au lieu de 500ms pour laisser le temps aux 
+  opérations de se terminer.
+
+- Filtrage intelligent : Le MutationObserver ignore les tables déjà 
+  marquées et les conteneurs qu'il a lui-même créés.
+
+
+FICHIER MODIFIE
+---------------
+public/Modelisation_template_v2.js
+
+Sections modifiées :
+- executeModelisation() : Ajout du verrou et des vérifications
+- initializeMutationObserver() : Ajout du debounce et du filtrage
+
+
+RESULTAT
+--------
+✅ Un seul accordéon affiché par document n8n_doc
+✅ Pas de duplications même après plusieurs rafraîchissements
+✅ MutationObserver stable et non-intrusif
+✅ Performance préservée
+
+
+POUR TESTER
+-----------
+1. Rafraîchir la page (Ctrl+F5)
+2. Envoyer un message contenant "Template" et "n8n_doc"
+3. Vérifier qu'un seul accordéon "Document n8n_doc" apparaît
+4. Ouvrir la console (F12) pour voir les logs de debug
+
+================================================================================

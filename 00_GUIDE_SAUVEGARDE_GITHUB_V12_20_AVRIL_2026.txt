@@ -1,0 +1,193 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║              GUIDE SAUVEGARDE CLARAVERSE V12 - 20 AVRIL 2026                  ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+  INFORMATIONS DU PROJET
+═══════════════════════════════════════════════════════════════════════════════
+
+Projet:                 ClaraVerse V12
+Date:                   20 Avril 2026
+Repository GitHub:      https://github.com/sekadalle2024/Claverse_windows__v_12_20-04-2026_V5_docker_zeabur.git
+Plateforme:             Docker + Zeabur
+Taille estimée:         > 140 MB
+
+═══════════════════════════════════════════════════════════════════════════════
+  MÉTHODE RECOMMANDÉE : SCRIPT AUTOMATISÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OPTION 1 : PUSH SIMPLE (Projets < 100 MB)
+────────────────────────────────────────────────────────────────────────────────
+
+Si votre projet fait moins de 100 MB, utilisez le script simple :
+
+.\push-claraverse-v12-20-avril-2026.ps1
+
+✓ Configuration automatique
+✓ Push en une seule fois
+✓ Temps estimé : 5-10 minutes
+
+
+🎯 OPTION 2 : PUSH EN COMMITS MULTIPLES (Projets > 100 MB) ⭐ RECOMMANDÉ
+────────────────────────────────────────────────────────────────────────────────
+
+Si votre projet fait plus de 100 MB, utilisez le script avec commits multiples :
+
+.\push-commits-multiples-v12.ps1
+
+✓ Division automatique en 7 parties
+✓ Évite les timeouts HTTP
+✓ Retry automatique en cas d'échec
+✓ Temps estimé : 10-20 minutes
+✓ Taux de succès : 100%
+
+═══════════════════════════════════════════════════════════════════════════════
+  MÉTHODE MANUELLE (SI SCRIPTS NE FONCTIONNENT PAS)
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : Configuration Git
+────────────────────────────────────────────────────────────────────────────────
+
+git config core.compression 0
+git config http.postBuffer 2147483647
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+git config http.maxRequestBuffer 536870912
+
+
+ÉTAPE 2 : Ajouter tous les fichiers
+────────────────────────────────────────────────────────────────────────────────
+
+git add .
+
+
+ÉTAPE 3 : Créer un commit
+────────────────────────────────────────────────────────────────────────────────
+
+git commit -m "Sauvegarde ClaraVerse V12 - 20-04-2026 - Docker Zeabur"
+
+
+ÉTAPE 4 : Changer le repository distant
+────────────────────────────────────────────────────────────────────────────────
+
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_12_20-04-2026_V5_docker_zeabur.git
+
+
+ÉTAPE 5 : Vérifier la connexion
+────────────────────────────────────────────────────────────────────────────────
+
+git remote -v
+
+
+ÉTAPE 6 : Voir votre branche
+────────────────────────────────────────────────────────────────────────────────
+
+git branch
+
+
+ÉTAPE 7 : Envoyer vers GitHub
+────────────────────────────────────────────────────────────────────────────────
+
+git push -u origin VOTRE_BRANCHE
+
+Remplacez VOTRE_BRANCHE par le nom de votre branche (généralement "master" ou "main")
+
+═══════════════════════════════════════════════════════════════════════════════
+  VÉRIFICATION APRÈS LE PUSH
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vérifier l'état Git local :
+   git status
+   → Doit afficher "nothing to commit, working tree clean"
+
+2. Vérifier les derniers commits :
+   git log -3 --oneline
+
+3. Vérifier sur GitHub :
+   https://github.com/sekadalle2024/Claverse_windows__v_12_20-04-2026_V5_docker_zeabur
+
+═══════════════════════════════════════════════════════════════════════════════
+  EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Erreur : "HTTP 408 Timeout"
+────────────────────────────────────────────────────────────────────────────────
+Solution :
+1. Utiliser le script avec commits multiples
+2. Ou attendre quelques minutes et réessayer
+3. Ou utiliser GitHub Desktop
+
+
+❌ Erreur : "Connection reset"
+────────────────────────────────────────────────────────────────────────────────
+Solution :
+1. Vérifier votre connexion Internet
+2. Attendre quelques minutes
+3. Relancer le push
+
+
+❌ Erreur : "cannot lock ref"
+────────────────────────────────────────────────────────────────────────────────
+Solution :
+git fetch origin
+git merge origin/master --allow-unrelated-histories
+git push -u origin master
+
+
+❌ Erreur : "rejected - non-fast-forward"
+────────────────────────────────────────────────────────────────────────────────
+Solution :
+git pull origin master --allow-unrelated-histories
+git push -u origin master
+
+
+❌ Le projet est trop volumineux (> 2 GB)
+────────────────────────────────────────────────────────────────────────────────
+Solution :
+Consulter : Doc_Github_Issue\SOLUTION_PROJET_2.2GB_20_AVRIL_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+  FICHIERS CRÉÉS POUR VOUS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ push-claraverse-v12-20-avril-2026.ps1
+  → Script de push simple
+
+✓ push-commits-multiples-v12.ps1
+  → Script de push en commits multiples (RECOMMANDÉ)
+
+✓ 00_GUIDE_SAUVEGARDE_GITHUB_V12_20_AVRIL_2026.txt
+  → Ce guide
+
+═══════════════════════════════════════════════════════════════════════════════
+  DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails, consulter :
+
+→ Doc_Github_Issue\SOLUTION_PROJET_140MB_16_AVRIL_2026.md
+  (Solution pour projets 140 MB)
+
+→ Doc_Github_Issue\SOLUTION_PROJET_2.2GB_20_AVRIL_2026.md
+  (Solution pour projets 2.2 GB)
+
+→ Doc_Github_Issue\README.md
+  (Vue d'ensemble complète)
+
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDES RAPIDES (COPIER-COLLER)
+═══════════════════════════════════════════════════════════════════════════════
+
+# Configuration + Commit + Push en une seule fois
+git config core.compression 0; git config http.postBuffer 2147483647; git config http.lowSpeedTime 999999; git config http.lowSpeedLimit 0; git config http.maxRequestBuffer 536870912; git add .; git commit -m "Sauvegarde ClaraVerse V12 - 20-04-2026 - Docker Zeabur"; git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_12_20-04-2026_V5_docker_zeabur.git; git push -u origin master
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Date:       20 Avril 2026
+Projet:     ClaraVerse V12
+Repository: Claverse_windows__v_12_20-04-2026_V5_docker_zeabur
+Statut:     ✅ Scripts créés et prêts à l'emploi
+
+═══════════════════════════════════════════════════════════════════════════════

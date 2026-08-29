@@ -1,0 +1,340 @@
+═══════════════════════════════════════════════════════════════════════════════
+📐 GUIDE D'INTÉGRATION - SCHÉMA DE CALCUL PAPIER DE TRAVAIL
+═══════════════════════════════════════════════════════════════════════════════
+
+Date: 24 avril 2026
+Version: 1.0
+Objectif: Intégrer le système de schéma de calcul dans menu.js
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 RÉSUMÉ DE LA SOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ FONCTIONNALITÉS IMPLÉMENTÉES:
+
+1. Détection automatique de la "Nature de test" dans la table 2
+2. Génération automatique du schéma de calcul selon 10+ modèles
+3. Positionnement au-dessus de la table principale (Modelised_table)
+4. Sauvegarde persistante avec localStorage (comme conso.js)
+5. Édition en temps réel des cellules du schéma
+6. Intégration dans le menu contextuel
+7. Raccourci clavier Ctrl+Shift+S
+
+═══════════════════════════════════════════════════════════════════════════════
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. public/papier-travail-schema-calcul.js
+   → Module autonome gérant les schémas de calcul
+   → Fonctionne indépendamment de menu.js
+   → Sauvegarde persistante avec localStorage
+
+2. public/menu-papier-travail-integration.js
+   → Code à intégrer dans menu.js
+   → Méthodes pour le menu contextuel
+   → Instructions détaillées d'intégration
+
+3. 00_GUIDE_INTEGRATION_SCHEMA_CALCUL_24_AVRIL_2026.txt
+   → Ce fichier - Guide complet
+
+═══════════════════════════════════════════════════════════════════════════════
+🚀 ÉTAPES D'INTÉGRATION
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: CHARGER LE MODULE AUTONOME
+────────────────────────────────────────────────────────────────────────────
+
+Ajouter dans index.html (avant la fermeture de </body>):
+
+<script src="/papier-travail-schema-calcul.js"></script>
+
+Position: Après menu.js et conso.js
+
+
+ÉTAPE 2: METTRE À JOUR getMenuSections() DANS menu.js
+────────────────────────────────────────────────────────────────────────────
+
+Localiser la section "papier-travail" (ligne ~189) et remplacer par:
+
+{
+  id: "papier-travail", title: "Papier de travail", icon: "📁",
+  items: [
+    { text: "📐 Ajouter Schéma de calcul", action: () => this.ajouterSchemaCalcul(), shortcut: "Ctrl+Shift+S" },
+    { text: "📐 Régénérer Schéma de calcul", action: () => this.regenererSchemaCalcul() },
+    { text: "🗑️ Supprimer Schéma de calcul", action: () => this.supprimerSchemaCalcul() },
+    { text: "─────────────────────", action: null },
+    { text: "📤 Importer X-Ref documentaire", action: () => this.importerXRefDocumentaire(), shortcut: "Ctrl+Shift+X" },
+    { text: "📂 Ouvrir X-Ref documentaire", action: () => this.ouvrirXRefDocumentaire(), shortcut: "Ctrl+Shift+O" },
+    { text: "📋 Afficher X-Ref documentaire", action: () => this.afficherXRefDocumentaire() },
+    { text: "🔍 Rechercher document", action: () => this.rechercherDocument() }
+  ]
+},
+
+
+ÉTAPE 3: AJOUTER LES MÉTHODES DANS menu.js
+────────────────────────────────────────────────────────────────────────────
+
+Ouvrir: public/menu-papier-travail-integration.js
+
+Copier TOUTES les méthodes entre les lignes:
+  - Ligne 50 (ajouterSchemaCalcul) 
+  - Ligne 500+ (fin des méthodes)
+
+Coller dans menu.js:
+  - Position: Avant la méthode cleanup() (ligne ~10000+)
+  - Section: PAPIER DE TRAVAIL - SCHÉMA DE CALCUL
+
+
+ÉTAPE 4: AJOUTER LE RACCOURCI CLAVIER
+────────────────────────────────────────────────────────────────────────────
+
+Dans menu.js, méthode attachEventListeners(), ajouter après les autres raccourcis:
+
+// Raccourci Schéma de calcul Ctrl+Shift+S
+if (e.ctrlKey && e.shiftKey && e.key === "S" && this.targetTable) { 
+  e.preventDefault(); 
+  this.ajouterSchemaCalcul(); 
+}
+
+Position: Après le raccourci Ctrl+Shift+C (ligne ~450+)
+
+
+ÉTAPE 5: TESTER L'INTÉGRATION
+────────────────────────────────────────────────────────────────────────────
+
+1. Redémarrer le serveur de développement
+2. Ouvrir la console du navigateur (F12)
+3. Vérifier les messages:
+   ✅ "📐 [Schéma] Module chargé"
+   ✅ "📐 [Schéma] Gestionnaire initialisé avec succès"
+
+4. Tester dans le chat:
+   - Créer une table avec "Nature de test" = "Rapprochement"
+   - Créer une table principale avec colonnes Conclusion/Assertion/CTR
+   - Clic droit sur la table → Papier de travail → Ajouter Schéma de calcul
+   - Vérifier qu'un schéma apparaît au-dessus avec: (A) (B) (C) = (A) - (B)
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 MODÈLES DE SCHÉMA SUPPORTÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VALIDATION
+   Nature: "Validation"
+   Schéma: (A) (B) (C) = (A) + (B) (D) (E) = (C) - (D)
+
+2. MOUVEMENT
+   Nature: "Mouvement"
+   Schéma: (A) (B) (C) (D) = (A) + (B) - (C) (E) (F) = (D) - (E)
+
+3. RAPPROCHEMENT
+   Nature: "Rapprochement"
+   Schéma: (A) (B) (C) = (A) - (B)
+
+4. SÉPARATION
+   Nature: "Séparation" ou "Separation"
+   Schéma: (A) (B) (C) = (A) - (B)
+
+5. ESTIMATION
+   Nature: "Estimation"
+   Schéma: (A) (B) (C) = (A) * (B) (D) (E) = (C) - (D)
+
+6. REVUE ANALYTIQUE
+   Nature: "Revue analytique"
+   Schéma: (A) (B) (C) = (A) - (B)
+
+7. CADRAGE TVA
+   Nature: "Cadrage TVA" ou "Cadrage Tva"
+   Schéma: (A) (B) = (A) * 18% (C) (D) (E) (F) = (B) - (C) - (D) - (E)
+
+8. COTISATIONS SOCIALES
+   Nature: "Cotisations sociales"
+   Schéma: (A) (B) (C) (D)
+
+9. VIERGE
+   Nature: "Vierge"
+   Schéma: (aucune colonne)
+
+10. MODÉLISATION
+    Nature: Contient "(X)", "(Y)", etc.
+    Schéma: Variables extraites automatiquement
+    Exemple: "(A) = (B) - (C)" → Schéma: (A) (B) (C)
+
+═══════════════════════════════════════════════════════════════════════════════
+💾 PERSISTANCE DES DONNÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+STOCKAGE:
+- Clé localStorage: "claraverse_schema_calcul_data"
+- Format: JSON avec schemaId comme clé
+- Sauvegarde automatique après 500ms (debounce)
+
+STRUCTURE DES DONNÉES:
+{
+  "schema_table_abc123_1714000000": {
+    "timestamp": 1714000000000,
+    "forTable": "table_abc123",
+    "cells": [
+      { "row": 0, "col": 0, "value": "(A)" },
+      { "row": 0, "col": 1, "value": "(B)" },
+      { "row": 0, "col": 2, "value": "(C) = (A) - (B)" }
+    ]
+  }
+}
+
+RESTAURATION:
+- Automatique au chargement de la page
+- Recherche des tables principales par data-table-id
+- Restauration des valeurs éditées
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 COMMANDES DE DEBUG
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans la console du navigateur:
+
+// Retraiter toutes les tables
+schemaCalculCommands.processAll()
+
+// Afficher le contenu du localStorage
+schemaCalculCommands.showStorage()
+
+// Effacer tous les schémas sauvegardés
+schemaCalculCommands.clearStorage()
+
+// Restaurer tous les schémas
+schemaCalculCommands.restoreAll()
+
+// Accès direct au gestionnaire
+SchemaCalculManager.processAllTables()
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 UTILISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+MÉTHODE 1: MENU CONTEXTUEL
+1. Cliquer sur une cellule de la table principale
+2. Clic droit → Papier de travail → Ajouter Schéma de calcul
+3. Le schéma apparaît automatiquement au-dessus
+
+MÉTHODE 2: RACCOURCI CLAVIER
+1. Cliquer sur une cellule de la table principale
+2. Appuyer sur Ctrl+Shift+S
+3. Le schéma apparaît automatiquement
+
+MÉTHODE 3: AUTOMATIQUE
+1. Le module détecte automatiquement les nouvelles tables
+2. Si une table 2 avec "Nature de test" existe
+3. Et une table principale (Modelised_table) existe
+4. Le schéma est créé automatiquement
+
+ÉDITION:
+- Cliquer sur une cellule du schéma pour l'éditer
+- Appuyer sur Entrée ou cliquer ailleurs pour sauvegarder
+- Les modifications sont sauvegardées automatiquement
+
+RÉGÉNÉRATION:
+- Menu contextuel → Papier de travail → Régénérer Schéma de calcul
+- Supprime et recrée le schéma avec les dernières données
+
+SUPPRESSION:
+- Menu contextuel → Papier de travail → Supprimer Schéma de calcul
+- Supprime le schéma et les données du localStorage
+
+═══════════════════════════════════════════════════════════════════════════════
+⚠️ POINTS D'ATTENTION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DÉPENDANCES:
+   - Le module fonctionne indépendamment de menu.js
+   - Mais l'intégration menu nécessite menu.js chargé
+
+2. ORDRE DE CHARGEMENT:
+   - menu.js
+   - conso.js
+   - papier-travail-schema-calcul.js
+
+3. COMPATIBILITÉ:
+   - Compatible avec la logique de conso.js
+   - Utilise le même système de persistance
+   - Pas de conflit avec les autres fonctionnalités
+
+4. PERFORMANCE:
+   - MutationObserver pour détecter les changements DOM
+   - Debounce de 500ms pour la sauvegarde
+   - Pas d'impact sur les performances
+
+═══════════════════════════════════════════════════════════════════════════════
+🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Le schéma n'apparaît pas
+SOLUTION:
+1. Vérifier que la table 2 contient "Nature de test"
+2. Vérifier que la table principale a Conclusion/Assertion/CTR
+3. Ouvrir la console et vérifier les messages d'erreur
+4. Exécuter: schemaCalculCommands.processAll()
+
+PROBLÈME: Le schéma n'est pas sauvegardé
+SOLUTION:
+1. Vérifier que localStorage est disponible
+2. Ouvrir la console: schemaCalculCommands.showStorage()
+3. Vérifier les quotas localStorage
+4. Tester: localStorage.setItem("test", "test")
+
+PROBLÈME: Le schéma est dupliqué
+SOLUTION:
+1. Supprimer les schémas en double manuellement
+2. Exécuter: schemaCalculCommands.clearStorage()
+3. Recharger la page
+4. Recréer les schémas
+
+PROBLÈME: Les modifications ne sont pas sauvegardées
+SOLUTION:
+1. Vérifier que l'édition fonctionne (contentEditable)
+2. Vérifier les événements blur et keydown
+3. Forcer la sauvegarde: SchemaCalculManager.saveSchemaDataNow(table)
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST DE VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Fichier papier-travail-schema-calcul.js chargé dans index.html
+□ Méthodes ajoutées dans menu.js (section PAPIER DE TRAVAIL)
+□ Menu "papier-travail" mis à jour dans getMenuSections()
+□ Raccourci Ctrl+Shift+S ajouté dans attachEventListeners()
+□ Console affiche "📐 [Schéma] Module chargé"
+□ Console affiche "📐 [Schéma] Gestionnaire initialisé"
+□ Test: Créer table 2 avec "Nature de test"
+□ Test: Créer table principale avec Conclusion/Assertion/CTR
+□ Test: Clic droit → Ajouter Schéma de calcul
+□ Test: Schéma apparaît au-dessus de la table
+□ Test: Éditer une cellule du schéma
+□ Test: Recharger la page → schéma restauré
+□ Test: Raccourci Ctrl+Shift+S fonctionne
+□ Test: Régénérer schéma fonctionne
+□ Test: Supprimer schéma fonctionne
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+En cas de problème:
+1. Consulter la console du navigateur (F12)
+2. Exécuter les commandes de debug
+3. Vérifier les fichiers créés
+4. Relire ce guide d'intégration
+
+═══════════════════════════════════════════════════════════════════════════════
+✨ MISSION ACCOMPLIE
+═══════════════════════════════════════════════════════════════════════════════
+
+Le système de schéma de calcul est maintenant prêt à être intégré dans menu.js.
+
+Tous les fichiers nécessaires ont été créés:
+✅ Module autonome (papier-travail-schema-calcul.js)
+✅ Code d'intégration (menu-papier-travail-integration.js)
+✅ Guide complet (ce fichier)
+
+Suivez les étapes d'intégration ci-dessus pour finaliser l'implémentation.
+
+Bonne intégration! 🚀

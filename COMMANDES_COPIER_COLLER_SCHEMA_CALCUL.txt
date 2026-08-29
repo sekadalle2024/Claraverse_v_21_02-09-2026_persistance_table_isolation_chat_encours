@@ -1,0 +1,186 @@
+═══════════════════════════════════════════════════════════════════════════════
+📋 COMMANDES À COPIER-COLLER - DIAGNOSTIC SCHÉMA DE CALCUL
+═══════════════════════════════════════════════════════════════════════════════
+
+Copiez-collez ces commandes dans la console du navigateur (F12)
+
+═══════════════════════════════════════════════════════════════════════════════
+1️⃣ VÉRIFIER QUE LE MODULE EST CHARGÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+window.SchemaCalculManager
+
+Résultat attendu: Objet (pas "undefined")
+
+═══════════════════════════════════════════════════════════════════════════════
+2️⃣ FORCER LE TRAITEMENT DE TOUTES LES TABLES
+═══════════════════════════════════════════════════════════════════════════════
+
+schemaCalculCommands.processAll()
+
+Messages possibles:
+✅ "Nature de test détectée: Validation" → Bon signe!
+❌ Aucun message → Pas de table avec "Nature de test"
+❌ "Aucune table principale trouvée" → Manque colonne Conclusion/Assertion/CTR
+
+═══════════════════════════════════════════════════════════════════════════════
+3️⃣ VOIR LES SCHÉMAS SAUVEGARDÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+schemaCalculCommands.showStorage()
+
+Affiche tous les schémas sauvegardés dans localStorage
+
+═══════════════════════════════════════════════════════════════════════════════
+4️⃣ RESTAURER TOUS LES SCHÉMAS
+═══════════════════════════════════════════════════════════════════════════════
+
+schemaCalculCommands.restoreAll()
+
+Restaure tous les schémas depuis localStorage
+
+═══════════════════════════════════════════════════════════════════════════════
+5️⃣ EFFACER TOUS LES SCHÉMAS (AVEC CONFIRMATION)
+═══════════════════════════════════════════════════════════════════════════════
+
+schemaCalculCommands.clearStorage()
+
+Efface tous les schémas sauvegardés (demande confirmation)
+
+═══════════════════════════════════════════════════════════════════════════════
+6️⃣ DIAGNOSTIC COMPLET (COPIER TOUT LE BLOC)
+═══════════════════════════════════════════════════════════════════════════════
+
+console.log("🔍 DIAGNOSTIC SCHÉMA DE CALCUL");
+console.log("================================");
+console.log("1. Module chargé:", typeof window.SchemaCalculManager !== "undefined" ? "✅ OUI" : "❌ NON");
+console.log("2. Commandes disponibles:", typeof window.schemaCalculCommands !== "undefined" ? "✅ OUI" : "❌ NON");
+console.log("3. Nombre de tables:", document.querySelectorAll("table").length);
+console.log("4. Divs prose:", document.querySelectorAll('div.prose, div[class*="prose"]').length);
+console.log("================================");
+console.log("5. Forçage du traitement...");
+if (typeof window.schemaCalculCommands !== "undefined") {
+  schemaCalculCommands.processAll();
+} else {
+  console.error("❌ Commandes non disponibles");
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+7️⃣ COMPTER LES TABLES AVEC "NATURE DE TEST"
+═══════════════════════════════════════════════════════════════════════════════
+
+Array.from(document.querySelectorAll("table")).filter(table => 
+  table.textContent.toLowerCase().includes("nature") && 
+  table.textContent.toLowerCase().includes("test")
+).length
+
+Résultat: Nombre de tables contenant "Nature de test"
+
+═══════════════════════════════════════════════════════════════════════════════
+8️⃣ COMPTER LES TABLES AVEC COLONNES REQUISES
+═══════════════════════════════════════════════════════════════════════════════
+
+Array.from(document.querySelectorAll("table")).filter(table => {
+  const headers = Array.from(table.querySelectorAll("th, tr:first-child td"))
+    .map(cell => cell.textContent.trim().toLowerCase());
+  return headers.some(h => h === "conclusion" || h === "assertion" || /^ctr\d*$/.test(h));
+}).length
+
+Résultat: Nombre de tables avec colonne Conclusion/Assertion/CTR
+
+═══════════════════════════════════════════════════════════════════════════════
+9️⃣ AFFICHER LES EN-TÊTES DE TOUTES LES TABLES
+═══════════════════════════════════════════════════════════════════════════════
+
+Array.from(document.querySelectorAll("table")).forEach((table, index) => {
+  const headers = Array.from(table.querySelectorAll("th, tr:first-child td"))
+    .map(cell => cell.textContent.trim());
+  console.log(`Table ${index + 1}:`, headers.join(" | "));
+});
+
+Affiche les en-têtes de chaque table
+
+═══════════════════════════════════════════════════════════════════════════════
+🔟 DIAGNOSTIC ULTRA-COMPLET (COPIER TOUT LE BLOC)
+═══════════════════════════════════════════════════════════════════════════════
+
+console.log("🔍 DIAGNOSTIC ULTRA-COMPLET");
+console.log("============================");
+
+// 1. Module
+console.log("\n1️⃣ MODULE:");
+console.log("  - SchemaCalculManager:", typeof window.SchemaCalculManager !== "undefined" ? "✅" : "❌");
+console.log("  - Commandes:", typeof window.schemaCalculCommands !== "undefined" ? "✅" : "❌");
+
+// 2. Tables
+const allTables = document.querySelectorAll("table");
+console.log("\n2️⃣ TABLES:");
+console.log("  - Total:", allTables.length);
+
+// 3. Tables avec "Nature de test"
+const tablesNature = Array.from(allTables).filter(table => 
+  table.textContent.toLowerCase().includes("nature") && 
+  table.textContent.toLowerCase().includes("test")
+);
+console.log("  - Avec 'Nature de test':", tablesNature.length);
+
+// 4. Tables avec colonnes requises
+const tablesColonnes = Array.from(allTables).filter(table => {
+  const headers = Array.from(table.querySelectorAll("th, tr:first-child td"))
+    .map(cell => cell.textContent.trim().toLowerCase());
+  return headers.some(h => h === "conclusion" || h === "assertion" || /^ctr\d*$/.test(h));
+});
+console.log("  - Avec colonnes requises:", tablesColonnes.length);
+
+// 5. Divs prose
+const proseDivs = document.querySelectorAll('div.prose, div[class*="prose"]');
+console.log("\n3️⃣ DIVS PROSE:", proseDivs.length);
+
+// 6. Analyse par div
+console.log("\n4️⃣ ANALYSE PAR DIV:");
+proseDivs.forEach((div, index) => {
+  const tables = div.querySelectorAll("table");
+  console.log(`  Div ${index + 1}: ${tables.length} table(s)`);
+});
+
+// 7. En-têtes
+console.log("\n5️⃣ EN-TÊTES DES TABLES:");
+allTables.forEach((table, index) => {
+  const headers = Array.from(table.querySelectorAll("th, tr:first-child td"))
+    .map(cell => cell.textContent.trim());
+  if (headers.length > 0) {
+    console.log(`  Table ${index + 1}:`, headers.join(" | "));
+  }
+});
+
+// 8. Traitement
+console.log("\n6️⃣ FORÇAGE DU TRAITEMENT:");
+if (typeof window.schemaCalculCommands !== "undefined") {
+  schemaCalculCommands.processAll();
+} else {
+  console.error("  ❌ Commandes non disponibles");
+}
+
+console.log("\n============================");
+console.log("✅ Diagnostic terminé");
+
+═══════════════════════════════════════════════════════════════════════════════
+💡 UTILISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Appuyez sur F12 pour ouvrir la console
+2. Copiez-collez la commande souhaitée
+3. Appuyez sur Entrée
+4. Regardez les résultats
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 COMMANDE RECOMMANDÉE POUR COMMENCER
+═══════════════════════════════════════════════════════════════════════════════
+
+Commencez par la commande 2️⃣ (la plus simple):
+
+schemaCalculCommands.processAll()
+
+Puis regardez les messages dans la console!
+
+═══════════════════════════════════════════════════════════════════════════════

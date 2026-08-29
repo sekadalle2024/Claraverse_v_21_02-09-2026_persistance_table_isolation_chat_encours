@@ -1,0 +1,130 @@
+═══════════════════════════════════════════════════════════════════
+⚡ ACTION IMMÉDIATE - Fix N8N Réponse Vide
+═══════════════════════════════════════════════════════════════════
+
+✅ CORRECTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════
+
+Le fichier public/Flowise.js a été corrigé et formaté automatiquement.
+
+La fonction normalizeN8nResponse détecte maintenant le format:
+[{
+  "response": {
+    "body": [{
+      "output": "...",
+      "status": "success",
+      "timestamp": "...",
+      "contentLength": 19372
+    }]
+  }
+}]
+
+
+⚡ TESTEZ MAINTENANT (30 SECONDES)
+═══════════════════════════════════════════════════════════════════
+
+1. Démarrer le serveur:
+   npm run dev
+
+2. Ouvrir dans le navigateur:
+   http://localhost:5173/test-n8n-programme-travail.html
+
+3. Cliquer sur:
+   "Envoyer Test Programme"
+
+4. Vérifier les logs:
+   ✅ Si vous voyez "FORMAT DÉTECTÉ: Webhook htlm_processor" → C'EST BON !
+   ❌ Si vous voyez "OUTPUT VIDE" → Voir ci-dessous
+
+
+📊 LOGS ATTENDUS
+═══════════════════════════════════════════════════════════════════
+
+✅ SUCCÈS:
+   🔍 ========== NORMALISATION RÉPONSE N8N ==========
+   📦 Type de réponse: Array
+   ✅ Réponse est un Array avec 1 élément(s)
+   🔍 Détection du format response.body...
+   📦 Body[0].output existe? true
+   ✅ ✅ ✅ FORMAT DÉTECTÉ: Webhook htlm_processor
+   📊 Status: success
+   📋 Content length: 19372
+
+❌ ERREUR:
+   ❌ ========== ERREUR: OUTPUT VIDE ==========
+
+
+🔧 SI LE PROBLÈME PERSISTE
+═══════════════════════════════════════════════════════════════════
+
+PROBLÈME: "Output vide ou null"
+
+SOLUTION 1: Vérifier l'endpoint n8n
+   curl -X POST "https://xomava4845.app.n8n.cloud/webhook/htlm_processor" \
+     -H "Content-Type: application/json" \
+     -d '{"question":"<table><tr><th>Test</th></tr></table>"}'
+
+SOLUTION 2: Vérifier le workflow n8n
+   - Ouvrir n8n
+   - Vérifier que le workflow "htlm_processor" est actif
+   - Vérifier qu'il retourne bien des données dans body[0].output
+
+SOLUTION 3: Appliquer le patch de secours
+   // Dans la console du navigateur (F12)
+   const script = document.createElement('script');
+   script.src = '/patch-flowise-n8n-response.js';
+   document.head.appendChild(script);
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════
+
+COMMENCEZ PAR:
+→ FAITES_CECI_MAINTENANT_PROGRAMME_TRAVAIL.txt
+
+PUIS:
+→ README_FIX_PROGRAMME_TRAVAIL.md (vue d'ensemble)
+→ TESTEZ_MAINTENANT_PROGRAMME_TRAVAIL.md (guide de test)
+→ SOLUTION_PROGRAMME_TRAVAIL_N8N.md (technique)
+
+
+🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════
+
+// Console du navigateur (F12)
+
+// Vérifier la version
+console.log(window.ClaraverseN8nV17.version);
+
+// Tester la connexion
+await window.ClaraverseN8nV17.testN8nConnection();
+
+// Forcer un scan
+window.ClaraverseN8nV17.scanAndProcess();
+
+
+✅ CHECKLIST
+═══════════════════════════════════════════════════════════════════
+
+[ ] Serveur démarré (npm run dev)
+[ ] Page de test ouverte
+[ ] Test "Programme de travail" effectué
+[ ] Logs vérifiés
+[ ] Format détecté correctement
+[ ] Test réel dans Claraverse
+[ ] Tables affichées correctement
+
+
+📞 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════════
+
+Partagez:
+1. Tous les logs de la console
+2. Structure de la réponse n8n
+3. Capture d'écran de la table
+4. Résultat du test curl
+
+
+═══════════════════════════════════════════════════════════════════
+Version: 17.1.0 | Date: 2025-12-03 | Statut: ✅ Corrigé et formaté
+═══════════════════════════════════════════════════════════════════

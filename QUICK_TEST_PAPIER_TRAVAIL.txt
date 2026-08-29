@@ -1,0 +1,131 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 GUIDE DE TEST RAPIDE - SERVICE PAPIER DE TRAVAIL
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PRÉREQUIS
+────────────
+✓ Service claraPapierTravailService.ts créé
+✓ Intégration dans claraApiService.ts active
+✓ Workflow N8N configuré pour retourner "Nature de test"
+
+🎯 CRITÈRE DE DÉTECTION
+────────────────────────
+Le service détecte automatiquement les papiers de travail si :
+• La réponse contient une clé "Nature de test" dans la table 1
+• OU la structure contient "Etape mission - Feuille couverture"
+
+📝 EXEMPLE DE MESSAGE À ENVOYER
+────────────────────────────────
+Dans le chat Claraverse, envoyez :
+
+"Test_Caisse_Rapprochement"
+
+ou
+
+"Feuille de test audit caisse"
+
+🔍 VÉRIFICATIONS À EFFECTUER
+────────────────────────────
+1. ✅ Détection automatique
+   → Console : "📋 === PAPIER DE TRAVAIL DÉTECTÉ ==="
+
+2. ✅ Schéma de calcul affiché
+   → Ligne bleue avec formules (A), (B), (C) = (A) - (B)
+   → Cellule orange pour le résultat (Ecart)
+
+3. ✅ Totalisation automatique
+   → Ligne verte "Total" en bas du tableau
+   → Sommes calculées pour les colonnes monétaires
+
+4. ✅ Cross-références horizontales
+   → Ligne bleue italique avec [A01], [A02], [A03]
+
+5. ✅ Cross-références documentaires
+   → Tableau avec liens vers documents sources
+
+6. ✅ Toutes les tables affichées
+   → Table 0 : Signature Worksheet
+   → Table 1 : Feuille de couverture
+   → Table 2 : Objectifs
+   → Table 3 : Procédures
+   → Table 5 : Données du test
+   → Table 8 : Cross-références documentaires
+   → Table 9 : Légendes
+   → Table 10 : Revue manager
+
+📊 EXEMPLE DE RÉPONSE N8N ATTENDUE
+───────────────────────────────────
+```json
+{
+  "Etape mission - Feuille couverture": [
+    {
+      "table 1": [
+        {
+          "Etape de mission": "Feuille de couverture (Test d'audit)",
+          "Nature de test": "Rapprochement"
+        }
+      ]
+    },
+    {
+      "table 5": [
+        {
+          "N°": "1",
+          "Solde Théorique (FCFA)": "500000",
+          "Solde Physique (FCFA)": "500000",
+          "Ecart": "0"
+        }
+      ]
+    }
+  ]
+}
+```
+
+🐛 DÉBOGAGE
+───────────
+Si le service ne se déclenche pas :
+
+1. Vérifier la console du navigateur :
+   → Rechercher "📋 === PAPIER DE TRAVAIL DÉTECTÉ ==="
+   → Rechercher "🔍 === DEBUT ANALYSE REPONSE N8N ==="
+
+2. Vérifier la structure de la réponse :
+   → Ouvrir les DevTools (F12)
+   → Onglet Network
+   → Chercher la requête vers n8n
+   → Vérifier la réponse JSON
+
+3. Vérifier que "Nature de test" est présent :
+   → Dans la table 1
+   → Avec une valeur non vide
+
+🎨 STYLES À VÉRIFIER
+────────────────────
+• Schéma de calcul : Ligne bleue/orange en haut du tableau
+• Totalisation : Ligne verte en bas du tableau
+• Cross-références : Ligne bleue italique
+
+✅ RÉSULTAT ATTENDU
+───────────────────
+Un papier de travail complet avec :
+• En-tête (Signature Worksheet)
+• Feuille de couverture
+• Objectifs
+• Procédures
+• Schéma de calcul (ligne bleue/orange)
+• Tableau de données
+• Totalisation (ligne verte)
+• Cross-références horizontales (ligne bleue)
+• Cross-références documentaires
+• Légendes
+• Revue manager
+
+═══════════════════════════════════════════════════════════════════════════════
+  📞 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════════════════════
+
+Consultez :
+• Doc papier de travail javascript/IMPLEMENTATION_COMPLETE.md
+• Doc papier de travail javascript/ARCHITECTURE.md
+• 00_PAPIER_TRAVAIL_SERVICE_CREE_25_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════════

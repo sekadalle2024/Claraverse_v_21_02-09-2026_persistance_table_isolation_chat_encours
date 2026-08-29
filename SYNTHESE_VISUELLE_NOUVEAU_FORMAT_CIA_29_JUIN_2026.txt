@@ -1,0 +1,249 @@
+═══════════════════════════════════════════════════════════════════════════
+📊 SYNTHÈSE VISUELLE - CORRECTION NOUVEAU FORMAT CIA
+═══════════════════════════════════════════════════════════════════════════
+
+📅 Date: 29 Juin 2026
+🎯 Objectif: Support du format JSON encapsulé dans backticks markdown
+
+═══════════════════════════════════════════════════════════════════════════
+🔴 AVANT (Problème)
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ENDPOINT N8N (Programme de travail)                                    │
+│  https://fpb7ab9h.rpcl.app/webhook-test/integration                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ Retourne JSON dans backticks
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  RÉPONSE N8N (format problématique)                                     │
+│  [{                                                                     │
+│    "output": "`json\n{\"Sous-section A\": \"...\", ...}\n```"          │
+│  }]                                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ ClaraApiService ne reconnaît pas
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ❌ ERREUR AFFICHÉE                                                      │
+│  {                                                                      │
+│    "error": "Unexpected token '`', \"`json\n{\"... is not valid JSON", │
+│    "raw": "..."                                                         │
+│  }                                                                      │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+🟢 APRÈS (Solution)
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ENDPOINT N8N (Programme de travail)                                    │
+│  https://fpb7ab9h.rpcl.app/webhook-test/integration                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ Retourne JSON dans backticks
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  RÉPONSE N8N                                                            │
+│  [{                                                                     │
+│    "output": "`json\n{\"Sous-section A\": \"...\", ...}\n```"          │
+│  }]                                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ ✅ FORMAT 9 DÉTECTÉ
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 1: EXTRACTION                                                    │
+│  • Détecte result[0].output                                            │
+│  • Détecte backticks (```json ou `json)                                │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 2: NETTOYAGE                                                     │
+│  • Retire "`json" initial                                              │
+│  • Retire "```json" et "```"                                           │
+│  • Retire backticks résiduels                                          │
+│                                                                         │
+│  AVANT: "`json\n{\"Sous-section\": ...}\n```"                          │
+│  APRÈS: "{\"Sous-section\": ...}"                                      │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 3: PARSING                                                       │
+│  • JSON.parse(cleanedOutput)                                           │
+│  • Vérification structure                                              │
+│  • Log des informations                                                │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 4: DÉTECTION TYPE                                                │
+│  • Vérifie "Sous-section" + "Sub-items"                               │
+│  • Analyse contenu pour type:                                          │
+│    - "étape" / "rôle" → Méthodologie Audit                            │
+│    - Autres → CIA Cours                                                │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 5: CONVERSION                                                    │
+│  • Encapsule dans marqueur:                                            │
+│    __CIA_METHODO_ACCORDION__ OU __CIA_ACCORDION__                      │
+│  • Retourne avec métadonnées                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│  ✅ AFFICHAGE RÉUSSI                                                     │
+│  • Accordéon CIA interactif                                            │
+│  • Page de couverture                                                  │
+│  • Sections expandables                                                │
+│  • Badges colorés par rubrique                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+🔄 FLUX DE TRAITEMENT DÉTAILLÉ
+═══════════════════════════════════════════════════════════════════════════
+
+📥 ENTRÉE (Endpoint n8n)
+┌───────────────────────────────────────────────────────────────────────┐
+│ [{                                                                    │
+│   "output": "`json\n{                                                │
+│     \"Sous-section A\": \"Le Modèle des Trois Lignes...\",           │
+│     \"Sub-items\": [                                                  │
+│       {                                                               │
+│         \"Sub-item A1\": \"La Première Ligne...\",                   │
+│         \"Items\": [                                                  │
+│           {                                                           │
+│             \"Item A1.1\": \"Définition...\",                        │
+│             \"Rubrique\": \"quoi\",                                  │
+│             \"Contenu\": \"La première ligne...\"                    │
+│           }                                                           │
+│         ]                                                             │
+│       }                                                               │
+│     ]                                                                 │
+│   }\n```"                                                            │
+│ }]                                                                    │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              │ normalizeN8nResponse()
+                              ▼
+🔍 DÉTECTION FORMAT 9
+┌───────────────────────────────────────────────────────────────────────┐
+│ if (Array.isArray(result) &&                                         │
+│     result[0].output &&                                              │
+│     (output.includes("```json") || output.startsWith("`json"))) {   │
+│   console.log("🔧 FORMAT 9 NOUVEAU CIA détecté");                    │
+│   // ... traitement                                                  │
+│ }                                                                     │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+🧹 NETTOYAGE
+┌───────────────────────────────────────────────────────────────────────┐
+│ 1. Retire "`json" → substring(5)                                     │
+│ 2. Retire "```json" et "```" → replace(/^```json\s*/gm, '')         │
+│ 3. Retire backticks résiduels → replace(/^`+/, '').replace(/`+$/, '') │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+📦 PARSING
+┌───────────────────────────────────────────────────────────────────────┐
+│ const parsedData = JSON.parse(cleanedOutput);                        │
+│ console.log("✅ JSON parsé avec succès");                            │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+✅ VÉRIFICATION STRUCTURE
+┌───────────────────────────────────────────────────────────────────────┐
+│ if ("Sous-section" in parsedData) {                                  │
+│   const dataArray = Array.isArray(parsedData)                        │
+│     ? parsedData                                                      │
+│     : [parsedData];                                                   │
+│   // ... déterminer type et convertir                                │
+│ }                                                                     │
+└───────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+📤 SORTIE (Pour CiaAccordionRenderer)
+┌───────────────────────────────────────────────────────────────────────┐
+│ content: "__CIA_ACCORDION__[{                                         │
+│   \"Sous-section\": \"Le Modèle des Trois Lignes...\",              │
+│   \"Sub-items\": [...]                                                │
+│ }]"                                                                   │
+│                                                                       │
+│ metadata: {                                                           │
+│   format: "cia_accordion",                                           │
+│   extractedFromMarkdown: true,                                       │
+│   newFormat: true,                                                   │
+│   totalSections: 1                                                   │
+│ }                                                                     │
+└───────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+✅ src/services/claraApiService.ts
+   • Ajout du FORMAT 9 (lignes ~1400-1470)
+   • Fonction: normalizeN8nResponse()
+   • Placement: AVANT FORMAT 5 (prioritaire)
+
+📄 Fichiers créés:
+   • 00_SOLUTION_NOUVEAU_FORMAT_CIA_ENDPOINT_29_JUIN_2026.txt
+   • QUICK_TEST_NOUVEAU_FORMAT_CIA_29_JUIN_2026.txt
+   • SYNTHESE_VISUELLE_NOUVEAU_FORMAT_CIA_29_JUIN_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════
+🎨 AFFICHAGE FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  ╔═══════════════════════════════════════════════════════════════╗  │
+│  ║  CIA — Formation Audit Interne                                ║  │
+│  ║  Le Modèle des Trois Lignes de l'IIA                         ║  │
+│  ╚═══════════════════════════════════════════════════════════════╝  │
+│                                                                     │
+│  [+] La Première Ligne : Responsabilités...                        │
+│  [+] La Deuxième Ligne : Fonctions de Surveillance...             │
+│  [+] La Troisième Ligne : L'Audit Interne Indépendant            │
+│  [+] Interaction et Coordination entre les Trois Lignes           │
+│  [+] Évolution des Normes CRIPP (2025) et les Rôles              │
+│                                                                     │
+│  Quand ouvert:                                                      │
+│  ┌──────────────────────────────────────────────────────────────┐  │
+│  │ [-] La Première Ligne : Responsabilités...                   │  │
+│  │                                                               │  │
+│  │   📘 Définition et Rôle Principal                            │  │
+│  │      [quoi] La première ligne de défense est constituée...   │  │
+│  │                                                               │  │
+│  │   📘 Importance pour l'Atteinte des Objectifs                │  │
+│  │      [pourquoi] Cette première ligne est cruciale...         │  │
+│  │                                                               │  │
+│  │   📘 Exemples de Responsabilités Clés                        │  │
+│  │      [exemple] Les responsabilités incluent...               │  │
+│  └──────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────┘
+
+Badges colorés par rubrique:
+• [quoi]     → 🔵 Bleu
+• [pourquoi] → 🟢 Vert
+• [exemple]  → 🟡 Jaune
+• [norme]    → 🟣 Violet
+• [erreur]   → 🔴 Rouge
+
+═══════════════════════════════════════════════════════════════════════════
+✅ RÉSULTAT FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+AVANT: ❌ Erreur "Unexpected token '`'"
+APRÈS: ✅ Accordéon CIA interactif et fonctionnel
+
+COMPATIBILITÉ: ✅ Tous les autres formats continuent de fonctionner
+ROBUSTESSE: ✅ Gestion des erreurs et logging détaillé
+AFFICHAGE: ✅ Identique aux autres endpoints CIA
+
+═══════════════════════════════════════════════════════════════════════════

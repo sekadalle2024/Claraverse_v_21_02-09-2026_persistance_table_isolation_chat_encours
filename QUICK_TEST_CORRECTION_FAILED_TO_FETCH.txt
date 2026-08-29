@@ -1,0 +1,109 @@
+================================================================================
+QUICK TEST - CORRECTION "FAILED TO FETCH"
+================================================================================
+
+🎯 OBJECTIF: Vérifier que l'erreur "failed to fetch" est corrigée
+
+================================================================================
+ÉTAPES DE TEST
+================================================================================
+
+1️⃣  REDÉMARRER LE BACKEND (OBLIGATOIRE)
+   
+   Le backend DOIT être redémarré pour prendre en compte les modifications.
+   
+   Commande:
+   .\start-claraverse.ps1
+   
+   Attendre: "✅ Backend démarré sur http://localhost:8000"
+
+2️⃣  IMPORTER LA BALANCE
+   
+   Fichier: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   
+   Dans l'interface:
+   - Cliquer sur "Importer Balance"
+   - Sélectionner le fichier
+   - Attendre la confirmation
+   
+   ✅ SUCCÈS SI: Pas d'erreur "failed to fetch"
+   ❌ ÉCHEC SI: Erreur "failed to fetch" persiste
+
+3️⃣  GÉNÉRER LES ÉTATS FINANCIERS
+   
+   Dans l'interface:
+   - Cliquer sur "Générer États Financiers"
+   - Attendre la génération
+   
+   ✅ SUCCÈS SI: Les états s'affichent correctement
+   ❌ ÉCHEC SI: Erreur ou page blanche
+
+4️⃣  VÉRIFIER LES LOGS BACKEND
+   
+   Dans la console du backend, chercher:
+   
+   ✓ "📊 Stockage des balances dans le cache global pour l'export..."
+   ✓ "✅ Balances stockées dans le cache: N=XXX lignes"
+   
+   Ces messages confirment que les balances sont bien stockées.
+
+5️⃣  EXPORTER LA LIASSE OFFICIELLE
+   
+   Dans l'interface:
+   - Cliquer sur "Exporter Liasse Officielle"
+   - Le fichier Excel se télécharge
+   
+   Dans les logs backend, chercher:
+   ✓ "📊 Récupération des balances depuis le cache global..."
+   ✓ "✅ Balance N récupérée: XXX lignes"
+   ✓ "📊 Enrichissement du Bilan ACTIF avec BRUT et AMORTISSEMENT..."
+
+6️⃣  VÉRIFIER LE FICHIER EXCEL
+   
+   Ouvrir le fichier téléchargé:
+   
+   Onglet ACTIF:
+   ✓ Colonne F (BRUT) remplie pour AD, AE, AF, etc.
+   ✓ Colonne G (AMORTISSEMENT) remplie
+   ✓ Colonne H (NET N) remplie
+   ✓ Colonne I (NET N-1) remplie
+
+================================================================================
+RÉSULTATS ATTENDUS
+================================================================================
+
+✅ SI TOUT FONCTIONNE:
+   - Pas d'erreur "failed to fetch"
+   - États financiers générés correctement
+   - Liasse exportée avec colonnes BRUT et AMORT remplies
+   
+   → Problème RÉSOLU ✅
+
+❌ SI PROBLÈME PERSISTE:
+   - Vérifier que le backend a bien été redémarré
+   - Vérifier les logs pour les messages de cache
+   - Consulter 00_CORRECTION_FAILED_TO_FETCH_06_AVRIL_2026.txt
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Redémarrer le backend
+.\start-claraverse.ps1
+
+# Voir la correction appliquée
+cat 00_CORRECTION_FAILED_TO_FETCH_06_AVRIL_2026.txt
+
+# Voir le diagnostic initial
+cat 00_ERREUR_FAILED_TO_FETCH_06_AVRIL_2026.txt
+
+================================================================================
+SUPPORT
+================================================================================
+
+En cas de problème:
+1. Vérifier que le backend a été redémarré
+2. Vérifier les logs du backend
+3. Consulter la documentation de correction
+
+================================================================================

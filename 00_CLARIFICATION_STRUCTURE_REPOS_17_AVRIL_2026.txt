@@ -1,0 +1,206 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║   CLARIFICATION STRUCTURE REPOSITORIES - 17 AVRIL 2026   ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+📅 Date: 17 Avril 2026
+⚠️  IMPORTANT: Comprendre la structure des repositories
+
+═══════════════════════════════════════════════════════════
+
+🎯 SITUATION ACTUELLE
+
+Vous avez 2 REPOSITORIES GitHub différents:
+
+┌───────────────────────────────────────────────────────────┐
+│  REPOSITORY 1: Projet Complet (Frontend + Backend)       │
+└───────────────────────────────────────────────────────────┘
+
+URL: https://github.com/sekadalle2024/Claverse_windows__v8_17-04-2026_V5-Export_CAC-V0-Public.git
+
+Structure:
+```
+Claverse_windows__v8_17-04-2026_V5-Export_CAC-V0-Public/
+├── src/                    ← Frontend React
+├── public/
+├── py_backend/            ← Backend Python
+│   ├── main.py
+│   ├── runtime.txt        ← Créé ici localement
+│   ├── requirements_render.txt
+│   └── ...
+├── index.html
+└── ...
+```
+
+Usage: Développement local complet
+
+
+┌───────────────────────────────────────────────────────────┐
+│  REPOSITORY 2: Backend Seul (pour Render)                │
+└───────────────────────────────────────────────────────────┘
+
+URL: https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026.git
+
+Structure:
+```
+Back-end-python-V0_03_03_2026/
+├── main.py                ← À LA RACINE
+├── runtime.txt            ← DOIT ÊTRE ICI (manquant!)
+├── requirements_render.txt ← ICI aussi
+├── export_synthese_cac.py
+└── ...
+```
+
+Usage: Déploiement sur Render.com
+
+═══════════════════════════════════════════════════════════
+
+❌ PROBLÈME IDENTIFIÉ
+
+Le fichier `runtime.txt` n'est PAS dans le repository backend!
+
+Render cherche `runtime.txt` à la RACINE du repository.
+
+Dans le repo backend, la racine contient directement les fichiers Python
+(pas de dossier py_backend/).
+
+Donc Render cherche:
+```
+Back-end-python-V0_03_03_2026/runtime.txt  ← MANQUANT!
+```
+
+Et ne trouve pas, donc utilise Python 3.14.3 par défaut.
+
+═══════════════════════════════════════════════════════════
+
+✅ SOLUTION
+
+Il faut pousser `runtime.txt` vers le repository BACKEND:
+
+1. Le fichier existe dans py_backend/ localement
+2. Il faut le pousser vers le repo backend
+3. Render le détectera et utilisera Python 3.11.9
+
+═══════════════════════════════════════════════════════════
+
+🚀 COMMANDE À EXÉCUTER
+
+Depuis la RACINE du projet local:
+
+```powershell
+.\Doc render deploy\push-runtime-backend-repo.ps1
+```
+
+Ce script va:
+1. Naviguer vers py_backend/
+2. Vérifier que runtime.txt existe
+3. Vérifier le repository Git (doit être le backend)
+4. Commiter runtime.txt
+5. Pusher vers GitHub backend
+
+═══════════════════════════════════════════════════════════
+
+📋 VÉRIFICATION APRÈS PUSH
+
+1. Aller sur GitHub:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+2. Vérifier que ces fichiers existent À LA RACINE:
+   ✓ runtime.txt
+   ✓ requirements_render.txt
+   ✓ main.py
+
+3. Ouvrir runtime.txt et vérifier:
+   Contenu: python-3.11.9
+
+4. Ouvrir requirements_render.txt et vérifier:
+   pydantic==2.6.4
+   pydantic-core==2.16.3
+
+═══════════════════════════════════════════════════════════
+
+🔧 CONFIGURATION RENDER
+
+Render est configuré pour déployer depuis:
+Repository: Back-end-python-V0_03_03_2026
+Branche: master
+
+Build Command:
+```
+pip install -r requirements_render.txt
+```
+
+Start Command:
+```
+python main.py --host 0.0.0.0 --port $PORT
+```
+
+Root Directory: (VIDE)
+
+Avec runtime.txt à la racine, Render va:
+1. Détecter runtime.txt
+2. Utiliser Python 3.11.9
+3. Installer pydantic 2.6.4 avec wheels pré-compilés
+4. Build réussit sans erreur Rust
+
+═══════════════════════════════════════════════════════════
+
+⚠️ ATTENTION: DEUX REPOSITORIES DIFFÉRENTS
+
+NE PAS CONFONDRE:
+
+Repository 1 (Projet complet):
+→ Pour développement local
+→ Contient frontend + backend
+→ py_backend/ est un sous-dossier
+
+Repository 2 (Backend seul):
+→ Pour déploiement Render
+→ Contient UNIQUEMENT le backend
+→ Fichiers Python à la racine
+
+═══════════════════════════════════════════════════════════
+
+📝 CHECKLIST COMPLÈTE
+
+Avant le push:
+- [ ] runtime.txt existe dans py_backend/ localement
+- [ ] requirements_render.txt a pydantic 2.6.4
+- [ ] Git remote pointe vers le repo backend
+
+Après le push:
+- [ ] runtime.txt visible sur GitHub backend (racine)
+- [ ] requirements_render.txt visible sur GitHub backend
+- [ ] Render détecte le push
+- [ ] Build utilise Python 3.11.9
+- [ ] Pydantic 2.6.4 installé avec wheels
+- [ ] Build réussit
+- [ ] Service démarre
+
+═══════════════════════════════════════════════════════════
+
+🎉 RÉSULTAT ATTENDU
+
+Logs Render après le push:
+
+```
+==> Using Python version 3.11.9 (from runtime.txt)
+==> Installing dependencies from requirements_render.txt
+Collecting pydantic==2.6.4
+  Downloading pydantic-2.6.4-py3-none-any.whl
+Collecting pydantic-core==2.16.3
+  Downloading pydantic_core-2.16.3-cp311-cp311-manylinux_2_17_x86_64.whl
+Successfully installed pydantic-2.6.4 pydantic-core-2.16.3
+==> Build successful
+==> Starting service...
+Service started successfully
+```
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+Auteur: Clara Team
+Version: 1.0.0
+
+═══════════════════════════════════════════════════════════

@@ -1,0 +1,168 @@
+═══════════════════════════════════════════════════════════════════════════════
+   CORRECTION MAPPING 7 VARIABLES - AGENT RAG N8N
+   29 MARS 2026 - VERSION FINALE CORRIGÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Extract Variables for RAG" ne mappe pas correctement les variables.
+
+MAPPING ACTUEL (INCORRECT) :
+- user_message ← devrait être command
+- cycle ← OK
+- constat ← devrait être test
+- anomalie ← OK
+
+VARIABLES MANQUANTES :
+- reference
+- nature_test
+- assertion
+
+RÉSULTAT : L'agent RAG ne reçoit que 4 variables au lieu de 7.
+
+✅ SOLUTION - 2 ÉTAPES SIMPLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Corriger le node "Extract Variables for RAG"
+─────────────────────────────────────────────────────────────────────────
+
+1. Ouvre le node "Extract Variables for RAG" dans N8N
+2. Copie TOUT le code du fichier : n8n_node_extract_variables_rag_complet.js
+3. Colle-le dans le node (remplace tout le code existant)
+4. Sauvegarde
+
+CHANGEMENTS CLÉS :
+- Mapping EXACT des clés frontend : [Command], [Cycle], [test], [reference], [Nature de test], [Assertion], [Anomalie]
+- Plus de toLowerCase() ou includes() qui causaient des erreurs
+- Extraction de data[0].User_message directement
+- Suppression du champ "data" dans le résultat (pas nécessaire)
+
+ÉTAPE 2 : Corriger le node "Alea16" (ou le remplacer)
+─────────────────────────────────────────────────────────────────────────
+
+OPTION A - Remplacer par un node Code (RECOMMANDÉ) :
+
+1. Supprime le node "Alea16" actuel
+2. Ajoute un nouveau node "Code" (JavaScript)
+3. Nomme-le "Alea Generator"
+4. Copie le code du fichier : n8n_node_alea16_remplacement_code.js
+5. Connecte : Extract Variables → Alea Generator → Agent RAG
+6. Sauvegarde
+
+OPTION B - Configurer manuellement le node "Alea16" :
+
+Voir le fichier : 00_GUIDE_CONFIGURATION_NODE_ALEA16.txt
+
+📊 MAPPING COMPLET DES 7 VARIABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend → Node Extract → Agent RAG
+─────────────────────────────────────────────────────────────────────────
+[Command]         → command      → {{ $json.command }}
+[Cycle]           → cycle        → {{ $json.cycle }}
+[test]            → test         → {{ $json.test }}
+[reference]       → reference    → {{ $json.reference }}
+[Nature de test]  → nature_test  → {{ $json.nature_test }}
+[Assertion]       → assertion    → {{ $json.assertion }}
+[Anomalie]        → anomalie     → {{ $json.anomalie }}
+
+📤 RÉSULTAT ATTENDU APRÈS CORRECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OUTPUT DU NODE "Extract Variables for RAG" :
+{
+  "command": "Recos contrôle interne comptable",
+  "cycle": "trésorerie",
+  "test": "AA010",
+  "reference": "test sur la validation du compte caisse",
+  "nature_test": "Rapprochement",
+  "assertion": "validité",
+  "anomalie": "VOL de caisse de 600 0000 FCFA sur les petites depenses fournisseurs"
+}
+
+OUTPUT DU NODE "Alea Generator" (ou "Alea16") :
+{
+  "alea": 3,
+  "command": "Recos contrôle interne comptable",
+  "cycle": "trésorerie",
+  "test": "AA010",
+  "reference": "test sur la validation du compte caisse",
+  "nature_test": "Rapprochement",
+  "assertion": "validité",
+  "anomalie": "VOL de caisse de 600 0000 FCFA sur les petites depenses fournisseurs"
+}
+
+PROMPT DE L'AGENT RAG (plus de [undefined]) :
+[command] = Recos contrôle interne comptable
+[cycle] = trésorerie
+[test] = AA010
+[reference] = test sur la validation du compte caisse
+[nature_test] = Rapprochement
+[assertion] = validité
+[anomalie] = VOL de caisse de 600 0000 FCFA sur les petites depenses fournisseurs
+
+🔧 ARCHITECTURE FINALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9
+  ↓
+Code integrate7 (crée User_message avec 7 clés)
+  ↓
+Extract Variables for RAG (extrait les 7 variables avec mapping EXACT)
+  ↓
+Alea Generator (ajoute alea + PRÉSERVE les 7 variables)
+  ↓
+Agent RAG (reçoit 8 valeurs : alea + 7 variables)
+  ↓
+code RAG4
+
+📁 FICHIERS CORRIGÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. n8n_node_extract_variables_rag_complet.js (CORRIGÉ)
+   → Mapping EXACT des 7 clés frontend
+   → Plus de toLowerCase() ou includes()
+   → Extraction directe depuis data[0].User_message
+
+2. n8n_node_alea16_remplacement_code.js (CORRIGÉ)
+   → Ajout de logs pour debug
+   → Préserve les 7 variables + ajoute alea
+
+3. n8n_prompt_agent_rag_7_variables.txt (DÉJÀ CORRECT)
+   → Utilise la syntaxe N8N correcte {{ $json.variable }}
+
+4. 00_CORRECTION_MAPPING_7_VARIABLES_29_MARS_2026.txt (CE FICHIER)
+   → Récapitulatif de la correction
+
+✅ VÉRIFICATION APRÈS CORRECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Exécute le workflow dans N8N
+2. Vérifie l'output du node "Extract Variables for RAG" :
+   ✓ Doit contenir les 7 variables avec leurs valeurs réelles
+   ✓ Plus de "user_message" ou "constat"
+   ✓ Doit avoir "command", "test", "reference", "nature_test", "assertion"
+
+3. Vérifie l'output du node "Alea Generator" :
+   ✓ Doit contenir alea (nombre entre 1 et 4)
+   ✓ Doit contenir les 7 variables préservées
+
+4. Vérifie le prompt de l'agent RAG :
+   ✓ Les 7 variables doivent s'afficher avec leurs valeurs réelles
+   ✓ Plus de [undefined]
+
+🎯 POURQUOI ÇA FONCTIONNE MAINTENANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AVANT (INCORRECT) :
+- toLowerCase() transformait "[Command]" en "[command]"
+- includes() matchait mal les clés
+- Résultat : mapping incorrect
+
+APRÈS (CORRECT) :
+- Comparaison EXACTE : key === '[Command]'
+- Pas de transformation de la clé
+- Résultat : mapping parfait
+
+═══════════════════════════════════════════════════════════════════════════════

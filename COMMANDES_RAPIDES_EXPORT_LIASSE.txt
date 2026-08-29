@@ -1,0 +1,321 @@
+================================================================================
+⚡ COMMANDES RAPIDES - EXPORT LIASSE (06 AVRIL 2026)
+================================================================================
+
+📋 DIAGNOSTIC
+================================================================================
+
+# Exécuter le diagnostic complet
+.\test-diagnostic-export-liasse.ps1
+
+# Ou manuellement:
+cd py_backend
+conda activate claraverse_env
+python diagnostic_export_liasse_complet.py
+cd ..
+
+# Fichier de test créé:
+py_backend/test_export_diagnostic.xlsx
+
+================================================================================
+📖 LIRE LA DOCUMENTATION
+================================================================================
+
+# Guide de démarrage rapide (5 min)
+cat 00_LIRE_MAINTENANT_EXPORT_LIASSE_06_AVRIL_2026.txt
+
+# Synthèse visuelle (5 min)
+cat 00_SYNTHESE_VISUELLE_EXPORT_LIASSE_06_AVRIL_2026.txt
+
+# Récapitulatif final (5 min)
+cat 00_RECAP_FINAL_TACHE_EXPORT_LIASSE_06_AVRIL_2026.txt
+
+# Analyse détaillée (15 min)
+cat Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+# Mission accomplie (5 min)
+cat 00_MISSION_ACCOMPLIE_ANALYSE_EXPORT_LIASSE_06_AVRIL_2026.txt
+
+================================================================================
+🔧 TESTS (APRÈS CORRECTIONS)
+================================================================================
+
+# Test des calculs brut/amortissement
+cd py_backend
+python test_brut_amortissement.py
+
+# Test de l'export complet
+cd py_backend
+python test_export_complet.py
+
+# Fichier généré:
+py_backend/test_liasse_complete.xlsx
+
+================================================================================
+🚀 REDÉMARRER LE BACKEND
+================================================================================
+
+# Arrêter le backend
+.\stop-claraverse.ps1
+
+# Démarrer le backend
+.\start-claraverse.ps1
+
+# Ou avec conda:
+conda activate claraverse_env
+cd py_backend
+python main.py
+
+================================================================================
+📂 OUVRIR LES FICHIERS
+================================================================================
+
+# Template Excel
+start py_backend/Liasse_officielle_revise.xlsx
+
+# Balance de test
+start py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+# Fichier de test diagnostic
+start py_backend/test_export_diagnostic.xlsx
+
+# Fichier de test export complet (après corrections)
+start py_backend/test_liasse_complete.xlsx
+
+================================================================================
+✏️ MODIFIER LES FICHIERS
+================================================================================
+
+# Backend - Calculs
+code py_backend/etats_financiers_v2.py
+
+# Backend - Export
+code py_backend/export_liasse.py
+
+# Backend - Contrôles
+code py_backend/generer_onglet_controle_coherence.py
+
+# Frontend - Menu accordéon (à identifier)
+code src/components/Clara_Components/
+
+================================================================================
+🔍 VÉRIFIER LES FICHIERS
+================================================================================
+
+# Vérifier que les fichiers existent
+Test-Path py_backend/Liasse_officielle_revise.xlsx
+Test-Path py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+Test-Path py_backend/etats_financiers_v2.py
+Test-Path py_backend/export_liasse.py
+
+# Lister les onglets du template
+python -c "import openpyxl; wb = openpyxl.load_workbook('py_backend/Liasse_officielle_revise.xlsx'); print(wb.sheetnames)"
+
+# Lister les onglets de la balance
+python -c "import pandas as pd; xls = pd.ExcelFile('py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls'); print(xls.sheet_names)"
+
+================================================================================
+📊 ANALYSER LES DONNÉES
+================================================================================
+
+# Charger et afficher la balance N
+python -c "import pandas as pd; df = pd.read_excel('py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls', sheet_name='BALANCE N'); print(df.head())"
+
+# Compter les comptes dans la balance
+python -c "import pandas as pd; df = pd.read_excel('py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls', sheet_name='BALANCE N'); print(f'Nombre de comptes: {len(df)}')"
+
+# Afficher les comptes de classe 2 (immobilisations)
+python -c "import pandas as pd; df = pd.read_excel('py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls', sheet_name='BALANCE N'); print(df[df['Numéro'].astype(str).str.startswith('2')])"
+
+================================================================================
+🧪 TESTS UNITAIRES
+================================================================================
+
+# Tester le module etats_financiers_v2
+cd py_backend
+python -m pytest test_etats_financiers_v2.py -v
+
+# Tester le module export_liasse
+cd py_backend
+python -m pytest test_export_liasse.py -v
+
+# Tester tous les modules
+cd py_backend
+python -m pytest -v
+
+================================================================================
+📝 GIT
+================================================================================
+
+# Voir les fichiers modifiés
+git status
+
+# Voir les différences
+git diff
+
+# Ajouter les nouveaux fichiers
+git add .
+
+# Commit
+git commit -m "Analyse complète des problèmes export liasse + solutions proposées"
+
+# Push
+git push origin main
+
+================================================================================
+🔄 WORKFLOW COMPLET
+================================================================================
+
+# 1. Diagnostic
+.\test-diagnostic-export-liasse.ps1
+
+# 2. Lire l'analyse
+cat Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+# 3. Modifier le backend
+code py_backend/etats_financiers_v2.py
+# Ajouter les fonctions proposées dans la documentation
+
+# 4. Tester les calculs
+cd py_backend
+python test_brut_amortissement.py
+
+# 5. Modifier l'export
+code py_backend/export_liasse.py
+# Appliquer les corrections proposées
+
+# 6. Tester l'export
+cd py_backend
+python test_export_complet.py
+
+# 7. Vérifier le fichier généré
+start py_backend/test_liasse_complete.xlsx
+
+# 8. Modifier le frontend
+code src/components/Clara_Components/[Composant Menu Accordéon]
+
+# 9. Redémarrer le backend
+.\start-claraverse.ps1
+
+# 10. Tester dans le navigateur
+# Ouvrir http://localhost:3000
+# Importer la balance de test
+# Vérifier l'affichage du menu accordéon
+# Exporter la liasse
+# Vérifier le fichier Excel
+
+================================================================================
+💡 RACCOURCIS UTILES
+================================================================================
+
+# Aller dans py_backend
+cd py_backend
+
+# Retourner à la racine
+cd ..
+
+# Activer conda
+conda activate claraverse_env
+
+# Désactiver conda
+conda deactivate
+
+# Lister les fichiers Python
+ls py_backend/*.py
+
+# Lister les fichiers Excel
+ls py_backend/*.xlsx
+ls py_backend/*.xls
+
+# Rechercher dans les fichiers
+grep -r "remplir_liasse_officielle" py_backend/
+
+# Compter les lignes de code
+(Get-Content py_backend/export_liasse.py).Count
+
+================================================================================
+🐛 DÉBOGAGE
+================================================================================
+
+# Activer les logs détaillés
+$env:LOG_LEVEL="DEBUG"
+
+# Exécuter avec logs
+cd py_backend
+python diagnostic_export_liasse_complet.py 2>&1 | Tee-Object -FilePath diagnostic.log
+
+# Voir les logs
+cat py_backend/diagnostic.log
+
+# Vérifier les imports Python
+python -c "import openpyxl; import pandas; print('OK')"
+
+# Vérifier la version de openpyxl
+python -c "import openpyxl; print(openpyxl.__version__)"
+
+# Vérifier la version de pandas
+python -c "import pandas; print(pandas.__version__)"
+
+================================================================================
+📦 ENVIRONNEMENT
+================================================================================
+
+# Vérifier l'environnement conda
+conda env list
+
+# Activer l'environnement
+conda activate claraverse_env
+
+# Lister les packages installés
+conda list
+
+# Installer un package manquant
+conda install openpyxl pandas
+
+# Mettre à jour un package
+conda update openpyxl
+
+================================================================================
+🎯 COMMANDES PAR PHASE
+================================================================================
+
+PHASE 1: DIAGNOSTIC (2 min)
+  .\test-diagnostic-export-liasse.ps1
+
+PHASE 2: CORRECTIONS BACKEND (30 min)
+  code py_backend/etats_financiers_v2.py
+  cd py_backend
+  python test_brut_amortissement.py
+
+PHASE 3: CORRECTIONS EXPORT (20 min)
+  code py_backend/export_liasse.py
+  cd py_backend
+  python test_export_complet.py
+
+PHASE 4: CORRECTIONS FRONTEND (15 min)
+  code src/components/Clara_Components/[Composant]
+  .\start-claraverse.ps1
+
+PHASE 5: VALIDATION (15 min)
+  # Tests complets dans le navigateur
+  # Vérification du fichier Excel exporté
+
+================================================================================
+📞 AIDE
+================================================================================
+
+# Voir ce fichier
+cat COMMANDES_RAPIDES_EXPORT_LIASSE.txt
+
+# Voir la liste complète des fichiers créés
+ls -la | grep "06_AVRIL_2026"
+
+# Voir la documentation
+ls Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+
+# Ouvrir la documentation dans VS Code
+code Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 17:20
+================================================================================

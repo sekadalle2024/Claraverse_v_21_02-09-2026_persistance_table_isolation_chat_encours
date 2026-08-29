@@ -1,0 +1,190 @@
+========================================
+DIAGNOSTIC SÉLECTEURS CSS - EXPORT CAC
+========================================
+Date: 26 Mars 2026
+Statut: 🔍 EN DIAGNOSTIC
+
+📋 PROBLÈME IDENTIFIÉ
+---------------------
+Le système d'export "Synthèse CAC" ne détecte pas les tables dans le chat.
+
+Message d'erreur:
+"⚠️ Aucune table Claraverse trouvée dans le chat.
+
+Assurez-vous que des tables FRAP, Recos Révision ou Recos CI sont présentes.
+
+Les tables doivent avoir les classes CSS Claraverse."
+
+🔍 CAUSE PROBABLE
+-----------------
+Le sélecteur CSS utilisé dans menu.js ne correspond pas aux classes CSS réelles des tables dans votre chat.
+
+Sélecteur actuel (menu.js ligne ~7320):
+"table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg"
+
+🚀 ÉTAPES DE DIAGNOSTIC
+-----------------------
+
+ÉTAPE 1: Rafraîchir la page
+----------------------------
+1. Ouvrir Claraverse dans le navigateur
+2. Appuyer sur Ctrl+F5 (rafraîchissement forcé)
+3. Attendre que la page soit complètement chargée
+
+ÉTAPE 2: Attendre les alertes automatiques
+-------------------------------------------
+Après 3 secondes, DEUX alertes vont s'afficher automatiquement:
+
+ALERTE 1 - Informations générales:
+-----------------------------------
+=== DIAGNOSTIC TABLES CLARAVERSE ===
+
+✓ Sélecteur Claraverse: X table(s)
+  Sélecteur: table.min-w-full.border...
+
+✓ Toutes les tables: X
+
+--- ANALYSE DÉTAILLÉE DES TABLES ---
+
+Table 1:
+  Classes: "..."
+  ID: "..."
+  Parent: DIV
+  Classes parent: "..."
+  Première cellule: "..."
+
+[Copier TOUTES ces informations]
+
+ALERTE 2 - Sélecteurs alternatifs:
+-----------------------------------
+=== SÉLECTEURS ALTERNATIFS ===
+
+table                          → X table(s)
+table.min-w-full              → X table(s)
+table.border                  → X table(s)
+.prose table                  → X table(s)
+main table                    → X table(s)
+...
+
+--- RECOMMANDATION ---
+✓ Des tables sont présentes dans le DOM
+→ Utiliser le sélecteur qui retourne le plus de tables
+
+[Copier TOUTES ces informations]
+
+ÉTAPE 3: Communiquer les résultats
+-----------------------------------
+Envoyer le contenu des DEUX alertes (capture d'écran ou texte copié).
+
+IMPORTANT: Ne pas fermer les alertes avant d'avoir copié le contenu!
+
+📊 ANALYSE ATTENDUE
+-------------------
+
+SCÉNARIO 1: Aucune table détectée
+----------------------------------
+✓ Sélecteur Claraverse: 0 table(s)
+✓ Toutes les tables: 0
+
+→ CAUSE: Les tables ne sont pas encore chargées
+→ SOLUTION: Attendre 10 secondes et relancer le diagnostic avec:
+   window.diagnosticTables()
+   (dans la console F12)
+
+SCÉNARIO 2: Tables détectées mais sélecteur incorrect
+------------------------------------------------------
+✓ Sélecteur Claraverse: 0 table(s)
+✓ Toutes les tables: 15
+
+Table 1:
+  Classes: "autre-classe table-custom"
+  
+→ CAUSE: Le sélecteur Claraverse ne correspond pas aux classes réelles
+→ SOLUTION: Utiliser un sélecteur alternatif qui fonctionne
+
+SCÉNARIO 3: Tables détectées avec le bon sélecteur
+---------------------------------------------------
+✓ Sélecteur Claraverse: 15 table(s)
+✓ Toutes les tables: 15
+
+→ CAUSE: Le sélecteur fonctionne, problème ailleurs
+→ SOLUTION: Vérifier la détection des types de tables (FRAP, Recos, etc.)
+
+🔧 CORRECTION À APPORTER
+-------------------------
+
+Une fois le bon sélecteur identifié, modifier menu.js:
+
+Fichier: public/menu.js
+Ligne: ~7320
+Fonction: exportSyntheseCAC()
+
+AVANT:
+------
+const CLARAVERSE_SELECTORS = {
+  CHAT_TABLES: "table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg",
+  PARENT_DIV: "div.prose.prose-base.dark\\:prose-invert.max-w-none"
+};
+
+APRÈS (exemple):
+----------------
+const CLARAVERSE_SELECTORS = {
+  CHAT_TABLES: "table",  // ← Remplacer par le sélecteur qui fonctionne
+  PARENT_DIV: "div.prose.prose-base.dark\\:prose-invert.max-w-none"
+};
+
+OU (si les tables sont dans un conteneur spécifique):
+------------------------------------------------------
+const CLARAVERSE_SELECTORS = {
+  CHAT_TABLES: ".message-content table",  // ← Exemple
+  PARENT_DIV: "div.prose.prose-base.dark\\:prose-invert.max-w-none"
+};
+
+📝 COMMANDES UTILES
+-------------------
+
+Relancer le diagnostic manuellement:
+------------------------------------
+1. Ouvrir la console (F12)
+2. Taper: window.diagnosticTables()
+3. Appuyer sur Entrée
+
+Vérifier les logs dans la console:
+-----------------------------------
+1. Ouvrir la console (F12)
+2. Chercher les messages:
+   🔍 [DIAGNOSTIC] ...
+   📊 [DIAGNOSTIC] ...
+
+Tester l'export après correction:
+----------------------------------
+1. Clic droit sur une table
+2. "Rapports CAC & Expert-Comptable" → "Export Synthèse CAC"
+3. Vérifier les logs dans la console:
+   🔍 [Export CAC] Conteneur trouvé: ...
+   🔍 [Export CAC] X table(s) Claraverse trouvée(s)
+
+📁 FICHIERS CONCERNÉS
+---------------------
+✅ public/diagnostic-tables.js - Script de diagnostic (AMÉLIORÉ)
+⏳ public/menu.js - À corriger après diagnostic
+⏳ index.html - Charge le script de diagnostic
+
+🔗 DOCUMENTS LIÉS
+-----------------
+- Doc export rapport/DIAGNOSTIC_DETECTION_TABLES.md
+- Doc export rapport/GUIDE_EXPORT_SYNTHESE_CAC.md
+- Doc export rapport/CORRECTION_MENU_ET_DETECTION_RECOS_CI.md
+
+🎯 PROCHAINES ÉTAPES
+--------------------
+1. ✅ Script de diagnostic amélioré créé
+2. ⏳ Utilisateur rafraîchit la page (Ctrl+F5)
+3. ⏳ Utilisateur lit les 2 alertes
+4. ⏳ Utilisateur communique les résultats
+5. ⏳ Correction du sélecteur dans menu.js
+6. ⏳ Test de l'export du rapport
+
+========================================
+FIN DU DOCUMENT
+========================================

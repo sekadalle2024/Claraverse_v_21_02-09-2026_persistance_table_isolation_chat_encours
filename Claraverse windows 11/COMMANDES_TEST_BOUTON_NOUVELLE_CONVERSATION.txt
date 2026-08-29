@@ -1,0 +1,132 @@
+=================================================================
+  COMMANDES TEST - BOUTON "NOUVELLE CONVERSATION"
+=================================================================
+
+📦 DÉMARRAGE
+-----------------------------------------------------------------
+npm run dev
+
+
+🌐 URLS À OUVRIR
+-----------------------------------------------------------------
+Application principale:
+http://localhost:5173
+
+Page de test dédiée:
+http://localhost:5173/test-new-chat-button.html
+
+
+🔍 COMMANDES CONSOLE (F12)
+-----------------------------------------------------------------
+
+# Vérifier si l'API est disponible
+window.fixNewChatButton
+
+# Réappliquer le fix manuellement
+window.fixNewChatButton.reapply()
+
+# Rechercher tous les boutons
+document.querySelectorAll('button').forEach(btn => {
+    console.log('Bouton:', btn.textContent.substring(0, 30));
+});
+
+# Rechercher spécifiquement "New Chat"
+document.querySelectorAll('button').forEach(btn => {
+    if (btn.textContent.includes('New Chat')) {
+        console.log('✅ Bouton New Chat trouvé:', btn);
+        console.log('Display:', window.getComputedStyle(btn).display);
+        console.log('Visibility:', window.getComputedStyle(btn).visibility);
+        console.log('Opacity:', window.getComputedStyle(btn).opacity);
+    }
+});
+
+# Vérifier les styles CSS injectés
+document.getElementById('fix-new-chat-button-styles')
+
+# Forcer l'affichage du bouton
+document.querySelectorAll('button').forEach(btn => {
+    if (btn.textContent.includes('New Chat')) {
+        btn.style.setProperty('display', 'flex', 'important');
+        btn.style.setProperty('visibility', 'visible', 'important');
+        btn.style.setProperty('opacity', '1', 'important');
+        console.log('✅ Bouton forcé visible');
+    }
+});
+
+
+📋 MESSAGES CONSOLE ATTENDUS
+-----------------------------------------------------------------
+🔧 [FIX NEW CHAT] Initialisation du correctif
+✅ [FIX NEW CHAT] Styles CSS injectés
+✅ [FIX NEW CHAT] Bouton "New Chat" forcé visible
+✅ [FIX NEW CHAT] Observateur DOM activé
+✅ [FIX NEW CHAT] Système actif
+
+
+🧪 TESTS À EFFECTUER
+-----------------------------------------------------------------
+1. Survoler la sidebar gauche
+2. Vérifier que le bouton "New Chat" apparaît
+3. Cliquer sur le bouton
+4. Vérifier qu'une nouvelle conversation est créée
+5. Actualiser la page (F5)
+6. Vérifier que le bouton est toujours visible
+
+
+🐛 DIAGNOSTIC SI PROBLÈME
+-----------------------------------------------------------------
+
+# Vérifier si le script est chargé
+console.log('Script chargé:', typeof window.fixNewChatButton !== 'undefined');
+
+# Vérifier les scripts dans index.html
+document.querySelectorAll('script[src*="fix-new-chat"]').forEach(s => {
+    console.log('Script trouvé:', s.src);
+});
+
+# Vérifier si design_chat.js masque le bouton
+console.log('Design chat:', typeof window.designChat !== 'undefined');
+
+# Réappliquer tous les fixes
+if (window.fixNewChatButton) window.fixNewChatButton.reapply();
+if (window.designChat) window.designChat.reapply();
+
+
+📁 FICHIERS À CONSULTER
+-----------------------------------------------------------------
+Documentation:
+- FIX_BOUTON_NOUVELLE_CONVERSATION.md
+- TESTEZ_BOUTON_NOUVELLE_CONVERSATION.md
+- RESUME_FIX_BOUTON_NOUVELLE_CONVERSATION.md
+
+Code:
+- public/fix-new-chat-button.js
+- public/design_chat.js
+- index.html
+- src/components/Clara_Components/ClaraSidebar.tsx
+
+
+✅ RÉSULTAT ATTENDU
+-----------------------------------------------------------------
+- Bouton "New Chat" visible quand sidebar étendue
+- Bouton reste accessible après actualisation
+- Bouton fonctionne et crée une nouvelle conversation
+- Aucun message d'erreur dans la console
+
+
+❌ SI LE PROBLÈME PERSISTE
+-----------------------------------------------------------------
+Voir les solutions alternatives dans:
+TESTEZ_BOUTON_NOUVELLE_CONVERSATION.md
+
+Ou créer un rapport de bug avec:
+1. Navigateur utilisé
+2. Messages de la console
+3. Capture d'écran
+4. Résultat des commandes de diagnostic
+
+
+=================================================================
+Date: 10 décembre 2025
+Statut: ✅ Fix appliqué et prêt à tester
+=================================================================

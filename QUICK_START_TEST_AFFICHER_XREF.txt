@@ -1,0 +1,91 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    TEST WORKFLOW AFFICHER X-REF - QUICK START                ║
+║                              28 avril 2026                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 OBJECTIF
+-----------
+Tester le workflow n8n qui recherche et affiche les documents Google Drive
+dans le frontend Claraverse via la fonctionnalité "Ouvrir X-Ref documentaire".
+
+🎯 DOCUMENT DE TEST
+-------------------
+[I30]-AFRILAND
+
+📁 STRUCTURE GOOGLE DRIVE REQUISE
+----------------------------------
+Google Drive/
+  └── Dossier CAC/
+      └── ORANGE-2025/ (ou autre client)
+          └── Trésorerie/ (ou autre cycle)
+              └── [I30]-AFRILAND.pdf (ou .xlsx, .docx)
+
+⚡ TEST RAPIDE (3 ÉTAPES)
+-------------------------
+
+1️⃣  VÉRIFIER LE WORKFLOW N8N
+   • Ouvrir: https://n8nsqlite.zeabur.app
+   • Vérifier que le workflow "Cross References - Search" est ACTIF
+   • Vérifier les credentials Google Drive
+
+2️⃣  EXÉCUTER LE TEST AUTOMATIQUE
+   PowerShell:
+   .\test-workflow-afficher-xref.ps1
+
+   OU curl:
+   curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+     -H "Content-Type: application/json" \
+     -d '{"index":"[I30]-AFRILAND","dossier":"Dossier CAC"}'
+
+3️⃣  TESTER DANS CLARAVERSE
+   • Créer une table X-Ref avec la ligne: [I30] | AFRILAND
+   • Cliquer sur la ligne
+   • Menu contextuel → Papier de travail → 📂 Ouvrir X-Ref documentaire
+   • OU raccourci: Ctrl+Shift+O
+
+✅ RÉSULTAT ATTENDU
+-------------------
+• Barre latérale s'ouvre à droite
+• Document [I30]-AFRILAND s'affiche
+• Bouton "Ouvrir dans Drive" disponible
+
+❌ EN CAS DE PROBLÈME
+---------------------
+1. Document non trouvé
+   → Vérifier le nom exact: [I30]-AFRILAND
+   → Vérifier l'emplacement dans "Dossier CAC"
+   → Vérifier les permissions Google Drive
+
+2. Erreur de connexion
+   → Vérifier que le workflow n8n est actif
+   → Vérifier les credentials Google Drive
+   → Consulter les logs n8n
+
+3. Barre latérale ne s'affiche pas
+   → Ouvrir la console (F12)
+   → Vérifier les erreurs JavaScript
+   → Rafraîchir la page (Ctrl+F5)
+
+📚 DOCUMENTATION COMPLÈTE
+-------------------------
+Voir: 00_GUIDE_TEST_WORKFLOW_AFFICHER_XREF_28_AVRIL_2026.md
+
+🔗 ENDPOINTS
+------------
+• Workflow n8n: https://n8nsqlite.zeabur.app/webhook/cross_reference
+• n8n Interface: https://n8nsqlite.zeabur.app
+
+📊 CHECKLIST RAPIDE
+-------------------
+[ ] Workflow n8n actif
+[ ] Credentials Google Drive OK
+[ ] Dossier "Dossier CAC" existe
+[ ] Document [I30]-AFRILAND existe
+[ ] Test PowerShell réussi
+[ ] Affichage dans Claraverse OK
+
+🎉 SUCCÈS!
+----------
+Si tous les tests passent, le workflow est prêt pour la production!
+
+═══════════════════════════════════════════════════════════════════════════════

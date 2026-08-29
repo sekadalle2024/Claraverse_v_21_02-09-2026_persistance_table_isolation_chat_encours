@@ -1,0 +1,155 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ NOTIFICATIONS ROUTER N8N - FONCTIONNELLES
+═══════════════════════════════════════════════════════════════════════════
+
+📅 Date: 29 Mars 2026
+🎯 Objectif: Afficher les notifications de routing n8n en front-end
+✅ Statut: TERMINÉ ET FONCTIONNEL
+
+═══════════════════════════════════════════════════════════════════════════
+📋 MODIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✅ src/App.tsx
+   - Import de NotificationContainer ajouté
+   - Composant NotificationContainer rendu en bas de l'arbre React
+   - Toujours visible, quelle que soit la page active
+
+2. ✅ src/services/claraApiService.ts
+   - Import de addInfoNotification depuis toastNotificationService
+   - Notification ajoutée après la résolution du routing
+   - Affiche: Case, Route, et URL de l'endpoint n8n
+
+3. ✅ src/components/NotificationContainer.tsx
+   - Composant React fonctionnel
+   - Affiche les notifications en haut à droite
+   - Auto-fermeture après 7 secondes
+   - Bouton de fermeture manuel
+
+4. ✅ src/services/toastNotificationService.ts (NOUVEAU)
+   - Service de gestion des notifications toast
+   - Support de 4 types: info, success, error, warning
+   - Système d'abonnement pour les mises à jour
+   - Fonction addBackgroundCompletionNotification pour notifications persistantes
+   - Export d'objet notificationService pour compatibilité
+
+5. ✅ src/services/notificationService.ts (RESTAURÉ)
+   - Service legacy pour NotificationPanel.tsx
+   - Interface ClaraNotification avec système de lecture/non-lu
+   - Méthodes: subscribe, getUnreadCount, isSoundEnabled, etc.
+   - Système séparé de toastNotificationService
+
+6. ✅ src/components/NotificationContainer.css
+   - Styles pour les notifications toast
+   - Positionnement en haut à droite
+   - Animations d'entrée/sortie
+
+═══════════════════════════════════════════════════════════════════════════
+🎨 EXEMPLE DE NOTIFICATION
+═══════════════════════════════════════════════════════════════════════════
+
+Titre: 🔀 Router N8N
+Message:
+  Case 23 : recos_revision
+  🌐 https://t22wtwxl.rpcld.app/webhook/recos_revision
+
+Durée: 7 secondes
+Position: Haut à droite de l'écran
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 COMMENT TESTER
+═══════════════════════════════════════════════════════════════════════════
+
+1. Redémarrer les serveurs:
+   npm run dev
+   cd py_backend && python main.py
+
+2. Ouvrir l'application dans le navigateur
+
+3. Envoyer un message dans le chat Clara
+
+4. Observer:
+   ✅ Notification apparaît en haut à droite
+   ✅ Affiche le case, la route et l'URL
+   ✅ Se ferme automatiquement après 7 secondes
+   ✅ Peut être fermée manuellement avec le bouton ×
+
+═══════════════════════════════════════════════════════════════════════════
+📊 TOUS LES 33 CASES SUPPORTÉS
+═══════════════════════════════════════════════════════════════════════════
+
+Case 1  → default
+Case 2  → design
+Case 3  → n8n_doc
+Case 4  → htlm_processor
+Case 6  → algorithme
+Case 7  → visualisation
+Case 8  → notification
+Case 9  → document
+Case 10 → database_endpoint
+Case 11 → cia_cours
+Case 12 → cia_qcm
+Case 13 → cia_synthese
+Case 16 → implementation_modelisation
+Case 17 → implementation_programme_controle
+Case 18 → implementation_cartographie
+Case 19 → programme_controle_comptes
+Case 20 → revue_manager
+Case 21 → lead_balance
+Case 22 → regles_comptables
+Case 23 → recos_revision
+Case 24 → etat_fin
+Case 25 → recos_controle_interne
+Case 26 → recos_revision_comptes
+Case 27 → rapport_synthese_cac
+Case 28 → methodo_audit
+Case 29 → guide_des_commandes
+Case 30 → guide_intelligent
+Case 31 → guide_menu_contextuel
+Case 32 → guide_produit
+Case 33 → methodo_revision
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer front-end
+npm run dev
+
+# Redémarrer back-end
+cd py_backend
+python main.py
+
+# Vérifier les diagnostics
+# (Aucune erreur attendue, seulement des warnings mineurs)
+
+═══════════════════════════════════════════════════════════════════════════
+✅ RÉSULTAT FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Build réussi sans erreurs
+✅ Système de notifications toast fonctionnel
+✅ Compatibilité maintenue avec NotificationPanel legacy
+
+Chaque message envoyé affichera une notification indiquant:
+- Le case détecté (Case 1 à Case 33)
+- La route utilisée (ex: recos_revision, methodo_audit, etc.)
+- L'URL de l'endpoint n8n appelé
+
+Plus besoin d'ouvrir la console (F12) pour voir le routing!
+
+═══════════════════════════════════════════════════════════════════════════
+📦 FICHIERS CRÉÉS/MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+CRÉÉS:
+- src/services/toastNotificationService.ts
+- src/services/notificationService.ts (restauré)
+- src/components/NotificationContainer.tsx
+- src/components/NotificationContainer.css
+
+MODIFIÉS:
+- src/App.tsx
+- src/services/claraApiService.ts
+
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,107 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    QUICK START - WORKFLOW V2 CORRIGÉ                        ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🚀 DÉMARRAGE RAPIDE EN 5 ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣  IMPORTER LE WORKFLOW
+
+    Fichier : WORKFLOW_N8N_XREF_HTTP_SOLUTION_V2.json
+    
+    Dans n8n :
+    - Cliquer sur "+" (nouveau workflow)
+    - Cliquer sur "⋮" (menu)
+    - "Import from File"
+    - Sélectionner le fichier V2
+
+2️⃣  CRÉER LE CREDENTIAL OAUTH2
+
+    Settings > Credentials > New Credential > Google OAuth2 API
+    
+    Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+    Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+    
+    Scopes:
+    - https://www.googleapis.com/auth/drive
+    - https://www.googleapis.com/auth/drive.file
+    
+    Cliquer sur "Connect my account" et autoriser
+
+3️⃣  ASSIGNER LE CREDENTIAL AUX 7 NODES HTTP REQUEST
+
+    Pour chaque node HTTP Request :
+    - Rechercher Dossier CAC
+    - Créer Dossier CAC
+    - Rechercher Dossier Client
+    - Créer Dossier Client
+    - Créer Cycles
+    - Rechercher Cycle
+    - Upload Fichier
+    
+    Sélectionner le credential "Google OAuth2"
+
+4️⃣  ACTIVER LE WORKFLOW
+
+    Cliquer sur le bouton "Active" en haut à droite
+
+5️⃣  TESTER
+
+    - Copier l'URL du formulaire (node "Cross References Form")
+    - Ouvrir dans un navigateur
+    - Remplir et soumettre
+    - Vérifier dans Google Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CORRECTIONS APPLIQUÉES DANS V2
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Requêtes GET : sendQuery + queryParameters
+✓ Requêtes POST : sendBody + contentType + bodyContent
+✓ Upload fichier : multipart-form-data avec bodyContent
+✓ Syntaxe correcte pour HTTP Request v4.2
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 STRUCTURE CRÉÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Dossier CAC/
+└── {Client}-{Exercice}/
+    ├── Capitaux propres/
+    ├── Charge d'exploitation/
+    ├── Client/
+    ├── Fournisseur/
+    ├── Immobilisations/
+    ├── Impôt et taxes/
+    ├── Personnel/
+    ├── Stock/
+    ├── Trésorerie/
+    └── Ventes/
+
+Fichier : [{Cross référence}]-{Document}.{extension}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Erreur 401 → Configurer les credentials OAuth2
+❌ Erreur 403 → Vérifier les scopes Google Drive
+❌ Fichier non uploadé → Vérifier les binary data
+❌ Dossiers non créés → Vérifier les permissions Google
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 FICHIERS DE RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+- WORKFLOW_N8N_XREF_HTTP_SOLUTION_V2.json → Workflow corrigé
+- 00_WORKFLOW_CORRIGE_V2_12_AVRIL_2026.txt → Documentation complète
+- GUIDE_IMPORT_WORKFLOW_V2.md → Guide détaillé
+- QUICK_START_V2.txt → Ce fichier
+
+═══════════════════════════════════════════════════════════════════════════════

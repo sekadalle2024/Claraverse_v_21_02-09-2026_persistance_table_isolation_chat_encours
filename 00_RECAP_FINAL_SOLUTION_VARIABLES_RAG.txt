@@ -1,0 +1,92 @@
+═══════════════════════════════════════════════════════════════════════════════
+   RÉCAPITULATIF FINAL - SOLUTION VARIABLES AGENT RAG
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ ÉTAT ACTUEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Extract Variables for RAG" extrait :
+{
+  "user_message": "Message non fourni",           ❌ Pas extrait
+  "cycle": "trésorerie",                          ✅ Extrait
+  "constat": "À compléter",                       ❌ Pas extrait
+  "anomalie": "absence de manuel des procedures"  ✅ Extrait
+}
+
+📋 MAPPING DES CLÉS FRONTEND → VARIABLES AGENT RAG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Clés frontend (User_message) :
+- [Command] = "Recos contrôle interne comptable"
+- [Cycle] = "trésorerie"                         → cycle ✅
+- [test] = "AA010"                               → constat (à mapper)
+- [reference] = "test sur la validation..."      → user_message (à mapper)
+- [Nature de test] = ""
+- [Assertion] = "validité"
+- [Anomalie] = "absence de manuel..."            → anomalie ✅
+
+🔧 ACTIONS À FAIRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ACTION 1 : Mettre à jour le node "Extract Variables for RAG" dans N8N
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Ouvrez le node "Extract Variables for RAG"
+   2. Remplacez TOUT le code JavaScript par le contenu du fichier :
+      n8n_node_extract_variables_rag.js
+   
+   Le code a été mis à jour pour mapper :
+   - [reference] → user_message
+   - [test] → constat
+   - [Cycle] → cycle
+   - [Anomalie] → anomalie
+
+ACTION 2 : Modifier le node "Alea16" pour préserver les variables
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Ouvrez le node "Alea16"
+   2. Ajoutez 4 champs supplémentaires (cliquez sur "Add Field" 4 fois)
+   
+   Field 2:
+   - Name: user_message
+   - Type: String
+   - Value: ={{ $json.user_message }}
+   
+   Field 3:
+   - Name: cycle
+   - Type: String
+   - Value: ={{ $json.cycle }}
+   
+   Field 4:
+   - Name: constat
+   - Type: String
+   - Value: ={{ $json.constat }}
+   
+   Field 5:
+   - Name: anomalie
+   - Type: String
+   - Value: ={{ $json.anomalie }}
+
+ACTION 3 : Tester le workflow complet
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Exécutez le workflow
+   2. Vérifiez l'output de "Extract Variables for RAG" :
+      {
+        "user_message": "test sur la validation du compte caisse",
+        "cycle": "trésorerie",
+        "constat": "AA010",
+        "anomalie": "absence de manuel des procedures"
+      }
+   
+   3. Vérifiez l'output de "Alea16" :
+      {
+        "alea": 2,
+        "user_message": "test sur la validation du compte caisse",
+        "cycle": "trésorerie",
+        "constat": "AA010",
+        "anomalie": "absence de manuel des procedures"
+      }
+   
+   4. Vérifiez que l'agent RAG affiche les bonnes valeurs dans le prompt
+

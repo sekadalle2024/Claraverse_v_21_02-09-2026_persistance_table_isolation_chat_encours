@@ -1,0 +1,62 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  ✅ CORRECTION CSS FRONTEND ZEABUR                            ║
+║                        20 AVRIL 2026                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🎯 PROBLÈME IDENTIFIÉ
+═══════════════════════
+Le frontend s'affiche mais est complètement désordonné (pas de CSS).
+
+🔍 CAUSE RACINE
+═══════════════
+Base URL dynamique dans vite.config.ts qui génère des chemins relatifs (./)
+au lieu de chemins absolus (/) pour les assets CSS/JS.
+
+✅ CORRECTIONS APPLIQUÉES
+═════════════════════════
+
+1️⃣ VITE.CONFIG.TS (GitHub)
+   Ligne modifiée:
+   AVANT: base: process.env.ELECTRON_START_URL ? '/' : './',
+   APRÈS: base: '/', // Force absolute paths for Zeabur deployment
+
+2️⃣ DOCKERFILE.FRONTEND (Zeabur)
+   Configuration Nginx optimisée avec:
+   - Gestion correcte des assets statiques
+   - Compression gzip pour CSS/JS
+   - Cache approprié
+   - Fallback React Router
+
+3️⃣ VARIABLES D'ENVIRONNEMENT (Zeabur)
+   VITE_APP_NAME=Claraverse
+   VITE_BACKEND_URL=https://pybackend.zeabur.app
+   NODE_ENV=production
+
+📋 ÉTAPES DE DÉPLOIEMENT
+═════════════════════════
+
+1. Commit et push vite.config.ts vers GitHub
+2. Dans Zeabur Frontend Settings:
+   - Remplacer Dockerfile par la version corrigée
+   - Vérifier les variables d'environnement
+   - Save & Redeploy
+
+3. Attendre le rebuild (2-3 minutes)
+4. Vérifier que le CSS se charge correctement
+
+🎯 RÉSULTAT ATTENDU
+═══════════════════
+✅ CSS chargé correctement
+✅ Layout organisé
+✅ Styles appliqués
+✅ Application fonctionnelle
+
+📝 FICHIERS MODIFIÉS
+════════════════════
+- vite.config.ts (GitHub)
+- Dockerfile.frontend (Zeabur uniquement)
+
+🔗 RÉFÉRENCES
+═════════════
+- Doc zeabur docker/00_CORRECTION_NGINX_CONF_20_AVRIL_2026.txt
+- Dockerfile.frontend (version locale)

@@ -1,0 +1,140 @@
+========================================================================
+   CORRECTION TIMEOUT HUGGING FACE - BUILD OPTIMISE
+========================================================================
+
+Date : 18 Avril 2026
+Probleme : Launch timed out, workload was not healthy after 30 min
+
+========================================================================
+   DIAGNOSTIC
+========================================================================
+
+Le build a echoue apres 30 minutes de timeout.
+
+Cause identifiee :
+- Le Dockerfile installait spaCy et telechargait le modele en_core_web_sm
+- Le telechargement du modele spaCy est trop long pour Hugging Face
+- Installation de build-essential inutile
+- Utilisation de uv qui ajoute de la complexite
+
+========================================================================
+   CORRECTIONS APPLIQUEES
+========================================================================
+
+1. SUPPRESSION DE SPACY
+   ---------------------
+   - Retire l'installation de spaCy
+   - Retire le telechargement du modele en_core_web_sm
+   - spaCy n'est pas dans requirements.txt donc pas necessaire
+
+2. SIMPLIFICATION DU BUILD
+   ------------------------
+   - Utilisation directe de pip au lieu de uv
+   - Suppression de build-essential
+   - Installation plus rapide des dependances
+
+3. OPTIMISATION DU PORT
+   ---------------------
+   - Port change de 5000 a 7860 (standard Hugging Face)
+   - Variables d'environnement simplifiees
+   - Suppression de l'utilisateur non-root (pas necessaire sur HF)
+
+4. HEALTHCHECK OPTIMISE
+   ---------------------
+   - Timeout reduit de 30s a 10s
+   - Port fixe a 7860
+
+========================================================================
+   NOUVEAU DOCKERFILE
+========================================================================
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies (minimal)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application
+COPY . .
+RUN mkdir -p /app/data
+
+# Environment variables
+ENV HOST="0.0.0.0" \
+    PORT=7860 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+EXPOSE 7860
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:7860/health || exit 1
+
+# Run
+CMD ["python", "main.py", "--host", "0.0.0.0", "--port", "7860"]
+
+========================================================================
+   COMMIT ET PUSH
+========================================================================
+
+Commit : 0bc476a
+Message : "Fix Dockerfile for Hugging Face - Remove spaCy, optimize build time"
+
+Push vers Hugging Face : REUSSI
+Branch : master -> main
+
+========================================================================
+   PROCHAINES ETAPES
+========================================================================
+
+1. ATTENDRE LE NOUVEAU BUILD
+   --------------------------
+   Le build devrait maintenant prendre 5-10 minutes au lieu de 30+
+
+   Allez sur : https://huggingface.co/spaces/ohadada/claraverse-backend
+   Cliquez sur "Logs" pour suivre la progression
+
+2. VERIFIER LE DEMARRAGE
+   ----------------------
+   Une fois le build termine, verifiez :
+   
+   https://ohadada-claraverse-backend.hf.space/health
+   https://ohadada-claraverse-backend.hf.space/docs
+
+3. SI LE PROBLEME PERSISTE
+   ------------------------
+   - Verifier les logs sur Hugging Face
+   - Le port 7860 est bien utilise
+   - Les dependances sont toutes installees
+
+========================================================================
+   TEMPS ESTIME
+========================================================================
+
+Nouveau temps de build estime : 5-10 minutes
+
+Dependances principales :
+- FastAPI, Uvicorn : ~1 min
+- Pandas, NumPy, OpenPyXL : ~2-3 min
+- Autres dependances : ~1-2 min
+- Build Docker : ~1-2 min
+
+Total : ~5-8 minutes
+
+========================================================================
+   SUCCES !
+========================================================================
+
+Le Dockerfile a ete optimise pour Hugging Face Spaces.
+Le nouveau build est en cours.
+
+Attendez quelques minutes et verifiez les logs !
+
+========================================================================

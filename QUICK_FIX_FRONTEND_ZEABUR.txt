@@ -1,0 +1,94 @@
+╔═══════════════════════════════════════════════════════════════╗
+║          🚀 FIX RAPIDE FRONTEND ZEABUR - 3 ÉTAPES            ║
+║                    2 CORRECTIONS APPLIQUÉES                   ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ CORRECTIONS APPLIQUÉES:
+   1. npm ci → npm install (dépendances)
+   2. Ajout COPY sdk/ (Clara Flow SDK)
+
+┌───────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: PUSH VERS GITHUB (2 minutes)                        │
+└───────────────────────────────────────────────────────────────┘
+
+Ouvrir PowerShell et exécuter:
+
+   cd "C:\Users\[VotreNom]\Documents\Claraverse_windows_v_11_20_04_2026_v5_docker_zeabur_t1"
+   .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+✅ Le script va:
+   - Vérifier les fichiers modifiés
+   - Créer un commit "Fix: npm install pour frontend Zeabur"
+   - Pusher vers GitHub
+
+┌───────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: REDÉPLOYER SUR ZEABUR (5-10 minutes)                │
+└───────────────────────────────────────────────────────────────┘
+
+1. Aller sur: https://zeabur.com/dashboard
+
+2. Cliquer sur votre projet "claraverse-production"
+
+3. Sélectionner le service "frontend"
+
+4. Cliquer sur le bouton "Redeploy" (en haut à droite)
+
+5. Attendre que le build se termine:
+   ✓ Building... (5-8 minutes)
+   ✓ Deploying... (1-2 minutes)
+   ✓ Running ✅
+
+┌───────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: VÉRIFIER (1 minute)                                 │
+└───────────────────────────────────────────────────────────────┘
+
+1. Ouvrir: https://prclaravi.zeabur.app
+
+2. Vérifier que:
+   ✅ La page se charge
+   ✅ Le menu "Démarrer" est visible
+   ✅ Pas d'erreur dans la console (F12)
+
+3. Tester une fonctionnalité:
+   - Cliquer sur "Démarrer"
+   - Sélectionner un mode
+   - Vérifier la communication avec le backend
+
+╔═══════════════════════════════════════════════════════════════╗
+║                    ✅ C'EST TOUT !                            ║
+║                                                               ║
+║  Votre application est maintenant déployée sur Zeabur        ║
+║  avec déploiement automatique à chaque push GitHub           ║
+╚═══════════════════════════════════════════════════════════════╝
+
+🔗 LIENS UTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend:  https://prclaravi.zeabur.app
+Backend:   https://pybackend.zeabur.app
+Dashboard: https://zeabur.com/dashboard
+
+📝 MODIFICATIONS APPLIQUÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fichier: Dockerfile.frontend
+
+Correction 1 (Ligne 18):
+   npm ci → npm install --production=false
+
+Correction 2 (Ligne 24):
+   Ajout: COPY sdk/ ./sdk/
+
+Raisons:
+   1. npm ci nécessite package-lock.json exact
+      → npm install est plus tolérant
+   
+   2. SDK manquant causait erreur de résolution
+      → Copie du dossier sdk/ nécessaire pour le build
+
+⚠️  SI LE BUILD ÉCHOUE ENCORE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Vérifier les logs de build sur Zeabur
+2. Chercher l'erreur exacte
+3. Consulter: 00_CORRECTION_FRONTEND_ZEABUR_20_AVRIL_2026.txt

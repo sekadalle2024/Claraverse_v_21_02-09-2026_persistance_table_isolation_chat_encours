@@ -1,0 +1,220 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION WORKFLOW N8N - PROGRAMME CONTRÔLE COMPTES (CASE 19)
+  Date: 31 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+Le message reçu en front-end n'est pas formaté en tableaux Markdown mais en 
+texte brut avec des clés-valeurs. Le format attendu par claraApiService.ts 
+n'est pas respecté.
+
+Format actuel (INCORRECT) :
+  **Tableau entete**:**Etape de mission**: Programme de travail...
+
+Format attendu (CORRECT) :
+  | Rubrique | Description |
+  |----------|-------------|
+  | **Etape de mission** | Programme de travail |
+
+
+🎯 SOLUTION
+─────────────────────────────────────────────────────────────────────────────
+
+La solution comporte 2 parties :
+
+1. CORRIGER LE NODE CODE (après le LLM)
+   → Fichier: n8n_node_code_programme_controle_comptes_FINAL.js
+   
+2. CORRIGER LE PROMPT LLM (optionnel mais recommandé)
+   → Fichier: n8n_prompt_programme_controle_comptes_CORRIGE.txt
+
+
+📦 STRUCTURE ATTENDUE PAR LE FRONT-END
+─────────────────────────────────────────────────────────────────────────────
+
+claraApiService.ts attend le FORMAT 4 :
+
+[
+  {
+    data: {
+      "Tableau entete": {
+        "Etape de mission": "...",
+        "Normes": "...",
+        "Méthode": "...",
+        "Reference": "..."
+      },
+      "Tableau processus": [
+        {
+          "no": 1,
+          "Cycle": "...",
+          "Domaines": "...",
+          "Test": "...",
+          "Controle audit": "...",
+          "Objectif": "...",
+          "Evaluation globale des risques": "...",
+          "Echantillon": "..."
+        }
+      ]
+    }
+  }
+]
+
+Le service convertit ensuite cette structure en Markdown avec :
+- convertHeaderTableToMarkdown() pour "Tableau entete"
+- convertArrayTableToMarkdown() pour "Tableau processus"
+
+
+🔧 ÉTAPE 1 : REMPLACER LE NODE CODE
+─────────────────────────────────────────────────────────────────────────────
+
+Dans n8n, workflow "Programme contrôle comptes" :
+
+1. Localiser le node "Parseur JSON + Format" (après le node LLM)
+
+2. Ouvrir le node et aller dans l'onglet "Code"
+
+3. REMPLACER TOUT LE CODE par le contenu du fichier :
+   n8n_node_code_programme_controle_comptes_FINAL.js
+
+4. Sauvegarder le node
+
+FONCTIONNALITÉS DU NOUVEAU CODE :
+✅ Parse robuste du JSON avec 3 tentatives de fallback
+✅ Nettoyage des caractères d'échappement invalides
+✅ Détection automatique du format (array ou objet)
+✅ Fusion des objets si nécessaire
+✅ Normalisation des noms de clés (variations possibles)
+✅ Retour au FORMAT 4 attendu par claraApiService.ts
+✅ Logs détaillés pour le debugging
+
+
+🔧 ÉTAPE 2 : CORRIGER LE PROMPT LLM (OPTIONNEL)
+─────────────────────────────────────────────────────────────────────────────
+
+Pour améliorer la qualité de la réponse du LLM :
+
+1. Localiser le node "Programme controle compte" (node LLM/Agent)
+
+2. Ouvrir le node et aller dans l'onglet "Prompt" ou "Text"
+
+3. AJOUTER AU DÉBUT du prompt existant le contenu du fichier :
+   n8n_prompt_programme_controle_comptes_CORRIGE.txt
+
+4. Sauvegarder le node
+
+AVANTAGES :
+✅ Le LLM retourne directement le bon format
+✅ Moins de corrections nécessaires dans le node Code
+✅ Réduction des erreurs de parsing
+
+
+📊 TRAITEMENT DANS claraApiService.ts
+─────────────────────────────────────────────────────────────────────────────
+
+Le service détecte automatiquement le FORMAT 4 et applique :
+
+1. EXTRACTION (si nécessaire) :
+   response.body[0].data → [{ data: {...} }]
+
+2. DÉTECTION DU FORMAT :
+   normalizeN8nResponse() identifie le FORMAT 4
+
+3. CONVERSION EN MARKDOWN :
+   convertStructuredDataToMarkdown() traite les 2 tables :
+   
+   a) "Tableau entete" → convertHeaderTableToMarkdown()
+      Génère un tableau Markdown 2 colonnes :
+      | Rubrique | Description |
+      |----------|-------------|
+      
+   b) "Tableau processus" → convertArrayTableToMarkdown()
+      Génère un tableau Markdown avec toutes les colonnes :
+      | no | Cycle | Domaines | Test | ... |
+      |----|-------|----------|------|-----|
+
+4. AFFICHAGE :
+   Le Markdown est rendu dans le chat Clara
+
+
+🧪 TESTS À EFFECTUER
+─────────────────────────────────────────────────────────────────────────────
+
+1. TEST MANUEL DANS N8N :
+   - Ouvrir le workflow
+   - Cliquer sur "Execute Workflow"
+   - Vérifier dans le node "Parseur JSON + Format" :
+     * La structure retournée est [{ data: {...} }]
+     * Les clés "Tableau entete" et "Tableau processus" sont présentes
+     * "Tableau processus" est un array
+
+2. TEST VIA WEBHOOK :
+   curl -X POST https://t22wtwxl.rpcld.app/webhook/programme_controle_comptes \
+     -H "Content-Type: application/json" \
+     -d '{"question": "Programme_controle_comptes"}'
+
+3. TEST DANS L'APPLICATION CLARA :
+   - Envoyer un message contenant "Programme_controle_comptes"
+   - Vérifier que la réponse s'affiche en tableaux Markdown
+   - Vérifier les 2 tables :
+     * Table 1 : En-tête (2 colonnes)
+     * Table 2 : Processus (8 colonnes)
+
+
+🐛 DEBUGGING
+─────────────────────────────────────────────────────────────────────────────
+
+Si le problème persiste :
+
+1. VÉRIFIER LES LOGS DU NODE CODE :
+   - Ouvrir la console du navigateur (F12)
+   - Chercher les logs "[CODE NODE]"
+   - Vérifier :
+     * La longueur de l'output brut
+     * Le résultat du parsing JSON
+     * La structure finale générée
+
+2. VÉRIFIER LES LOGS DE claraApiService.ts :
+   - Chercher les logs "🔍 === DEBUT ANALYSE REPONSE N8N ==="
+   - Vérifier :
+     * La structure reçue
+     * Le format détecté
+     * La conversion en Markdown
+
+3. VÉRIFIER LA RÉPONSE DU WEBHOOK :
+   - Utiliser Postman ou curl
+   - Examiner la réponse brute
+   - Vérifier la structure JSON
+
+
+📝 NOTES IMPORTANTES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Le node Code gère AUTOMATIQUEMENT les variations de format :
+   - Array avec objets séparés : [{"Tableau entete": {...}}, {"Tableau processus": [...]}]
+   - Objet direct : {"Tableau entete": {...}, "Tableau processus": [...]}
+   - Variations de noms de clés (entete, header, processus, process, etc.)
+
+2. Le FORMAT 4 est OBLIGATOIRE pour que claraApiService.ts détecte et traite
+   correctement la réponse.
+
+3. Les autres workflows (Case 25, Case 23, etc.) utilisent le même principe
+   mais avec des structures différentes.
+
+
+✅ CHECKLIST DE VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+□ Node Code remplacé par le nouveau code
+□ Prompt LLM mis à jour (optionnel)
+□ Workflow sauvegardé dans n8n
+□ Test manuel dans n8n réussi
+□ Test via webhook réussi
+□ Test dans l'application Clara réussi
+□ Les 2 tableaux s'affichent correctement en Markdown
+□ Pas d'erreur dans la console du navigateur
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

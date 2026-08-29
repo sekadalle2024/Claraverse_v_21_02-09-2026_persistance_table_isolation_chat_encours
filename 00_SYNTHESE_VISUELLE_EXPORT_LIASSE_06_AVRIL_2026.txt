@@ -1,0 +1,361 @@
+================================================================================
+🎨 SYNTHÈSE VISUELLE - EXPORT LIASSE (06 AVRIL 2026)
+================================================================================
+
+📊 VUE D'ENSEMBLE DU PROBLÈME
+================================================================================
+
+                    ┌─────────────────────────────────────┐
+                    │   EXPORT LIASSE OFFICIELLE EXCEL    │
+                    │   (Liasse_officielle_revise.xlsx)   │
+                    └─────────────────────────────────────┘
+                                    │
+                    ┌───────────────┴───────────────┐
+                    │                               │
+            ✅ FONCTIONNE                   ❌ PROBLÈMES
+                    │                               │
+        ┌───────────┴───────────┐       ┌──────────┴──────────┐
+        │                       │       │                     │
+    • Bilan PASSIF        • Compte    • Bilan ACTIF      • TFT
+      (complet)             Résultat    (incomplet)       (vide)
+                           (complet)        │
+                                            │
+                            ┌───────────────┴───────────────┐
+                            │                               │
+                    1. Colonnes BRUT              2. Totalisations
+                       et AMORTISSEMENT              manquantes
+                       vides                         (AZ, BQ, etc.)
+
+================================================================================
+🎯 LES 3 PROBLÈMES EN SCHÉMA
+================================================================================
+
+PROBLÈME 1: Colonnes BRUT et AMORTISSEMENT
+───────────────────────────────────────────────────────────────────────────────
+
+Template Excel (ACTIF):
+┌──────┬─────────────────────┬──────────┬──────────────┬─────────┬─────────┐
+│ REF  │     LIBELLÉ         │  BRUT N  │  AMORT. N    │  NET N  │ NET N-1 │
+├──────┼─────────────────────┼──────────┼──────────────┼─────────┼─────────┤
+│ AD   │ Charges immob.      │    ❌    │      ❌      │   ✅    │   ✅    │
+│ AI   │ Terrains            │    ❌    │      ❌      │   ✅    │   ✅    │
+│ AJ   │ Bâtiments           │    ❌    │      ❌      │   ✅    │   ✅    │
+└──────┴─────────────────────┴──────────┴──────────────┴─────────┴─────────┘
+         Colonne A            Colonne E   Colonne F    Colonne G  Colonne H
+
+État actuel:
+- ✅ Colonnes G (NET N) et H (NET N-1) remplies
+- ❌ Colonnes E (BRUT N) et F (AMORT. N) vides
+
+Solution:
+1. Extraire BRUT depuis comptes 2xxx (ex: 211 Terrains)
+2. Extraire AMORT depuis comptes 28xx (ex: 2811 Amort. terrains)
+3. Calculer: NET = BRUT - AMORT
+4. Remplir les 3 colonnes
+
+───────────────────────────────────────────────────────────────────────────────
+
+PROBLÈME 2: Totalisations Manquantes
+───────────────────────────────────────────────────────────────────────────────
+
+Structure du Bilan ACTIF:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ACTIF IMMOBILISÉ                                                            │
+│   AD - Charges immobilisées                                    ✅           │
+│   AI - Terrains                                                ✅           │
+│   AJ - Bâtiments                                               ✅           │
+│   ...                                                          ✅           │
+│   AZ - TOTAL ACTIF IMMOBILISÉ                                  ❌ VIDE      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ACTIF CIRCULANT                                                             │
+│   BA - Actif circulant HAO                                     ✅           │
+│   BB - Stocks                                                  ✅           │
+│   ...                                                          ✅           │
+│   BQ - TOTAL ACTIF CIRCULANT                                   ❌ VIDE      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ TRÉSORERIE-ACTIF                                                            │
+│   BT - Titres de placement                                     ✅           │
+│   BV - Banques, caisse                                         ✅           │
+│   BZ - TOTAL TRÉSORERIE-ACTIF                                  ❌ VIDE      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ DZ - TOTAL GÉNÉRAL ACTIF                                       ❌ VIDE      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Solution:
+1. Identifier les postes inclus dans chaque totalisation
+2. Calculer: AZ = Σ(AD à AQ)
+3. Calculer: BQ = Σ(BA à BK)
+4. Calculer: BZ = Σ(BT à BV)
+5. Calculer: DZ = AZ + BQ + BZ + CZ
+
+───────────────────────────────────────────────────────────────────────────────
+
+PROBLÈME 3: TFT Vierge
+───────────────────────────────────────────────────────────────────────────────
+
+Onglet TFT (Tableau des Flux de Trésorerie):
+┌──────┬─────────────────────────────────────────┬─────────┬─────────┐
+│ REF  │              LIBELLÉ                    │    N    │   N-1   │
+├──────┼─────────────────────────────────────────┼─────────┼─────────┤
+│ ZA   │ Trésorerie ouverture                    │   ❌    │   ❌    │
+│ ZB   │ Flux opérationnels                      │   ❌    │   ❌    │
+│ ZC   │ Flux investissement                     │   ❌    │   ❌    │
+│ ZG   │ Variation trésorerie                    │   ❌    │   ❌    │
+│ ZH   │ Trésorerie clôture                      │   ❌    │   ❌    │
+└──────┴─────────────────────────────────────────┴─────────┴─────────┘
+         Colonne A                                Colonne I Colonne K
+
+État actuel:
+- ❌ Toutes les cellules vides
+- ✅ TFT généré en backend (format dict)
+- ❌ Conversion dict → liste fonctionne mais pas l'export
+
+Solution:
+1. Vérifier le mapping des colonnes (I pour N, K pour N-1)
+2. Améliorer la conversion dict → liste
+3. Scanner correctement la colonne A pour les REF
+
+================================================================================
+📊 FLUX DE DONNÉES
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         BALANCE EXCEL                                       │
+│                  (P000 -BALANCE DEMO N_N-1_N-2.xls)                        │
+│                                                                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                    │
+│  │  BALANCE N   │  │  BALANCE N-1 │  │  BALANCE N-2 │                    │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘                    │
+└─────────┼──────────────────┼──────────────────┼──────────────────────────┘
+          │                  │                  │
+          └──────────────────┴──────────────────┘
+                             │
+                             ▼
+          ┌──────────────────────────────────────────┐
+          │   etats_financiers_v2.py                 │
+          │   generer_etats_financiers()             │
+          │                                          │
+          │   ❌ PROBLÈME: Ne calcule que NET        │
+          │   ✅ SOLUTION: Calculer BRUT et AMORT    │
+          │   ❌ PROBLÈME: Pas de totalisations      │
+          │   ✅ SOLUTION: Calculer les totaux       │
+          └──────────────────┬───────────────────────┘
+                             │
+                             ▼
+          ┌──────────────────────────────────────────┐
+          │   RÉSULTATS (Dict/List)                  │
+          │                                          │
+          │   • bilan_actif: [                       │
+          │       {ref, libelle,                     │
+          │        brut_n, amort_n, montant_n,       │ ← À AJOUTER
+          │        brut_n1, amort_n1, montant_n1}    │ ← À AJOUTER
+          │     ]                                    │
+          │   • tft: {ZA_tresorerie: val, ...}       │
+          └──────────────────┬───────────────────────┘
+                             │
+                             ▼
+          ┌──────────────────────────────────────────┐
+          │   export_liasse.py                       │
+          │   remplir_liasse_officielle()            │
+          │                                          │
+          │   ❌ PROBLÈME: Remplit que colonne G     │
+          │   ✅ SOLUTION: Remplir E, F, G           │
+          │   ❌ PROBLÈME: TFT mapping incorrect     │
+          │   ✅ SOLUTION: Colonnes I et K           │
+          └──────────────────┬───────────────────────┘
+                             │
+                             ▼
+          ┌──────────────────────────────────────────┐
+          │   LIASSE EXCEL REMPLIE                   │
+          │   (Liasse_officielle_revise.xlsx)        │
+          │                                          │
+          │   ✅ BILAN PASSIF complet                │
+          │   ✅ COMPTE RÉSULTAT complet             │
+          │   ❌ BILAN ACTIF incomplet               │
+          │   ❌ TFT vide                            │
+          └──────────────────────────────────────────┘
+
+================================================================================
+🔧 PLAN D'ACTION VISUEL
+================================================================================
+
+Phase 1: DIAGNOSTIC (FAIT ✅)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ✅ Script diagnostic créé                                                   │
+│ ✅ Problèmes identifiés                                                     │
+│ ✅ Solutions documentées                                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Phase 2: CORRECTIONS BACKEND (30 min)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Fichier: py_backend/etats_financiers_v2.py                                 │
+│                                                                             │
+│ [ ] Ajouter fonction extraire_brut_et_amortissement()                      │
+│     └─> Extraire comptes 2xxx (brut) et 28xx (amort)                       │
+│                                                                             │
+│ [ ] Modifier calculer_bilan_actif()                                        │
+│     └─> Inclure brut_n, amort_n, brut_n1, amort_n1                         │
+│                                                                             │
+│ [ ] Ajouter fonction calculer_totalisations_actif()                        │
+│     └─> Calculer AZ, BQ, BZ, CZ, DZ                                        │
+│                                                                             │
+│ [ ] Tester avec test_brut_amortissement.py                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Phase 3: CORRECTIONS EXPORT (20 min)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Fichier: py_backend/export_liasse.py                                       │
+│                                                                             │
+│ [ ] Vérifier colonnes template (E, F, G, H)                                │
+│                                                                             │
+│ [ ] Modifier remplir_onglet_par_scan()                                     │
+│     └─> Remplir colonnes E (brut), F (amort), G (net)                      │
+│                                                                             │
+│ [ ] Corriger mapping TFT                                                   │
+│     └─> Colonnes I (N) et K (N-1)                                          │
+│                                                                             │
+│ [ ] Tester avec test_export_complet.py                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Phase 4: CORRECTIONS FRONTEND (15 min)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Fichier: src/components/Clara_Components/[Menu Accordéon]                  │
+│                                                                             │
+│ [ ] Ajouter colonnes BRUT et AMORTISSEMENT                                 │
+│                                                                             │
+│ [ ] Tester l'affichage                                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Phase 5: VALIDATION (15 min)
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [ ] Test avec balance démo                                                 │
+│ [ ] Vérification cohérence frontend/export                                 │
+│ [ ] Validation 16 états de contrôle                                        │
+│ [ ] Documentation mise à jour                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+TEMPS TOTAL: ~80 minutes
+
+================================================================================
+📋 CHECKLIST VISUELLE
+================================================================================
+
+BACKEND:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [ ] brut_n calculé                    [ ] brut_n1 calculé                  │
+│ [ ] amort_n calculé                   [ ] amort_n1 calculé                 │
+│ [ ] montant_n calculé                 [ ] montant_n1 calculé               │
+│ [ ] AZ calculé                        [ ] BQ calculé                       │
+│ [ ] BZ calculé                        [ ] CZ calculé                       │
+│ [ ] DZ calculé                        [ ] TFT converti                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+EXPORT:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [ ] Colonne E remplie (brut N)        [ ] Colonne F remplie (amort N)     │
+│ [ ] Colonne G remplie (net N)         [ ] Colonne H remplie (net N-1)     │
+│ [ ] Totalisations remplies            [ ] TFT colonnes I et K remplies    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+FRONTEND:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [ ] Colonne BRUT affichée             [ ] Colonne AMORTISSEMENT affichée  │
+│ [ ] Colonne NET affichée              [ ] Cohérence avec export           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+VALIDATION:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [ ] Test balance démo OK              [ ] Export Excel complet            │
+│ [ ] 16 états contrôle OK              [ ] Cohérence totale                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+🚀 COMMANDES RAPIDES
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. DIAGNOSTIC                                                               │
+│    .\test-diagnostic-export-liasse.ps1                                      │
+│    └─> Crée: py_backend/test_export_diagnostic.xlsx                        │
+│                                                                             │
+│ 2. TESTS BACKEND (après corrections)                                       │
+│    cd py_backend                                                            │
+│    python test_brut_amortissement.py                                        │
+│                                                                             │
+│ 3. TESTS EXPORT (après corrections)                                        │
+│    cd py_backend                                                            │
+│    python test_export_complet.py                                            │
+│    └─> Crée: test_liasse_complete.xlsx                                     │
+│                                                                             │
+│ 4. REDÉMARRER BACKEND                                                      │
+│    .\start-claraverse.ps1                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+📚 DOCUMENTATION
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ DÉMARRAGE RAPIDE:                                                           │
+│ • 00_LIRE_MAINTENANT_EXPORT_LIASSE_06_AVRIL_2026.txt                       │
+│ • 00_RECAP_FINAL_TACHE_EXPORT_LIASSE_06_AVRIL_2026.txt                     │
+│                                                                             │
+│ ANALYSE DÉTAILLÉE:                                                          │
+│ • Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/                │
+│   02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md                           │
+│                                                                             │
+│ SOLUTIONS PRÉCÉDENTES:                                                      │
+│ • Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/                │
+│   01_SOLUTIONS_IMPLEMENTEES_06_AVRIL_2026.md                               │
+│                                                                             │
+│ ARCHITECTURE:                                                               │
+│ • Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md                         │
+│ • Doc_Etat_Fin/00_INDEX_COMPLET_V2.md                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+💡 POINTS CLÉS
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. Le diagnostic est PRÊT                                                   │
+│    └─> Exécuter test-diagnostic-export-liasse.ps1                          │
+│                                                                             │
+│ 2. Les solutions sont DOCUMENTÉES                                           │
+│    └─> Code complet dans 02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md   │
+│                                                                             │
+│ 3. Le temps est ESTIMÉ                                                      │
+│    └─> ~80 minutes (corrections + tests)                                   │
+│                                                                             │
+│ 4. Les fichiers sont IDENTIFIÉS                                             │
+│    └─> etats_financiers_v2.py, export_liasse.py, composant frontend       │
+│                                                                             │
+│ 5. La validation est DÉFINIE                                                │
+│    └─> Checklist complète + tests + critères de succès                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+🎯 PROCHAINE ACTION
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                                                             │
+│                   .\test-diagnostic-export-liasse.ps1                       │
+│                                                                             │
+│   Cela va:                                                                  │
+│   1. Vérifier les fichiers nécessaires                                     │
+│   2. Charger les balances de test                                          │
+│   3. Générer les états financiers                                          │
+│   4. Analyser le template Excel                                            │
+│   5. Tester l'écriture dans les cellules                                   │
+│   6. Créer un fichier de test pour examen                                  │
+│                                                                             │
+│   Temps: 2 minutes                                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 17:00
+Agent: Kiro AI Assistant
+Statut: Diagnostic terminé - Prêt pour corrections
+================================================================================

@@ -1,0 +1,70 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ ACTION IMMÉDIATE - CORRECTION FORMAT TABLEAUX
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 CE QU'IL FAUT FAIRE MAINTENANT
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir le fichier : n8n_node_code_SOLUTION_FINALE.js
+
+2. COPIER TOUT LE CONTENU (Ctrl+A puis Ctrl+C)
+
+3. Aller sur n8n : https://t22wtwxl.rpcld.app
+
+4. Ouvrir le workflow "Programme contrôle comptes"
+
+5. Cliquer sur le node "Parseur JSON + Format"
+
+6. SUPPRIMER tout le code existant
+
+7. COLLER le nouveau code (Ctrl+V)
+
+8. Cliquer sur "Save" pour sauvegarder le workflow
+
+9. Tester en cliquant sur "Execute Workflow"
+
+10. Vérifier dans l'application Clara
+
+
+🔍 COMMENT VÉRIFIER QUE ÇA FONCTIONNE
+─────────────────────────────────────────────────────────────────────────────
+
+DANS N8N (après exécution manuelle):
+  ✓ Cliquer sur le node "Parseur JSON + Format"
+  ✓ Chercher dans les logs : "🎯 [SOLUTION FINALE] STRUCTURE RETOURNÉE"
+  ✓ Vérifier : "hasJsonProperty: false"
+
+DANS L'APPLICATION CLARA:
+  ✓ Envoyer le message : "Programme_controle_comptes"
+  ✓ Ouvrir la console du navigateur (F12)
+  ✓ Chercher : "✅ FORMAT 4 DETECTE"
+  ✓ Vérifier que les tableaux s'affichent correctement
+
+
+🚨 SI ÇA NE FONCTIONNE TOUJOURS PAS
+─────────────────────────────────────────────────────────────────────────────
+
+Exécuter ce script pour voir la structure exacte retournée :
+
+  .\test-webhook-programme-controle.ps1
+
+Puis consulter : 00_DIAGNOSTIC_PROBLEME_PERSISTANT.txt
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎓 EXPLICATION RAPIDE DU PROBLÈME
+─────────────────────────────────────────────────────────────────────────────
+
+Le node Code retournait :
+  [{ json: { data: {...} } }]  ❌
+
+Mais claraApiService.ts attend :
+  [{ data: {...} }]  ✅
+
+La propriété "json" supplémentaire empêchait la détection du FORMAT 4.
+
+La solution : retourner directement [{ data: {...} }] SANS "json".
+
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,154 @@
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTION COMPLÈTE : 7 VARIABLES POUR L'AGENT RAG
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le frontend envoie 7 variables dans User_message :
+1. [Command] = "Recos contrôle interne comptable"
+2. [Cycle] = "trésorerie"
+3. [test] = "AA010"
+4. [reference] = "test sur la validation du compte caisse"
+5. [Nature de test] = "Rapprochement"
+6. [Assertion] = "validité"
+7. [Anomalie] = "VOL de caisse de 600 0000 FCFA..."
+
+Mais seulement 4 variables étaient extraites et transmises à l'agent RAG.
+
+📋 MAPPING COMPLET FRONTEND → AGENT RAG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend (User_message)     →  Variable Agent RAG
+─────────────────────────────────────────────────────────────────────────────
+[Command]                   →  command
+[Cycle]                     →  cycle
+[test]                      →  test
+[reference]                 →  reference
+[Nature de test]            →  nature_test
+[Assertion]                 →  assertion
+[Anomalie]                  →  anomalie
+
+✅ SOLUTION : 2 ACTIONS À FAIRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ACTION 1 : Mettre à jour le node "Extract Variables for RAG"
+─────────────────────────────────────────────────────────────────────────
+
+1. Ouvre le node "Extract Variables for RAG" dans N8N
+2. Remplace TOUT le code JavaScript par le contenu du fichier :
+   n8n_node_extract_variables_rag_complet.js
+
+Le nouveau code extrait les 7 variables :
+- command (depuis [Command])
+- cycle (depuis [Cycle])
+- test (depuis [test])
+- reference (depuis [reference])
+- nature_test (depuis [Nature de test])
+- assertion (depuis [Assertion])
+- anomalie (depuis [Anomalie])
+
+ACTION 2 : Mettre à jour le node "Alea16" pour préserver les 7 variables
+─────────────────────────────────────────────────────────────────────────
+
+1. Ouvre le node "Alea16"
+2. Ajoute 7 champs (clique sur "Add Field" 7 fois)
+
+Field 1 (déjà existant):
+- Name: alea
+- Type: Number
+- Value: ={{ Math.floor(Math.random() * 4) + 1 }}
+
+Field 2:
+- Name: command
+- Type: String
+- Value: ={{ $json.command }}
+
+Field 3:
+- Name: cycle
+- Type: String
+- Value: ={{ $json.cycle }}
+
+Field 4:
+- Name: test
+- Type: String
+- Value: ={{ $json.test }}
+
+Field 5:
+- Name: reference
+- Type: String
+- Value: ={{ $json.reference }}
+
+Field 6:
+- Name: nature_test
+- Type: String
+- Value: ={{ $json.nature_test }}
+
+Field 7:
+- Name: assertion
+- Type: String
+- Value: ={{ $json.assertion }}
+
+Field 8:
+- Name: anomalie
+- Type: String
+- Value: ={{ $json.anomalie }}
+
+📤 RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après ces modifications, l'output du node "Alea16" devrait être :
+
+{
+  "alea": 2,
+  "command": "Recos contrôle interne comptable",
+  "cycle": "trésorerie",
+  "test": "AA010",
+  "reference": "test sur la validation du compte caisse",
+  "nature_test": "Rapprochement",
+  "assertion": "validité",
+  "anomalie": "VOL de caisse de 600 0000 FCFA sur les petites depenses fournisseurs"
+}
+
+Et l'agent RAG recevra toutes ces variables via la syntaxe N8N :
+- {{ $json.command }}
+- {{ $json.cycle }}
+- {{ $json.test }}
+- {{ $json.reference }}
+- {{ $json.nature_test }}
+- {{ $json.assertion }}
+- {{ $json.anomalie }}
+
+🔧 ARCHITECTURE FINALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9
+  ↓
+Code integrate7 (crée User_message array avec 7 clés)
+  ↓
+Extract Variables for RAG (extrait les 7 variables)
+  ↓
+Alea16 (ajoute alea + PRÉSERVE les 7 variables)
+  ↓
+Agent RAG (reçoit alea + toutes les 7 variables)
+  ↓
+code RAG4
+
+📝 NOTES IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Le node "Extract Variables for RAG" utilise .toLowerCase() et .includes()
+   pour être insensible à la casse et aux variations de noms
+
+2. Le node "Alea16" doit EXPLICITEMENT copier chaque variable avec
+   ={{ $json.variable }} sinon elles sont écrasées
+
+3. L'agent RAG peut ensuite utiliser ces variables dans son prompt avec
+   la syntaxe N8N : {{ $json.variable }}
+
+4. Si de nouvelles variables sont ajoutées dans le frontend, il faudra :
+   - Ajouter le mapping dans "Extract Variables for RAG"
+   - Ajouter un nouveau champ dans "Alea16"
+   - Utiliser la variable dans le prompt de l'agent RAG
+
+═══════════════════════════════════════════════════════════════════════════════

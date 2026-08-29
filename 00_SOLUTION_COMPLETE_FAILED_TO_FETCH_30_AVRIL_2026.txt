@@ -1,0 +1,155 @@
+✅ SOLUTION COMPLÈTE - ERREUR "FAILED TO FETCH" XREF
+=====================================================
+Date: 30 avril 2026
+
+🎯 SOLUTION RECOMMANDÉE: Workflow HTTP Request avec API Google Drive
+====================================================================
+
+Cette solution utilise l'API REST de Google Drive directement via HTTP Request,
+évitant les problèmes avec les nodes Google Drive de n8n.
+
+📋 ÉTAPES DE MISE EN ŒUVRE
+---------------------------
+
+ÉTAPE 1: Obtenir un Access Token Google Drive
+----------------------------------------------
+1. Aller dans n8n > Credentials
+2. Créer/Modifier "Google Drive OAuth2 API"
+3. Utiliser ces paramètres:
+   - Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+   - Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+   - Scope: https://www.googleapis.com/auth/drive
+   - Access Type: offline
+
+ÉTAPE 2: Créer le workflow avec HTTP Request
+---------------------------------------------
+Voir le fichier: workflow_n8n_ouvrir_xref_HTTP_REQUEST.json
+
+Structure du workflow:
+1. Webhook OPTIONS (preflight CORS)
+2. Webhook POST (reçoit la requête)
+3. HTTP Request - Rechercher Dossier CAC
+4. HTTP Request - Rechercher Fichier
+5. Code - Formater la réponse
+6. Respond to Webhook
+
+ÉTAPE 3: Configuration des HTTP Request nodes
+----------------------------------------------
+
+Node "Rechercher Dossier CAC":
+```json
+{
+  "method": "GET",
+  "url": "https://www.googleapis.com/drive/v3/files",
+  "authentication": "predefinedCredentialType",
+  "nodeCredentialType": "googleDriveOAuth2Api",
+  "sendQuery": true,
+  "queryParameters": {
+    "q": "name='Dossier CAC' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+    "fields": "files(id, name)"
+  }
+}
+```
+
+Node "Rechercher Fichier":
+```json
+{
+  "method": "GET",
+  "url": "https://www.googleapis.com/drive/v3/files",
+  "authentication": "predefinedCredentialType",
+  "nodeCredentialType": "googleDriveOAuth2Api",
+  "sendQuery": true,
+  "queryParameters": {
+    "q": "name contains '{{ $('Webhook POST').item.json.body.index }}' and '{{ $json.files[0].id }}' in parents and trashed=false",
+    "fields": "files(id, name, mimeType, webViewLink, webContentLink, thumbnailLink, iconLink, size, createdTime, modifiedTime)"
+  }
+}
+```
+
+ÉTAPE 4: Activer le partage des fichiers
+-----------------------------------------
+Pour que le frontend puisse afficher les documents:
+
+1. Dans Google Drive, sélectionner le dossier "Dossier CAC"
+2. Clic droit > Partager
+3. Modifier les permissions:
+   - "Toute personne disposant du lien" > "Lecteur"
+4. Copier le lien de partage
+
+Ou via API:
+```json
+{
+  "method": "POST",
+  "url": "https://www.googleapis.com/drive/v3/files/{{ $json.file.id }}/permissions",
+  "body": {
+    "role": "reader",
+    "type": "anyone"
+  }
+}
+```
+
+ÉTAPE 5: Tester le workflow
+----------------------------
+```powershell
+# Exécuter le script de test
+.\test-workflow-afficher-xref.ps1
+```
+
+Résultat attendu:
+```json
+{
+  "success": true,
+  "file": {
+    "id": "1abc...",
+    "name": "[I30]-AFRILAND.pdf",
+    "mimeType": "application/pdf",
+    "webViewLink": "https://drive.google.com/file/d/...",
+    "webContentLink": "https://drive.google.com/uc?id=...",
+    "thumbnailLink": "https://...",
+    "size": "1234567",
+    "createdTime": "2026-04-30T10:00:00.000Z",
+    "modifiedTime": "2026-04-30T10:00:00.000Z"
+  },
+  "searchTerm": "[I30]-AFRILAND",
+  "dossier": "Dossier CAC"
+}
+```
+
+🔧 ALTERNATIVE: Corriger le workflow existant
+==============================================
+
+Si vous préférez garder les nodes Google Drive:
+
+1. Remplacer l'opération "search" par "list"
+2. Ajouter les paramètres dans "options.queryString"
+3. Vérifier que les credentials sont bien configurés
+
+Voir: workflow_n8n_ouvrir_xref_CORRIGE.json
+
+⚠️ PRÉCAUTIONS
+===============
+
+1. ✓ Toujours tester avec curl avant d'intégrer au frontend
+2. ✓ Vérifier les logs n8n en cas d'erreur
+3. ✓ S'assurer que les fichiers existent dans Google Drive
+4. ✓ Respecter la nomenclature: [INDEX]-NomDocument.extension
+5. ✓ Vérifier les permissions Google Drive
+
+📊 RÉSULTAT ATTENDU
+===================
+
+Frontend Claraverse:
+1. ✓ Détecte la table [Cross references- documentaire]
+2. ✓ Affiche un menu contextuel sur les cellules
+3. ✓ Action "Afficher" appelle le workflow n8n
+4. ✓ Reçoit les métadonnées du document
+5. ✓ Affiche le document dans une barre latérale React
+6. ✓ Permet de fermer la barre latérale
+
+🎉 SUCCÈS
+=========
+
+Une fois le workflow fonctionnel:
+- Le frontend peut retrouver n'importe quel document via son index
+- Les documents s'affichent dans une barre latérale
+- L'intégration avec Google Drive est complète

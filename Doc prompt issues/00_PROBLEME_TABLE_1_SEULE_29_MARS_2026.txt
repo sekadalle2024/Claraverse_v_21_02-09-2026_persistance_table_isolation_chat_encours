@@ -1,0 +1,305 @@
+═══════════════════════════════════════════════════════════════════════════
+  🚨 PROBLÈME URGENT - SEULE LA TABLE 1 S'AFFICHE
+  Date: 29 Mars 2026 - 19h07
+═══════════════════════════════════════════════════════════════════════════
+
+SYMPTÔME
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Table 1 affichée (en-tête):
+| Rubrique | Description |
+|----------|-------------|
+| Etape de mission | Frap |
+| Norme | Norme 14.3 Évaluation des constats |
+| Méthode | Méthode des risques par les tâches clés |
+| Reference | Frap-001 |
+
+❌ Tables 2-6 MANQUANTES:
+- Table 2 (Intitule)
+- Table 3 (Observation)
+- Table 4 (Constat)
+- Table 5 (Risque)
+- Table 6 (Recommendation)
+
+DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════
+
+CAUSE IDENTIFIÉE
+───────────────────────────────────────────────────────────────────────────
+
+Le Structured Output Parser ne retourne QUE la table 1 au lieu des 6 tables.
+
+Cela signifie que:
+1. Le LLM ne génère pas toutes les tables demandées
+2. OU le schéma JSON du Structured Output Parser est trop restrictif
+3. OU le prompt système est incomplet
+
+ANALYSE DU WORKFLOW ACTUEL
+───────────────────────────────────────────────────────────────────────────
+
+Nodes présents:
+✅ Recos controle interne comptable2 (Chain LLM)
+✅ Structured Output Parser
+✅ node clean1 V2 (code corrigé)
+✅ Markdown Generator1 corrige V2 (code corrigé)
+✅ Respond to Webhook16
+
+Problème identifié:
+❌ Le Structured Output Parser a un schéma JSON qui ne force PAS le LLM 
+   à générer les 6 tables
+
+SCHÉMA JSON ACTUEL (INCOMPLET)
+───────────────────────────────────────────────────────────────────────────
+
+{
+  "Etape mission - Recos contrôle interne comptable": [
+    {
+      "table 1": {
+        "Etape de mission": "Recos contrôle interne comptable",
+        "Norme": "14.3 Évaluation des constats",
+        "Méthode": "Méthode des constats d'audit par les risques critiques",
+        "Reference": "Recos contrôle interne comptable-001"
+      }
+    },
+    {
+      "table 2": {
+        "Intitule": "..."
+      }
+    },
+    ...
+  ]
+}
+
+PROBLÈME: Ce schéma montre un EXEMPLE mais ne FORCE PAS le LLM à générer
+les 6 tables. Le LLM s'arrête après la table 1.
+
+SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+OPTION 1: MODIFIER LE SCHÉMA JSON DU STRUCTURED OUTPUT PARSER
+───────────────────────────────────────────────────────────────────────────
+
+Remplacer le schéma JSON actuel par un schéma qui FORCE les 6 tables:
+
+{
+  "type": "object",
+  "properties": {
+    "Etape mission - Recos contrôle interne comptable": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "table 1": {
+              "type": "object",
+              "properties": {
+                "Etape de mission": {"type": "string"},
+                "Norme": {"type": "string"},
+                "Méthode": {"type": "string"},
+                "Reference": {"type": "string"}
+              },
+              "required": ["Etape de mission", "Norme", "Méthode", "Reference"]
+            }
+          },
+          "required": ["table 1"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "table 2": {
+              "type": "object",
+              "properties": {
+                "Intitule": {"type": "string"}
+              },
+              "required": ["Intitule"]
+            }
+          },
+          "required": ["table 2"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "table 3": {
+              "type": "object",
+              "properties": {
+                "Observation": {"type": "string"}
+              },
+              "required": ["Observation"]
+            }
+          },
+          "required": ["table 3"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "table 4": {
+              "type": "object",
+              "properties": {
+                "Constat": {"type": "string"}
+              },
+              "required": ["Constat"]
+            }
+          },
+          "required": ["table 4"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "table 5": {
+              "type": "object",
+              "properties": {
+                "Risque": {"type": "string"}
+              },
+              "required": ["Risque"]
+            }
+          },
+          "required": ["table 5"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "table 6": {
+              "type": "object",
+              "properties": {
+                "Recommendation": {"type": "string"}
+              },
+              "required": ["Recommendation"]
+            }
+          },
+          "required": ["table 6"]
+        }
+      ]
+    }
+  },
+  "required": ["Etape mission - Recos contrôle interne comptable"]
+}
+
+OPTION 2: RETIRER LE STRUCTURED OUTPUT PARSER
+───────────────────────────────────────────────────────────────────────────
+
+Si le Structured Output Parser cause plus de problèmes qu'il n'en résout:
+
+1. Retirer le Structured Output Parser du workflow
+2. Laisser le LLM générer du JSON libre
+3. Le node clean1 V2 parsera le JSON brut
+4. Le Markdown Generator1 corrige V2 transformera vers FORMAT 4
+
+AVANTAGES:
+✅ Plus de flexibilité pour le LLM
+✅ Moins de contraintes sur le format
+✅ Le LLM peut générer toutes les tables sans restriction
+
+INCONVÉNIENTS:
+❌ Risque de JSON mal formé
+❌ Besoin de validation plus stricte dans node clean1
+
+OPTION 3: MODIFIER LE PROMPT SYSTÈME
+───────────────────────────────────────────────────────────────────────────
+
+Ajouter des instructions EXPLICITES dans le prompt système:
+
+IMPORTANT: Tu DOIS générer EXACTEMENT 6 tables dans cet ordre:
+1. table 1: En-tête (Etape de mission, Norme, Méthode, Reference)
+2. table 2: Intitule (titre de l'anomalie)
+3. table 3: Observation (description des travaux)
+4. table 4: Constat (constat de l'anomalie)
+5. table 5: Risque (risques associés)
+6. table 6: Recommendation (recommandations)
+
+Ne génère PAS seulement la table 1. Tu DOIS générer les 6 tables complètes.
+
+RECOMMANDATION
+═══════════════════════════════════════════════════════════════════════════
+
+SOLUTION IMMÉDIATE: OPTION 2 (Retirer le Structured Output Parser)
+
+Raisons:
+1. Le Structured Output Parser est trop restrictif
+2. Le schéma JSON est complexe à configurer correctement
+3. Le LLM génère mieux sans contraintes strictes
+4. Les nodes clean1 V2 et Markdown Generator V2 gèrent déjà le parsing
+
+ÉTAPES À SUIVRE
+═══════════════════════════════════════════════════════════════════════════
+
+1. OUVRIR N8N
+───────────────────────────────────────────────────────────────────────────
+https://t22wtwxl.rpcld.app
+
+2. OUVRIR LE WORKFLOW
+───────────────────────────────────────────────────────────────────────────
+Workflow: recos_contrôle_interne_comptable
+
+3. RETIRER LE STRUCTURED OUTPUT PARSER
+───────────────────────────────────────────────────────────────────────────
+- Cliquer sur le node "Structured Output Parser"
+- Supprimer la connexion entre "Recos controle interne comptable2" 
+  et "Structured Output Parser"
+- Connecter directement "Recos controle interne comptable2" 
+  vers "node clean1 V2"
+
+4. MODIFIER LE PROMPT SYSTÈME
+───────────────────────────────────────────────────────────────────────────
+Dans le node "Recos controle interne comptable2", ajouter à la fin du prompt:
+
+CONTRAINTE ABSOLUE:
+Tu DOIS générer EXACTEMENT 6 tables dans le JSON de réponse:
+- table 1: En-tête (4 champs)
+- table 2: Intitule (1 champ)
+- table 3: Observation (1 champ)
+- table 4: Constat (1 champ)
+- table 5: Risque (1 champ)
+- table 6: Recommendation (1 champ)
+
+Si tu ne génères que la table 1, la réponse sera REJETÉE.
+
+5. TESTER LE WORKFLOW
+───────────────────────────────────────────────────────────────────────────
+Message test:
+[VAE] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+6. VÉRIFIER L'AFFICHAGE
+───────────────────────────────────────────────────────────────────────────
+✅ Table 1 affichée (en-tête)
+✅ Table 2 affichée (Intitule)
+✅ Table 3 affichée (Observation)
+✅ Table 4 affichée (Constat)
+✅ Table 5 affichée (Risque)
+✅ Table 6 affichée (Recommendation)
+
+ALTERNATIVE SI OPTION 2 NE FONCTIONNE PAS
+═══════════════════════════════════════════════════════════════════════════
+
+Si retirer le Structured Output Parser ne fonctionne pas, essayer OPTION 1:
+
+1. Garder le Structured Output Parser
+2. Remplacer le schéma JSON par le schéma complet ci-dessus
+3. Ajouter "minItems": 6 et "maxItems": 6 pour forcer 6 tables
+
+FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. 00_PROBLEME_TABLE_1_SEULE_29_MARS_2026.txt (ce fichier)
+2. SCHEMA_JSON_COMPLET_6_TABLES_CASE_25.json (à créer)
+3. PROMPT_SYSTEME_FORCE_6_TABLES_CASE_25.txt (à créer)
+
+PROCHAINE ACTION
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir n8n
+2. Retirer le Structured Output Parser
+3. Modifier le prompt système
+4. Tester avec le message RH
+5. Vérifier que les 6 tables s'affichent
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 19h07
+Priorité: CRITIQUE
+Statut: DIAGNOSTIC COMPLET - SOLUTION FOURNIE

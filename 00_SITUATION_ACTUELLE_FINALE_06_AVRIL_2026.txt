@@ -1,0 +1,187 @@
+================================================================================
+📋 SITUATION ACTUELLE - 06 AVRIL 2026 - 22h00
+================================================================================
+
+CONTEXTE:
+---------
+Correction de l'erreur "failed to fetch" dans l'export de la liasse officielle.
+Le backend a été redémarré mais l'erreur persiste.
+
+================================================================================
+✅ CE QUI A ÉTÉ FAIT
+================================================================================
+
+1. Corrections appliquées:
+   ✅ Cache global _balance_cache créé (etats_financiers.py ligne ~25)
+   ✅ Stockage des balances dans le cache (ligne ~1553)
+   ✅ Récupération depuis le cache (export_liasse.py ligne ~450)
+   ✅ Import datetime ajouté (ligne ~7)
+   ✅ Script test-backend-direct.ps1 corrigé (port 5000)
+
+2. Backend redémarré:
+   ✅ Commande: .\start-claraverse-conda.ps1
+   ✅ Backend accessible sur http://localhost:5000
+   ✅ Test d'accessibilité réussi
+
+3. Documentation créée:
+   ✅ 8 fichiers de diagnostic et instructions
+   ✅ Scripts de test prêts
+   ✅ Guides de dépannage complets
+
+================================================================================
+❌ PROBLÈME ACTUEL
+================================================================================
+
+Erreur: "failed to fetch" persiste lors de l'import de la balance
+
+Symptôme:
+- Backend accessible (test-backend-direct.ps1 OK)
+- Erreur se produit lors du traitement de la balance
+- Pas encore de logs d'erreur collectés
+
+================================================================================
+🔍 PROCHAINE ÉTAPE IMMÉDIATE
+================================================================================
+
+OBSERVER LES LOGS DU BACKEND lors de l'import d'une balance
+
+Méthode recommandée:
+--------------------
+Exécuter le script de test interactif:
+
+```powershell
+.\test-import-balance-simple.ps1
+```
+
+Ce script va:
+1. Vérifier que le backend est accessible
+2. Afficher les logs actuels
+3. Attendre que vous importiez une balance
+4. Afficher les nouveaux logs avec coloration
+5. Analyser les résultats
+
+Alternative manuelle:
+---------------------
+1. Ouvrir une nouvelle fenêtre PowerShell
+2. Exécuter:
+   ```powershell
+   $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+   Receive-Job -Id $jobs.Backend -Keep
+   ```
+3. Importer la balance dans le navigateur
+4. Observer les logs en temps réel
+
+================================================================================
+🎯 CE QU'ON CHERCHE DANS LES LOGS
+================================================================================
+
+✅ SUCCÈS (ce qu'on veut voir):
+```
+📊 Stockage des balances dans le cache global pour l'export...
+✅ Balances stockées dans le cache: N=XXX lignes, N-1=YYY lignes
+```
+
+❌ ERREUR (ce qu'on cherche à identifier):
+```
+ERROR: ...
+Exception: ...
+Traceback (most recent call last):
+  File "...", line XXX, in ...
+    ...
+TypeError: ... (ou autre type d'erreur)
+```
+
+================================================================================
+📊 CAUSES POSSIBLES
+================================================================================
+
+Basé sur le contexte, voici les hypothèses par ordre de probabilité:
+
+1️⃣  Erreur de syntaxe dans le stockage du cache (ligne ~1553)
+    → Vérifier la structure du dictionnaire _balance_cache
+
+2️⃣  Erreur lors de la lecture des onglets de la balance
+    → Noms d'onglets avec espaces: "BALANCE N ", "BALANCE N-1 "
+
+3️⃣  Erreur dans un module importé (tableau_flux_tresorerie, annexes_liasse)
+    → Vérifier les imports et dépendances
+
+4️⃣  Erreur de sérialisation JSON (DataFrame ajouté par erreur)
+    → Vérifier qu'aucun DataFrame n'est dans results_liasse
+
+5️⃣  Erreur dans le traitement des données de la balance
+    → Problème avec pandas, numpy, ou les calculs
+
+================================================================================
+📁 FICHIERS IMPORTANTS
+================================================================================
+
+Fichiers modifiés:
+------------------
+- py_backend/etats_financiers.py (cache global)
+- py_backend/export_liasse.py (récupération cache)
+- test-backend-direct.ps1 (port corrigé)
+
+Scripts de test:
+----------------
+- test-import-balance-simple.ps1 (NOUVEAU - à exécuter)
+- py_backend/test_import_etats_financiers.py
+- py_backend/test_simple_problemes.py
+
+Documentation:
+--------------
+- 00_ETAPE_SUIVANTE_DIAGNOSTIC_06_AVRIL_2026.txt (NOUVEAU)
+- COMMENCER_ICI_TESTS.txt
+- 00_INDEX_TESTS_DIAGNOSTIC_06_AVRIL_2026.md
+- GUIDE_DEPANNAGE_RAPIDE_FAILED_TO_FETCH.txt
+
+================================================================================
+🚀 COMMANDES RAPIDES
+================================================================================
+
+# Exécuter le test interactif (RECOMMANDÉ)
+.\test-import-balance-simple.ps1
+
+# Voir les logs manuellement
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep | Select-Object -Last 50
+
+# Tester l'import du module
+cd py_backend
+conda run -n claraverse_backend python test_import_etats_financiers.py
+
+# Redémarrer le backend si nécessaire
+.\stop-claraverse.ps1
+.\start-claraverse-conda.ps1
+
+================================================================================
+📞 INFORMATIONS À FOURNIR
+================================================================================
+
+Une fois les logs collectés, fournir:
+
+1. Le message d'erreur Python complet (avec Traceback)
+2. La ligne exacte qui cause l'erreur
+3. Le status code HTTP (visible dans F12 → Network)
+4. Le message d'erreur dans le frontend
+
+================================================================================
+✅ STATUT ACTUEL
+================================================================================
+
+Backend: ✅ Démarré et accessible
+Corrections: ✅ Appliquées et vérifiées
+Tests: ⏳ En attente d'exécution
+Logs: ⏳ En attente de collecte
+Diagnostic: ⏳ En attente des logs d'erreur
+
+================================================================================
+🎯 OBJECTIF
+================================================================================
+
+Identifier l'erreur exacte dans les logs du backend pour appliquer la
+correction appropriée et résoudre définitivement l'erreur "failed to fetch".
+
+================================================================================
+FIN - PRÊT POUR LE DIAGNOSTIC
+================================================================================

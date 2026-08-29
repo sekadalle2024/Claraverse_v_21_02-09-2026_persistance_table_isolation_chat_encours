@@ -1,0 +1,87 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ HEATMAP - RISQUES AFFICHÉS DANS LES CELLULES
+  02 Avril 2026
+═══════════════════════════════════════════════════════════════════════════
+
+STATUS: ✅ MODIFICATION APPLIQUÉE
+
+═══════════════════════════════════════════════════════════════════════════
+  CHANGEMENT RÉALISÉ
+═══════════════════════════════════════════════════════════════════════════
+
+AVANT:
+❌ Cellules avec compteur (ex: "3 Élevé")
+❌ Clic requis pour voir les risques
+❌ Popup avec liste tronquée
+
+APRÈS:
+✅ Risques affichés directement dans les cellules
+✅ Format: "R1: Description complète"
+✅ Aucune interaction requise
+✅ Conforme à la capture "heatmap risque"
+
+═══════════════════════════════════════════════════════════════════════════
+  FICHIERS MODIFIÉS (2)
+═══════════════════════════════════════════════════════════════════════════
+
+1. HeatmapRisqueAccordionRenderer.tsx
+   - Suppression state selectedCell
+   - Suppression handleCellClick
+   - Modification renderCell() pour affichage direct
+
+2. HeatmapRisqueAccordionRenderer.css
+   - Nouveaux styles: .heatmap-cell-risques-list
+   - Nouveaux styles: .heatmap-cell-risque-item
+   - Ajustements responsive
+
+═══════════════════════════════════════════════════════════════════════════
+  EXEMPLE VISUEL
+═══════════════════════════════════════════════════════════════════════════
+
+Cellule avec risques (Rouge - Criticité Élevée):
+┌────────────────────────────────────────────────────────┐
+│ R1: Risque de détournement d'espèces lors de          │
+│     l'encaissement.                                    │
+│                                                        │
+│ R3: Risque que les écarts de caisse ne soient pas     │
+│     justifiés.                                         │
+│                                                        │
+│ R5: Risque de non-rapprochement entre solde           │
+│     comptable et solde physique.                       │
+└────────────────────────────────────────────────────────┘
+
+Cellule vide (Vert - Criticité Faible):
+┌────────────────────────────────────────────────────────┐
+│                         0                              │
+│                      Faible                            │
+└────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+  AVANTAGES
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Visibilité immédiate de tous les risques
+✓ Pas de clic nécessaire
+✓ Texte complet (non tronqué)
+✓ Conforme au design demandé
+✓ Meilleure accessibilité
+✓ Code plus simple
+
+═══════════════════════════════════════════════════════════════════════════
+  TEST RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+1. npm run dev
+2. Taper "Heatmap" dans le chat
+3. Ouvrir section "Heatmap de Criticité des Risques"
+4. Vérifier: Risques affichés dans les cellules
+
+═══════════════════════════════════════════════════════════════════════════
+  DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════
+
+DÉTAILS:          00_MODIFICATION_HEATMAP_AFFICHAGE_RISQUES.txt
+COMPARAISON:      COMPARAISON_AVANT_APRES_HEATMAP.md
+INTÉGRATION:      00_INTEGRATION_HEATMAP_RISQUE_02_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════

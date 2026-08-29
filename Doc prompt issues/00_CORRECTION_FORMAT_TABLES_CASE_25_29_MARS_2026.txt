@@ -1,0 +1,357 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION FORMAT TABLES CASE 25
+  Date: 29 Mars 2026 - 20h30
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Après redémarrage du serveur, seule la première table s'affiche.
+
+CAUSE
+───────────────────────────────────────────────────────────────────────────
+
+Le workflow n8n retourne maintenant un NOUVEAU FORMAT où toutes les 6 tables
+sont dans UN SEUL objet au lieu d'un array de 6 objets séparés.
+
+FORMAT RETOURNÉ PAR N8N (NOUVEAU)
+───────────────────────────────────────────────────────────────────────────
+
+[{
+  "data": {
+    "Etape mission - Recos contrôle interne comptable": [
+      {
+        "table 1": {...},
+        "table 2": {...},
+        "table 3": {...},
+        "table 4": {...},
+        "table 5": {...},
+        "table 6": {...}
+      }
+    ]
+  }
+}]
+
+FORMAT ATTENDU PAR LE FRONTEND (ANCIEN)
+───────────────────────────────────────────────────────────────────────────
+
+[{
+  "data": {
+    "Etape mission - Recos contrôle interne comptable": [
+      {"table 1": {...}},
+      {"table 2": {...}},
+      {"table 3": {...}},
+      {"table 4": {...}},
+      {"table 5": {...}},
+      {"table 6": {...}}
+    ]
+  }
+}]
+
+DIFFÉRENCE CRITIQUE
+───────────────────────────────────────────────────────────────────────────
+
+ANCIEN FORMAT:
+- Array de 6 objets
+- Chaque objet contient UNE table
+- etapeMission.length = 6
+
+NOUVEAU FORMAT:
+- Array de 1 objet
+- Cet objet contient les 6 tables
+- etapeMission.length = 1
+- etapeMission[0] contient 6 clés: "table 1", "table 2", ..., "table 6"
+
+SOLUTION IMPLÉMENTÉE
+═══════════════════════════════════════════════════════════════════════════
+
+FICHIER: src/services/claraApiService.ts
+FONCTION: convertStructuredDataToMarkdown()
+LIGNE: ~500
+
+MODIFICATION: Détection du nouveau format Case 25
+───────────────────────────────────────────────────────────────────────────
+
+Ajout d'une logique de détection AVANT le traitement normal:
+
+```typescript
+// 🔧 NOUVEAU FORMAT CASE 25: Toutes les tables dans un seul objet
+// Détecter si le premier élément contient plusieurs clés "table X"
+if (etapeMission.length === 1 && typeof etapeMission[0] === 'object') {
+  const firstElement = etapeMission[0];
+  const keys = Object.keys(firstElement);
+  
+  // Vérifier si les clés sont "table 1", "table 2", etc.
+  const hasTableKeys = keys.some(key => /^table\s+\d+$/i.test(key));
+  
+  if (hasTableKeys) {
+    console.log("🔧 FORMAT CASE 25 DÉTECTÉ: Toutes les tables dans un seul objet");
+    console.log(`📊 Nombre de tables trouvées: ${keys.length}`);
+    
+    // Trier les clés par numéro de table
+    const sortedKeys = keys.sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+      const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+      return numA - numB;
+    });
+    
+    // Traiter chaque table
+    sortedKeys.forEach((tableKey, index) => {
+      const tableData = firstElement[tableKey];
+      const tableType = this.detectTableType(tableKey, tableData);
+
+      console.log(
+        `📋 Table ${index + 1}/${sortedKeys.length}: "${tableKey}" (type: ${tableType})`,
+      );
+
+      switch (tableType) {
+        case "header":
+          markdown += this.convertHeaderTableToMarkdown(tableData, index);
+          break;
+
+        case "data_array":
+          const title = this.generateTableTitle(tableKey, tableData);
+          markdown += this.convertArrayTableToMarkdown(title, tableData);
+          break;
+
+        case "download":
+          markdown += this.convertDownloadTableToMarkdown(tableData);
+          break;
+
+        default:
+          console.warn(`⚠️ Type de table non reconnu: ${tableKey}`);
+          markdown += this.convertGenericStructureToMarkdown({
+            [tableKey]: tableData,
+          });
+      }
+    });
+    
+    return markdown;
+  }
+}
+```
+
+LOGIQUE DE DÉTECTION
+───────────────────────────────────────────────────────────────────────────
+
+1. Vérifier que etapeMission.length === 1 (un seul élément)
+2. Vérifier que cet élément est un objet
+3. Extraire les clés de cet objet
+4. Vérifier si les clés matchent le pattern "table X" (regex: /^table\s+\d+$/i)
+5. Si OUI → Nouveau format Case 25 détecté
+6. Trier les clés par numéro de table (1, 2, 3, 4, 5, 6)
+7. Traiter chaque table avec l'index correct
+
+AVANTAGES DE CETTE SOLUTION
+───────────────────────────────────────────────────────────────────────────
+
+✅ Détection automatique du format
+✅ Tri correct des tables (1, 2, 3, 4, 5, 6)
+✅ Compatible avec l'ancien format (fallback)
+✅ Logs détaillés pour déboguer
+✅ Pas de modification du workflow n8n nécessaire
+
+FLUX DE TRAITEMENT
+═══════════════════════════════════════════════════════════════════════════
+
+1. normalizeN8nResponse() extrait response.body[0].data
+   ↓
+2. Transformation en [{data: {...}}] pour FORMAT 4
+   ↓
+3. convertStructuredDataToMarkdown() détecte le format
+   ↓
+4. NOUVEAU FORMAT CASE 25 détecté
+   ↓
+5. Extraction des 6 clés "table 1" à "table 6"
+   ↓
+6. Tri des clés par numéro
+   ↓
+7. Traitement de chaque table avec convertHeaderTableToMarkdown()
+   ↓
+8. Génération du Markdown complet
+   ↓
+9. Affichage des 6 tables dans le frontend
+
+LOGS ATTENDUS DANS LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: EXTRACTION
+───────────────────────────────────────────────────────────────────────────
+🔧 FORMAT WEBHOOK N8N: Extraction de response.body[0].data
+✅ Extraction de response.body[0].data réussie
+🔄 Données transformées pour traitement FORMAT 4
+
+ÉTAPE 2: DÉTECTION FORMAT
+───────────────────────────────────────────────────────────────────────────
+✅ FORMAT 4 DETECTE: Nouveau format "Programme de travail" avec structure data
+🔍 Clé principale détectée: "Etape mission - Recos contrôle interne comptable"
+📊 Nombre d'éléments dans le tableau: 1
+🔧 FORMAT CASE 25 DÉTECTÉ: Toutes les tables dans un seul objet
+📊 Nombre de tables trouvées: 6
+
+ÉTAPE 3: TRAITEMENT DES TABLES
+───────────────────────────────────────────────────────────────────────────
+📋 Table 1/6: "table 1" (type: header)
+📋 Table 2/6: "table 2" (type: header)
+📋 Table 3/6: "table 3" (type: header)
+📋 Table 4/6: "table 4" (type: header)
+📋 Table 5/6: "table 5" (type: header)
+📋 Table 6/6: "table 6" (type: header)
+
+ÉTAPE 4: SUCCÈS
+───────────────────────────────────────────────────────────────────────────
+✅ Conversion terminée: XXXX caractères générés
+✅✅✅ Contenu extrait avec succès et prêt à être retourné via la Promise.
+
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 1: REDÉMARRER LE SERVEUR
+───────────────────────────────────────────────────────────────────────────
+.\stop-claraverse.ps1
+.\start-claraverse.ps1
+
+TEST 2: ENVOYER UN MESSAGE CASE 25
+───────────────────────────────────────────────────────────────────────────
+[Command] : Recos contrôle interne comptable
+[Cycle] : trésorerie
+[test] : AA010
+[reference] : test sur la validation du compte caisse
+[Anomalie] = Absence de contrôles inopinés de la caisse
+
+TEST 3: VÉRIFIER LES LOGS (F12)
+───────────────────────────────────────────────────────────────────────────
+✅ FORMAT CASE 25 DÉTECTÉ
+✅ Nombre de tables trouvées: 6
+✅ Table 1/6, 2/6, 3/6, 4/6, 5/6, 6/6 traitées
+
+TEST 4: VÉRIFIER L'AFFICHAGE
+───────────────────────────────────────────────────────────────────────────
+✅ Table 1 affichée (en-tête 2 colonnes)
+✅ Table 2 affichée (Intitule)
+✅ Table 3 affichée (Observation)
+✅ Table 4 affichée (Constat)
+✅ Table 5 affichée (Risque)
+✅ Table 6 affichée (Recommendation)
+
+TEST 5: VÉRIFIER LE CONTENU
+───────────────────────────────────────────────────────────────────────────
+✅ Contenu parle de Trésorerie
+✅ Contenu parle de Caisse
+✅ Contenu mentionne l'absence de contrôles inopinés
+
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   - Fonction convertStructuredDataToMarkdown() (ligne ~500)
+     → Ajout détection nouveau format Case 25
+     → Tri des tables par numéro
+     → Traitement de toutes les tables
+
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Après redémarrage du serveur:
+
+✅ Table 1 (En-tête 2 colonnes):
+   | Rubrique | Description |
+   |----------|-------------|
+   | **Etape de mission** | Frap |
+   | **Norme** | 14.3 Évaluation des constats |
+   | **Méthode** | Méthode des risques par les tâches clés |
+   | **Reference** | Frap-001 |
+
+✅ Table 2 (Intitule):
+   **Intitule**
+   Absence de contrôles inopinés et indépendants des encaisses physiques
+
+✅ Table 3 (Observation):
+   **Observation**
+   La procédure interne de gestion de la trésorerie...
+
+✅ Table 4 (Constat):
+   **Constat**
+   - Aucun procès-verbal d'inventaire inopiné...
+
+✅ Table 5 (Risque):
+   **Risque**
+   - Risque de détournement d'actifs...
+
+✅ Table 6 (Recommendation):
+   **Recommendation**
+   Afin de sécuriser les flux de trésorerie...
+
+DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Seule la table 1 s'affiche encore
+───────────────────────────────────────────────────────────────────────────
+Solution:
+1. Vérifier les logs dans la console (F12)
+2. Chercher "FORMAT CASE 25 DÉTECTÉ"
+3. Si absent → Le format n'est pas détecté
+4. Vérifier le JSON retourné par n8n dans les logs
+
+PROBLÈME: "FORMAT CASE 25 DÉTECTÉ" mais tables manquantes
+───────────────────────────────────────────────────────────────────────────
+Solution:
+1. Vérifier "Nombre de tables trouvées: X"
+2. Si X < 6 → Le workflow n8n ne génère pas toutes les tables
+3. Ouvrir n8n et vérifier en mode manuel
+
+PROBLÈME: Tables dans le mauvais ordre
+───────────────────────────────────────────────────────────────────────────
+Solution:
+1. Vérifier les logs "Table X/6"
+2. Le tri devrait être: 1, 2, 3, 4, 5, 6
+3. Si désordre → Problème dans le tri des clés
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le serveur
+.\stop-claraverse.ps1; .\start-claraverse.ps1
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+# Voir les modifications
+git diff src/services/claraApiService.ts
+
+STATUT FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Détection nouveau format Case 25: IMPLÉMENTÉE
+✅ Tri des tables par numéro: IMPLÉMENTÉ
+✅ Traitement de toutes les tables: IMPLÉMENTÉ
+✅ Diagnostics TypeScript: AUCUNE ERREUR
+⏳ Tests: À EFFECTUER
+
+PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════════════════
+
+Redémarrer le serveur et tester avec le message Case 25.
+
+Si les 6 tables s'affichent:
+→ Case 25 fonctionne complètement ✅
+→ Commit et push sur GitHub
+
+Si problème persiste:
+→ Vérifier les logs dans la console (F12)
+→ Chercher "FORMAT CASE 25 DÉTECTÉ"
+→ Vérifier le JSON retourné par n8n
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 20h30
+Version: 9.0 (détection nouveau format Case 25)
+Priorité: CRITIQUE
+Statut: SOLUTION IMPLÉMENTÉE - PRÊT POUR LES TESTS
+
+REDÉMARRER LE SERVEUR ET TESTER MAINTENANT.
+
+═══════════════════════════════════════════════════════════════════════════

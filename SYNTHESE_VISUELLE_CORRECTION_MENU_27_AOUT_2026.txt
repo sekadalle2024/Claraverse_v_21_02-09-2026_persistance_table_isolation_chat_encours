@@ -1,0 +1,114 @@
+╔═══════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                       ║
+║   🎯 CORRECTION MENU CONTEXTUEL - DÉSACTIVATION SURVOL                               ║
+║   Date: 27 août 2026                                                                 ║
+║                                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════════════════════╝
+
+
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                   │
+│  📌 AVANT LA CORRECTION (Comportement problématique)                             │
+│                                                                                   │
+│   ╭──────────────────╮                                                           │
+│   │   🖱️ Souris      │                                                           │
+│   │   approche       │  ──────►  ⏱️ 300ms delay  ──────►  📋 Menu s'ouvre !    │
+│   │   la table       │                                                           │
+│   ╰──────────────────╯                                                           │
+│                                                                                   │
+│   ❌ PROBLÈME: Menu contextuel s'affiche automatiquement au survol               │
+│                                                                                   │
+└───────────────────────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                   │
+│  ✅ APRÈS LA CORRECTION (Comportement correct)                                   │
+│                                                                                   │
+│   ╭──────────────────╮                                                           │
+│   │   🖱️ Souris      │                                                           │
+│   │   survole        │  ──────►  🚫 RIEN  (Pas de menu)                         │
+│   │   la table       │                                                           │
+│   ╰──────────────────╯                                                           │
+│                                                                                   │
+│   ╭──────────────────╮                                                           │
+│   │   🖱️ Clic droit  │                                                           │
+│   │   sur la table   │  ──────►  ✅ Menu s'affiche !                             │
+│   │                  │                                                           │
+│   ╰──────────────────╯                                                           │
+│                                                                                   │
+└───────────────────────────────────────────────────────────────────────────────────┘
+
+
+╔═══════════════════════════════════════════════════════════════════════════════════════╗
+║  🔧 MODIFICATION TECHNIQUE                                                            ║
+╚═══════════════════════════════════════════════════════════════════════════════════════╝
+
+Fichier modifié:
+└─ 📄 public/menu.js (ligne ~9635)
+
+Fonction corrigée:
+└─ handleTableHover(e, table)
+
+Action prise:
+└─ Commenté le setTimeout qui déclenchait le menu au survol
+
+
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│  CODE AVANT (Ligne ~9638-9641)                                                   │
+├───────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                   │
+│  if (this.targetTable !== table && !this.isMenuVisible) {                        │
+│    this.hoverTimeout = setTimeout(() => {                                        │
+│      if (this.isHoveringTable && !this.isMenuVisible)                            │
+│        this.showMenu(e.pageX + 10, e.pageY + 10, table);                         │
+│    }, this.config.hoverDelay);                                                   │
+│  }                                                                                │
+│                                                                                   │
+└───────────────────────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│  CODE APRÈS (Désactivé avec commentaires)                                        │
+├───────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                   │
+│  // Menu contextuel désactivé au survol - activation uniquement au clic droit    │
+│  // Le code ci-dessous était responsable de l'ouverture automatique au survol    │
+│  // if (this.targetTable !== table && !this.isMenuVisible) {                     │
+│  //   this.hoverTimeout = setTimeout(() => {                                     │
+│  //     if (this.isHoveringTable && !this.isMenuVisible)                         │
+│  //       this.showMenu(e.pageX + 10, e.pageY + 10, table);                      │
+│  //   }, this.config.hoverDelay);                                                │
+│  // }                                                                             │
+│                                                                                   │
+└───────────────────────────────────────────────────────────────────────────────────┘
+
+
+╔═══════════════════════════════════════════════════════════════════════════════════════╗
+║  📊 MATRICE DE TESTS                                                                  ║
+╚═══════════════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────┬──────────────┬──────────────┐
+│ ACTION                           │ AVANT        │ APRÈS        │
+├──────────────────────────────────┼──────────────┼──────────────┤
+│ Survol table                     │ ❌ Menu      │ ✅ Rien      │
+│ Survol prolongé (2s)             │ ❌ Menu      │ ✅ Rien      │
+│ Clic droit sur table             │ ✅ Menu      │ ✅ Menu      │
+│ Clic gauche en dehors            │ ✅ Ferme     │ ✅ Ferme     │
+│ Touche Échap                     │ ✅ Ferme     │ ✅ Ferme     │
+│ Actions menu (insérer ligne...)  │ ✅ OK        │ ✅ OK        │
+└──────────────────────────────────┴──────────────┴──────────────┘
+
+
+╔═══════════════════════════════════════════════════════════════════════════════════════╗
+║  🚀 PROCHAINES ÉTAPES                                                                 ║
+╚═══════════════════════════════════════════════════════════════════════════════════════╝
+
+1. ✅ Correction appliquée dans menu.js
+2. 📋 Tester avec: QUICK_TEST_MENU_CONTEXTUEL_27_AOUT_2026.txt
+3. 🔄 Redémarrer le serveur (npm run dev)
+4. 🧪 Vérifier le comportement dans le navigateur
+5. 📝 Valider tous les tests avant de commit
+
+
+═══════════════════════════════════════════════════════════════════════════════════════

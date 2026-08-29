@@ -1,0 +1,189 @@
+═══════════════════════════════════════════════════════════════════
+  ⚡ COMMANDES RAPIDES - SAUVEGARDE V17
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🚀 EXÉCUTION DU SCRIPT (MÉTHODE RECOMMANDÉE)                    │
+└───────────────────────────────────────────────────────────────────┘
+
+# Exécuter le script de push automatique
+.\push-claraverse-v17-09-mai-2026.ps1
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🔍 VÉRIFICATIONS AVANT PUSH                                      │
+└───────────────────────────────────────────────────────────────────┘
+
+# Vérifier l'état Git
+git status
+
+# Vérifier la branche actuelle
+git branch --show-current
+
+# Vérifier le repository distant
+git remote -v
+
+# Vérifier la connexion à GitHub
+git ls-remote origin
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  ⚙️ CONFIGURATION GIT (AUTOMATIQUE DANS LE SCRIPT)               │
+└───────────────────────────────────────────────────────────────────┘
+
+# Désactiver la compression
+git config core.compression 0
+
+# Augmenter le buffer HTTP à 1 GB
+git config http.postBuffer 1048576000
+
+# Désactiver les limites de vitesse
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🔄 CHANGER LE REPOSITORY (SI NÉCESSAIRE)                        │
+└───────────────────────────────────────────────────────────────────┘
+
+# Changer l'URL du repository distant
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_17_09-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+# Vérifier le changement
+git remote -v
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  📦 PUSH MANUEL (SI LE SCRIPT ÉCHOUE)                            │
+└───────────────────────────────────────────────────────────────────┘
+
+# Partie 1: Code Source
+git add src/
+git commit -m "Sauvegarde ClaraVerse V17 - Partie 1: Code Source"
+git push -u origin v17_backup_final
+
+# Partie 2: Backend Python
+git add py_backend/
+git commit -m "Sauvegarde ClaraVerse V17 - Partie 2: Backend Python"
+git push -u origin v17_backup_final
+
+# Partie 3: Fichiers Publics
+git add public/
+git commit -m "Sauvegarde ClaraVerse V17 - Partie 3: Fichiers Publics"
+git push -u origin v17_backup_final
+
+# Partie 4: Documentation principale
+git add "Doc menu demarrer/" "Doc export rapport/" "Doc_Lead_Balance/" "Doc_Etat_Fin/"
+git commit -m "Sauvegarde ClaraVerse V17 - Partie 4: Documentation"
+git push -u origin v17_backup_final
+
+# Partie 5: Autres documentations
+git add *.md *.txt "Doc_Github_Issue/" "Doc Koyeb deploy/"
+git commit -m "Sauvegarde ClaraVerse V17 - Partie 5: Autres docs"
+git push -u origin v17_backup_final
+
+# Partie 6: Fichiers restants
+git add .
+git commit -m "Sauvegarde ClaraVerse V17 - Partie 6: Configuration"
+git push -u origin v17_backup_final
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🔍 VÉRIFICATIONS APRÈS PUSH                                      │
+└───────────────────────────────────────────────────────────────────┘
+
+# Vérifier le statut final
+git status
+
+# Vérifier les commits récents
+git log --oneline -10
+
+# Vérifier que tout est synchronisé
+git fetch origin
+git status
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🆘 DÉPANNAGE                                                     │
+└───────────────────────────────────────────────────────────────────┘
+
+# Annuler le dernier commit (garder les fichiers)
+git reset --soft HEAD~1
+
+# Voir les fichiers modifiés
+git status --short
+
+# Voir la taille du repository
+git count-objects -vH
+
+# Tester la connexion à GitHub
+Test-Connection github.com -Count 4
+
+# Vérifier les credentials Git
+git config --list | Select-String "user"
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🔧 COMMANDES UTILES                                              │
+└───────────────────────────────────────────────────────────────────┘
+
+# Voir tous les remotes
+git remote -v
+
+# Voir toutes les branches
+git branch -a
+
+# Voir les fichiers non suivis
+git ls-files --others --exclude-standard
+
+# Nettoyer les fichiers non suivis (ATTENTION!)
+git clean -fd -n  # Simulation
+git clean -fd     # Exécution réelle
+
+# Voir la configuration Git
+git config --list
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  📊 STATISTIQUES                                                  │
+└───────────────────────────────────────────────────────────────────┘
+
+# Taille du repository
+git count-objects -vH
+
+# Nombre de fichiers suivis
+git ls-files | Measure-Object -Line
+
+# Nombre de commits
+git rev-list --count HEAD
+
+# Historique des commits
+git log --oneline --graph --all --decorate
+
+═══════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────┐
+│  🌐 LIENS UTILES                                                  │
+└───────────────────────────────────────────────────────────────────┘
+
+Repository GitHub:
+https://github.com/sekadalle2024/Claverse_windows__v_17_09-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+Documentation complète:
+- 00_COMMENCER_ICI_SAUVEGARDE_V17_09_MAI_2026.txt
+- SYNTHESE_VISUELLE_SAUVEGARDE_V17_09_MAI_2026.txt
+- Doc_Github_Issue/SOLUTION_PROJET_140MB_16_AVRIL_2026.md
+
+═══════════════════════════════════════════════════════════════════
+
+Date: 09 Mai 2026
+Projet: ClaraVerse V17
+Branche: v17_backup_final

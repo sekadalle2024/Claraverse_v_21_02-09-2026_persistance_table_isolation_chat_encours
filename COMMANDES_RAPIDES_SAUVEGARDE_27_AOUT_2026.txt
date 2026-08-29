@@ -1,0 +1,282 @@
+================================================================
+    ⚡ COMMANDES RAPIDES - SAUVEGARDE GITHUB
+    ClaraVerse V18 - 27 Août 2026
+================================================================
+
+🎯 REPOSITORY:
+https://github.com/sekadalle2024/Claverse_windows__v_18_27-08-2026_Wide_sceren.git
+
+================================================================
+    🚀 COMMANDE PRINCIPALE
+================================================================
+
+# Ouvrir PowerShell dans le dossier ClaraVerse puis:
+
+.\push-claraverse-fixed.ps1
+
+================================================================
+    🔧 COMMANDES DE CONFIGURATION
+================================================================
+
+# Initialiser Git (si nécessaire)
+git init
+
+# Ajouter le remote
+git remote add origin https://github.com/sekadalle2024/Claverse_windows__v_18_27-08-2026_Wide_sceren.git
+
+# Changer le remote (si déjà configuré)
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_18_27-08-2026_Wide_sceren.git
+
+# Vérifier le remote
+git remote -v
+
+# Vérifier la connexion
+git ls-remote origin
+
+================================================================
+    📊 COMMANDES DE VÉRIFICATION
+================================================================
+
+# Voir l'état actuel
+git status
+
+# Voir la branche actuelle
+git branch
+
+# Voir l'historique des commits
+git log --oneline -10
+
+# Voir les fichiers modifiés
+git diff --name-only
+
+# Voir les fichiers non trackés
+git ls-files --others --exclude-standard
+
+================================================================
+    🔐 CONFIGURATION CREDENTIALS
+================================================================
+
+# Configurer nom d'utilisateur
+git config --global user.name "VotreNom"
+
+# Configurer email
+git config --global user.email "votre.email@example.com"
+
+# Voir toute la configuration
+git config --list
+
+# Voir seulement les credentials
+git config user.name
+git config user.email
+
+================================================================
+    ⚙️ CONFIGURATION OPTIMALE (Appliquée par le script)
+================================================================
+
+# Configuration pour gros fichiers
+git config core.compression 0
+git config http.postBuffer 1048576000
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+git config pack.windowMemory "100m"
+git config pack.packSizeLimit "100m"
+git config pack.threads "1"
+
+================================================================
+    🆘 COMMANDES DE DÉPANNAGE
+================================================================
+
+# Annuler le dernier commit (garde les modifications)
+git reset --soft HEAD~1
+
+# Annuler tous les changements non commités
+git reset --hard HEAD
+
+# Voir les fichiers ignorés par .gitignore
+git status --ignored
+
+# Nettoyer les fichiers non trackés
+git clean -fd
+
+# Forcer le push (⚠️ DANGER - à utiliser avec précaution)
+git push -f origin master
+
+# Retirer un fichier du staging
+git reset HEAD fichier.txt
+
+================================================================
+    📦 COMMANDES MANUELLES (Si le script échoue)
+================================================================
+
+# Partie 1: Code Source
+git add src/
+git commit -m "V18 Wide Screen - Partie 1: Code Source React/TypeScript"
+git push -u origin master
+
+# Partie 2: Backend
+git add py_backend/
+git commit -m "V18 Wide Screen - Partie 2: Backend Python"
+git push -u origin master
+
+# Partie 3: Fichiers Publics
+git add public/
+git commit -m "V18 Wide Screen - Partie 3: Fichiers Publics"
+git push -u origin master
+
+# Partie 4: Documentation Principale
+git add "Doc menu demarrer/" "Doc export rapport/" "Doc_Etat_Fin/" "Doc_Lead_Balance/"
+git commit -m "V18 Wide Screen - Partie 4: Documentation Principale"
+git push -u origin master
+
+# Partie 5: Autres Docs
+git add "Doc_Github_Issue/" "*.md" "*.txt" --force
+git commit -m "V18 Wide Screen - Partie 5: Documentation et Markdown"
+git push -u origin master
+
+# Partie 6: Reste
+git add .
+git commit -m "V18 Wide Screen - Partie 6: Configuration et Fichiers Restants"
+git push -u origin master
+
+================================================================
+    🔍 COMMANDES DE DIAGNOSTIC
+================================================================
+
+# Tester la connexion Internet
+Test-Connection github.com -Count 4
+
+# Voir la taille du repository
+Get-ChildItem -Recurse | Measure-Object -Property Length -Sum
+
+# Trouver les plus gros fichiers
+Get-ChildItem -Recurse | Sort-Object Length -Descending | Select-Object -First 20 Name, Length
+
+# Voir l'espace disque
+Get-PSDrive
+
+# Voir les processus Git en cours
+Get-Process | Where-Object {$_.ProcessName -like "*git*"}
+
+================================================================
+    🔄 COMMANDES DE MISE À JOUR
+================================================================
+
+# Récupérer les dernières modifications du remote
+git fetch origin
+
+# Fusionner avec la branche locale
+git merge origin/master
+
+# Ou faire les deux en une commande
+git pull origin master
+
+# Voir les différences avec le remote
+git diff origin/master
+
+================================================================
+    📁 COMMANDES POUR .gitignore
+================================================================
+
+# Créer un .gitignore de base
+@"
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+"@ | Out-File -FilePath .gitignore -Encoding UTF8
+
+# Ignorer des fichiers déjà trackés
+git rm --cached fichier.txt
+git commit -m "Stop tracking fichier.txt"
+
+================================================================
+    🚀 ALTERNATIVES SI LE SCRIPT ÉCHOUE
+================================================================
+
+# MÉTHODE 1: GitHub Desktop
+# 1. Télécharger: https://desktop.github.com/
+# 2. Ouvrir le dossier ClaraVerse
+# 3. Cliquer sur "Publish repository"
+# 4. Suivre les instructions
+
+# MÉTHODE 2: Push manuel par parties (voir section ci-dessus)
+
+# MÉTHODE 3: SSH (plus stable)
+# 1. Générer une clé SSH:
+ssh-keygen -t ed25519 -C "votre.email@example.com"
+
+# 2. Copier la clé publique:
+Get-Content ~/.ssh/id_ed25519.pub | Set-Clipboard
+
+# 3. Ajouter sur GitHub: Settings > SSH keys > New SSH key
+
+# 4. Changer le remote en SSH:
+git remote set-url origin git@github.com:sekadalle2024/Claverse_windows__v_18_27-08-2026_Wide_sceren.git
+
+================================================================
+    📊 COMMANDES DE STATISTIQUES
+================================================================
+
+# Nombre total de commits
+git rev-list --count HEAD
+
+# Nombre de fichiers trackés
+git ls-files | Measure-Object -Line
+
+# Taille du repository
+du -sh .git
+
+# Contributeurs
+git shortlog -sn
+
+# Fichiers les plus modifiés
+git log --pretty=format: --name-only | Sort-Object | Get-Unique -Count | Sort-Object Count -Descending | Select-Object -First 10
+
+================================================================
+    ✅ VÉRIFICATION FINALE
+================================================================
+
+# Après un push réussi, vérifier:
+
+# 1. Statut local
+git status
+
+# 2. Branche synchronisée
+git branch -vv
+
+# 3. Dernier commit
+git log -1
+
+# 4. Sur GitHub (ouvrir dans le navigateur)
+start https://github.com/sekadalle2024/Claverse_windows__v_18_27-08-2026_Wide_sceren
+
+================================================================
+    💡 ASTUCES
+================================================================
+
+# Créer un alias pour les commandes longues
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+
+# Ensuite utiliser:
+git st    # au lieu de git status
+git ci    # au lieu de git commit
+
+# Sauvegarder les credentials temporairement
+git config --global credential.helper cache
+
+# Sauvegarder les credentials définitivement (Windows)
+git config --global credential.helper wincred
+
+================================================================
+
+📝 COPIER-COLLER CES COMMANDES SELON BESOIN
+
+Pour la sauvegarde complète automatique, utilisez simplement:
+    .\push-claraverse-fixed.ps1
+
+================================================================

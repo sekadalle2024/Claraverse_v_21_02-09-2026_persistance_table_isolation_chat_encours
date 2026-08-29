@@ -1,0 +1,185 @@
+═══════════════════════════════════════════════════════════════════════════════
+  DIAGNOSTIC - PROBLÈME PERSISTANT FORMATAGE TABLEAUX
+  Date: 31 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 SYMPTÔME
+─────────────────────────────────────────────────────────────────────────────
+Le message reçu en front-end affiche du texte brut au lieu de tableaux Markdown:
+
+  **Tableau entete**:**Etape de mission**: Programme de travail...
+
+Au lieu de:
+
+  | Rubrique | Description |
+  |----------|-------------|
+  | **Etape de mission** | Programme de travail |
+
+
+🔍 ANALYSE DU PROBLÈME
+─────────────────────────────────────────────────────────────────────────────
+
+Le problème peut avoir 3 causes possibles :
+
+1. ❌ Le node Code ne retourne PAS le FORMAT 4 attendu
+   → Structure attendue : [{ data: {...} }]
+   
+2. ❌ claraApiService.ts ne DÉTECTE PAS le FORMAT 4
+   → Il utilise convertGenericStructureToMarkdown() au lieu de 
+     convertStructuredDataToMarkdown()
+   
+3. ❌ Le webhook n8n enveloppe la réponse dans response.body[0].data
+   → Le node Code ne gère pas cette enveloppe
+
+
+🧪 ÉTAPES DE DIAGNOSTIC
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1 : Tester le webhook directement
+────────────────────────────────────────
+
+Exécuter le script PowerShell :
+
+  .\test-webhook-programme-controle.ps1
+
+Ce script va :
+✓ Appeler le webhook
+✓ Afficher la structure exacte de la réponse
+✓ Vérifier si la propriété 'data' existe
+✓ Lister toutes les clés disponibles
+
+RÉSULTAT ATTENDU :
+  [
+    {
+      "data": {
+        "Tableau entete": {...},
+        "Tableau processus": [...]
+      }
+    }
+  ]
+
+
+ÉTAPE 2 : Vérifier les logs du node Code dans n8n
+──────────────────────────────────────────────────
+
+1. Ouvrir n8n
+2. Exécuter le workflow manuellement
+3. Cliquer sur le node "Parseur JSON + Format"
+4. Vérifier les logs dans la console :
+
+   Chercher ces messages :
+   ✓ "🚀 [NODE CODE] Démarrage du traitement..."
+   ✓ "📦 [NODE CODE] Nombre d'items reçus: X"
+   ✓ "✅ [NODE CODE] Parse JSON réussi"
+   ✓ "✅ [NODE CODE] Format final généré"
+   ✓ "📤 [NODE CODE] Structure retournée: ..."
+
+PROBLÈMES POSSIBLES :
+- Si "Output LLM vide" → Le node LLM ne retourne rien
+- Si "Parse échoué" → Le JSON du LLM est invalide
+- Si "Structure incomplète" → Les clés ne sont pas correctes
+
+
+ÉTAPE 3 : Vérifier les logs dans le navigateur (front-end)
+───────────────────────────────────────────────────────────
+
+1. Ouvrir l'application Clara
+2. Ouvrir la console du navigateur (F12)
+3. Envoyer un message "Programme_controle_comptes"
+4. Chercher ces logs :
+
+   ✓ "🔍 === DEBUT ANALYSE REPONSE N8N ==="
+   ✓ "📦 Structure reçue: ..."
+   ✓ "✅ FORMAT 4 DETECTE" OU "⚠️ Format non reconnu"
+
+PROBLÈMES POSSIBLES :
+- Si "FORMAT 4 DETECTE" mais pas de tableaux
+  → Problème dans convertStructuredDataToMarkdown()
+  
+- Si "Format non reconnu"
+  → La structure ne correspond pas au FORMAT 4
+  → Vérifier la structure exacte dans les logs
+
+
+🔧 SOLUTIONS SELON LE DIAGNOSTIC
+─────────────────────────────────────────────────────────────────────────────
+
+SOLUTION 1 : Le webhook retourne response.body[0].data
+───────────────────────────────────────────────────────
+
+Si le test webhook montre cette structure :
+  {
+    "response": {
+      "body": [
+        {
+          "data": {
+            "Tableau entete": {...},
+            "Tableau processus": [...]
+          }
+        }
+      ]
+    }
+  }
+
+ALORS :
+→ Remplacer le node Code par : n8n_node_code_programme_controle_ULTRA_ROBUSTE.js
+→ Ce code gère automatiquement cette enveloppe
+
+
+SOLUTION 2 : Le node Code ne retourne pas le bon format
+────────────────────────────────────────────────────────
+
+Si les logs du node Code montrent une erreur de parsing ou une structure 
+incomplète :
+
+ALORS :
+→ Vérifier le prompt du LLM
+→ S'assurer qu'il retourne EXACTEMENT :
+  [
+    {"Tableau entete": {...}},
+    {"Tableau processus": [...]}
+  ]
+  
+→ Ajouter au début du prompt LLM le contenu de :
+  n8n_prompt_programme_controle_comptes_CORRIGE.txt
+
+
+SOLUTION 3 : claraApiService.ts ne détecte pas le FORMAT 4
+───────────────────────────────────────────────────────────
+
+Si les logs du navigateur montrent "Format non reconnu" :
+
+ALORS :
+→ Vérifier dans claraApiService.ts la fonction normalizeN8nResponse()
+→ Chercher la section "FORMAT 4"
+→ Vérifier que la condition de détection est correcte :
+
+  if (Array.isArray(result) && result.length > 0 && result[0].data) {
+    // FORMAT 4 détecté
+  }
+
+
+📋 CHECKLIST DE VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+□ Exécuter test-webhook-programme-controle.ps1
+□ Noter la structure exacte retournée
+□ Vérifier les logs du node Code dans n8n
+□ Vérifier les logs dans la console du navigateur
+□ Identifier quelle solution appliquer
+□ Appliquer la solution
+□ Re-tester
+
+
+🚨 SI LE PROBLÈME PERSISTE APRÈS TOUTES CES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Copier TOUS les logs (n8n + navigateur)
+2. Copier la structure exacte retournée par le webhook
+3. Copier le code actuel du node Code
+4. Fournir ces informations pour un diagnostic approfondi
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

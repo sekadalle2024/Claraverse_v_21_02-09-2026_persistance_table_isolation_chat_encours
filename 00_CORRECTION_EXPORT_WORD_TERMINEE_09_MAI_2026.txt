@@ -1,0 +1,144 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION EXPORT TEMPLATE WORD TERMINÉE - 09 MAI 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ ULTRA-RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ DEUX PROBLÈMES CORRIGÉS:
+
+1. ❌ PROBLÈME: Export Word n'exportait qu'UNE SEULE table
+   ✅ SOLUTION: Réplication de la logique Excel corrigée
+   
+2. ❌ PROBLÈME: Erreur "Timeout: docx non accessible"
+   ✅ SOLUTION: Timeout augmenté de 5s à 30s
+
+
+📊 DÉTAILS DES CORRECTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 CORRECTION 1: DÉTECTION DES TABLES
+────────────────────────────────────────────────────────────────────────────
+
+Fichier:    public/menu.js
+Fonction:   exportTemplateWord() (lignes 4171-4283)
+
+AVANT ❌:
+  - Cherchait uniquement le conteneur div.prose
+  - Ne trouvait pas toujours toutes les tables
+  - Logique différente d'Excel
+
+APRÈS ✅:
+  - Compte les wrappers div[data-container-id]
+  - Trouve le conteneur parent avec toutes les tables
+  - MÊME LOGIQUE QUE EXCEL (cohérence)
+  - Logs de diagnostic détaillés
+
+PRINCIPE:
+  Au lieu de chercher div.prose, on compte les WRAPPERS créés par 
+  wrap-tables-auto.js pour identifier le conteneur du message.
+
+
+🔧 CORRECTION 2: TIMEOUT BIBLIOTHÈQUE DOCX
+────────────────────────────────────────────────────────────────────────────
+
+Fichier:    public/menu.js
+Fonction:   ensureDocxLibraryLoaded() (lignes 5009-5067)
+
+AVANT ❌:
+  - Timeout: 50 tentatives × 100ms = 5 secondes
+  - Trop court pour charger depuis unpkg.com
+  - Erreur fréquente: "Timeout: docx non accessible"
+
+APRÈS ✅:
+  - Timeout: 300 tentatives × 100ms = 30 secondes
+  - Laisse le temps au CDN de répondre
+  - Message d'erreur plus explicite
+  - Appliqué aux 2 points de chargement
+
+
+🧪 TEST ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SCÉNARIO: Message avec 3 tables
+
+1. Clic droit sur une table
+2. Sélectionner "Export template Word"
+
+RÉSULTAT ATTENDU:
+  ✅ Pas d'erreur de timeout
+  ✅ Les 3 tables sont détectées
+  ✅ Les 3 tables sont exportées dans le fichier Word
+  ✅ Logs détaillés dans la console
+
+LOGS CONSOLE ATTENDUS:
+  🔍 [Export Word] Wrapper individuel trouvé: container-xxx-2
+  🔍 [Export Word] Conteneur testé: prose prose-base..., wrappers: 3
+  ✅ [Export Word] Conteneur du message trouvé avec 3 wrappers
+  ✅ [Export Word] 3 table(s) trouvée(s) dans le message
+  🔍 [Export Word] Tables détectées:
+       Table 1: { rows: 5, cols: 3 }
+       Table 2: { rows: 8, cols: 4 }
+       Table 3: { rows: 6, cols: 2 }
+  📄 Export Word: 3 tables seront exportées
+  ✅ Export Word terminé! (3 tables)
+
+
+📁 FICHIERS MODIFIÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ public/menu.js
+   - exportTemplateWord() (lignes 4171-4283)
+   - ensureDocxLibraryLoaded() (lignes 5009-5067)
+
+
+📚 DOCUMENTATION CRÉÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Doc menu contextuel menu.js update/CORRECTION_EXPORT_TEMPLATE_WORD_09_MAI_2026.md
+   - Documentation technique complète
+   - Comparaison avant/après
+   - Tests de validation
+   - Maintenance future
+
+
+🎯 COHÉRENCE GLOBALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AVANT:
+  ❌ Excel: Logique corrigée (compte les wrappers)
+  ❌ Word:  Logique ancienne (cherche div.prose)
+  ❌ INCOHÉRENCE entre les deux exports
+
+APRÈS:
+  ✅ Excel: Logique corrigée (compte les wrappers)
+  ✅ Word:  MÊME LOGIQUE (compte les wrappers)
+  ✅ COHÉRENCE TOTALE entre les deux exports
+
+
+🔗 RÉFÉRENCES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 Probleme_resolution_export_table_div.md
+   → Documentation de la correction Excel (référence)
+
+📄 ARCHITECTURE_WRAP_TABLES_AUTO.md
+   → Fonctionnement du script wrap-tables-auto.js
+
+📄 CORRECTION_EXPORT_TEMPLATE_WORD_09_MAI_2026.md
+   → Documentation technique complète de cette correction
+
+
+✅ PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Tester l'export Word avec plusieurs tables
+2. Vérifier les logs dans la console
+3. Valider que toutes les tables sont exportées
+4. Tester avec connexion lente (timeout)
+5. Tester le fallback JavaScript si backend indisponible
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION TERMINÉE - PRÊT POUR LES TESTS
+═══════════════════════════════════════════════════════════════════════════════

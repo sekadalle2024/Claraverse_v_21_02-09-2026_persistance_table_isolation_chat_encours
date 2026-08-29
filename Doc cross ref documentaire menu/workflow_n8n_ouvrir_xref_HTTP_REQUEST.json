@@ -1,0 +1,245 @@
+{
+  "name": "Cross Reference - Ouvrir Document (HTTP Request)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "OPTIONS",
+        "path": "cross_reference",
+        "responseMode": "lastNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Accept"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "id": "webhook-options",
+      "name": "Webhook OPTIONS",
+      "webhookId": "cross-ref-options"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [450, 300],
+      "id": "respond-options",
+      "name": "Respond OPTIONS"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cross_reference",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "id": "webhook-post",
+      "name": "Webhook POST",
+      "webhookId": "cross-ref-post"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ \"name='Dossier CAC' and mimeType='application/vnd.google-apps.folder' and trashed=false\" }}"
+            },
+            {
+              "name": "fields",
+              "value": "files(id, name)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "find-dossier-cac",
+      "name": "Find Dossier CAC",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 500],
+      "typeVersion": 4.1,
+      "credentials": {
+        "oAuth2Api": {
+          "id": "xEmtGGojiTDYAGfS",
+          "name": "Google Drive OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "oAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ \"name contains '\" + $json.body.index + \"' and '\" + $('Find Dossier CAC').first().json.files[0].id + \"' in parents and trashed=false\" }}"
+            },
+            {
+              "name": "fields",
+              "value": "files(id, name, mimeType, webViewLink, webContentLink, thumbnailLink, iconLink, size, createdTime, modifiedTime)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "find-document",
+      "name": "Find Document",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 500],
+      "typeVersion": 4.1,
+      "credentials": {
+        "oAuth2Api": {
+          "id": "xEmtGGojiTDYAGfS",
+          "name": "Google Drive OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer les données du webhook et de la recherche\nconst webhookData = $('Webhook POST').first().json.body;\nconst searchResult = $input.first().json;\n\n// Vérifier si des fichiers ont été trouvés\nif (!searchResult.files || searchResult.files.length === 0) {\n  return [\n    {\n      json: {\n        success: false,\n        message: \"Document non trouvé dans Google Drive\",\n        searchTerm: webhookData.index,\n        dossier: webhookData.dossier\n      }\n    }\n  ];\n}\n\n// Trouver le fichier qui correspond le mieux\n// Priorité 1: nom exact (sans extension)\n// Priorité 2: nom qui commence par l'index exact\n// Priorité 3: premier fichier trouvé\nconst searchIndex = webhookData.index;\nlet bestMatch = null;\nlet priority = 999;\n\nfor (const file of searchResult.files) {\n  const fileName = file.name;\n  const fileNameWithoutExt = fileName.replace(/\\.[^/.]+$/, '');\n  \n  // Priorité 1: nom exact (sans extension)\n  if (fileNameWithoutExt === searchIndex && priority > 1) {\n    bestMatch = file;\n    priority = 1;\n  }\n  // Priorité 2: nom qui commence par l'index exact\n  else if (fileName.startsWith(searchIndex) && priority > 2) {\n    bestMatch = file;\n    priority = 2;\n  }\n  // Priorité 3: premier fichier trouvé\n  else if (!bestMatch) {\n    bestMatch = file;\n    priority = 3;\n  }\n}\n\nreturn [\n  {\n    json: {\n      success: true,\n      file: {\n        id: bestMatch.id,\n        name: bestMatch.name,\n        mimeType: bestMatch.mimeType,\n        webViewLink: bestMatch.webViewLink,\n        webContentLink: bestMatch.webContentLink,\n        thumbnailLink: bestMatch.thumbnailLink,\n        iconLink: bestMatch.iconLink,\n        size: bestMatch.size,\n        createdTime: bestMatch.createdTime,\n        modifiedTime: bestMatch.modifiedTime\n      },\n      searchTerm: webhookData.index,\n      dossier: webhookData.dossier,\n      matchPriority: priority\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 500],
+      "id": "format-response",
+      "name": "Format Response"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.3,
+      "position": [1050, 500],
+      "id": "respond-post",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook OPTIONS": {
+      "main": [
+        [
+          {
+            "node": "Respond OPTIONS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook POST": {
+      "main": [
+        [
+          {
+            "node": "Find Dossier CAC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Dossier CAC": {
+      "main": [
+        [
+          {
+            "node": "Find Document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Document": {
+      "main": [
+        [
+          {
+            "node": "Format Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["cross-reference", "google-drive", "http-request"],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-28T00:00:00.000Z",
+  "versionId": "4"
+}

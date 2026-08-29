@@ -1,0 +1,60 @@
+feat: Utilisation du fichier Liasse_officielle_revise.xlsx pour l'export
+
+Modification du script d'export de la liasse officielle pour utiliser
+le fichier template SYSCOHADA Révisé avec 84 onglets complets.
+
+## Changements
+
+### Fichier modifié
+- `py_backend/export_liasse.py`
+  - Fonction `remplir_liasse_officielle()` modifiée
+  - Priorité du template changée vers `Liasse_officielle_revise.xlsx`
+  - Fallback vers anciens templates conservé pour compatibilité
+
+### Nouveau template
+- `py_backend/Liasse_officielle_revise.xlsx` (84 onglets)
+  - BILAN, ACTIF, PASSIF (états de synthèse)
+  - RESULTAT (compte de résultat)
+  - TFT (tableau des flux de trésorerie)
+  - NOTE 1 à NOTE 39 (notes annexes)
+  - Fiches R1, R2, R3, R4 (fiches complémentaires)
+  - Compléments DGI-INS et suppléments
+
+### Documentation créée
+- `Doc_Etat_Fin/00_CORRECTION_EXPORT_LIASSE_REVISE_05_AVRIL_2026.txt`
+- `Doc_Etat_Fin/GUIDE_EXPORT_LIASSE_REVISE.md`
+- `Doc_Etat_Fin/QUICK_TEST_EXPORT_LIASSE_REVISE.txt`
+- `Doc_Etat_Fin/Scripts/test-export-liasse-revise.ps1`
+- `QUICK_START_EXPORT_LIASSE_REVISE.txt`
+- `00_EXPORT_LIASSE_REVISE_CORRIGE_05_AVRIL_2026.txt`
+
+### Documentation mise à jour
+- `Doc_Etat_Fin/00_INDEX_COMPLET_V2.md` (V2.0 → V2.1)
+  - Ajout changelog V2.1
+  - Mise à jour section Export Excel
+  - Mise à jour configuration
+
+## Avantages
+
+✅ Conformité totale SYSCOHADA Révisé
+✅ 84 onglets complets au lieu de quelques-uns
+✅ Fallback vers anciens templates conservé
+✅ Documentation complète
+✅ Scripts de test fournis
+
+## Tests à effectuer
+
+- [ ] Test export via menu contextuel
+- [ ] Test export via script autonome
+- [ ] Test export via API
+- [ ] Vérification des valeurs remplies
+- [ ] Validation des mappings de cellules
+
+## Breaking Changes
+
+Aucun - Le fallback vers les anciens templates est conservé pour
+assurer la compatibilité avec les installations existantes.
+
+## Version
+
+Version 2.1 - 05 Avril 2026

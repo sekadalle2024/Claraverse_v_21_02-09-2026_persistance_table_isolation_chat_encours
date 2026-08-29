@@ -1,0 +1,106 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION FINALE - PROBLÈME ARRAY vs OBJET
+  Date: 31 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+
+Le webhook retourne :
+  { data: {...} }  ← OBJET
+
+Mais claraApiService.ts attend :
+  [{ data: {...} }]  ← ARRAY
+
+La condition dans claraApiService.ts (ligne 1233) est :
+  if (Array.isArray(result) && result.length > 0)
+
+Cette condition échoue car result est un OBJET, pas un ARRAY !
+
+
+🔍 CAUSE RACINE
+─────────────────────────────────────────────────────────────────────────────
+
+Dans n8n, quand le node Code retourne :
+  return [{ data: finalData }];
+
+n8n transforme automatiquement cette structure et le webhook envoie :
+  { data: {...} }  ← Le premier élément de l'array
+
+Pour que le webhook envoie un ARRAY, il faut que le node Code retourne :
+  return [{ json: [{ data: finalData }] }];
+
+Ainsi, n8n transforme et le webhook envoie :
+  [{ data: {...} }]  ← ARRAY avec un élément
+
+
+✅ SOLUTION
+─────────────────────────────────────────────────────────────────────────────
+
+Le fichier n8n_node_code_SOLUTION_FINALE.js a été corrigé.
+
+La dernière ligne est maintenant :
+  return [{ json: [{ data: finalData }] }];
+
+Au lieu de :
+  return [{ data: finalData }];
+
+
+📋 ÉTAPES D'APPLICATION
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir le fichier : n8n_node_code_SOLUTION_FINALE.js
+
+2. Copier TOUT le contenu (Ctrl+A puis Ctrl+C)
+
+3. Aller sur n8n : https://t22wtwxl.rpcld.app
+
+4. Ouvrir le workflow "Programme contrôle comptes"
+
+5. Cliquer sur le node "Parseur JSON + Format"
+
+6. Supprimer tout le code existant
+
+7. Coller le nouveau code (Ctrl+V)
+
+8. Sauvegarder le workflow
+
+9. Tester avec les bons paramètres :
+   - Command: Programme_controle_comptes
+   - Processus: Trésorerie
+   - Niveau de risque R: 1
+   - Assertion: Validité
+
+
+🧪 VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+DANS N8N :
+  → Logs : "wrappedInJson: true"
+  → Logs : "innerIsArray: true"
+
+DANS L'APPLICATION :
+  → Console (F12) : "✅ FORMAT 4 DETECTE"
+  → Tableaux affichés correctement
+
+
+🔧 EXPLICATION TECHNIQUE
+─────────────────────────────────────────────────────────────────────────────
+
+Structure n8n :
+  [{ json: CONTENU }]  ← Ce que n8n attend
+
+Transformation par n8n :
+  [{ json: [{ data: {...} }] }]  →  [{ data: {...} }]
+                                     ↑
+                                     Ce que le webhook envoie
+
+Détection dans claraApiService.ts :
+  if (Array.isArray(result))  →  TRUE ✅
+  if (result[0].data)  →  TRUE ✅
+  → FORMAT 4 détecté !
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

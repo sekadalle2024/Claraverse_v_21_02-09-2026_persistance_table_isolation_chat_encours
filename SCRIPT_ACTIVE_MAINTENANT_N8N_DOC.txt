@@ -1,0 +1,137 @@
+=================================================================
+✅ SCRIPT ACTIVÉ - TESTEZ MAINTENANT !
+=================================================================
+
+🎯 PROBLÈME RÉSOLU !
+
+Le script google-drive-downloader.js n'était PAS chargé dans index.html.
+C'est maintenant corrigé !
+
+=================================================================
+⚡ ACTION IMMÉDIATE
+=================================================================
+
+1. Rechargez la page avec Ctrl+F5 (IMPORTANT - vider le cache)
+   http://localhost:5173/test-modelisation-template-v2.html
+
+2. Ouvrez la console (F12)
+
+3. Vous devriez IMMÉDIATEMENT voir :
+
+   🎯 ========================================
+   🎯 Google Drive Downloader - CHARGÉ
+   🎯 ========================================
+
+4. Puis après 2.5 secondes :
+
+   🚀 [N8N_DOC] Lancement de la recherche initiale...
+   🔍 [N8N_DOC] === DÉBUT DÉTECTION ===
+
+=================================================================
+✅ CE QUI A ÉTÉ FAIT
+=================================================================
+
+Ajouté dans index.html :
+
+<!-- Google Drive Downloader - Télécharge et affiche directement (NOUVEAU) -->
+<script src="/google-drive-downloader.js"></script>
+
+Position : Juste après fix-google-drive-case8.js
+
+=================================================================
+🔍 LOGS À SURVEILLER
+=================================================================
+
+ÉTAPE 1 - Chargement (immédiat) :
+   🎯 Google Drive Downloader - CHARGÉ
+   📋 Configuration:
+      - Doc ID: 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+      - Proxy: https://api.allorigins.win/raw?url=
+      - Debug: true
+
+ÉTAPE 2 - Recherche (après 2.5s) :
+   🚀 [N8N_DOC] Lancement de la recherche initiale...
+   🔍 [N8N_DOC] Nombre total de tables trouvées: X
+
+ÉTAPE 3 - Détection :
+   ✅ [N8N_DOC] 🎯 TABLE CIBLE TROUVÉE !
+
+ÉTAPE 4 - Téléchargement :
+   📥 [N8N_DOC_DOWNLOAD] === DÉBUT TÉLÉCHARGEMENT ===
+   📥 [N8N_DOC_DOWNLOAD] Réponse reçue après XXXms
+
+ÉTAPE 5 - Affichage :
+   ✅ [N8N_DOC_DOWNLOAD] 🎉 Document affiché avec succès!
+
+=================================================================
+❌ SI VOUS NE VOYEZ TOUJOURS PAS LES LOGS
+=================================================================
+
+1. Vérifiez que vous avez bien fait Ctrl+F5 (pas juste F5)
+
+2. Vérifiez dans l'onglet Network (F12 → Network) :
+   - Cherchez "google-drive-downloader.js"
+   - Status doit être 200 (pas 404)
+
+3. Tapez dans la console :
+   window.googleDriveDownloader
+
+   Si vous voyez "undefined" → Le script ne se charge pas
+   Si vous voyez un objet → Le script est chargé
+
+4. Forcez l'exécution manuelle :
+   window.googleDriveDownloader.execute();
+
+=================================================================
+💻 COMMANDES DE DIAGNOSTIC
+=================================================================
+
+# Vérifier que le script est chargé
+window.googleDriveDownloader
+
+# Voir la configuration
+console.log(window.googleDriveDownloader.config);
+
+# Forcer l'exécution
+window.googleDriveDownloader.execute();
+
+# Compter les tables
+console.log('Tables:', document.querySelectorAll('table').length);
+
+# Chercher n8n_doc
+document.querySelectorAll('table').forEach((t, i) => {
+    const text = t.textContent;
+    if (text.includes('Template') && text.includes('n8n_doc')) {
+        console.log(`✅ Table ${i+1} contient Template ET n8n_doc`);
+    }
+});
+
+=================================================================
+📊 INFORMATIONS
+=================================================================
+
+Fichier modifié : index.html
+Script ajouté : /google-drive-downloader.js
+Position : Ligne ~48 (après fix-google-drive-case8.js)
+
+Document ID : 1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I
+Proxy CORS : https://api.allorigins.win/raw?url=
+Délai recherche : 2500ms (2.5 secondes)
+
+=================================================================
+🎯 RÉSULTAT ATTENDU
+=================================================================
+
+Après le rechargement, vous devriez voir :
+
+1. Les logs [N8N_DOC] dans la console
+2. Un accordéon généré après la table n8n_doc
+3. Le document Google Drive téléchargé et affiché
+
+Si le téléchargement prend du temps, c'est normal (peut prendre 5-10s).
+Mais les LOGS doivent apparaître IMMÉDIATEMENT.
+
+=================================================================
+Date : 13 décembre 2025
+Statut : ✅ SCRIPT ACTIVÉ - PRÊT À TESTER
+=================================================================

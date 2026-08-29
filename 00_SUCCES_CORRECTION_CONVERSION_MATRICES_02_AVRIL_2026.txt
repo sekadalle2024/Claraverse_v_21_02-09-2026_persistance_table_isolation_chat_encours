@@ -1,0 +1,80 @@
+================================================================================
+✅ CORRECTION RÉUSSIE: CONVERSION INTÉGRALE DES MATRICES DE RISQUES
+Date: 02 Avril 2026
+================================================================================
+
+PROBLÈME RÉSOLU:
+----------------
+Les méthodes de conversion de matrices ne convertissaient PAS les valeurs 
+entre formats alphabétiques et numériques.
+
+Exemple de problème:
+- "Faible" → Num-5 ❌ ne fonctionnait pas
+- "1" → Alpha-3 ❌ ne fonctionnait pas
+
+SOLUTION IMPLÉMENTÉE:
+----------------------
+✅ 6 nouvelles méthodes de conversion INTÉGRALE créées:
+   - convertToNumeric3(value)  // Alpha → Num-3
+   - convertToNumeric4(value)  // Alpha → Num-4
+   - convertToNumeric5(value)  // Alpha → Num-5
+   - convertToAlpha3(value)    // Num → Alpha-3
+   - convertToAlpha4(value)    // Num → Alpha-4
+   - convertToAlpha5(value)    // Num → Alpha-5
+
+✅ 6 méthodes de conversion de matrices modifiées:
+   1. convertToMatrixNum3()  - utilise maintenant convertToNumeric3()
+   2. convertToMatrixNum4()  - utilise maintenant convertToNumeric4()
+   3. convertToMatrixNum5()  - utilise maintenant convertToNumeric5()
+   4. convertToMatrixAlpha3() - utilise maintenant convertToAlpha3()
+   5. convertToMatrixAlpha5() - utilise maintenant convertToAlpha5()
+   6. convertToMatrixAlpha4() - utilise maintenant convertToAlpha4()
+
+EMPLACEMENT DANS LE CODE:
+--------------------------
+Fichier: public/menu.js
+Classe: ContextualMenuManager
+
+Nouvelles méthodes insérées après normalizeToNum5() (ligne ~1958)
+et avant le commentaire "COULEURS POUR LES MATRICES"
+
+CONVERSIONS SUPPORTÉES:
+------------------------
+Les nouvelles méthodes supportent la conversion entre TOUS les formats:
+
+Alpha-3 ↔ Alpha-4 ↔ Alpha-5 ↔ Num-3 ↔ Num-4 ↔ Num-5
+
+Exemples de conversions maintenant fonctionnelles:
+- "Faible" → 2 (Num-5)
+- "1" → "Faible" (Alpha-3)
+- "Mineur" → 1 (Num-4)
+- "3" → "Moyen" (Alpha-3)
+- "Très élevé" → 5 (Num-5)
+- "5" → "Très élevé" (Alpha-5)
+
+TESTS À EFFECTUER:
+------------------
+1. Créer une matrice Alpha-3 avec valeurs: Faible, Moyen, Élevé
+2. Convertir vers Num-5
+3. Vérifier que toutes les cellules sont converties en 1-5
+
+4. Créer une matrice Num-3 avec valeurs: 1, 2, 3
+5. Convertir vers Alpha-5
+6. Vérifier que toutes les cellules sont converties en texte
+
+STATUT:
+-------
+✅ 6 nouvelles méthodes ajoutées
+✅ 6 méthodes existantes modifiées
+✅ Aucune erreur de syntaxe
+✅ Fichier menu.js validé
+
+PROCHAINE ÉTAPE:
+-----------------
+Tester la conversion dans l'application:
+1. Ouvrir une page avec une table de risques
+2. Générer une matrice Alpha-3
+3. Convertir vers Num-5
+4. Vérifier que TOUTES les cellules sont converties
+
+================================================================================

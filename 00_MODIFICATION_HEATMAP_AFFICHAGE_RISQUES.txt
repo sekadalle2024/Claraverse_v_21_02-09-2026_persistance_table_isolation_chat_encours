@@ -1,0 +1,212 @@
+═══════════════════════════════════════════════════════════════════════════
+  MODIFICATION HEATMAP - AFFICHAGE DES RISQUES DANS LES CELLULES
+  Date: 02 Avril 2026
+═══════════════════════════════════════════════════════════════════════════
+
+✅ MODIFICATION APPLIQUÉE
+
+═══════════════════════════════════════════════════════════════════════════
+  CHANGEMENT DEMANDÉ
+═══════════════════════════════════════════════════════════════════════════
+
+AVANT:
+- Cellules affichaient seulement un compteur (ex: "3 Élevé")
+- Clic sur cellule → popup avec liste des risques
+
+APRÈS:
+- Cellules affichent directement les risques détaillés
+- Format: "R1: Description du risque", "R2: Description...", etc.
+- Conforme à la capture d'écran "heatmap risque"
+
+═══════════════════════════════════════════════════════════════════════════
+  FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. HeatmapRisqueAccordionRenderer.tsx
+   
+   Modifications dans le composant HeatmapGrid:
+   
+   a) Suppression du state selectedCell (plus nécessaire)
+   b) Suppression de la fonction handleCellClick
+   c) Modification de renderCell():
+      - Affichage direct des risques dans la cellule
+      - Format: <strong>R{no}</strong>: {Description}
+      - Cellules vides: affichent "0" + criticité
+
+2. HeatmapRisqueAccordionRenderer.css
+   
+   Nouveaux styles:
+   
+   a) .heatmap-cell-risques-list
+      - Container pour la liste des risques
+      - Display flex, direction column
+   
+   b) .heatmap-cell-risque-item
+      - Style pour chaque risque
+      - Background semi-transparent
+      - Bordure gauche colorée
+      - Padding et border-radius
+   
+   c) .heatmap-cell-empty
+      - Style pour cellules vides
+      - Centré verticalement et horizontalement
+   
+   d) Ajustements responsive
+      - Tailles de police adaptées
+      - Padding réduit sur mobile
+
+═══════════════════════════════════════════════════════════════════════════
+  DÉTAILS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════
+
+STRUCTURE HTML GÉNÉRÉE:
+
+Cellule avec risques:
+<td class="heatmap-cell heatmap-cell-élevé">
+  <div class="heatmap-cell-content">
+    <div class="heatmap-cell-risques-list">
+      <div class="heatmap-cell-risque-item">
+        <strong>R1</strong>: Risque de détournement d'espèces...
+      </div>
+      <div class="heatmap-cell-risque-item">
+        <strong>R3</strong>: Risque que les écarts de caisse...
+      </div>
+    </div>
+  </div>
+</td>
+
+Cellule vide:
+<td class="heatmap-cell heatmap-cell-faible">
+  <div class="heatmap-cell-content">
+    <div class="heatmap-cell-empty">
+      <div class="heatmap-cell-count">0</div>
+      <div class="heatmap-cell-label">Faible</div>
+    </div>
+  </div>
+</td>
+
+═══════════════════════════════════════════════════════════════════════════
+  STYLES CSS PRINCIPAUX
+═══════════════════════════════════════════════════════════════════════════
+
+.heatmap-cell {
+  padding: 12px;
+  text-align: left;          /* Changé de center à left */
+  min-height: 120px;         /* Augmenté de 80px à 120px */
+  vertical-align: top;       /* Changé de middle à top */
+}
+
+.heatmap-cell-risque-item {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.heatmap-cell-risque-item strong {
+  display: inline-block;
+  margin-right: 4px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+═══════════════════════════════════════════════════════════════════════════
+  AVANTAGES DE CETTE APPROCHE
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Visibilité immédiate
+  - Tous les risques visibles d'un coup d'œil
+  - Pas besoin de cliquer pour voir les détails
+
+✓ Conforme à la capture
+  - Correspond exactement au design demandé
+  - Format "R{no}: Description" dans chaque cellule
+
+✓ Meilleure lisibilité
+  - Texte aligné à gauche
+  - Espacement entre les risques
+  - Bordure gauche pour séparer visuellement
+
+✓ Responsive
+  - Tailles de police adaptées
+  - Scroll horizontal sur mobile si nécessaire
+  - Padding réduit sur petits écrans
+
+═══════════════════════════════════════════════════════════════════════════
+  EXEMPLE VISUEL
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Probabilité: Élevé | Impact: Élevé | Criticité: Élevé (Rouge)  │
+├─────────────────────────────────────────────────────────────────┤
+│ R1: Risque de détournement d'espèces lors de l'encaissement.   │
+│ R3: Risque que les écarts de caisse ne soient pas justifiés.   │
+│ R5: Risque de non-rapprochement entre solde comptable et       │
+│     solde physique de caisse.                                   │
+│ R6: Risque que l'absence de contrôles inopinés favorise        │
+│     l'installation de pratiques frauduleuses.                   │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Probabilité: Faible | Impact: Faible | Criticité: Faible (Vert)│
+├─────────────────────────────────────────────────────────────────┤
+│                              0                                   │
+│                           Faible                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+  TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+1. TEST VISUEL
+   - Vérifier que les risques s'affichent dans les cellules
+   - Vérifier le format "R{no}: Description"
+   - Vérifier les couleurs de fond (Vert/Orange/Rouge)
+
+2. TEST RESPONSIVE
+   - Desktop: Tout visible, bien espacé
+   - Tablette: Texte lisible, padding adapté
+   - Mobile: Scroll horizontal si nécessaire
+
+3. TEST CONTENU
+   - Cellules avec plusieurs risques: tous visibles
+   - Cellules vides: affichent "0" + criticité
+   - Texte long: word-wrap fonctionne
+
+4. TEST MODE SOMBRE
+   - Background des items adapté
+   - Bordure gauche visible
+   - Contraste suffisant
+
+═══════════════════════════════════════════════════════════════════════════
+  COMMANDES DE TEST
+═══════════════════════════════════════════════════════════════════════════
+
+1. Redémarrer le serveur:
+   npm run dev
+
+2. Dans le chat:
+   Heatmap
+
+3. Ouvrir la section "Heatmap de Criticité des Risques"
+
+4. Vérifier:
+   ✓ Risques affichés dans les cellules
+   ✓ Format correct (R1:, R2:, etc.)
+   ✓ Couleurs appropriées
+   ✓ Lisibilité du texte
+
+═══════════════════════════════════════════════════════════════════════════
+  NOTES
+═══════════════════════════════════════════════════════════════════════════
+
+- Aucune erreur de compilation
+- 1 warning mineur (variable 'key' non utilisée) - sans impact
+- Compatible avec tous les navigateurs modernes
+- Performance optimale (pas de re-render inutile)
+
+═══════════════════════════════════════════════════════════════════════════

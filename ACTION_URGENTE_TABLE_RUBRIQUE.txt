@@ -1,0 +1,56 @@
+╔═══════════════════════════════════════════════════════════════╗
+║  🚨 PROBLÈME IDENTIFIÉ - TABLE "RUBRIQUE" MANQUANTE !       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+❌ CONSTAT:
+   Le test a trouvé 6 divs avec des tables, mais AUCUNE n'a:
+   - En-tête "Rubrique"
+   - En-tête "Description"
+
+📊 TABLES TROUVÉES:
+   • DIV 1-2: ['etape', 'reference']
+   • DIV 3-6: ['option', 'question', 'ref question', ...]
+
+🎯 TABLE MANQUANTE:
+   D'après votre capture d'écran, il existe une table avec:
+   - En-tête "Rubrique"
+   - En-tête "Description"
+   - Colonne "Flowise" contenant le mot-clé
+
+💡 HYPOTHÈSE:
+   Cette table existe mais n'est PAS dans une div.prose
+   → Elle est peut-être dans un autre conteneur
+
+═══════════════════════════════════════════════════════════════
+
+🔍 ACTION IMMÉDIATE:
+
+1️⃣ LANCER LE DIAGNOSTIC COMPLET
+   → Ouvrez: DIAGNOSTIC_TOUTES_TABLES.js
+   → Copiez TOUT le contenu
+   → Collez dans la console de Claraverse
+   → Appuyez sur Entrée
+
+2️⃣ CHERCHER LA TABLE CIBLE
+   Le diagnostic va afficher:
+   ✅ Toutes les tables de la page
+   ✅ Leurs en-têtes
+   ✅ Leurs parents (div, section, etc.)
+   ✅ Marquer celle avec "Rubrique" + "Description"
+
+3️⃣ IDENTIFIER LE CONTENEUR
+   Notez le parent de la table "Rubrique/Description":
+   → Est-ce une div.prose? ❌ (apparemment non)
+   → Est-ce un autre type de div?
+   → Quel est son sélecteur CSS?
+
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF:
+
+Trouver où se trouve la table avec "Rubrique" et "Description"
+pour adapter le code de collecte.
+
+═══════════════════════════════════════════════════════════════
+
+⏱️ TEMPS ESTIMÉ: 2 minutes

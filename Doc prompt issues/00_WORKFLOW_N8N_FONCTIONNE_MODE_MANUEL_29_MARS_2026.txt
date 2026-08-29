@@ -1,0 +1,295 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ WORKFLOW N8N FONCTIONNE EN MODE MANUEL
+  Date: 29 Mars 2026 - 19h30
+═══════════════════════════════════════════════════════════════════════════
+
+BONNE NOUVELLE
+═══════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n fonctionne PARFAITEMENT en mode manuel:
+
+✅ Les 6 tables sont générées
+✅ Le contenu est spécifique au cycle (Trésorerie)
+✅ Le format JSON est correct
+✅ La structure "data" est présente
+
+RÉPONSE OBTENUE EN MODE MANUEL
+═══════════════════════════════════════════════════════════════════════════
+
+{
+  "data": {
+    "Etape mission - Recos contrôle interne comptable": [
+      {
+        "table 1": {
+          "Etape de mission": "Recos contrôle interne comptable",
+          "Norme": "14.3 Évaluation des constats",
+          "Méthode": "Méthode des rapprochements par les assertions de validité",
+          "Reference": "Frap-AA010"
+        }
+      },
+      {
+        "table 2": {
+          "Intitule": "Fraude sur les pièces justificatives de caisse..."
+        }
+      },
+      {
+        "table 3": {
+          "Observation": "Conformément aux procédures de gestion..."
+        }
+      },
+      {
+        "table 4": {
+          "Constat": "- Nous avons identifié des pièces justificatives falsifiées..."
+        }
+      },
+      {
+        "table 5": {
+          "Risque": "- Perte financière directe et certaine de 4 770 000 FCFA..."
+        }
+      },
+      {
+        "table 6": {
+          "Recommendation": "Afin de sécuriser les flux de caisse..."
+        }
+      }
+    ]
+  }
+}
+
+DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ
+───────────────────────────────────────────────────────────────────────────
+
+Si le workflow fonctionne en MODE MANUEL mais pas depuis le FRONTEND:
+
+Le problème est dans la COMMUNICATION entre le frontend et n8n.
+
+CAUSES POSSIBLES
+───────────────────────────────────────────────────────────────────────────
+
+1. ❌ Le webhook n8n ne reçoit PAS le message utilisateur
+2. ❌ Le message utilisateur est mal formaté
+3. ❌ Le webhook n8n attend un format différent
+4. ❌ Le frontend n'envoie pas le message au bon endpoint
+5. ❌ Le router front-end route vers un autre workflow
+
+VÉRIFICATIONS À FAIRE
+═══════════════════════════════════════════════════════════════════════════
+
+VÉRIFICATION 1: ROUTER FRONT-END
+───────────────────────────────────────────────────────────────────────────
+
+Vérifier que le router détecte bien Case 25 et appelle le bon endpoint.
+
+Fichier: src/services/claraApiService.ts
+Fonction: getN8nEndpointWithInfo()
+
+Chercher dans les logs du frontend:
+- "Case 25 : recos_controle_interne"
+- Endpoint: "https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable"
+
+VÉRIFICATION 2: FORMAT DU MESSAGE ENVOYÉ
+───────────────────────────────────────────────────────────────────────────
+
+Vérifier que le frontend envoie le message dans le bon format.
+
+Format attendu par n8n:
+{
+  "data": "[Command] : Recos contrôle interne comptable..."
+}
+
+OU
+
+{
+  "question": "[Command] : Recos contrôle interne comptable..."
+}
+
+OU
+
+{
+  "message": "[Command] : Recos contrôle interne comptable..."
+}
+
+VÉRIFICATION 3: WEBHOOK N8N
+───────────────────────────────────────────────────────────────────────────
+
+Vérifier que le webhook n8n reçoit bien le message.
+
+Dans n8n:
+1. Ouvrir le workflow "recos_contrôle_interne_comptable"
+2. Cliquer sur le node "Webhook" (premier node)
+3. Vérifier les logs d'exécution
+4. Chercher le message utilisateur dans les logs
+
+VÉRIFICATION 4: NODE "Recos controle interne comptable2"
+───────────────────────────────────────────────────────────────────────────
+
+Vérifier que le prompt système contient bien le message utilisateur.
+
+Dans le node "Recos controle interne comptable2":
+- Chercher: {{ JSON.stringify($json.data, null, 2) }}
+- OU: {{ $('When chat message received').item.json.chatInput }}
+
+SOLUTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: VÉRIFIER LE ROUTER FRONT-END
+───────────────────────────────────────────────────────────────────────────
+
+Ouvrir la console du navigateur (F12) et envoyer un message:
+
+[Command] : Recos contrôle interne comptable
+[Cycle] : Trésorerie
+[test] : AA010
+[Anomalie] = Fraude de pièce justificatives
+
+Chercher dans les logs:
+✅ "Case 25 : recos_controle_interne"
+✅ "Endpoint: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable"
+
+Si Case 25 n'est PAS détecté:
+→ Le problème est dans le router front-end
+→ Vérifier src/services/claraApiService.ts
+
+Si Case 25 est détecté:
+→ Le problème est dans la communication avec n8n
+→ Passer à l'étape 2
+
+ÉTAPE 2: VÉRIFIER LE FORMAT DU MESSAGE
+───────────────────────────────────────────────────────────────────────────
+
+Dans la console du navigateur, chercher la requête HTTP vers n8n:
+
+Network → Chercher "recos_contrôle_interne_comptable"
+→ Cliquer sur la requête
+→ Onglet "Payload" ou "Request"
+→ Vérifier le format du message envoyé
+
+Format attendu:
+{
+  "data": "[Command] : Recos contrôle interne comptable..."
+}
+
+Si le format est différent:
+→ Le problème est dans claraApiService.ts
+→ Modifier la fonction qui envoie le message à n8n
+
+ÉTAPE 3: VÉRIFIER LES LOGS N8N
+───────────────────────────────────────────────────────────────────────────
+
+Ouvrir n8n: https://t22wtwxl.rpcld.app
+
+1. Ouvrir le workflow "recos_contrôle_interne_comptable"
+2. Cliquer sur "Executions" (en haut à droite)
+3. Chercher la dernière exécution depuis le frontend
+4. Cliquer sur l'exécution
+5. Vérifier chaque node:
+   - Webhook: Le message est-il reçu?
+   - Recos controle interne comptable2: Le prompt contient-il le message?
+   - Structured Output Parser: Le JSON est-il parsé?
+   - node clean1 V2: Le JSON est-il transformé?
+   - Markdown Generator1 corrige V2: Le format est-il correct?
+
+ÉTAPE 4: COMPARER MODE MANUEL VS FRONTEND
+───────────────────────────────────────────────────────────────────────────
+
+Comparer les données reçues en mode manuel vs depuis le frontend:
+
+MODE MANUEL:
+- Le message est dans quel champ? (data, question, message, body?)
+- Le format est-il JSON ou texte brut?
+
+DEPUIS LE FRONTEND:
+- Le message est dans quel champ?
+- Le format est-il identique au mode manuel?
+
+Si les formats sont DIFFÉRENTS:
+→ Modifier le node "Recos controle interne comptable2" pour extraire 
+   le message du bon champ
+
+SOLUTION PROBABLE
+═══════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE 1: LE WEBHOOK REÇOIT LE MESSAGE DANS UN CHAMP DIFFÉRENT
+───────────────────────────────────────────────────────────────────────────
+
+En mode manuel, tu as probablement testé avec:
+{
+  "data": "[Command] : Recos contrôle interne comptable..."
+}
+
+Mais depuis le frontend, le message arrive peut-être dans:
+{
+  "question": "[Command] : Recos contrôle interne comptable..."
+}
+
+OU
+
+{
+  "message": "[Command] : Recos contrôle interne comptable..."
+}
+
+SOLUTION:
+Modifier le prompt système dans "Recos controle interne comptable2":
+
+AVANT:
+[user_message] = {{ JSON.stringify($json.data, null, 2) }}
+
+APRÈS:
+[user_message] = {{ JSON.stringify($json.data || $json.question || $json.message || $json.body, null, 2) }}
+
+HYPOTHÈSE 2: LE FRONTEND N'ENVOIE PAS LE MESSAGE
+───────────────────────────────────────────────────────────────────────────
+
+Le router front-end détecte Case 25 mais n'envoie pas le message à n8n.
+
+SOLUTION:
+Vérifier dans src/services/claraApiService.ts que la fonction qui appelle
+n8n envoie bien le message utilisateur dans le body de la requête.
+
+PROCHAINES ACTIONS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir la console du navigateur (F12)
+2. Envoyer un message Case 25 depuis le frontend
+3. Vérifier les logs:
+   - Router détecte Case 25?
+   - Endpoint correct appelé?
+   - Message envoyé dans la requête?
+4. Ouvrir n8n et vérifier les logs d'exécution
+5. Comparer avec le test manuel qui fonctionne
+
+FICHIERS À VÉRIFIER
+═══════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   - Fonction getN8nEndpointWithInfo()
+   - Fonction qui envoie la requête à n8n
+
+2. Workflow n8n "recos_contrôle_interne_comptable"
+   - Node Webhook
+   - Node "Recos controle interne comptable2"
+   - Logs d'exécution
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Voir les logs du frontend
+# F12 → Console
+
+# Voir les logs n8n
+# n8n → Workflow → Executions
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 19h30
+Priorité: CRITIQUE
+Statut: WORKFLOW N8N OK - PROBLÈME DANS LA COMMUNICATION FRONTEND → N8N

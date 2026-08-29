@@ -1,0 +1,106 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🧪 TEST MENU CIA SIMPLE - MAINTENANT                      ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+                    🎯 NOUVELLE PAGE DE TEST
+═══════════════════════════════════════════════════════════════
+
+J'ai créé une NOUVELLE page de test simplifiée qui devrait
+fonctionner correctement.
+
+
+═══════════════════════════════════════════════════════════════
+                    🚀 OUVRIR LA PAGE
+═══════════════════════════════════════════════════════════════
+
+http://localhost:5173/test-menu-cia-simple.html
+
+
+═══════════════════════════════════════════════════════════════
+                    📋 ÉTAPES DE TEST
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir la console (F12)
+
+2. Vérifier les logs:
+   ✅ "conso.js: function" ou "object"
+   ✅ "menu_cia.js: object"
+   
+   Si vous voyez "undefined", le script n'est pas chargé!
+
+3. Cocher quelques réponses dans les tables
+
+4. CLIC DROIT sur une table
+
+5. Le menu contextuel devrait apparaître avec:
+   "📊 Résultat final"
+
+
+═══════════════════════════════════════════════════════════════
+                    🐛 SI LE MENU NE S'AFFICHE PAS
+═══════════════════════════════════════════════════════════════
+
+Dans la console, taper:
+
+```javascript
+// Vérifier si le menu est chargé
+console.log('Menu CIA:', window.ClaraverseCIAMenu);
+
+// Forcer l'affichage du menu
+if (window.ClaraverseCIAMenu) {
+  console.log('✅ Menu chargé');
+} else {
+  console.error('❌ Menu NON chargé');
+}
+```
+
+
+═══════════════════════════════════════════════════════════════
+                    📊 INFORMATIONS À ME DONNER
+═══════════════════════════════════════════════════════════════
+
+1. Est-ce que la page s'affiche?
+   ☐ Oui  ☐ Non
+
+2. Est-ce que la console affiche "Menu CIA: object"?
+   ☐ Oui  ☐ Non
+
+3. Est-ce que le clic droit affiche un menu?
+   ☐ Oui  ☐ Non
+
+4. Si oui, que contient le menu?
+
+5. Copier TOUS les logs de la console
+
+
+═══════════════════════════════════════════════════════════════
+                    🔍 DIAGNOSTIC ALTERNATIF
+═══════════════════════════════════════════════════════════════
+
+Si le menu ne s'affiche toujours pas, dans la console:
+
+```javascript
+// Test 1: Vérifier l'event listener
+document.addEventListener('contextmenu', function(e) {
+  console.log('CLIC DROIT détecté!', e.target);
+});
+
+// Test 2: Afficher un menu de test
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert('Clic droit fonctionne!');
+});
+```
+
+
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   📞 AVEC CES INFORMATIONS, JE POURRAI VOUS AIDER           ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+Version: TEST SIMPLE
+Date: Décembre 2024

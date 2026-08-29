@@ -1,0 +1,198 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION ÉTATS DE CONTRÔLE EN COURS - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 05 Avril 2026
+🎯 OBJECTIF : Corriger les états de contrôle pour afficher N et N-1
+
+═══════════════════════════════════════════════════════════════════════════════
+TRAVAIL ACCOMPLI
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 1. CORRECTION FRONTEND APPLIQUÉE
+   Fichier : public/EtatFinAutoTrigger.js
+   - Sélecteurs CSS alternatifs ajoutés
+   - Styles forcés avec !important
+   - Ouverture automatique du premier accordéon
+   - Logs de débogage détaillés
+   - Scroll automatique vers les résultats
+
+✅ 2. FICHIERS DE RÉFÉRENCE IDENTIFIÉS
+   - py_backend/generer_test_etats_controle_html.py
+   - py_backend/etats_controle_exhaustifs.py
+   - py_backend/html_etats_controle.py
+   - Doc_Etat_Fin/Scripts/test-etats-controle-html.ps1
+
+✅ 3. STRUCTURE CORRECTE DOCUMENTÉE
+   Fichier créé : Doc_Etat_Fin/Documentation/00_STRUCTURE_FICHIER_BALANCE_DEMO.txt
+   - Structure standard des onglets
+   - Format des colonnes (8 colonnes)
+   - Utilisation de N-2 pour les calculs
+   - Exemples de code
+
+✅ 4. SCRIPTS CORRIGÉS
+   - py_backend/generer_test_etats_controle_html.py
+   - Chemin du fichier corrigé
+   - Noms des onglets mis à jour
+
+═══════════════════════════════════════════════════════════════════════════════
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ FICHIER BALANCE ACTUEL PAS À JOUR
+
+Fichier actuel : py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+Onglets actuels :
+   1. 'BALANCE 2018 ' (avec espace à la fin)
+   2. 'BALANCE 2017 ' (avec espace à la fin)
+   3. 'BALANCE 2016'
+
+Onglets attendus (structure standard):
+   1. 'BALANCE N'
+   2. 'BALANCE N-1'
+   3. 'BALANCE N-2'
+
+═══════════════════════════════════════════════════════════════════════════════
+DEUX OPTIONS POSSIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+OPTION 1 : METTRE À JOUR LE FICHIER EXCEL
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Action : Renommer les onglets dans le fichier Excel                    │
+│                                                                         │
+│ Étapes :                                                                │
+│ 1. Ouvrir py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls                 │
+│ 2. Renommer "BALANCE 2018 " → "BALANCE N"                             │
+│ 3. Renommer "BALANCE 2017 " → "BALANCE N-1"                           │
+│ 4. Renommer "BALANCE 2016" → "BALANCE N-2"                            │
+│ 5. Sauvegarder le fichier                                              │
+│                                                                         │
+│ Avantages :                                                             │
+│ ✓ Structure standard pour tous les tests                               │
+│ ✓ Pas besoin de modifier les scripts                                   │
+│ ✓ Cohérence avec la documentation                                      │
+│                                                                         │
+│ Inconvénients :                                                         │
+│ ✗ Nécessite une action manuelle                                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+OPTION 2 : ADAPTER LES SCRIPTS AU FICHIER ACTUEL
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Action : Utiliser les noms d'onglets actuels dans les scripts         │
+│                                                                         │
+│ Modifications nécessaires :                                             │
+│ 1. py_backend/generer_test_etats_controle_html.py                     │
+│    - Charger "BALANCE 2018 " au lieu de "BALANCE N"                   │
+│    - Charger "BALANCE 2017 " au lieu de "BALANCE N-1"                 │
+│                                                                         │
+│ 2. py_backend/etats_financiers.py                                     │
+│    - Vérifier la détection automatique des onglets                     │
+│    - S'assurer que les espaces sont gérés                             │
+│                                                                         │
+│ Avantages :                                                             │
+│ ✓ Pas besoin de modifier le fichier Excel                             │
+│ ✓ Fonctionne immédiatement                                            │
+│                                                                         │
+│ Inconvénients :                                                         │
+│ ✗ Non conforme à la structure standard documentée                      │
+│ ✗ Confusion entre structure standard et structure actuelle             │
+│ ✗ Maintenance plus difficile                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+RECOMMANDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OPTION 1 RECOMMANDÉE : Mettre à jour le fichier Excel
+
+Raisons :
+1. Cohérence avec la documentation créée
+2. Structure standard pour tous les futurs tests
+3. Évite la confusion entre différentes structures
+4. Facilite la maintenance à long terme
+5. Conforme aux spécifications du SYSCOHADA Révisé
+
+═══════════════════════════════════════════════════════════════════════════════
+SOLUTION TEMPORAIRE
+═══════════════════════════════════════════════════════════════════════════════
+
+En attendant la mise à jour du fichier Excel, je vais adapter le script pour
+utiliser les onglets actuels:
+
+```python
+# Charger les onglets avec les noms actuels (temporaire)
+balance_n = pd.read_excel(fichier, sheet_name="BALANCE 2018 ")
+balance_n1 = pd.read_excel(fichier, sheet_name="BALANCE 2017 ")
+```
+
+Cette solution permet de tester immédiatement la génération des états de contrôle.
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+IMMÉDIAT (Solution temporaire):
+1. ⏳ Adapter le script pour utiliser les onglets actuels
+2. ⏳ Exécuter le script de test
+3. ⏳ Vérifier le fichier HTML généré
+4. ⏳ Valider la structure des états de contrôle
+
+À MOYEN TERME (Solution définitive):
+1. ⏳ Mettre à jour le fichier Excel avec les onglets standard
+2. ⏳ Remettre les noms d'onglets standard dans les scripts
+3. ⏳ Tester à nouveau
+4. ⏳ Documenter la structure finale
+
+INTÉGRATION BACKEND:
+1. ⏳ Vérifier py_backend/etats_financiers.py (lignes 1740-1800)
+2. ⏳ Intégrer les fonctions de py_backend/etats_controle_exhaustifs.py
+3. ⏳ Utiliser generate_all_etats_controle_html() de py_backend/html_etats_controle.py
+4. ⏳ Tester le workflow complet
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS CRÉÉS/MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIERS CRÉÉS:
+✓ Doc_Etat_Fin/Documentation/00_STRUCTURE_FICHIER_BALANCE_DEMO.txt
+  - Documentation de la structure standard
+  - Exemples de code
+  - Notes importantes
+
+✓ 00_CORRECTION_ETATS_CONTROLE_EN_COURS_05_AVRIL_2026.txt (ce fichier)
+  - Récapitulatif du travail accompli
+  - Problème identifié
+  - Options et recommandations
+
+FICHIERS MODIFIÉS:
+✓ py_backend/generer_test_etats_controle_html.py
+  - Chemin du fichier corrigé
+  - Noms des onglets mis à jour (à adapter temporairement)
+
+✓ public/EtatFinAutoTrigger.js
+  - Correction de l'affichage frontend
+  - Sélecteurs CSS améliorés
+  - Ouverture automatique du premier accordéon
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ STRUCTURE STANDARD VS STRUCTURE ACTUELLE:
+- La documentation décrit la structure STANDARD (BALANCE N, BALANCE N-1, BALANCE N-2)
+- Le fichier actuel utilise une structure TEMPORAIRE (BALANCE 2018, BALANCE 2017, BALANCE 2016)
+- Il faut choisir entre adapter le fichier ou adapter les scripts
+
+⚠️ IMPACT SUR LES AUTRES SCRIPTS:
+- py_backend/etats_financiers.py utilise probablement une détection automatique
+- Vérifier que la détection fonctionne avec les deux structures
+- S'assurer que les espaces dans les noms d'onglets sont gérés
+
+⚠️ TESTS À EFFECTUER:
+- Tester avec la structure actuelle (BALANCE 2018, etc.)
+- Tester avec la structure standard (BALANCE N, etc.) après mise à jour
+- Vérifier que les deux structures fonctionnent
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

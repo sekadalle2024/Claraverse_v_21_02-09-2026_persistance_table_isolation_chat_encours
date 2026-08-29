@@ -1,0 +1,286 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ COMMANDES RAPIDES - Nomenclature Export Template Excel
+  📅 Date: 10 Mai 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+─────────────────────────────────────────────────────────────────────────────
+
+Commandes rapides pour tester et déboguer la nouvelle nomenclature des fichiers
+exportés via "Export template Excel".
+
+🔧 COMMANDES CONSOLE (F12)
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. Vérifier que la fonction existe                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+console.log(typeof window.contextualMenuManager?.extractEtapeMission);
+// Devrait afficher: "function"
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 2. Tester manuellement l'extraction                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const tables = document.querySelectorAll('table');
+const etape = window.contextualMenuManager?.extractEtapeMission(Array.from(tables));
+console.log("Étape trouvée:", etape);
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 3. Afficher toutes les tables du message                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const tables = document.querySelectorAll('div.prose table');
+console.log(`Nombre de tables: ${tables.length}`);
+tables.forEach((table, i) => {
+  console.log(`Table ${i + 1}:`, {
+    rows: table.querySelectorAll('tr').length,
+    cols: table.querySelectorAll('tr')[0]?.querySelectorAll('td, th').length || 0
+  });
+});
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 4. Analyser une table spécifique                                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const table = document.querySelectorAll('table')[0]; // Première table
+const rows = table.querySelectorAll('tr');
+console.log("Contenu de la table:");
+rows.forEach((row, i) => {
+  const cells = row.querySelectorAll('td, th');
+  const rowData = Array.from(cells).map(cell => cell.textContent.trim());
+  console.log(`Ligne ${i + 1}:`, rowData);
+});
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 5. Chercher les colonnes "Rubrique" et "Description"                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const table = document.querySelectorAll('table')[0];
+const headerRow = table.querySelector('tr');
+const headers = Array.from(headerRow.querySelectorAll('th, td')).map(h => h.textContent.trim());
+console.log("En-têtes:", headers);
+console.log("Index Rubrique:", headers.findIndex(h => h.toLowerCase().includes('rubrique')));
+console.log("Index Description:", headers.findIndex(h => h.toLowerCase().includes('description')));
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 6. Chercher la ligne "Etape de mission"                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const table = document.querySelectorAll('table')[0];
+const rows = table.querySelectorAll('tr');
+rows.forEach((row, i) => {
+  const cells = row.querySelectorAll('td, th');
+  const firstCell = cells[0]?.textContent.trim().toLowerCase();
+  if (firstCell && firstCell.includes('etape') && firstCell.includes('mission')) {
+    console.log(`Ligne "Etape de mission" trouvée à l'index ${i}:`, 
+                Array.from(cells).map(c => c.textContent.trim()));
+  }
+});
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 7. Simuler l'export (sans télécharger)                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const tables = document.querySelectorAll('table');
+const etape = window.contextualMenuManager?.extractEtapeMission(Array.from(tables));
+const timestamp = new Date().toISOString().slice(0, 19).replace(/[:]/g, "-");
+let filename;
+if (etape) {
+  const etapeSanitized = etape.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, '-');
+  filename = `E-audit_Etape-mission-${etapeSanitized}_${timestamp}.xlsx`;
+} else {
+  filename = `E-audit_Etape-mission-X_${timestamp}.xlsx`;
+}
+console.log("Nom du fichier qui serait généré:", filename);
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 8. Activer les logs détaillés                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+// Les logs sont déjà activés par défaut dans extractEtapeMission()
+// Pour voir tous les logs, ouvrir la console (F12) avant l'export
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 9. Tester la sanitisation du nom                                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+const testNames = [
+  "Programme de travail",
+  "Cartographie des risques!",
+  "Lead  sheet",
+  "Étape #1",
+  "Test@123"
+];
+
+testNames.forEach(name => {
+  const sanitized = name.replace(/[^a-zA-Z0-9\s-]/g, '').replace(/\s+/g, '-');
+  console.log(`"${name}" → "${sanitized}"`);
+});
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 10. Recharger le menu contextuel                                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+// Si le menu ne fonctionne pas après modification
+location.reload(); // Recharger la page
+// OU
+window.contextualMenuManager?.init(); // Réinitialiser le menu
+
+🔍 FILTRES CONSOLE
+─────────────────────────────────────────────────────────────────────────────
+
+Pour voir uniquement les logs liés à l'extraction de l'étape de mission:
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Filtre 1: Logs d'extraction                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Dans la console, taper dans le champ de filtre:
+Extract Etape Mission
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Filtre 2: Logs d'export                                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Dans la console, taper dans le champ de filtre:
+Export Template
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Filtre 3: Tous les logs du menu                                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Dans la console, taper dans le champ de filtre:
+[Export Template]
+
+🧪 TESTS RAPIDES
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Test 1: Vérifier la détection                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Ouvrir la console (F12)
+2. Coller et exécuter:
+
+const tables = document.querySelectorAll('table');
+const etape = window.contextualMenuManager?.extractEtapeMission(Array.from(tables));
+console.log("✅ Étape détectée:", etape || "❌ Non trouvée");
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Test 2: Vérifier le nom du fichier                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Ouvrir la console (F12)
+2. Clic droit sur une table → "Export template Excel"
+3. Chercher dans les logs:
+   ✅ [Export Template] Nom fichier avec étape: ...
+   OU
+   ⚠️ [Export Template] Étape de mission non trouvée, nom fichier fallback: ...
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Test 3: Vérifier le fichier téléchargé                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Exporter une table
+2. Vérifier le nom du fichier dans le dossier Téléchargements
+3. Format attendu:
+   E-audit_Etape-mission-{NomEtape}_YYYY-MM-DDTHH-MM-SS.xlsx
+   OU
+   E-audit_Etape-mission-X_YYYY-MM-DDTHH-MM-SS.xlsx
+
+🔧 DÉPANNAGE
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Fonction extractEtapeMission non trouvée                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+// Vérifier que le menu est initialisé
+console.log(window.contextualMenuManager);
+
+// Si undefined, recharger la page
+location.reload();
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Étape non détectée alors qu'elle existe                      │
+└─────────────────────────────────────────────────────────────────────────┘
+
+// Vérifier les en-têtes de la table
+const table = document.querySelectorAll('table')[0];
+const headers = Array.from(table.querySelectorAll('tr')[0].querySelectorAll('th, td'))
+  .map(h => h.textContent.trim());
+console.log("En-têtes:", headers);
+
+// Vérifier le contenu de la table
+const rows = table.querySelectorAll('tr');
+rows.forEach((row, i) => {
+  const cells = Array.from(row.querySelectorAll('td, th')).map(c => c.textContent.trim());
+  console.log(`Ligne ${i}:`, cells);
+});
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Fichier toujours nommé "claraverse_template_..."             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+// Vérifier que le code a été modifié
+console.log(window.contextualMenuManager.exportTemplate.toString().includes('extractEtapeMission'));
+// Devrait afficher: true
+
+// Si false, recharger la page avec cache vidé
+// Ctrl+F5 (Windows) ou Cmd+Shift+R (Mac)
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Erreur JavaScript                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+// Vérifier les erreurs dans la console
+// Chercher les messages en rouge
+
+// Vérifier la syntaxe de la fonction
+console.log(window.contextualMenuManager.extractEtapeMission);
+
+📋 CHECKLIST DE VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+Avant de tester:
+□ Fichier menu.js modifié
+□ Page rechargée (Ctrl+F5)
+□ Console ouverte (F12)
+□ Table avec "Etape de mission" présente
+
+Pendant le test:
+□ Clic droit sur la table
+□ Sélection "Export template Excel"
+□ Vérification des logs console
+□ Vérification du nom du fichier téléchargé
+
+Après le test:
+□ Fichier téléchargé avec le bon nom
+□ Logs de diagnostic présents
+□ Pas d'erreur JavaScript
+□ Fallback fonctionne si étape non trouvée
+
+🎓 RÉFÉRENCES
+─────────────────────────────────────────────────────────────────────────────
+
+📄 Documentation complète:
+   Doc menu contextuel menu.js update/NOMENCLATURE_FICHIER_EXPORT_TEMPLATE_10_MAI_2026.md
+
+🧪 Guide de test:
+   QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+📊 Synthèse visuelle:
+   SYNTHESE_VISUELLE_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+📑 Index:
+   00_INDEX_NOMENCLATURE_EXPORT_TEMPLATE_10_MAI_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ COMMANDES PRÊTES À L'EMPLOI
+═══════════════════════════════════════════════════════════════════════════════
+
+Copier-coller ces commandes dans la console pour tester rapidement.
+
+═══════════════════════════════════════════════════════════════════════════════

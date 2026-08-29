@@ -1,0 +1,198 @@
+═══════════════════════════════════════════════════════════════════════════════
+  DIAGNOSTIC - PROBLÈME DÉTECTION TABLE X-REF DOCUMENTAIRE
+  Date: 28 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME SIGNALÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+L'utilisateur reçoit cette erreur en front-end:
+
+  ⚠️ Aucune table X-Ref documentaire trouvée.
+  
+  La table doit contenir les colonnes:
+  - Cross references (ou X-Ref)
+  - Document
+
+Pourtant, la table existe avec les bonnes colonnes.
+
+
+🔍 ANALYSE DU CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+Fichier: public/menu.js
+Fonction: ouvrirXRefDocumentaire() (ligne 9866)
+
+CODE DE DÉTECTION:
+------------------
+const headers = Array.from(table.querySelectorAll('th, thead td'))
+  .map(th => th.textContent.trim().toLowerCase());
+
+const hasCrossRef = headers.some(h => 
+  (h.includes('cross') && h.includes('ref')) || 
+  h.includes('x-ref') || h.includes('xref')
+);
+
+const hasDocument = headers.some(h => 
+  h.includes('document') || h.includes('doc')
+);
+
+LOGIQUE DE DÉTECTION:
+---------------------
+✅ Pour "Cross references":
+   - Cherche "cross" ET "ref" dans le texte
+   - OU "x-ref"
+   - OU "xref"
+
+✅ Pour "Document":
+   - Cherche "document"
+   - OU exactement "doc"
+
+
+📊 STRUCTURE ATTENDUE DE LA TABLE
+═══════════════════════════════════════════════════════════════════════════════
+
+<table>
+  <thead>
+    <tr>
+      <th>no</th>
+      <th>Cross references</th>  ← Colonne clé 1
+      <th>Document</th>           ← Colonne clé 2
+      <th>Client</th>
+      <th>Exercice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>[I30]</td>
+      <td>AFRILAND</td>
+      <td>FILTRACI</td>
+      <td>2024</td>
+    </tr>
+  </tbody>
+</table>
+
+
+🐛 CAUSES POSSIBLES DU PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ❌ STRUCTURE HTML INCORRECTE
+   - Pas de <thead> / <tbody>
+   - En-têtes dans le <tbody>
+   - Utilisation de <td> au lieu de <th> pour les en-têtes
+
+2. ❌ NOM DE COLONNE DIFFÉRENT
+   - "Cross reference" (singulier) au lieu de "Cross references"
+   - "X-Ref" avec majuscules différentes
+   - Espaces multiples ou caractères invisibles
+
+3. ❌ SÉLECTION DE LA MAUVAISE TABLE
+   - Plusieurs tables dans la page
+   - La table X-Ref n'est pas celle qui est active
+
+4. ❌ PROBLÈME DE TIMING
+   - Le code s'exécute avant que la table soit complètement chargée
+   - La table est dans un accordéon non encore ouvert
+
+
+🔧 SOLUTION: FICHIER DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+J'ai créé un fichier de test pour diagnostiquer le problème:
+
+📄 test-detection-xref-table.html
+   - Contient une table X-Ref avec la structure correcte
+   - Tests automatiques de détection
+   - Affichage détaillé des résultats
+
+🚀 LANCER LE TEST:
+   .\test-detection-xref.ps1
+
+
+📋 TESTS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. 🔍 TESTER DÉTECTION
+   - Vérifie la structure de la table (thead, tbody)
+   - Extrait les en-têtes
+   - Teste la détection des colonnes clés
+   - Affiche les en-têtes en minuscules pour debug
+
+2. 📊 TESTER INDEX COLONNES
+   - Affiche chaque cellule d'en-tête avec son index
+   - Trouve les index de "Cross references" et "Document"
+   - Vérifie que les index sont corrects
+
+3. 📋 TESTER DONNÉES LIGNE
+   - Extrait les données de chaque ligne
+   - Construit le nom de fichier selon [Indexation]
+   - Affiche: [Cross references]-[Document]
+
+
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ EXÉCUTER LE TEST
+   .\test-detection-xref.ps1
+
+2. 📊 ANALYSER LES RÉSULTATS
+   - Vérifier que les colonnes sont détectées
+   - Noter les index trouvés
+   - Comparer avec la table dans Claraverse
+
+3. 🔍 COMPARER AVEC CLARAVERSE
+   - Ouvrir la console du navigateur (F12)
+   - Inspecter la table X-Ref dans Claraverse
+   - Vérifier la structure HTML exacte
+
+4. 🐛 IDENTIFIER LA DIFFÉRENCE
+   - Comparer la structure HTML
+   - Vérifier les noms de colonnes exacts
+   - Chercher des caractères invisibles
+
+
+💡 SOLUTIONS POSSIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+SI LE TEST FONCTIONNE MAIS PAS DANS CLARAVERSE:
+------------------------------------------------
+→ Le problème vient de la structure de la table dans Claraverse
+→ Vérifier comment la table est générée (N8N, backend Python)
+→ Comparer le HTML généré avec le HTML du test
+
+SI LE TEST NE FONCTIONNE PAS:
+------------------------------
+→ Le problème vient du code de détection
+→ Améliorer la logique de détection
+→ Ajouter plus de variantes de noms de colonnes
+
+SI LES COLONNES ONT DES NOMS DIFFÉRENTS:
+-----------------------------------------
+→ Mettre à jour le code de détection
+→ Ajouter les variantes trouvées
+→ Rendre la détection plus flexible
+
+
+📞 INFORMATIONS À FOURNIR
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour résoudre le problème, j'ai besoin de:
+
+1. 📸 CAPTURE D'ÉCRAN
+   - La table X-Ref dans Claraverse
+   - L'erreur affichée
+
+2. 🔍 INSPECTION HTML
+   - Ouvrir F12 dans le navigateur
+   - Onglet "Elements" ou "Inspecteur"
+   - Copier le HTML de la table X-Ref
+
+3. 📋 RÉSULTATS DU TEST
+   - Exécuter .\test-detection-xref.ps1
+   - Copier les résultats affichés
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════════

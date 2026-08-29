@@ -1,0 +1,195 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              🚀 DÉMARRAGE DES CONTENEURS E-AUDIT                         ║
+║                  Commandes pour la prochaine connexion                   ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+📋 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ OPTION 1: DÉMARRAGE SIMPLE (Recommandé)                              │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # Ouvrir WSL2 Ubuntu                                               │
+│   wsl                                                                 │
+│                                                                       │
+│   # Naviguer vers le projet                                          │
+│   cd /mnt/d/ClaraVerse-v\ firebase                                   │
+│                                                                       │
+│   # Démarrer les conteneurs                                          │
+│   docker compose up -d                                                │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ OPTION 2: AVEC SCRIPT (Plus de détails)                              │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # Ouvrir WSL2 Ubuntu                                               │
+│   wsl                                                                 │
+│                                                                       │
+│   # Naviguer vers le projet                                          │
+│   cd /mnt/d/ClaraVerse-v\ firebase                                   │
+│                                                                       │
+│   # Utiliser le script de démarrage                                  │
+│   ./start-docker.sh                                                  │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+🌐 ACCÈS À L'APPLICATION
+═══════════════════════════════════════════════════════════════════════════
+
+Une fois les conteneurs démarrés (attendre 10-15 secondes):
+
+  📱 Frontend:     http://localhost:8080
+  🔧 Backend:      http://localhost:5000
+  💚 Health Check: http://localhost:5000/health
+
+
+🔍 VÉRIFIER L'ÉTAT
+═══════════════════════════════════════════════════════════════════════════
+
+# Voir l'état des conteneurs
+docker compose ps
+
+# Voir les logs
+docker compose logs -f
+
+# Voir les logs d'un service spécifique
+docker compose logs -f frontend
+docker compose logs -f backend
+
+
+⏹️  ARRÊTER LES CONTENEURS
+═══════════════════════════════════════════════════════════════════════════
+
+# Arrêter proprement
+docker compose down
+
+# Ou utiliser le script
+./stop-docker.sh
+
+
+🔄 REDÉMARRER
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer tous les services
+docker compose restart
+
+# Redémarrer un service spécifique
+docker compose restart frontend
+docker compose restart backend
+
+
+🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════
+
+# Si Docker ne démarre pas
+sudo service docker start
+
+# Si les conteneurs ne démarrent pas
+docker compose down
+docker compose up -d
+
+# Voir les logs détaillés
+docker compose logs --tail=50 backend
+docker compose logs --tail=50 frontend
+
+# Rebuild si nécessaire (après modification du code)
+docker compose down
+docker compose build
+docker compose up -d
+
+
+📝 COMMANDES COMPLÈTES DEPUIS WINDOWS
+═══════════════════════════════════════════════════════════════════════════
+
+Depuis PowerShell ou CMD Windows:
+
+# Tout en une ligne
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose up -d"
+
+# Vérifier l'état
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose ps"
+
+# Arrêter
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose down"
+
+
+⚡ DÉMARRAGE AUTOMATIQUE (Optionnel)
+═══════════════════════════════════════════════════════════════════════════
+
+Pour démarrer automatiquement au démarrage de WSL2:
+
+1. Créer un script de démarrage automatique:
+   
+   nano ~/.bashrc
+   
+2. Ajouter à la fin du fichier:
+   
+   # Auto-start E-audit containers
+   if [ -d "/mnt/d/ClaraVerse-v firebase" ]; then
+       cd "/mnt/d/ClaraVerse-v firebase"
+       if ! docker compose ps | grep -q "Up"; then
+           echo "Démarrage des conteneurs E-audit..."
+           docker compose up -d
+       fi
+   fi
+
+3. Sauvegarder et quitter (Ctrl+X, Y, Enter)
+
+
+💡 CONSEILS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Les conteneurs conservent leur état entre les redémarrages
+2. Les données backend sont persistées dans le volume Docker
+3. Pas besoin de rebuild sauf si vous modifiez le code
+4. Le frontend met ~5 secondes à démarrer
+5. Le backend met ~10-15 secondes à être "healthy"
+
+
+📊 MONITORING
+═══════════════════════════════════════════════════════════════════════════
+
+# Voir l'utilisation des ressources
+docker stats
+
+# Voir les processus dans un conteneur
+docker top e-audit-frontend
+docker top e-audit-backend
+
+# Inspecter un conteneur
+docker inspect e-audit-frontend
+docker inspect e-audit-backend
+
+
+🔑 INFORMATIONS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════
+
+Conteneurs:
+  - e-audit-frontend  (Nginx + React)
+  - e-audit-backend   (Python + FastAPI)
+
+Réseau:
+  - claraverse-vfirebase_e-audit-network
+
+Volume:
+  - claraverse-vfirebase_backend-data
+
+Ports:
+  - 8080 → Frontend (au lieu de 3000 pour éviter Flowise)
+  - 5000 → Backend
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ COMMANDES PRÊTES À L'EMPLOI                        ║
+║                                                                           ║
+║              Copiez-collez simplement dans votre terminal                ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

@@ -1,0 +1,180 @@
+🚨 ACTION IMMÉDIATE - AJOUT LOGS DE TRAÇABILITÉ
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME:
+Aucun log visible dans la console → Le script ne se déclenche pas
+
+DIAGNOSTIC:
+Le workflow n8n fonctionne (testé avec HTTP Request + Google Sheets)
+Mais Flowise.js ne collecte pas les tables HTML
+
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 1: TESTER SI LE SCRIPT SE CHARGE
+───────────────────────────────────────
+
+1. Ouvrir: TEST_FLOWISE_CHARGE.html dans votre navigateur
+
+2. Cliquer sur les boutons de test:
+   - Test 1: Script Chargé?
+   - Test 2: Console Fonctionne?
+   - Test 3: MutationObserver?
+   - Test 4: Créer Table Test
+
+3. Observer les résultats dans "Logs Console (Temps Réel)"
+
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 2: SELON LES RÉSULTATS
+─────────────────────────────
+
+CAS A: Aucun log "🚀 Initialisation"
+→ Le script ne se charge PAS
+→ Vérifier index.html ligne 49
+→ Vérifier que Flowise.js existe à la racine
+
+CAS B: Log "🚀 Initialisation" mais rien après
+→ Le script se charge mais ne détecte pas les tables
+→ Problème de MutationObserver ou de sélecteur
+
+CAS C: Logs de détection mais pas d'appel n8n
+→ Erreur dans la collecte ou l'envoi
+→ Chercher les erreurs JavaScript
+
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 3: AJOUTER LES LOGS DE TRAÇABILITÉ
+─────────────────────────────────────────
+
+Si le script se charge mais manque de logs:
+
+1. Ouvrir: GUIDE_APPLICATION_LOGS_TRACABILITE.md
+
+2. Suivre les instructions pour ajouter les logs
+
+3. Utiliser le code de: PATCH_LOGS_TRACABILITE_FLOWISE.js
+
+4. Recharger la page (Ctrl+F5)
+
+5. Observer les nouveaux logs détaillés
+
+═══════════════════════════════════════════════════════════════
+
+LOGS ATTENDUS APRÈS MODIFICATION:
+
+Au chargement:
+═══════════════════════════════════════════════════════
+🚀 INITIALISATION FLOWISE.JS V17.1
+═══════════════════════════════════════════════════════
+├─ Timestamp: 2025-12-09T...
+├─ Endpoint: https://barow52161.app.n8n.cloud/...
+├─ Version: V17.1
+└─ Status: ✅ Script chargé avec succès
+
+═══════════════════════════════════════════════════════
+👀 MUTATIONOBSERVER ACTIVÉ
+═══════════════════════════════════════════════════════
+├─ Cible: document.body
+├─ Options: { childList: true, subtree: true }
+└─ En attente de nouvelles tables...
+
+Quand vous créez une table Flowise:
+🔔 MUTATION DÉTECTÉE
+├─ Nombre de mutations: 1
+└─ Analyse en cours...
+
+📋 NOUVELLE TABLE DÉTECTÉE
+├─ En-têtes: Flowise
+└─ Vérification si table Flowise...
+
+✅ TABLE FLOWISE TROUVÉE!
+├─ Mot-clé extrait: Gestion stratégique
+└─ Démarrage de la collecte...
+
+═══════════════════════════════════════════════════════
+📦 DÉBUT DE LA COLLECTE DES TABLES
+═══════════════════════════════════════════════════════
+├─ Mot-clé recherché: Gestion stratégique
+├─ Divs à analyser: 10
+└─ Timestamp: 2025-12-09T...
+
+... (collecte des tables) ...
+
+═══════════════════════════════════════════════════════
+✅ FIN DE LA COLLECTE DES TABLES
+═══════════════════════════════════════════════════════
+├─ Tables collectées: 3
+├─ Taille totale: 5432 caractères
+└─ Prêt pour envoi à n8n
+
+═══════════════════════════════════════════════════════
+🚀 DÉBUT DE L'APPEL N8N
+═══════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: PRÉPARATION
+├─ Endpoint: https://barow52161.app.n8n.cloud/...
+├─ Méthode: POST
+├─ Content-Type: application/json
+└─ Taille payload: 5432 caractères
+
+📡 ÉTAPE 2: ENVOI DE LA REQUÊTE
+└─ Timestamp: 2025-12-09T...
+
+📥 ÉTAPE 3: RÉCEPTION DE LA RÉPONSE
+├─ Statut HTTP: 200 OK
+├─ Durée: 2538ms
+└─ Headers reçus:
+   ├─ content-length: 1234
+   ├─ content-type: application/json
+
+📄 ÉTAPE 4: LECTURE DU BODY
+├─ Taille reçue: 1234 caractères
+├─ Est vide? ✅ NON
+└─ Aperçu: {...}
+
+🔍 ÉTAPE 5: PARSING JSON
+└─ ✅ JSON parsé avec succès
+
+📊 ÉTAPE 6: ANALYSE DE LA STRUCTURE
+├─ Type: Array
+├─ Longueur: 1
+└─ Clés: output, stats, debugInfo
+
+📊 RÉSUMÉ
+├─ HTTP OK? ✅ OUI
+├─ Données reçues? ✅ OUI
+├─ JSON valide? ✅ OUI
+└─ Durée totale: 2538ms
+
+═══════════════════════════════════════════════════════
+🏁 FIN DE L'APPEL N8N
+═══════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════
+
+FICHIERS CRÉÉS:
+
+1. TEST_FLOWISE_CHARGE.html
+   → Test interactif du chargement
+
+2. GUIDE_APPLICATION_LOGS_TRACABILITE.md
+   → Instructions détaillées
+
+3. PATCH_LOGS_TRACABILITE_FLOWISE.js
+   → Code des logs à ajouter
+
+4. Ce fichier
+   → Actions rapides
+
+═══════════════════════════════════════════════════════
+
+PROCHAINES ÉTAPES:
+
+1. Ouvrir TEST_FLOWISE_CHARGE.html
+2. Lancer les 4 tests
+3. Noter les résultats
+4. Si le script ne se charge pas → Vérifier index.html
+5. Si le script se charge → Ajouter les logs détaillés
+6. Partager les logs pour diagnostic
+
+═══════════════════════════════════════════════════════

@@ -1,0 +1,146 @@
+========================================
+TEST RAPIDE - ACCORDEONS CLIQUABLES
+========================================
+Date: 05 Avril 2026
+
+OBJECTIF
+========
+Verifier que les 16 sections accordeon des etats de controle
+sont maintenant cliquables et fonctionnelles.
+
+PREREQUIS
+=========
+- Application Claraverse demarree (npm run dev)
+- Backend Python actif (conda activate claraverse_env)
+- Balance de test disponible: P000 -BALANCE DEMO N_N-1_N-2.xls
+
+ETAPES DE TEST
+==============
+
+1. OUVRIR L'APPLICATION
+   - Navigateur: http://localhost:5173
+   - Ouvrir la console (F12)
+
+2. GENERER LES ETATS FINANCIERS
+   - Dans le chat, taper: "Etat fin"
+   - Cliquer sur "Choisir un fichier"
+   - Selectionner: P000 -BALANCE DEMO N_N-1_N-2.xls
+   - Attendre la generation (30-60 secondes)
+
+3. VERIFIER LES LOGS CONSOLE
+   Vous devriez voir:
+   ✅ "🔧 EtatsControleAccordeonHandler: Initialisation..."
+   ✅ "📊 Nombre de sections trouvées: 16"
+   ✅ "✅ Listener ajouté sur section 1"
+   ✅ "🎉 Tous les accordéons sont initialisés!"
+
+4. SCROLLER VERS LES ETATS DE CONTROLE
+   - Descendre jusqu'a la section "16 États de Contrôle Exhaustifs"
+   - Verifier que 16 sections accordeon sont affichees
+
+5. TESTER LES CLICS
+   Pour chaque section:
+   - Cliquer sur le header (barre violette)
+   - Verifier que la section s'ouvre (animation smooth)
+   - Cliquer a nouveau pour fermer
+   - Verifier le log: "✅ Section toggled: Ouvert/Fermé"
+
+6. TESTER PLUSIEURS SECTIONS
+   - Ouvrir plusieurs sections en meme temps
+   - Verifier qu'elles restent ouvertes
+   - Fermer une section specifique
+   - Verifier que les autres restent ouvertes
+
+TESTS CONSOLE
+=============
+
+Dans la console du navigateur, tester:
+
+// 1. Verifier le nombre de sections
+document.querySelectorAll('.section-header').length
+// Attendu: 16
+
+// 2. Verifier les sections actives (ouvertes)
+document.querySelectorAll('.section.active').length
+// Attendu: nombre de sections ouvertes
+
+// 3. Tester toggleSection manuellement
+const header = document.querySelector('.section-header');
+window.toggleSection(header);
+// Attendu: La premiere section s'ouvre/ferme
+
+// 4. Reinitialiser les accordeons
+window.reinitializeEtatsControleAccordeons();
+// Attendu: "🔄 Réinitialisation des accordéons..."
+
+// 5. Verifier que toggleSection est globale
+typeof window.toggleSection
+// Attendu: "function"
+
+RESULTATS ATTENDUS
+==================
+
+✅ Les 16 sections accordeon s'affichent
+✅ Chaque section peut etre ouverte en cliquant sur le header
+✅ Chaque section peut etre fermee en cliquant a nouveau
+✅ Plusieurs sections peuvent etre ouvertes simultanement
+✅ L'animation est fluide (transition CSS)
+✅ Les logs console confirment les actions
+✅ Pas d'erreurs JavaScript dans la console
+
+PROBLEMES POSSIBLES
+===================
+
+❌ "toggleSection is not defined"
+   → Verifier que EtatsControleAccordeonHandler.js est charge
+   → Verifier dans index.html ligne 151
+
+❌ "Nombre de sections trouvées: 0"
+   → Les sections ne sont pas encore dans le DOM
+   → Attendre quelques secondes et recharger
+
+❌ Sections ne s'ouvrent pas au clic
+   → Verifier les styles CSS dans etats_financiers.py
+   → Verifier que la classe 'active' est togglee
+
+❌ Erreur "Cannot read property 'classList' of null"
+   → Le header n'a pas de parent .section
+   → Verifier la structure HTML generee
+
+COMMANDES DE DEPANNAGE
+=======================
+
+# Recharger la page
+Ctrl + R (ou Cmd + R sur Mac)
+
+# Vider le cache et recharger
+Ctrl + Shift + R (ou Cmd + Shift + R sur Mac)
+
+# Verifier les scripts charges
+console.log(window.toggleSection);
+console.log(window.reinitializeEtatsControleAccordeons);
+
+# Inspecter une section
+const section = document.querySelector('.section');
+console.log(section);
+console.log(section.classList);
+
+# Forcer l'ouverture d'une section
+const section = document.querySelector('.section');
+section.classList.add('active');
+
+VALIDATION FINALE
+=================
+
+Le test est REUSSI si:
+✅ Toutes les 16 sections sont cliquables
+✅ Les sections s'ouvrent et se ferment correctement
+✅ Aucune erreur dans la console
+✅ L'animation est fluide et professionnelle
+
+PROCHAINE ETAPE
+===============
+
+Si tous les tests passent:
+→ Faire un commit et push sur GitHub
+→ Voir: COMMIT_MESSAGE_ACCORDEONS_CLIQUABLES.txt

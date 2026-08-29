@@ -1,0 +1,63 @@
+================================================================================
+🚀 COMMENCER ICI - TESTS DE DIAGNOSTIC
+================================================================================
+
+SITUATION:
+----------
+✅ Corrections appliquées pour l'erreur "failed to fetch"
+⏳ Tests de diagnostic prêts à être exécutés
+❌ Backend NON démarré (action requise)
+
+================================================================================
+ACTION IMMÉDIATE (3 COMMANDES)
+================================================================================
+
+1. Démarrer le backend:
+   .\start-claraverse.ps1
+
+2. Vérifier qu'il répond:
+   .\test-backend-direct.ps1
+
+3. Tester l'import d'une balance:
+   - Ouvrir: http://localhost:5173
+   - Menu "Démarrer" → "États Financiers"
+   - Importer: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+================================================================================
+RÉSULTATS ATTENDUS
+================================================================================
+
+✅ Pas d'erreur "failed to fetch"
+✅ Logs backend: "Balances stockées dans le cache"
+✅ Export liasse: Colonnes BRUT et AMORT remplies
+
+================================================================================
+DOCUMENTATION DISPONIBLE
+================================================================================
+
+📄 00_LIRE_EN_PREMIER_TESTS_06_AVRIL_2026.txt
+   → Guide de démarrage rapide (2 min)
+
+📄 00_INDEX_TESTS_DIAGNOSTIC_06_AVRIL_2026.md
+   → Index complet de tous les fichiers
+
+📄 00_INSTRUCTIONS_TESTS_DIAGNOSTIC_06_AVRIL_2026.txt
+   → Instructions détaillées étape par étape
+
+📄 GUIDE_DEPANNAGE_RAPIDE_FAILED_TO_FETCH.txt
+   → En cas de problème
+
+================================================================================
+COMMANDES UTILES
+================================================================================
+
+# Voir les logs du backend
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep
+
+# Arrêter le backend
+.\stop-claraverse.ps1
+
+================================================================================
+C'EST TOUT! BONNE CHANCE! 🚀
+================================================================================

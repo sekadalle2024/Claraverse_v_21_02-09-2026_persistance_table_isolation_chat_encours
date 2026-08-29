@@ -1,0 +1,79 @@
+═══════════════════════════════════════════════════════════════
+  📋 TÂCHE 2 - Cross Référence Horizontale - 24 avril 2026
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+═══════════════════════════════════════════════════════════════
+Ajouter l'action "Cross référence horizontale" dans le menu 
+contextuel "Papier de travail"
+
+📐 STRUCTURE DE LA TABLE
+═══════════════════════════════════════════════════════════════
+✓ Architecture identique au [Schéma de calcul]
+✓ Table d'UNE ligne
+✓ SANS en-tête de colonne
+✓ Même nombre de cellules que le schéma de calcul
+✓ Contenu : références alphanumériques entre crochets
+
+📊 EXEMPLE VISUEL
+═══════════════════════════════════════════════════════════════
+Si [Schéma de calcul] = (A) | (B) | (C) = A-B
+
+Alors [Cross référence horizontale] =
+┌──────┬──────┬──────┐
+│ [I1] │[C100]│[F150]│
+└──────┴──────┴──────┘
+
+📥 SOURCE DES DONNÉES
+═══════════════════════════════════════════════════════════════
+Table 7 - Cross references horizontale
+(dans le JSON de réponse N8N)
+
+🔤 FORMAT DES RÉFÉRENCES
+═══════════════════════════════════════════════════════════════
+[LETTRE + NUMÉRO + DÉCLINAISON?]
+
+LETTRE (1-2 caractères) :
+  - Première(s) lettre(s) de la colonne "Reference"
+  - Représente le cycle comptable
+  - Exemples : AA, C, F, K, J, I
+
+NUMÉRO :
+  - 1 = Lead
+  - 10 = Balance
+  - Multiples de 5 ou 10 = Autres documents
+  - Exemples : 1, 10, 20, 30, 50, 100, 130, 150
+
+DÉCLINAISON (optionnel) :
+  - Pour les mouvements (plusieurs montants du même document)
+  - Format : .1, .2, .3
+  - Exemples : [C100.1], [C100.2], [C100.3]
+
+📋 RÈGLES MÉTIER
+═══════════════════════════════════════════════════════════════
+1. Toutes les références du même cycle (même lettre)
+2. Alignement avec les variables du schéma de calcul
+3. Extraction depuis Table 7 du JSON N8N
+4. Numérotation chronologique de 10 en 10 pour une section
+   Exemple section "AA" : [AA10], [AA20], [AA30], [AA40]
+
+🔧 DÉTECTION DE LA TABLE PRINCIPALE
+═══════════════════════════════════════════════════════════════
+Table "modelized_table" contient :
+  ✓ Ecart, Assertion, CTR1, CTR2, Description, Conclusion
+
+On RETIRE :
+  ✓ Colonnes après "Ecart"
+  ✓ Colonnes similaires à : No, Compte, Libellé, Transaction
+    (utiliser regex pour détecter)
+
+🎨 IMPLÉMENTATION
+═══════════════════════════════════════════════════════════════
+1. Ajouter action dans menu contextuel
+2. Détecter la table principale (modelized_table)
+3. Extraire Table 7 du JSON N8N
+4. Générer la table de cross références
+5. Insérer au-dessus de la table principale
+6. Sauvegarde localStorage
+
+═══════════════════════════════════════════════════════════════

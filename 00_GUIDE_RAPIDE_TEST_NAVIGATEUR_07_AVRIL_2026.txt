@@ -1,0 +1,173 @@
+═══════════════════════════════════════════════════════════════════════════════
+🚀 GUIDE RAPIDE - TEST DANS LE NAVIGATEUR
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PROBLÈME CORS: RÉSOLU
+⚠️ ERREUR 500: À DIAGNOSTIQUER
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPES POUR TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: OUVRIR L'APPLICATION
+───────────────────────────────────────────────────────────────────────────────
+1. Ouvrir votre navigateur (Chrome, Edge, Firefox)
+
+2. Aller à: http://localhost:5173
+
+3. Attendre que l'application se charge
+
+
+ÉTAPE 2: OUVRIR LA CONSOLE DU NAVIGATEUR
+───────────────────────────────────────────────────────────────────────────────
+Pour voir les messages d'erreur détaillés:
+
+1. Appuyer sur F12 (ou Ctrl+Shift+I)
+
+2. Cliquer sur l'onglet "Console"
+
+3. Laisser la console ouverte pendant le test
+
+
+ÉTAPE 3: DÉCLENCHER L'IMPORT DE BALANCE
+───────────────────────────────────────────────────────────────────────────────
+1. Dans le chat de l'application, taper: Etat fin
+
+2. Appuyer sur Entrée
+
+3. Une fenêtre de sélection de fichier devrait s'ouvrir
+
+4. Naviguer vers: py_backend\P000 -BALANCE DEMO N_N-1_N-2.xls
+
+5. Sélectionner le fichier et cliquer sur "Ouvrir"
+
+
+ÉTAPE 4: OBSERVER LE RÉSULTAT
+───────────────────────────────────────────────────────────────────────────────
+Deux scénarios possibles:
+
+SCÉNARIO A: ✅ ÇA FONCTIONNE
+   - Les états financiers s'affichent
+   - Pas d'erreur dans la console
+   - 🎉 PROBLÈME COMPLÈTEMENT RÉSOLU!
+
+SCÉNARIO B: ❌ ERREUR 500
+   - Un message d'erreur s'affiche
+   - La console montre des détails
+   - Continuer à l'ÉTAPE 5
+
+
+ÉTAPE 5: COPIER LE MESSAGE D'ERREUR (SI ERREUR)
+───────────────────────────────────────────────────────────────────────────────
+Si vous voyez une erreur:
+
+1. Dans la console du navigateur, chercher les lignes en rouge
+
+2. Cliquer sur la ligne d'erreur pour voir les détails
+
+3. Copier le message d'erreur complet
+
+4. Noter également:
+   - Le type d'erreur (TypeError, ValueError, etc.)
+   - Le fichier et la ligne où l'erreur se produit
+   - Le message d'erreur exact
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 QUE CHERCHER DANS LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+MESSAGES IMPORTANTS:
+✅ "Access-Control-Allow-Origin" → Si vous ne voyez PAS ce message, CORS est OK
+❌ "500 (Internal Server Error)" → Erreur Python dans le backend
+❌ "Failed to fetch" → Problème de connexion
+❌ "TypeError" / "ValueError" → Erreur dans le code Python
+
+EXEMPLE DE MESSAGE D'ERREUR UTILE:
+```
+POST http://127.0.0.1:5000/etats-financiers/process-excel 500 (Internal Server Error)
+Response: {
+  "error": "FileNotFoundError: correspondances_syscohada.json not found",
+  "detail": "Traceback (most recent call last):\n  File ..."
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+💡 ALTERNATIVE: VOIR LES LOGS DU BACKEND
+═══════════════════════════════════════════════════════════════════════════════
+
+Si vous préférez voir les logs du backend directement:
+
+1. Ouvrir PowerShell dans le dossier du projet
+
+2. Exécuter:
+   Get-Job -Id 1 | Receive-Job -Keep
+
+3. Chercher les lignes contenant "ERROR" ou "Exception"
+
+4. Copier le message d'erreur complet
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 INFORMATIONS ACTUELLES
+═══════════════════════════════════════════════════════════════════════════════
+
+SERVICES ACTIFS:
+✅ Backend: http://127.0.0.1:5000 (Job ID: 1)
+✅ Frontend: http://localhost:5173 (Job ID: 3)
+
+PROBLÈME CORS: ✅ RÉSOLU
+- Le middleware CORS est correctement configuré
+- Le backend reçoit les requêtes du frontend
+- Pas d'erreur CORS dans les tests
+
+PROBLÈME ERREUR 500: ⚠️ EN COURS
+- Une exception Python se produit
+- Besoin du message d'erreur exact pour diagnostiquer
+- Probablement un problème dans le code de traitement
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 PROCHAINES ACTIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Tester dans le navigateur (suivre les étapes ci-dessus)
+
+2. Si ça fonctionne: 🎉 Problème résolu!
+
+3. Si erreur 500: Copier le message d'erreur et le partager
+
+4. Avec le message d'erreur, nous pourrons:
+   - Identifier la cause exacte
+   - Appliquer la correction appropriée
+   - Résoudre le problème définitivement
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 BESOIN D'AIDE?
+═══════════════════════════════════════════════════════════════════════════════
+
+Si vous rencontrez des difficultés:
+
+1. Vérifier que les services sont actifs:
+   - Backend: http://127.0.0.1:5000/docs (devrait afficher la documentation)
+   - Frontend: http://localhost:5173 (devrait afficher l'application)
+
+2. Si un service ne répond pas:
+   .\stop-claraverse.ps1
+   .\start-claraverse-conda.ps1
+
+3. Partager le message d'erreur exact pour diagnostic
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ RÉSUMÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Le problème CORS est résolu. Le backend et le frontend communiquent correctement.
+
+Il reste à identifier la cause de l'erreur 500 en testant dans le navigateur
+et en copiant le message d'erreur exact.
+
+FICHIER BALANCE À UTILISER:
+py_backend\P000 -BALANCE DEMO N_N-1_N-2.xls
+
+COMMANDE DANS LE CHAT:
+Etat fin
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,118 @@
+═══════════════════════════════════════════════════════════════
+  🧪 TEST MANUEL - Restauration CIA
+═══════════════════════════════════════════════════════════════
+
+Vous avez 10 tables dans le DOM.
+Testons si la restauration fonctionne manuellement.
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 1 : Cocher une Checkbox
+═══════════════════════════════════════════════════════════════
+
+1. Trouvez une table CIA sur la page
+2. Cochez UNE checkbox dans la colonne "Reponse_user"
+3. Notez visuellement qu'elle est cochée
+
+FAIT ? OUI / NON : _____________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 2 : Forcer la Sauvegarde
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez :
+
+claraverseProcessor.autoSaveAllTables()
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Vous devez voir des logs de sauvegarde
+
+NOTEZ CE QUE VOUS VOYEZ :
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 3 : Vérifier localStorage
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez :
+
+const data = JSON.parse(localStorage.getItem('claraverse_tables_data') || '{}');
+const cia = Object.values(data).filter(t => t.isCIATable);
+const checked = cia.reduce((sum, t) => sum + (t.cells || []).filter(c => c.isCheckboxCell && c.isChecked).length, 0);
+console.log('Tables CIA:', cia.length, '| Checkboxes cochées:', checked);
+
+Appuyez sur Entrée.
+
+RÉSULTAT ATTENDU : Au moins 1 checkbox cochée
+
+NOTEZ LE RÉSULTAT :
+Tables CIA: _____ | Checkboxes cochées: _____
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 4 : Décocher la Checkbox
+═══════════════════════════════════════════════════════════════
+
+1. Décochez la checkbox que vous aviez cochée
+2. Vérifiez visuellement qu'elle est décochée
+
+FAIT ? OUI / NON : _____________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 5 : Forcer la Restauration
+═══════════════════════════════════════════════════════════════
+
+Dans la console, tapez :
+
+claraverseProcessor.restoreAllTablesData()
+
+Appuyez sur Entrée.
+
+Attendez 2 secondes.
+
+RÉSULTAT ATTENDU : La checkbox doit se recocher automatiquement
+
+EST-CE QUE LA CHECKBOX S'EST RECOCHÉE ? OUI / NON : _____________
+
+SI NON, NOTEZ CE QUE VOUS VOYEZ DANS LA CONSOLE :
+_________________________________________________________________
+_________________________________________________________________
+
+═══════════════════════════════════════════════════════════════
+  ÉTAPE 6 : Test de Changement de Chat
+═══════════════════════════════════════════════════════════════
+
+1. Cochez une checkbox
+2. Exécutez : claraverseProcessor.autoSaveAllTables()
+3. Changez de chat (cliquez sur un autre chat)
+4. Observez la console pendant 10 secondes
+5. Revenez au chat initial
+6. Observez la console pendant 10 secondes
+
+NOTEZ CE QUE VOUS VOYEZ DANS LA CONSOLE :
+
+Lors du changement de chat :
+_________________________________________________________________
+_________________________________________________________________
+
+Lors du retour au chat initial :
+_________________________________________________________________
+_________________________________________________________________
+
+EST-CE QUE LA CHECKBOX EST TOUJOURS COCHÉE ? OUI / NON : _____________
+
+═══════════════════════════════════════════════════════════════
+  DIAGNOSTIC
+═══════════════════════════════════════════════════════════════
+
+Si ÉTAPE 5 = OUI (restauration manuelle fonctionne) :
+→ Le problème est le TIMING lors du changement de chat
+→ La restauration ne se déclenche pas ou trop tôt/tard
+
+Si ÉTAPE 5 = NON (restauration manuelle ne fonctionne pas) :
+→ Le problème est dans la fonction restoreAllTablesData()
+→ Les données ne sont pas restaurées correctement
+
+═══════════════════════════════════════════════════════════════
+
+Date : 26 novembre 2025

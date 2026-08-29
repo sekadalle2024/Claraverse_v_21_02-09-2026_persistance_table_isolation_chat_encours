@@ -1,0 +1,67 @@
+================================================================================
+⚡ DÉMARRAGE RAPIDE - DIAGNOSTIC DE L'ERREUR
+================================================================================
+
+SITUATION:
+----------
+✅ Backend redémarré et accessible
+❌ Erreur "failed to fetch" persiste
+🎯 Besoin d'identifier l'erreur exacte
+
+================================================================================
+🚀 OPTION 1: TEST AUTOMATIQUE (RECOMMANDÉ)
+================================================================================
+
+Exécuter ce script pour tester directement l'import:
+
+.\test-direct-import.ps1
+
+Ce script va:
+✅ Tester l'import de la balance en Python
+✅ Afficher l'erreur exacte si elle existe
+✅ Indiquer la prochaine étape
+
+Temps: 30 secondes
+
+================================================================================
+🚀 OPTION 2: OBSERVER LES LOGS MANUELLEMENT
+================================================================================
+
+ÉTAPE 1: Ouvrir une NOUVELLE fenêtre PowerShell
+
+ÉTAPE 2: Dans la nouvelle fenêtre, exécuter:
+
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep | Select-Object -Last 100
+
+ÉTAPE 3: Dans le navigateur (http://localhost:5173):
+- Aller dans "États Financiers"
+- Importer: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+ÉTAPE 4: IMMÉDIATEMENT après, dans la fenêtre PowerShell:
+- Exécuter à nouveau la commande de l'ÉTAPE 2
+- Copier TOUT le message d'erreur
+
+Temps: 2 minutes
+
+================================================================================
+📞 INFORMATIONS À FOURNIR
+================================================================================
+
+Une fois l'erreur identifiée, fournir:
+
+1. Le message d'erreur Python COMPLET (avec Traceback)
+2. La ligne exacte qui cause l'erreur
+3. Le message d'erreur dans le navigateur
+
+================================================================================
+📚 FICHIERS DE RÉFÉRENCE
+================================================================================
+
+- 00_CONTINUER_ICI_07_AVRIL_2026.txt (instructions détaillées)
+- ACTION_IMMEDIATE_DIAGNOSTIC.txt (guide ultra-rapide)
+- 00_SITUATION_ACTUELLE_FINALE_06_AVRIL_2026.txt (contexte complet)
+
+================================================================================
+FIN - CHOISIR UNE OPTION ET EXÉCUTER
+================================================================================

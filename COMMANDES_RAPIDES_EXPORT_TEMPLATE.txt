@@ -1,0 +1,215 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ COMMANDES RAPIDES - TEST EXPORT TEMPLATE
+  Date: 09 Mai 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+# 1. Démarrer le backend (dans un terminal)
+cd py_backend
+python main.py
+
+# 2. Démarrer le frontend (dans un autre terminal)
+npm run dev
+
+# 3. Ouvrir le navigateur
+http://localhost:5173
+
+# 4. Ouvrir la console du navigateur
+Appuyer sur F12
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 COMMANDES DE TEST DANS LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier combien de tables sont présentes
+document.querySelectorAll('table').length
+
+# Vérifier combien de tables Claraverse sont présentes
+document.querySelectorAll('div.prose table').length
+
+# Afficher les classes des tables
+Array.from(document.querySelectorAll('div.prose table')).forEach((table, i) => {
+  console.log(`Table ${i + 1}:`, table.className);
+});
+
+# Afficher le nombre de lignes de chaque table
+Array.from(document.querySelectorAll('div.prose table')).forEach((table, i) => {
+  console.log(`Table ${i + 1}: ${table.querySelectorAll('tr').length} lignes`);
+});
+
+# Afficher le nombre de colonnes de chaque table
+Array.from(document.querySelectorAll('div.prose table')).forEach((table, i) => {
+  const cols = table.querySelectorAll('tr')[0]?.querySelectorAll('td, th').length || 0;
+  console.log(`Table ${i + 1}: ${cols} colonnes`);
+});
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 PROMPTS POUR GÉNÉRER DES TABLES DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+# Prompt 1: 3 tables simples
+Crée-moi 3 tables différentes:
+1. Une table de risques avec 5 lignes
+2. Une table de contrôles avec 4 lignes
+3. Une table de recommandations avec 6 lignes
+
+# Prompt 2: 5 tables variées
+Crée-moi 5 tables avec des données variées:
+1. Table des risques identifiés
+2. Table des contrôles en place
+3. Table des recommandations
+4. Table du plan d'action
+5. Table de suivi
+
+# Prompt 3: 10 tables pour test avancé
+Crée-moi 10 tables différentes avec des structures variées pour tester l'export
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 VÉRIFICATION APRÈS EXPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+# Vérifier les logs dans la console après l'export
+# Vous devriez voir:
+
+🔍 [Export Template] DIAGNOSTIC - Test des sélecteurs:
+  - document.querySelectorAll('table'): X
+  - document.querySelectorAll('div.prose table'): Y
+
+✅ [Export Template] Sélecteur utilisé: div.prose table
+🔍 [Export Template] Y table(s) trouvée(s)
+
+🔍 [Export Template] Premières tables détectées:
+  Table 1: { ... }
+  Table 2: { ... }
+  Table 3: { ... }
+
+📊 Export template: Y tables seront exportées
+
+✅ Export template terminé! (Y tables)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 VÉRIFICATION DU FICHIER EXCEL
+═══════════════════════════════════════════════════════════════════════════════
+
+# Le fichier téléchargé devrait avoir le format:
+claraverse_template_YYYY-MM-DD-HH-MM-SS.xlsx
+
+# Vérifier dans le fichier Excel:
+✅ Toutes les tables sont présentes
+✅ Les tables sont séparées par des lignes vides
+✅ Les en-têtes ont le style rouge bordeaux (#380101)
+✅ Les données sont correctement formatées
+✅ Les colonnes ont une largeur appropriée
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Problème: "0 table(s) trouvée(s)"
+# Solution:
+document.querySelectorAll('div.prose table')
+# Si le résultat est 0, vérifier que les tables ont la classe "prose"
+
+# Problème: Une seule table exportée
+# Solution:
+# 1. Vérifier que la correction a été appliquée dans menu.js
+# 2. Rechercher "document.querySelectorAll('div.prose table')" dans exportTemplate()
+# 3. Redémarrer le frontend: Ctrl+C puis npm run dev
+
+# Problème: Erreur dans la console
+# Solution:
+# 1. Copier l'erreur complète
+# 2. Vérifier que SheetJS est chargé: typeof XLSX
+# 3. Vérifier la syntaxe dans menu.js
+
+# Problème: Le fichier ne se télécharge pas
+# Solution:
+# 1. Vérifier les permissions du navigateur
+# 2. Vérifier la console pour les erreurs
+# 3. Essayer avec un autre navigateur
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚡ RACCOURCIS CLAVIER
+═══════════════════════════════════════════════════════════════════════════════
+
+F12                    → Ouvrir/Fermer la console
+Ctrl+Shift+R          → Recharger la page (vider le cache)
+Ctrl+Clic droit       → Menu contextuel sur la table
+Échap                 → Fermer le menu contextuel
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 CHECKLIST DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Avant le test:
+□ Backend démarré (python main.py)
+□ Frontend démarré (npm run dev)
+□ Navigateur ouvert sur http://localhost:5173
+□ Console ouverte (F12)
+
+Pendant le test:
+□ Tables générées dans le chat
+□ Clic droit sur une table
+□ Menu contextuel ouvert
+□ Section "Excel" ouverte
+□ Action "Exporter template Excel" cliquée
+
+Après le test:
+□ Notification "Export template en cours..." affichée
+□ Logs de diagnostic visibles dans la console
+□ Fichier Excel téléchargé
+□ Fichier Excel ouvert et vérifié
+□ Toutes les tables présentes dans le fichier
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ La console affiche le nombre correct de tables détectées
+✅ Le fichier Excel contient TOUTES les tables
+✅ Les tables sont séparées par des lignes vides
+✅ Les en-têtes ont le style rouge bordeaux
+✅ La notification finale indique le nombre correct de tables
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails, consulter:
+
+1. 00_RECAP_CORRECTION_EXPORT_TEMPLATE_09_MAI_2026.txt
+   → Récapitulatif complet de la correction
+
+2. QUICK_TEST_EXPORT_TEMPLATE_TOUTES_TABLES.txt
+   → Guide de test détaillé avec étapes
+
+3. 00_CORRECTION_EXPORT_TEMPLATE_TOUTES_TABLES_09_MAI_2026.txt
+   → Documentation technique complète
+
+4. SYNTHESE_VISUELLE_EXPORT_TEMPLATE_09_MAI_2026.txt
+   → Diagrammes et comparaison avant/après
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DES COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════════

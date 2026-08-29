@@ -1,0 +1,94 @@
+===============================================================
+  ACTION IMMEDIATE - DIAGNOSTIC X-REF
+  Date: 28 avril 2026
+===============================================================
+
+ETAPE 1: TESTER LA PAGE DE DIAGNOSTIC
+===============================================================
+
+Le fichier test-detection-xref-table.html vient de s'ouvrir.
+
+ACTIONS:
+1. Cliquez sur "Tester Detection"
+2. Cliquez sur "Tester Index Colonnes"
+3. Cliquez sur "Tester Donnees Ligne"
+
+RESULTATS ATTENDUS:
+  OK Table detectee
+  OK Colonnes trouvees: Cross references, Document
+  OK Index: crossRefIndex=0, documentIndex=1
+  OK Donnees extraites pour chaque ligne
+
+
+ETAPE 2: COMPARER AVEC CLARAVERSE
+===============================================================
+
+1. Ouvrez Claraverse dans un autre onglet
+2. Affichez la table X-Ref documentaire
+3. Appuyez sur F12 (ouvrir DevTools)
+4. Onglet "Elements"
+5. Trouvez la table dans le HTML
+6. Clic droit sur <table> → Copy → Copy outerHTML
+7. Collez le HTML dans un fichier texte
+
+
+ETAPE 3: IDENTIFIER LA DIFFERENCE
+===============================================================
+
+COMPAREZ:
+
+A. STRUCTURE HTML
+   Test:      <thead><tr><th>Cross references</th>...
+   Claraverse: ?
+
+B. NOMS DES COLONNES
+   Test:      "Cross references" et "Document"
+   Claraverse: ?
+
+C. ORDRE DES COLONNES
+   Test:      Cross references (index 0), Document (index 1)
+   Claraverse: ?
+
+
+ETAPE 4: APPLIQUER LA CORRECTION
+===============================================================
+
+Selon la difference trouvee:
+
+CAS 1: Pas de <thead>
+   → Modifier ligne 9905 de menu.js
+   → Utiliser: table.querySelector('tr:first-child')
+
+CAS 2: Nom different
+   → Ajouter la variante dans la detection
+   → Exemple: "Cross reference" (singulier)
+
+CAS 3: Ordre different
+   → Verifier les index des colonnes
+   → Ajuster la logique d'extraction
+
+
+INFORMATIONS NECESSAIRES
+===============================================================
+
+Pour vous aider, j'ai besoin de:
+
+1. RESULTATS DU TEST (dans le navigateur)
+   Copier-coller ce qui s'affiche
+
+2. HTML DE LA TABLE CLARAVERSE
+   F12 → Elements → Copy outerHTML de la table
+
+3. CAPTURE D'ECRAN
+   De l'erreur dans Claraverse
+
+
+COMMANDE POUR RELANCER LE TEST
+===============================================================
+
+    .\test-detection-xref.ps1
+
+
+===============================================================
+  FIN
+===============================================================

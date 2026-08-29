@@ -1,0 +1,212 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              🔄 GUIDE VISUEL - MISE À JOUR DOCKER                        ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+📊 WORKFLOW DE MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│  1️⃣  MODIFICATION DU CODE                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  • Modifier les fichiers frontend (src/, public/)              │  │
+│  │  • Modifier les fichiers backend (py_backend/)                 │  │
+│  │  • Modifier les dépendances (package.json, requirements.txt)   │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  2️⃣  ARRÊT DES CONTENEURS                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  $ docker compose down                                          │  │
+│  │                                                                  │  │
+│  │  ✓ Arrête e-audit-frontend                                      │  │
+│  │  ✓ Arrête e-audit-backend                                       │  │
+│  │  ✓ Préserve les volumes (données)                               │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  3️⃣  REBUILD DES IMAGES                                                │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  $ docker compose build                                         │  │
+│  │                                                                  │  │
+│  │  [Frontend] Build React/Vite + Nginx (5-7 min)                 │  │
+│  │  ├─ npm install                                                 │  │
+│  │  ├─ npm run build                                               │  │
+│  │  └─ Copie vers Nginx                                            │  │
+│  │                                                                  │  │
+│  │  [Backend] Build Python/FastAPI (1-2 min)                      │  │
+│  │  ├─ pip install requirements                                    │  │
+│  │  └─ Copie py_backend/                                           │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  4️⃣  REDÉMARRAGE                                                       │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  $ docker compose up -d                                         │  │
+│  │                                                                  │  │
+│  │  ✓ Démarre e-audit-backend (15 sec)                             │  │
+│  │  ✓ Démarre e-audit-frontend (5 sec)                             │  │
+│  │  ✓ Restaure les volumes                                         │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  5️⃣  VÉRIFICATION                                                      │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  $ docker compose ps                                            │  │
+│  │  $ docker compose logs -f                                       │  │
+│  │                                                                  │  │
+│  │  ✓ Frontend: http://localhost:8080                              │  │
+│  │  ✓ Backend:  http://localhost:5000                              │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+🎯 3 MÉTHODES DE MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 1: STANDARD (Recommandé)                                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Utilisation: Après modification du code                               │
+│  Durée: 5-10 minutes                                                   │
+│                                                                         │
+│  Commandes:                                                            │
+│    docker compose down                                                 │
+│    docker compose build                                                │
+│    docker compose up -d                                                │
+│                                                                         │
+│  Ou double-clic: update-containers.bat                                 │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 2: SANS CACHE (Si problème)                                    │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Utilisation: Si les modifications ne sont pas visibles                │
+│  Durée: 10-15 minutes                                                  │
+│                                                                         │
+│  Commandes:                                                            │
+│    docker compose down                                                 │
+│    docker compose build --no-cache                                     │
+│    docker compose up -d                                                │
+│                                                                         │
+│  Ou double-clic: rebuild-no-cache.bat                                  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 3: NETTOYAGE COMPLET (Si gros problème)                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  Utilisation: En dernier recours                                       │
+│  Durée: 10-15 minutes                                                  │
+│  ⚠️  ATTENTION: Supprime les volumes (perte de données)                │
+│                                                                         │
+│  Commandes:                                                            │
+│    docker compose down -v                                              │
+│    docker rmi claraverse-vfirebase-frontend                            │
+│    docker rmi claraverse-vfirebase-backend                             │
+│    docker compose build --no-cache                                     │
+│    docker compose up -d                                                │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+📁 SCRIPTS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│  GESTION QUOTIDIENNE                                                   │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  start-containers.bat      → Démarrer                           │  │
+│  │  stop-containers.bat       → Arrêter                            │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│  MISE À JOUR                                                           │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  update-containers.bat     → Mise à jour standard               │  │
+│  │  rebuild-no-cache.bat      → Rebuild sans cache                 │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+🔍 VÉRIFICATION APRÈS MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│  1. Vérifier l'état des conteneurs                                    │
+│     $ docker compose ps                                                │
+│                                                                         │
+│     Résultat attendu:                                                  │
+│     e-audit-frontend   Up 30 seconds   0.0.0.0:8080->80/tcp           │
+│     e-audit-backend    Up 45 seconds   0.0.0.0:5000->5000/tcp         │
+│                                                                         │
+│  2. Vérifier les logs                                                  │
+│     $ docker compose logs -f                                           │
+│                                                                         │
+│     Pas d'erreurs visibles                                             │
+│                                                                         │
+│  3. Tester l'application                                               │
+│     Frontend: http://localhost:8080                                    │
+│     Backend:  http://localhost:5000/health                             │
+│                                                                         │
+│     Résultat attendu:                                                  │
+│     {"status":"healthy","port":5000,"uptime":"..."}                    │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+💡 CONSEILS PRATIQUES
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Toujours arrêter avant de rebuild
+✓ Vérifier les logs après le redémarrage
+✓ Utiliser --no-cache si les changements ne sont pas visibles
+✓ Sauvegarder les données importantes avant un nettoyage complet
+✓ Tester l'application après chaque mise à jour
+
+
+🐛 PROBLÈMES COURANTS
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Modifications non visibles                                   │
+│ Solution: Rebuild sans cache                                           │
+│   $ docker compose build --no-cache                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Erreur de build                                              │
+│ Solution: Voir les logs détaillés                                      │
+│   $ docker compose build --progress=plain                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème: Conteneur ne démarre pas                                     │
+│ Solution: Voir les logs                                                │
+│   $ docker compose logs backend                                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ COMMANDE RAPIDE                                    ║
+║                                                                           ║
+║              docker compose down && docker compose build && docker compose up -d
+║                                                                           ║
+║              Ou double-clic: update-containers.bat                       ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

@@ -1,0 +1,228 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║           ✨ CASE 49 - DATA ANALYST ALÉATOIRE SIMPLE ✨                      ║
+║                                                                               ║
+║                        Ajouté le 08 Juillet 2026                              ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 📋 DESCRIPTION                                                                │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+Le CASE 49 a été étendu pour supporter une nouvelle condition:
+
+    • user_message contient "Data analyst" ET "Aléatoire simple"
+    • Endpoint n8n privé: http://127.0.0.1:500
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 🔀 SWITCH ROUTER - STRUCTURE                                                  │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+CASE 49 dispose maintenant de DEUX conditions:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CONDITION 1: Programme de travail                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Déclencheurs:                                                             │
+│   - "Programme de travail"                                                  │
+│   - "/Programme de travail"                                                 │
+│   - "programme de travail"                                                  │
+│                                                                             │
+│ • Route key: "programme_travail"                                            │
+│ • Endpoint: https://fpb7ab9h.rpcl.app/webhook-test/integration             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CONDITION 2: Data analyst Aléatoire simple (NOUVEAU ✨)                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Déclencheurs:                                                             │
+│   - "Data analyst" ET "Aléatoire simple" (les deux obligatoires)           │
+│                                                                             │
+│ • Route key: "data_analyst_aleatoire_simple"                                │
+│ • Endpoint: http://127.0.0.1:500                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 📝 FICHIERS MODIFIÉS                                                          │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+📄 src/services/claraApiService.ts
+   ├── Fonction: getN8nEndpointWithInfo()
+   │   └── Ajout de la condition: "Data analyst" && "Aléatoire simple"
+   │       → routeKey = "data_analyst_aleatoire_simple"
+   │       → caseName = "Case 49"
+   │
+   └── Fonction: resolveEndpointFromRouteKey()
+       └── Ajout du case "data_analyst_aleatoire_simple"
+           → return "http://127.0.0.1:500"
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 🧪 TESTS                                                                      │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+📄 test-case49-data-analyst-aleatoire.ps1
+
+   Script PowerShell pour tester les deux conditions du Case 49:
+
+   ✅ Test Condition 1: "Programme de travail"
+      → Vérifie l'endpoint: https://fpb7ab9h.rpcl.app/webhook-test/integration
+
+   ✅ Test Condition 2: "Data analyst Aléatoire simple"
+      → Vérifie l'endpoint: http://127.0.0.1:500
+
+   Exécution:
+   ./test-case49-data-analyst-aleatoire.ps1
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 EXEMPLES D'UTILISATION                                                     │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Exemple 1: Programme de travail (Condition 1)                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Message utilisateur:                                                        │
+│ "Générer un Programme de travail pour l'audit des stocks"                  │
+│                                                                             │
+│ Résultat:                                                                   │
+│ → Case 49 déclenché                                                         │
+│ → Route key: "programme_travail"                                            │
+│ → Endpoint: https://fpb7ab9h.rpcl.app/webhook-test/integration             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Exemple 2: Data analyst Aléatoire simple (Condition 2 - NOUVEAU)           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Message utilisateur:                                                        │
+│ "Data analyst Aléatoire simple"                                             │
+│                                                                             │
+│ Résultat:                                                                   │
+│ → Case 49 déclenché                                                         │
+│ → Route key: "data_analyst_aleatoire_simple"                                │
+│ → Endpoint: http://127.0.0.1:500                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Exemple 3: Variations acceptées (Condition 2)                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • "Je veux utiliser Data analyst avec Aléatoire simple"                     │
+│ • "Créer une analyse Data analyst en mode Aléatoire simple"                 │
+│ • "Data analyst pour échantillonnage Aléatoire simple"                      │
+│                                                                             │
+│ ⚠️  IMPORTANT: Les DEUX mots-clés doivent être présents !                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ ⚙️ CONFIGURATION N8N                                                          │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+Pour que le Case 49 (Condition 2) fonctionne correctement:
+
+1️⃣  Démarrer n8n sur le port 500
+   → URL locale: http://127.0.0.1:500
+
+2️⃣  Créer un workflow n8n avec:
+   • Un nœud Webhook qui écoute sur /
+   • Méthode: POST
+   • Accepte le paramètre: question (string)
+
+3️⃣  Configurer le traitement:
+   • Extraction de la question
+   • Analyse "Data analyst Aléatoire simple"
+   • Génération de la réponse appropriée
+   • Retour au format JSON
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 📊 LOGIQUE DE ROUTAGE                                                         │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          DÉCISION DE ROUTAGE                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Message utilisateur: "Data analyst Aléatoire simple"
+                              ↓
+                     ┌────────────────┐
+                     │ Switch Router  │
+                     └────────┬───────┘
+                              ↓
+                   Vérifie les conditions
+                              ↓
+              ┌───────────────┴───────────────┐
+              ↓                               ↓
+   Contient "Programme de travail" ?    Contient "Data analyst"
+              │                          ET "Aléatoire simple" ?
+              NO                                YES
+                                                ↓
+                                         ┌──────────────┐
+                                         │   CASE 49    │
+                                         └──────┬───────┘
+                                                ↓
+                                    routeKey: "data_analyst_aleatoire_simple"
+                                                ↓
+                                    Endpoint: http://127.0.0.1:500
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ ✅ VALIDATION                                                                 │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+Pour valider l'implémentation:
+
+1. ✅ Code modifié dans claraApiService.ts
+2. ✅ Route key ajoutée: "data_analyst_aleatoire_simple"
+3. ✅ Endpoint configuré: http://127.0.0.1:500
+4. ✅ Script de test créé: test-case49-data-analyst-aleatoire.ps1
+5. ⏳ À faire: Démarrer n8n sur le port 500
+6. ⏳ À faire: Tester dans l'application Claraverse
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 🎓 NOTES TECHNIQUES                                                           │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+• Le Case 49 utilise maintenant deux "else if" séparés pour gérer les
+  deux conditions indépendantes
+
+• L'ordre des conditions est important:
+  1. "Programme de travail" est vérifié en premier
+  2. "Data analyst + Aléatoire simple" est vérifié ensuite
+
+• La condition "Data analyst + Aléatoire simple" utilise l'opérateur &&
+  pour s'assurer que LES DEUX termes sont présents
+
+• L'endpoint http://127.0.0.1:500 est une URL LOCALE qui nécessite
+  que n8n soit démarré sur la même machine
+
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ 📚 DOCUMENTATION ASSOCIÉE                                                     │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+📄 test-case49-data-analyst-aleatoire.ps1
+   → Script de test PowerShell
+
+📄 test-case49-programme-travail.ps1 (existant)
+   → Script de test pour la Condition 1
+
+📄 SYNTHESE_VISUELLE_CASE_49_29_JUIN_2026.txt (existant)
+   → Documentation du Case 49 original
+
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                            ✅ MISSION ACCOMPLIE                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+Le Case 49 a été étendu avec succès pour supporter:
+• Condition 1: Programme de travail (existant)
+• Condition 2: Data analyst + Aléatoire simple (nouveau ✨)
+
+Les cases 1 à 48 restent inchangés comme demandé.
+
+Date de modification: 08 Juillet 2026

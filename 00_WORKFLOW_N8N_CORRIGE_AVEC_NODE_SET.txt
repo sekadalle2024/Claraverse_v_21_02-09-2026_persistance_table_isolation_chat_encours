@@ -1,0 +1,169 @@
+═══════════════════════════════════════════════════════════════════════════════
+   WORKFLOW N8N CORRIGÉ - AVEC NODE SET POUR VARIABLES RAG
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 SOLUTION COMPLÈTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le problème : L'agent RAG affiche les valeurs par défaut au lieu des valeurs 
+réelles car le node précédent ne transmet pas les données correctement.
+
+La solution : Ajouter un node "Set" entre "Alea16" et "Agent RAG" pour mapper
+explicitement les variables.
+
+📋 NOUVEAU FLUX DE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9 
+  → Code integrate7 
+    → Alea16 
+      → 🆕 Set Variables RAG (NOUVEAU NODE)
+        → Agent RAG révision des comptes1
+          → code RAG4
+
+🔧 CONFIGURATION DU NODE "SET VARIABLES RAG"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Type de node : Set (n8n-nodes-base.set)
+Position : Entre "Alea16" et "Agent RAG"
+
+CONFIGURATION DES CHAMPS :
+─────────────────────────────────────────────────────────────────────────
+
+Champ 1 : user_message
+  Type : String
+  Valeur : {{ $json.message || $json.user_message || $json.input || "Message non fourni" }}
+
+Champ 2 : cycle
+  Type : String
+  Valeur : {{ $json.cycle || $json.category || "Achats" }}
+
+Champ 3 : constat
+  Type : String
+  Valeur : {{ $json.constat || $json.observation || "À compléter" }}
+
+Champ 4 : anomalie
+  Type : String
+  Valeur : {{ $json.anomalie || $json.issue || "À compléter" }}
+
+
+✅ PROMPT AGENT RAG SIMPLIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Maintenant que le node Set fournit les variables, le prompt devient plus simple :
+
+[DONNÉES D'ENTRÉE]
+[user_message] = {{ $json.user_message }}
+[cycle_detecte] = {{ $json.cycle }}
+[constat] = {{ $json.constat }}
+[anomalie] = {{ $json.anomalie }}
+
+Plus besoin de fallback (||) car le node Set garantit que les variables existent.
+
+📝 ÉTAPES D'IMPLÉMENTATION DANS N8N
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Ajouter le node Set
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Dans N8N, cliquez sur le "+" entre "Alea16" et "Agent RAG"
+   2. Cherchez "Set" dans la liste des nodes
+   3. Ajoutez le node "Set"
+   4. Renommez-le "Set Variables RAG"
+
+ÉTAPE 2 : Configurer les 4 champs
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Mode : Manual Mapping
+   
+   Cliquez sur "Add Field" 4 fois et configurez :
+   
+   Field 1:
+   - Name: user_message
+   - Type: String
+   - Value: {{ $json.message || $json.user_message || $json.input || "Message non fourni" }}
+   
+   Field 2:
+   - Name: cycle
+   - Type: String
+   - Value: {{ $json.cycle || $json.category || "Achats" }}
+   
+   Field 3:
+   - Name: constat
+   - Type: String
+   - Value: {{ $json.constat || $json.observation || "À compléter" }}
+   
+   Field 4:
+   - Name: anomalie
+   - Type: String
+   - Value: {{ $json.anomalie || $json.issue || "À compléter" }}
+
+ÉTAPE 3 : Reconnecter les nodes
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Déconnectez "Alea16" de "Agent RAG"
+   2. Connectez "Alea16" → "Set Variables RAG"
+   3. Connectez "Set Variables RAG" → "Agent RAG"
+
+ÉTAPE 4 : Mettre à jour le prompt de l'agent RAG
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Remplacez la section [DONNÉES D'ENTRÉE] par :
+   
+   [DONNÉES D'ENTRÉE]
+   [user_message] = {{ $json.user_message }}
+   [cycle_detecte] = {{ $json.cycle }}
+   [constat] = {{ $json.constat }}
+   [anomalie] = {{ $json.anomalie }}
+
+ÉTAPE 5 : Tester le workflow
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Exécutez le workflow avec des données de test
+   2. Cliquez sur "Set Variables RAG" pour voir l'output
+   3. Vérifiez que les 4 variables sont présentes
+   4. Vérifiez que l'agent RAG reçoit les bonnes valeurs
+
+🔍 VÉRIFICATION DE L'OUTPUT DU NODE SET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après exécution, l'output du node "Set Variables RAG" devrait ressembler à :
+
+{
+  "user_message": "Facture fournisseur non comptabilisée",
+  "cycle": "Achats",
+  "constat": "Facture reçue mais pas enregistrée",
+  "anomalie": "Charge non comptabilisée"
+}
+
+Si vous voyez cela, les variables sont correctement mappées ! ✅
+
+🎯 AVANTAGES DE CETTE APPROCHE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Mapping explicite des variables
+✅ Gestion des noms de variables alternatifs
+✅ Valeurs par défaut garanties
+✅ Debugging facile (voir l'output du node Set)
+✅ Prompt agent RAG simplifié
+✅ Pas de modification du code ClaraVerse nécessaire
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ n8n_workflow_rag_avec_node_set_corrige.json
+   → Extrait de workflow N8N avec le node Set configuré
+
+✅ 00_WORKFLOW_N8N_CORRIGE_AVEC_NODE_SET.txt
+   → Ce fichier (guide complet)
+
+🚀 PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvrir N8N
+2. Ajouter le node "Set Variables RAG" entre Alea16 et Agent RAG
+3. Configurer les 4 champs comme indiqué ci-dessus
+4. Tester avec des données réelles
+5. Vérifier que l'agent RAG reçoit les bonnes valeurs
+
+═══════════════════════════════════════════════════════════════════════════════

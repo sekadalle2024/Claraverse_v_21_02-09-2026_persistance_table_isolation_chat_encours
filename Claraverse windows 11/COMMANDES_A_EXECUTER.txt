@@ -1,0 +1,119 @@
+=================================================================
+  CLARAVERSE - COMMANDES À EXÉCUTER (Copier-Coller)
+=================================================================
+
+ÉTAPE 1 : Terminer l'installation Miniconda
+-------------------------------------------
+→ L'installateur devrait être ouvert
+→ Cochez "Add Miniconda3 to my PATH environment variable"
+→ Cochez "Register Miniconda3 as my default Python"
+→ Terminez l'installation
+
+
+ÉTAPE 2 : Redémarrer le terminal
+---------------------------------
+→ Fermez ce terminal
+→ Ouvrez un nouveau PowerShell
+→ Naviguez vers ClaraVerse : cd H:\ClaraVerse
+
+
+ÉTAPE 3 : Initialiser Conda
+----------------------------
+conda init
+
+
+ÉTAPE 4 : Redémarrer le terminal à nouveau
+-------------------------------------------
+→ Fermez le terminal
+→ Ouvrez un nouveau PowerShell
+→ Naviguez vers ClaraVerse : cd H:\ClaraVerse
+
+
+ÉTAPE 5 : Vérifier Conda
+-------------------------
+conda --version
+
+
+ÉTAPE 6 : Configurer l'environnement Python (OPTION A - Automatique)
+---------------------------------------------------------------------
+.\setup-env-simple.ps1
+
+
+ÉTAPE 6 : Configurer l'environnement Python (OPTION B - Manuel)
+----------------------------------------------------------------
+conda create -n claraverse python=3.11 -y
+conda activate claraverse
+conda install pandas numpy openpyxl xlrd beautifulsoup4 -y
+cd py_backend
+pip install -r requirements.txt
+cd ..
+
+
+ÉTAPE 7 : Vérifier l'installation
+----------------------------------
+.\check-install.ps1
+
+
+ÉTAPE 8 : Démarrer le projet
+-----------------------------
+conda activate claraverse
+npm run dev:full
+
+
+=================================================================
+  URLS DU PROJET
+=================================================================
+
+Frontend : http://localhost:5173
+Backend  : http://localhost:8000
+API Docs : http://localhost:8000/docs
+
+
+=================================================================
+  COMMANDES UTILES
+=================================================================
+
+# Vérifier l'installation
+.\check-install.ps1
+
+# Lister les environnements conda
+conda env list
+
+# Activer l'environnement
+conda activate claraverse
+
+# Désactiver l'environnement
+conda deactivate
+
+# Démarrer seulement le frontend
+npm run dev
+
+# Démarrer seulement le backend
+conda activate claraverse
+cd py_backend
+python main.py
+
+# Mettre à jour les dépendances
+npm update
+conda activate claraverse
+pip install --upgrade -r py_backend/requirements.txt
+
+
+=================================================================
+  EN CAS DE PROBLÈME
+=================================================================
+
+# Si conda n'est pas reconnu
+→ Vérifiez que vous avez coché "Add to PATH" pendant l'installation
+→ Redémarrez le terminal
+→ Ajoutez manuellement au PATH si nécessaire
+
+# Si l'environnement n'existe pas
+conda create -n claraverse python=3.11 -y
+
+# Si erreur au démarrage
+conda activate claraverse
+pip install --force-reinstall -r py_backend/requirements.txt
+
+
+=================================================================

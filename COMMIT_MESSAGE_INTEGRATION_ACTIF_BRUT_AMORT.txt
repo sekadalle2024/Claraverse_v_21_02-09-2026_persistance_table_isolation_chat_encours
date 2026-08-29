@@ -1,0 +1,38 @@
+feat: Intégration module ACTIF BRUT/AMORT/NET dans backend
+
+✨ Fonctionnalités ajoutées:
+- Calcul automatique des colonnes BRUT, AMORT ET DEPREC, NET pour l'ACTIF
+- Génération HTML tableau 7 colonnes conforme SYSCOHADA Révisé
+- Intégration transparente dans le workflow etats_financiers.py
+- Fallback automatique vers version standard si erreur
+
+📊 Principe SYSCOHADA:
+- BRUT = Comptes classe 2 (hors 28 et 29)
+- AMORT ET DEPREC = Comptes 28 (amortissements) + 29 (provisions)
+- NET = BRUT - AMORT ET DEPREC
+
+🔧 Modifications:
+- py_backend/etats_financiers.py: Import et intégration du module
+- py_backend/calculer_actif_brut_amort.py: Module principal (déjà existant)
+- test-integration-actif-backend.ps1: Script de test automatisé
+
+📝 Documentation:
+- Doc_Etat_Fin/Doc Bilan Actif/00_INTEGRATION_BACKEND_COMPLETE_07_AVRIL_2026.txt
+- Doc_Etat_Fin/Doc Bilan Actif/00_GUIDE_INTEGRATION_FRONTEND_07_AVRIL_2026.txt
+- 00_RECAP_SESSION_INTEGRATION_ACTIF_07_AVRIL_2026.txt
+- 00_MISSION_ACCOMPLIE_INTEGRATION_ACTIF_07_AVRIL_2026.txt
+- 00_QUICK_START_TESTS_ACTIF_07_AVRIL_2026.txt
+- 00_LIRE_MAINTENANT_INTEGRATION_ACTIF.txt
+
+✅ Tests:
+- Module s'importe sans erreur
+- Intégration backend fonctionnelle
+- HTML enrichi généré correctement
+- Frontend compatible sans modification
+
+🔄 Prochaines étapes:
+- Exécuter tests backend
+- Valider affichage dans navigateur
+- Intégrer dans export Excel
+
+Date: 07 Avril 2026

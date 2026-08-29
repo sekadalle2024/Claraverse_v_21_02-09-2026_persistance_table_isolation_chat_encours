@@ -1,0 +1,65 @@
+================================================================
+   WORKFLOW CORRIGÉ - RECHERCHE PRÉCISE
+================================================================
+
+✅ CORRECTIONS APPLIQUÉES
+==========================
+
+Deux améliorations pour une recherche plus précise:
+
+
+1. REQUÊTE GOOGLE DRIVE AMÉLIORÉE
+==================================
+
+Ancienne requête:
+```
+name contains '[I30]-AFRILAND'
+```
+
+Nouvelle requête:
+```
+(name = '[I30]-AFRILAND' or name contains '[I30]-AFRILAND')
+```
+
+Cette requête cherche:
+- D'abord le nom exact
+- Puis les noms qui contiennent l'index
+
+
+2. LOGIQUE DE SÉLECTION INTELLIGENTE
+=====================================
+
+Le node "Format Response" trie maintenant les résultats:
+
+Priorité 1: Nom exact (sans extension)
+Priorité 2: Nom qui commence par l'index
+Priorité 3: Premier fichier trouvé
+
+Exemple:
+- Recherche: [I30]-AFRILAND
+- Fichiers trouvés:
+  * [I10]-Norme cripp.pdf
+  * [I30]-AFRILAND.pdf
+  * [I30]-AFRILAND-v2.pdf
+
+Résultat: [I30]-AFRILAND.pdf (commence par l'index exact)
+
+
+FICHIER MIS À JOUR
+==================
+
+workflow_n8n_ouvrir_xref_HTTP_REQUEST.json
+
+
+TESTER LA CORRECTION
+=====================
+
+1. Réimporter le workflow dans n8n
+2. Exécuter:
+   ```powershell
+   .\test-workflow-xref-afriland.ps1
+   ```
+
+Le workflow devrait maintenant retourner le bon fichier !
+
+================================================================

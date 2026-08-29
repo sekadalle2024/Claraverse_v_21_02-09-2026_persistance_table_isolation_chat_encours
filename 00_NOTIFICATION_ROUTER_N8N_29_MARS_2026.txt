@@ -1,0 +1,138 @@
+═══════════════════════════════════════════════════════════════════════════════
+  AJOUT NOTIFICATIONS ROUTER N8N - 29 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME RÉSOLU
+─────────────────────────────────────────────────────────────────────────────
+Le router switch-case de claraApiService.ts déterminait correctement les routes
+et endpoints n8n, mais ces informations n'étaient pas visibles en front-end.
+
+L'utilisateur ne pouvait pas vérifier quel case était activé et quelle URL était
+utilisée pour traiter son message.
+
+✅ SOLUTION IMPLÉMENTÉE
+─────────────────────────────────────────────────────────────────────────────
+Ajout de notifications front-end qui affichent :
+  1. Le numéro du case détecté (Case 1, Case 2, etc.)
+  2. La route validée (routeKey : design, cia_cours, etc.)
+  3. L'URL complète de l'endpoint n8n utilisé
+
+🔧 MODIFICATIONS TECHNIQUES
+─────────────────────────────────────────────────────────────────────────────
+
+1. NOUVELLE MÉTHODE : getN8nEndpointWithInfo()
+   ────────────────────────────────────────────
+   Remplace getN8nEndpoint() avec retour enrichi :
+   
+   Interface de retour :
+   {
+     endpoint: string,      // URL de l'endpoint n8n
+     caseName: string,      // "Case 1", "Case 2", etc.
+     routeKey: string       // "design", "cia_cours", etc.
+   }
+
+2. MÉTHODE HELPER : resolveEndpointFromRouteKey()
+   ───────────────────────────────────────────────
+   Centralise la résolution des URLs à partir des routeKeys
+   Évite la duplication de code
+
+3. REFACTORING : getN8nEndpoint() (legacy)
+   ────────────────────────────────────────
+   Maintenue pour compatibilité ascendante
+   Utilise maintenant getN8nEndpointWithInfo() en interne
+   Marquée @deprecated
+
+4. NOTIFICATION FRONT-END
+   ──────────────────────
+   Dans sendChatMessage() :
+   
+   ```typescript
+   const routingInfo = this.getN8nEndpointWithInfo(message);
+   const resolvedEndpoint = routingInfo.endpoint;
+   
+   // 🔔 NOTIFICATION FRONT-END
+   addInfoNotification(
+     `🔀 Router n8n - ${routingInfo.caseName}`,
+     `Route: ${routingInfo.routeKey}\nURL: ${resolvedEndpoint}`,
+     8000
+   );
+   ```
+
+📊 EXEMPLE DE NOTIFICATION
+─────────────────────────────────────────────────────────────────────────────
+Titre : 🔀 Router n8n - Case 11
+Message : 
+  Route: cia_cours
+  URL: http://localhost:5678/webhook/cia_cours_gemini
+
+Durée : 8 secondes
+
+🎯 BÉNÉFICES
+─────────────────────────────────────────────────────────────────────────────
+✓ Transparence totale du routing
+✓ Débogage facilité pour l'utilisateur
+✓ Vérification immédiate du case activé
+✓ Confirmation de l'URL appelée
+✓ Traçabilité des requêtes n8n
+
+📝 CASES SUPPORTÉS (33 au total)
+─────────────────────────────────────────────────────────────────────────────
+Case 1  : default (template)
+Case 2  : design (integration_windows)
+Case 3  : n8n_doc
+Case 4  : htlm_processor
+Case 6  : algorithme
+Case 7  : visualisation
+Case 8  : notification (locale)
+Case 9  : document (integration_document)
+Case 10 : database_endpoint (integration_database)
+Case 11 : cia_cours (cia_cours_gemini)
+Case 12 : cia_qcm (qcm_cia_gemini)
+Case 13 : cia_synthese (synthese_cia_gemini)
+Case 16 : implementation_modelisation
+Case 17 : implementation_programme_controle
+Case 18 : implementation_cartographie
+Case 19 : programme_controle_comptes
+Case 20 : revue_manager
+Case 21 : lead_balance (traitement local)
+Case 22 : regles_comptables
+Case 23 : recos_revision
+Case 24 : etat_fin (traitement local)
+Case 25 : recos_controle_interne
+Case 26 : recos_revision_comptes
+Case 27 : rapport_synthese_cac
+Case 28 : methodo_audit
+Case 29 : guide_des_commandes
+Case 30 : guide_intelligent
+Case 31 : guide_menu_contextuel
+Case 32 : guide_produit
+Case 33 : methodo_revision
+
+🧪 TEST
+─────────────────────────────────────────────────────────────────────────────
+1. Démarrer l'application Claraverse
+2. Envoyer un message contenant un mot-clé (ex: "CIA Cours")
+3. Observer la notification en haut à droite :
+   - Titre : 🔀 Router n8n - Case 11
+   - Message : Route: cia_cours
+               URL: http://localhost:5678/webhook/cia_cours_gemini
+4. Vérifier dans la console les logs correspondants
+
+📁 FICHIER MODIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+src/services/claraApiService.ts
+
+🔍 LOGS CONSOLE
+─────────────────────────────────────────────────────────────────────────────
+Les logs suivants sont générés :
+
+🔀 Router → Case 11 : cia_cours
+🔔 Notification envoyée: {
+  case: "Case 11",
+  route: "cia_cours",
+  url: "http://localhost:5678/webhook/cia_cours_gemini"
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

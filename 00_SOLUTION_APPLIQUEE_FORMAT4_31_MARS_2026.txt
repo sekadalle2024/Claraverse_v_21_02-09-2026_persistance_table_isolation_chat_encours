@@ -1,0 +1,109 @@
+================================================================
+SOLUTION APPLIQUÉE - FORMAT 4 OBJET vs ARRAY
+31 Mars 2026
+================================================================
+
+PROBLÈME IDENTIFIÉ:
+------------------
+Le webhook n8n retourne un OBJET { data: {...} } au lieu d'un ARRAY [{ data: {...} }]
+→ La condition Array.isArray(result) dans claraApiService.ts échouait
+→ Les tableaux Markdown n'étaient pas affichés (texte brut à la place)
+
+CAUSE RACINE:
+-------------
+n8n transforme automatiquement la réponse du node Code:
+- Code retourne: [{ json: { data: {...} } }]
+- Webhook retourne: { data: {...} } (objet, pas array)
+
+SOLUTION APPLIQUÉE:
+-------------------
+✅ Modification de src/services/claraApiService.ts (lignes ~1230-1280)
+
+Ajout de DEUX détections FORMAT 4:
+
+1. FORMAT 4A (NOUVEAU): Objet direct { data: {...} }
+   - Détecte: result && typeof result === "object" && !Array.isArray(result) && "data" in result
+   - C'est ce que le webhook n8n retourne actuellement
+   - Format: programme_travail_data_object
+
+2. FORMAT 4B (ORIGINAL): Array [{ data: {...} }]
+   - Détecte: Array.isArray(result) && result[0] && "data" in result[0]
+   - Au cas où n8n retournerait un array
+   - Format: programme_travail_data_array
+
+FICHIERS MODIFIÉS:
+------------------
+✅ src/services/claraApiService.ts
+   - Ajout détection FORMAT 4A (objet direct)
+   - Conservation FORMAT 4B (array)
+   - Les deux formats appellent convertStructuredDataToMarkdown()
+
+✅ test-webhook-avec-parametres.ps1
+   - Script de test avec les bons paramètres
+   - Variables entre crochets: [Command], [Processus], etc.
+
+PARAMÈTRES ATTENDUS PAR LE WORKFLOW:
+-------------------------------------
+{
+    "[Command]": "Programme_controle_comptes",
+    "[Processus]": "Trésorerie",
+    "[Niveau de risque R]": 1,
+    "[Assertion]": "Validité"
+}
+
+STRUCTURE ATTENDUE DU WEBHOOK:
+-------------------------------
+{
+  "data": {
+    "Tableau entete": {
+      "Etape de mission": "...",
+      "Normes": "...",
+      "Reference": "...",
+      "Methode": "..."
+    },
+    "Tableau processus": [
+      {
+        "Processus": "...",
+        "Assertion": "...",
+        "Risque": "...",
+        "Controle": "...",
+        "Procedure": "..."
+      }
+    ]
+  }
+}
+
+LOGS ATTENDUS DANS LA CONSOLE:
+-------------------------------
+✅ FORMAT 4A DETECTE: Objet direct avec propriété "data" (webhook n8n)
+📊 Contenu de data: { type: 'object', keys: [...], firstKey: '...' }
+🔄 Début de la conversion en Markdown...
+✅ Conversion terminée: XXXX caractères générés
+🔍 === FIN ANALYSE (FORMAT 4A - Programme de travail objet) ===
+
+PROCHAINES ÉTAPES:
+------------------
+1. Vérifier que le workflow n8n est activé
+2. Tester avec l'application Clara (bouton "Programme contrôle comptes")
+3. Vérifier les logs dans la console du navigateur
+4. Confirmer que les tableaux Markdown s'affichent correctement
+
+COMMANDES DE TEST:
+------------------
+# Test du webhook avec PowerShell
+./test-webhook-avec-parametres.ps1
+
+# Test depuis l'application Clara
+1. Ouvrir Clara dans le navigateur
+2. Ouvrir la console (F12)
+3. Cliquer sur "Démarrer" → "Programme contrôle comptes"
+4. Sélectionner: Processus = Trésorerie, Risque = 1, Assertion = Validité
+5. Vérifier les logs dans la console
+
+STATUT:
+-------
+✅ claraApiService.ts modifié (détection FORMAT 4A + 4B)
+⏳ En attente de test avec le workflow n8n activé
+⏳ Vérification de l'affichage des tableaux Markdown
+
+================================================================

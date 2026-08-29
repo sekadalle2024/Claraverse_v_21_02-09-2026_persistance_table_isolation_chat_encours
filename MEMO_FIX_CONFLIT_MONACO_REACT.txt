@@ -1,0 +1,66 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    MÉMO : RÉSOLUTION CONFLIT MONACO EDITOR / REACT
+                              Date : 20 décembre 2024
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME RENCONTRÉ
+──────────────────
+React ne se montait pas du tout. La page restait blanche avec #root vide.
+
+Erreur console :
+  "Can only have one anonymous define call per script file"
+  at lz-string.js
+
+CAUSE RACINE
+────────────
+Monaco Editor utilise RequireJS (AMD) et définit window.define globalement.
+Quand Vite/React essaie de charger lz-string (dépendance), celui-ci détecte
+window.define et tente de s'enregistrer comme module AMD au lieu d'ES6.
+Cela crée un conflit fatal qui empêche React de se monter.
+
+SOLUTION APPLIQUÉE
+──────────────────
+1. Retirer le chargement de Monaco du <head>
+2. Désactiver temporairement window.define avant le chargement de React
+3. Charger Monaco APRÈS que React soit monté
+
+Modification dans index.html :
+
+  <!-- AVANT le script React -->
+  <script>
+    window.__defineBackup = window.define;
+    window.define = undefined;
+  </script>
+  
+  <script type="module" src="/src/main.tsx"></script>
+  
+  <!-- APRÈS le script React -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        if (window.__defineBackup) {
+          window.define = window.__defineBackup;
+        }
+        var script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js';
+        document.head.appendChild(script);
+      }, 100);
+    });
+  </script>
+
+FICHIER MODIFIÉ
+───────────────
+index.html
+
+RÉSULTAT
+────────
+✅ React se monte correctement
+✅ Monaco Editor reste disponible après le montage
+✅ Pas de conflit AMD/ES6
+
+À RETENIR
+─────────
+Ne jamais charger Monaco Editor (ou tout loader AMD/RequireJS) AVANT les
+modules ES6 de React/Vite. L'ordre de chargement est critique.
+
+═══════════════════════════════════════════════════════════════════════════════

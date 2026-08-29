@@ -1,0 +1,203 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    🔄 FORCER REBUILD RENDER AVEC CLEAR CACHE             ║
+║    17 AVRIL 2026                                         ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🎯 OBJECTIF
+
+Forcer Render à rebuild complètement en effaçant le cache.
+Cela garantit que runtime.txt sera détecté.
+
+═══════════════════════════════════════════════════════════
+
+📋 ÉTAPES DÉTAILLÉES
+
+1️⃣  OUVRIR RENDER DASHBOARD
+
+   URL: https://dashboard.render.com/
+
+2️⃣  SÉLECTIONNER VOTRE SERVICE
+
+   - Chercher votre service backend dans la liste
+   - Cliquer dessus pour ouvrir les détails
+
+3️⃣  CLIQUER SUR "MANUAL DEPLOY"
+
+   - Bouton en haut à droite de la page
+   - Un menu déroulant s'ouvre
+
+4️⃣  SÉLECTIONNER "CLEAR BUILD CACHE & DEPLOY"
+
+   ⚠️  IMPORTANT: Choisir cette option, PAS "Deploy latest commit"
+   
+   Cette option:
+   - Efface le cache de build
+   - Force une installation complète
+   - Garantit la détection de runtime.txt
+
+5️⃣  CONFIRMER
+
+   - Cliquer sur "Yes, clear cache and deploy"
+   - Le rebuild commence immédiatement
+
+6️⃣  ATTENDRE LE BUILD
+
+   - Durée: 5-10 minutes
+   - Suivre les logs en temps réel
+
+7️⃣  VÉRIFIER LES LOGS
+
+   Chercher cette ligne:
+   "==> Using Python version 3.11.9"
+   
+   ✅ Si vous voyez 3.11.9 → Succès!
+   ❌ Si vous voyez 3.14.3 → Problème persiste
+
+═══════════════════════════════════════════════════════════
+
+🔍 LOGS À SURVEILLER
+
+Au début du build:
+
+✅ BON:
+"==> Using Python version 3.11.9"
+"==> Docs on specifying a Python version: ..."
+
+❌ MAUVAIS:
+"==> Using Python version 3.14.3 (default)"
+
+Pendant l'installation:
+
+✅ BON:
+"Collecting pydantic==2.6.4"
+"Successfully installed pydantic-2.6.4 pydantic-core-2.16.3"
+
+❌ MAUVAIS:
+"Collecting pydantic-core==2.20.1"
+"error: could not compile `pydantic-core`"
+
+═══════════════════════════════════════════════════════════
+
+⚠️  SI LE PROBLÈME PERSISTE
+
+Après "Clear build cache & deploy", si Render utilise toujours
+Python 3.14.3:
+
+CAUSES POSSIBLES:
+
+1. runtime.txt n'est PAS sur GitHub
+   → Vérifier: https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+   → Recommencer upload si absent
+
+2. runtime.txt est mal placé
+   → Doit être à la RACINE du repository
+   → PAS dans un sous-dossier
+
+3. runtime.txt a un nom incorrect
+   → Doit être exactement "runtime.txt"
+   → Tout en minuscules
+
+4. runtime.txt a un contenu incorrect
+   → Doit contenir: python-3.11.9
+   → Pas d'espace, pas de ligne vide
+
+═══════════════════════════════════════════════════════════
+
+✅ APRÈS LE SUCCÈS
+
+Une fois que vous voyez "Using Python version 3.11.9":
+
+1. Le build devrait continuer sans erreur Rust
+
+2. pydantic 2.6.4 s'installera avec wheels pré-compilés
+
+3. Le déploiement réussira
+
+4. Votre backend sera en ligne!
+
+═══════════════════════════════════════════════════════════
+
+📊 TIMELINE ATTENDUE
+
+T+0 min:    Clic sur "Clear build cache & deploy"
+T+1 min:    Clonage du repository
+T+2 min:    Détection de runtime.txt
+T+3 min:    Installation Python 3.11.9
+T+4 min:    Installation des dépendances
+T+6 min:    Build terminé
+T+8 min:    Déploiement en cours
+T+10 min:   ✅ Service en ligne!
+
+═══════════════════════════════════════════════════════════
+
+🎯 CHECKLIST
+
+Avant de forcer le rebuild:
+☐ runtime.txt vérifié sur GitHub (présent)
+☐ Contenu vérifié: python-3.11.9
+☐ Emplacement vérifié: racine du repository
+☐ Nom vérifié: runtime.txt (minuscules)
+
+Pendant le rebuild:
+☐ Logs ouverts et surveillés
+☐ Ligne "Using Python version 3.11.9" apparue
+☐ Installation pydantic 2.6.4 réussie
+☐ Pas d'erreur Rust
+
+Après le rebuild:
+☐ Build successful
+☐ Deploy successful
+☐ Service en ligne (status: Live)
+
+═══════════════════════════════════════════════════════════
+
+💡 ASTUCE
+
+Si vous ne trouvez pas "Clear build cache & deploy":
+
+1. Vérifier que vous êtes sur la page du service
+   (pas sur la page d'accueil du dashboard)
+
+2. Le bouton "Manual Deploy" est en haut à droite
+
+3. Cliquer dessus ouvre un menu déroulant
+
+4. "Clear build cache & deploy" est la 2ème option
+
+═══════════════════════════════════════════════════════════
+
+📖 DOCUMENTATION
+
+Problème diagnostiqué:
+→ 00_PROBLEME_RUNTIME_TXT_NON_DETECTE_17_AVRIL_2026.txt
+
+Vérification GitHub:
+→ VERIFIER_RUNTIME_TXT_GITHUB_MAINTENANT.txt
+
+Troubleshooting complet:
+→ Doc render deploy/TROUBLESHOOTING.md
+
+═══════════════════════════════════════════════════════════
+
+🔗 LIENS RAPIDES
+
+Render Dashboard:
+https://dashboard.render.com/
+
+GitHub Repository:
+https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+Vérifier runtime.txt:
+https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026/blob/main/runtime.txt
+
+═══════════════════════════════════════════════════════════
+
+⏱️  DURÉE TOTALE: ~10 MINUTES
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+
+═══════════════════════════════════════════════════════════

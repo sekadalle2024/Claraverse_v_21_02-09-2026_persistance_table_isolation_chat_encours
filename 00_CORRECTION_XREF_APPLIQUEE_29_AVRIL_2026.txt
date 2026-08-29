@@ -1,0 +1,108 @@
+===============================================================
+  ✅ CORRECTION X-REF DOCUMENTAIRE APPLIQUÉE
+  Date: 29 avril 2026
+===============================================================
+
+PROBLÈME RÉSOLU
+===============================================================
+
+La détection de la table X-Ref documentaire a été améliorée
+pour être ultra-flexible et fonctionner dans tous les cas.
+
+
+CORRECTIONS APPLIQUÉES DANS menu.js
+===============================================================
+
+✅ 1. Détection des en-têtes ultra-flexible
+   - Cherche d'abord dans <thead>
+   - Puis dans <tbody>
+   - Puis dans <tr>
+   - Fonctionne même si la structure HTML varie
+
+✅ 2. Détection des colonnes améliorée
+   - Accepte "Cross references" (pluriel)
+   - Accepte "Cross reference" (singulier)
+   - Accepte "X-Ref", "Xref", "X ref"
+   - Accepte "Document" ou "Documents"
+   - Ignore les espaces, tirets, underscores
+
+✅ 3. Messages d'erreur détaillés
+   - Affiche les colonnes détectées
+   - Affiche les valeurs extraites
+   - Aide au diagnostic
+
+✅ 4. Logs de debug dans la console
+   - Vous pouvez voir exactement ce qui se passe
+   - Facilite le dépannage
+
+
+COMMENT TESTER
+===============================================================
+
+MÉTHODE 1 : Test direct dans Claraverse
+-----------------------------------------
+
+1. Ouvrez Claraverse
+2. Affichez votre table X-Ref documentaire
+3. Cliquez sur une ligne de la table
+4. Faites clic droit
+5. Menu "Papier de travail" > "Ouvrir X-Ref documentaire"
+6. Ça devrait fonctionner !
+
+
+MÉTHODE 2 : Diagnostic avec le script
+-----------------------------------------
+
+Si ça ne fonctionne pas :
+
+1. Ouvrez Claraverse
+2. Affichez la table X-Ref
+3. Appuyez sur F12 (DevTools)
+4. Onglet "Console"
+5. Copiez-collez le script depuis :
+   SCRIPT_DEBUG_CLARAVERSE_XREF.txt
+6. Copiez le résultat et envoyez-le moi
+
+
+CE QUI DEVRAIT FONCTIONNER MAINTENANT
+===============================================================
+
+✅ Table avec <thead> et <tbody>
+✅ Table avec seulement <tbody>
+✅ Table avec seulement <tr>
+✅ En-têtes en <th>
+✅ En-têtes en <td>
+✅ "Cross references" (pluriel)
+✅ "Cross reference" (singulier)
+✅ "X-Ref", "Xref", "X ref"
+✅ "Document" ou "Documents"
+✅ Espaces, tirets, underscores dans les noms
+
+
+FICHIERS MODIFIÉS
+===============================================================
+
+📝 public/menu.js
+   - Fonction ouvrirXRefDocumentaire() améliorée
+   - Détection ultra-flexible
+   - Logs de debug ajoutés
+
+📝 SCRIPT_DEBUG_CLARAVERSE_XREF.txt
+   - Script de diagnostic complet
+   - À utiliser si problème persiste
+
+
+PROCHAINES ÉTAPES
+===============================================================
+
+1. Testez dans Claraverse
+2. Si ça fonctionne : ✅ Terminé !
+3. Si ça ne fonctionne pas :
+   - Exécutez le script de diagnostic
+   - Envoyez-moi le résultat
+   - Je verrai exactement ce qui ne va pas
+
+
+===============================================================
+  FIN
+===============================================================

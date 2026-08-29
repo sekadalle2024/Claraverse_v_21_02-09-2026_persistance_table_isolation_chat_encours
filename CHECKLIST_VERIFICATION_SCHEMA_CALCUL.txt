@@ -1,0 +1,261 @@
+═══════════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST DE VÉRIFICATION - SCHÉMA DE CALCUL
+═══════════════════════════════════════════════════════════════════════════════
+
+Date: 24 avril 2026
+Statut: À vérifier
+
+═══════════════════════════════════════════════════════════════════════════════
+📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 1. public/menu.js
+    [ ] Section "Papier de travail" mise à jour (lignes ~189-198)
+    [ ] Méthode ajouterSchemaCalcul() ajoutée (ligne ~10125)
+    [ ] Méthode actualiserSchemaCalcul() ajoutée (ligne ~10165)
+    [ ] Méthode supprimerSchemaCalcul() ajoutée (ligne ~10205)
+    [ ] Raccourci Ctrl+Shift+K ajouté (ligne ~426)
+
+[ ] 2. index.html
+    [ ] Script papier-travail-schema-calcul.js chargé (ligne ~135)
+    [ ] Ordre de chargement correct (après conso.js, avant menu.js)
+
+[ ] 3. public/papier-travail-schema-calcul.js
+    [ ] Fichier existant présent
+    [ ] Aucune modification nécessaire
+
+═══════════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION CRÉÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] 1. 00_LIRE_EN_PREMIER_SCHEMA_CALCUL.txt
+[ ] 2. 00_INTEGRATION_SCHEMA_CALCUL_MENU_24_AVRIL_2026.txt
+[ ] 3. QUICK_START_SCHEMA_CALCUL_MENU.txt
+[ ] 4. LISTE_FICHIERS_SCHEMA_CALCUL_MENU_24_AVRIL_2026.md
+[ ] 5. EXEMPLE_VISUEL_SCHEMA_CALCUL_MENU.txt
+[ ] 6. SYNTHESE_VISUELLE_SCHEMA_CALCUL_24_AVRIL_2026.txt
+[ ] 7. 00_INDEX_SCHEMA_CALCUL_MENU_24_AVRIL_2026.md
+[ ] 8. COMMANDES_RAPIDES_SCHEMA_CALCUL.txt
+[ ] 9. COMMIT_MESSAGE_SCHEMA_CALCUL_24_AVRIL_2026.txt
+[ ] 10. CHECKLIST_VERIFICATION_SCHEMA_CALCUL.txt (ce fichier)
+
+═══════════════════════════════════════════════════════════════════════════════
+🧪 TESTS FONCTIONNELS
+═══════════════════════════════════════════════════════════════════════════════
+
+PRÉPARATION
+───────────────────────────────────────────────────────────────────────────────
+[ ] 1. Ouvrir le navigateur
+[ ] 2. Ouvrir la console (F12)
+[ ] 3. Charger la page de l'application
+[ ] 4. Vérifier qu'il n'y a pas d'erreurs dans la console
+
+VÉRIFICATION DU CHARGEMENT
+───────────────────────────────────────────────────────────────────────────────
+[ ] 5. Vérifier que window.SchemaCalculManager existe
+    Commande: console.log(window.SchemaCalculManager)
+    Résultat attendu: Objet SchemaCalculManager
+
+[ ] 6. Vérifier que schemaCalculCommands existe
+    Commande: console.log(schemaCalculCommands)
+    Résultat attendu: Objet avec méthodes (showStorage, processAll, etc.)
+
+TEST DU MENU CONTEXTUEL
+───────────────────────────────────────────────────────────────────────────────
+[ ] 7. Créer une table de test avec colonnes: Conclusion, Assertion, CTR
+[ ] 8. Cliquer sur une cellule de la table
+[ ] 9. Ouvrir le menu contextuel (clic droit ou survol)
+[ ] 10. Vérifier que la section "Papier de travail" existe
+[ ] 11. Vérifier que les 3 nouvelles options sont présentes:
+    [ ] 📐 Ajouter Schéma de calcul (Ctrl+Shift+K)
+    [ ] 🔄 Actualiser Schéma de calcul
+    [ ] 🗑️ Supprimer Schéma de calcul
+
+TEST AJOUT MANUEL
+───────────────────────────────────────────────────────────────────────────────
+[ ] 12. Créer une table 2 avec "Nature de test: Rapprochement"
+[ ] 13. Créer une table principale (Modelised_table)
+[ ] 14. Cliquer sur la table principale
+[ ] 15. Menu > Papier de travail > Ajouter Schéma de calcul
+[ ] 16. Vérifier qu'un schéma apparaît au-dessus de la table
+[ ] 17. Vérifier que le schéma contient: (A) | (B) | (C) = (A) - (B)
+[ ] 18. Vérifier la notification: "✅ Schéma de calcul ajouté"
+
+TEST RACCOURCI CLAVIER
+───────────────────────────────────────────────────────────────────────────────
+[ ] 19. Cliquer sur une cellule de la table principale
+[ ] 20. Appuyer sur Ctrl+Shift+K
+[ ] 21. Vérifier qu'un schéma est ajouté
+[ ] 22. Vérifier la notification
+
+TEST ÉDITION
+───────────────────────────────────────────────────────────────────────────────
+[ ] 23. Cliquer sur une cellule du schéma
+[ ] 24. Modifier le contenu (ex: remplacer "(A)" par "Solde Livre")
+[ ] 25. Cliquer ailleurs ou appuyer sur Entrée
+[ ] 26. Vérifier que la modification est sauvegardée
+
+TEST SAUVEGARDE LOCALSTORAGE
+───────────────────────────────────────────────────────────────────────────────
+[ ] 27. Afficher le localStorage
+    Commande: schemaCalculCommands.showStorage()
+[ ] 28. Vérifier que les données du schéma sont présentes
+[ ] 29. Vérifier la structure: { schemaId: { timestamp, forTable, cells } }
+
+TEST RESTAURATION
+───────────────────────────────────────────────────────────────────────────────
+[ ] 30. Actualiser la page (F5)
+[ ] 31. Vérifier que le schéma réapparaît automatiquement
+[ ] 32. Vérifier que les modifications sont conservées
+
+TEST ACTUALISATION
+───────────────────────────────────────────────────────────────────────────────
+[ ] 33. Modifier la "Nature de test" dans la table 2 (ex: "Validation")
+[ ] 34. Cliquer sur la table principale
+[ ] 35. Menu > Papier de travail > Actualiser Schéma de calcul
+[ ] 36. Vérifier que le schéma est régénéré avec le nouveau modèle
+[ ] 37. Vérifier la notification: "✅ Schéma de calcul actualisé"
+
+TEST SUPPRESSION
+───────────────────────────────────────────────────────────────────────────────
+[ ] 38. Cliquer sur la table principale
+[ ] 39. Menu > Papier de travail > Supprimer Schéma de calcul
+[ ] 40. Confirmer la suppression
+[ ] 41. Vérifier que le schéma disparaît du DOM
+[ ] 42. Vérifier que les données sont supprimées du localStorage
+    Commande: schemaCalculCommands.showStorage()
+[ ] 43. Vérifier la notification: "✅ Schéma de calcul supprimé"
+
+TEST DÉTECTION AUTOMATIQUE
+───────────────────────────────────────────────────────────────────────────────
+[ ] 44. Créer une nouvelle div avec:
+    - Table 2 avec "Nature de test: Estimation"
+    - Table principale (Modelised_table)
+[ ] 45. Attendre quelques secondes (détection automatique)
+[ ] 46. Vérifier qu'un schéma est généré automatiquement
+[ ] 47. Vérifier que le modèle est correct: (A) | (B) | (C)=(A)*(B) | (D) | (E)=(C)-(D)
+
+TEST MODÈLES
+───────────────────────────────────────────────────────────────────────────────
+Tester chaque modèle:
+
+[ ] 48. Validation
+    Nature: "Validation"
+    Attendu: (A) | (B) | (C)=(A)+(B) | (D) | (E)=(C)-(D)
+
+[ ] 49. Mouvement
+    Nature: "Mouvement"
+    Attendu: (A) | (B) | (C) | (D)=(A)+(B)-(C) | (E) | (F)=(D)-(E)
+
+[ ] 50. Rapprochement
+    Nature: "Rapprochement"
+    Attendu: (A) | (B) | (C)=(A)-(B)
+
+[ ] 51. Séparation
+    Nature: "Séparation"
+    Attendu: (A) | (B) | (C)=(A)-(B)
+
+[ ] 52. Estimation
+    Nature: "Estimation"
+    Attendu: (A) | (B) | (C)=(A)*(B) | (D) | (E)=(C)-(D)
+
+[ ] 53. Revue analytique
+    Nature: "Revue analytique"
+    Attendu: (A) | (B) | (C)=(A)-(B)
+
+[ ] 54. Cadrage TVA
+    Nature: "Cadrage TVA"
+    Attendu: (A) | (B)=(A)*18% | (C) | (D) | (E) | (F)=(B)-(C)-(D)-(E)
+
+[ ] 55. Cotisations sociales
+    Nature: "Cotisations sociales"
+    Attendu: (A) | (B) | (C) | (D)
+
+[ ] 56. Modélisation
+    Nature: "(X) = (Y) - (Z)"
+    Attendu: (X) | (Y) | (Z)
+
+TEST COMMANDES DE DÉBOGAGE
+───────────────────────────────────────────────────────────────────────────────
+[ ] 57. schemaCalculCommands.showStorage()
+    Résultat: Affiche les données du localStorage
+
+[ ] 58. schemaCalculCommands.processAll()
+    Résultat: Retraite toutes les tables
+
+[ ] 59. schemaCalculCommands.restoreAll()
+    Résultat: Restaure tous les schémas
+
+[ ] 60. schemaCalculCommands.clearStorage()
+    Résultat: Efface tous les schémas (après confirmation)
+
+TEST GESTION D'ERREURS
+───────────────────────────────────────────────────────────────────────────────
+[ ] 61. Tester sans table sélectionnée
+    Résultat attendu: Message "⚠️ Aucune table sélectionnée"
+
+[ ] 62. Tester avec une table sans "Nature de test"
+    Résultat attendu: Aucun schéma généré (normal)
+
+[ ] 63. Tester la suppression d'un schéma inexistant
+    Résultat attendu: Message "⚠️ Aucun schéma de calcul trouvé"
+
+TEST COMPATIBILITÉ
+───────────────────────────────────────────────────────────────────────────────
+[ ] 64. Vérifier que conso.js fonctionne toujours
+[ ] 65. Vérifier que les autres fonctions du menu fonctionnent
+[ ] 66. Vérifier qu'il n'y a pas de conflits avec d'autres scripts
+
+TEST PERFORMANCE
+───────────────────────────────────────────────────────────────────────────────
+[ ] 67. Créer 10 tables avec schémas
+[ ] 68. Vérifier que la page reste réactive
+[ ] 69. Vérifier la taille du localStorage
+    Commande: voir COMMANDES_RAPIDES_SCHEMA_CALCUL.txt
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 RÉSULTATS
+═══════════════════════════════════════════════════════════════════════════════
+
+Tests réussis: _____ / 69
+Tests échoués: _____
+Taux de réussite: _____%
+
+═══════════════════════════════════════════════════════════════════════════════
+🐛 PROBLÈMES IDENTIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. _________________________________________________________________
+   Solution: _________________________________________________________
+
+2. _________________________________________________________________
+   Solution: _________________________________________________________
+
+3. _________________________________________________________________
+   Solution: _________________________________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ VALIDATION FINALE
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] Tous les tests fonctionnels passent
+[ ] Aucune erreur dans la console
+[ ] La documentation est complète
+[ ] Le code est propre et commenté
+[ ] Les performances sont acceptables
+[ ] La compatibilité est assurée
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 NOTES
+═══════════════════════════════════════════════════════════════════════════════
+
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+_____________________________________________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+Date de vérification: _______________
+Vérificateur: _______________
+Statut: [ ] ✅ VALIDÉ  [ ] ⚠️ À CORRIGER  [ ] ❌ ÉCHEC
+═══════════════════════════════════════════════════════════════════════════════

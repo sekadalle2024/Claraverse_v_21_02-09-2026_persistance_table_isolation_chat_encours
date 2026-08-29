@@ -1,0 +1,77 @@
+============================================================================
+   SAUVEGARDE CLARAVERSE V16 - 04 MAI 2026
+   PROBLEME: GitHub Push Protection (Secret detecte)
+============================================================================
+
+SITUATION ACTUELLE
+==================
+- Commit cree avec succes : 933a742
+- 6 fichiers ajoutes (944 insertions)
+- Push BLOQUE par GitHub Push Protection
+- Raison : Cle API OpenRouter detectee dans anciens commits
+
+FICHIERS CONCERNES PAR LE SECRET
+=================================
+Les fichiers suivants contiennent une cle OpenRouter dans l'historique :
+1. CONFIGURATION_OPENROUTER_PAR_DEFAUT.md (ligne 19)
+2. Claraverse windows 11/COMMENCEZ_ICI_OPENROUTER.md (ligne 16)
+3. Claraverse windows 11/GUIDE_RAPIDE_OPENROUTER.md (ligne 12)
+4. Claraverse windows 11/INDEX_CONFIGURATION_OPENROUTER.md (ligne 135)
+5. Claraverse windows 11/RESUME_MODIFICATIONS_OPENROUTER.md (ligne 42)
+6. src/db/index.ts (ligne 1415)
+
+Commits concernes :
+- 36ad132a4505f02eb5fe33723aee5fb9552e8458
+- df6e34ec9207b90f6910b5f0b96b830630d8a013
+
+
+SOLUTION RAPIDE (RECOMMANDEE)
+==============================
+
+ETAPE 1 : Autoriser le secret sur GitHub
+-----------------------------------------
+Cliquez sur ce lien pour autoriser le push :
+
+https://github.com/sekadalle2024/Claverse_windows__v_16_04-05-2026_V5_docker_zeabur_ok_switch_editeur-/security/secret-scanning/unblock-secret/3DHLOJzFtMavzTpaMzr8AEQKaDG
+
+ETAPE 2 : Relancer le push
+---------------------------
+Une fois autorise, executez :
+
+    .\push-claraverse-v16-04-mai-2026.ps1
+
+OU simplement :
+
+    git push -u origin master
+
+
+SOLUTION ALTERNATIVE (SI VOUS NE POUVEZ PAS AUTORISER)
+=======================================================
+
+Si vous ne pouvez pas autoriser le secret, vous devez :
+
+1. Supprimer les cles API des fichiers
+2. Utiliser des variables d'environnement a la place
+3. Nettoyer l'historique Git (complexe)
+
+Pour cette option, demandez de l'aide supplementaire.
+
+
+INFORMATIONS TECHNIQUES
+========================
+Repository : https://github.com/sekadalle2024/Claverse_windows__v_16_04-05-2026_V5_docker_zeabur_ok_switch_editeur-.git
+Branche    : master
+Commit     : 933a742
+Taille     : 84.30 MiB
+Fichiers   : 4350 objets
+
+
+PROCHAINES ETAPES
+=================
+1. Cliquez sur le lien d'autorisation ci-dessus
+2. Relancez le script de push
+3. Verifiez que le push reussit
+
+
+Date : 04 Mai 2026
+Statut : EN ATTENTE D'AUTORISATION GITHUB

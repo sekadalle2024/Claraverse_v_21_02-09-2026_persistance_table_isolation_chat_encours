@@ -1,0 +1,138 @@
+═══════════════════════════════════════════════════════════════════════
+  CORRECTION NOMS PROCESSUS GOOGLE SHEET - 31 MARS 2026
+═══════════════════════════════════════════════════════════════════════
+
+✅ STATUT : TERMINÉ, COMPILÉ ET CORRIGÉ (PAGE BLANCHE RÉSOLUE)
+
+═══════════════════════════════════════════════════════════════════════
+📋 RÉSUMÉ DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════
+
+OBJECTIF :
+Corriger les noms des processus dans l'étape "Matrice de contrôle des comptes"
+pour qu'ils correspondent EXACTEMENT aux noms utilisés dans la Google Sheet.
+
+NOMBRE TOTAL DE MODES : 30 modes (10 processus × 3 niveaux de risque)
+
+═══════════════════════════════════════════════════════════════════════
+🐛 PROBLÈME RÉSOLU : PAGE BLANCHE
+═══════════════════════════════════════════════════════════════════════
+
+CAUSE : Virgule orpheline sur une ligne seule (ligne 1240)
+SYMPTÔME : Page blanche à l'affichage (erreur JavaScript)
+SOLUTION : Déplacement de la virgule à la fin de l'objet précédent
+
+AVANT (INCORRECT) :
+  }
+,
+  {
+
+APRÈS (CORRECT) :
+  },
+  {
+
+═══════════════════════════════════════════════════════════════════════
+📊 LISTE DES 10 PROCESSUS CORRECTS
+═══════════════════════════════════════════════════════════════════════
+
+1. Trésorerie                    (3 modes : R=1, R=2, R=3)
+2. impôt et taxes                (3 modes : R=1, R=2, R=3)
+3. Ventes                        (3 modes : R=1, R=2, R=3)
+4. charge d'exploitation         (3 modes : R=1, R=2, R=3)
+5. Stock                         (3 modes : R=1, R=2, R=3)
+6. capitaux propres              (3 modes : R=1, R=2, R=3)
+7. personnel                     (3 modes : R=1, R=2, R=3)
+8. Immobilisations               (3 modes : R=1, R=2, R=3)
+9. client                        (3 modes : R=1, R=2, R=3)
+10. fournisseur                  (3 modes : R=1, R=2, R=3)
+
+═══════════════════════════════════════════════════════════════════════
+🔧 CORRECTIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════
+
+CORRECTIONS DE NOMS (8 processus) :
+✓ 'trésorerie' → 'Trésorerie'
+✓ 'ventes' → 'Ventes'
+✓ 'stocks' → 'Stock'
+✓ 'capitaux propres' → 'capitaux propres' (déjà correct)
+✓ 'achats' → 'fournisseur'
+✓ 'immobilisations' → 'Immobilisations'
+✓ 'personnel' → 'personnel' (déjà correct)
+✓ 'emprunts' → 'client'
+
+AJOUTS DE NOUVEAUX PROCESSUS (2 processus) :
+✓ 'impôt et taxes' (3 niveaux de risque)
+✓ 'charge d'exploitation' (3 niveaux de risque)
+
+CORRECTIONS SYNTAXE :
+✓ Échappement de l'apostrophe dans "Charge d'exploitation"
+  → label: 'Charge d\'exploitation - Risque X'
+✓ Correction virgule orpheline (ligne 1240)
+  → Déplacement de la virgule à la fin de l'objet précédent
+
+═══════════════════════════════════════════════════════════════════════
+📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════
+
+1. src/components/Clara_Components/DemarrerMenu.tsx
+   - Section : matrice-controle-comptes
+   - Lignes : ~1044-1290
+   - 30 modes configurés avec noms corrects
+   - Correction syntaxe virgule orpheline
+
+2. Doc menu demarrer/Scripts/fix_processus_names_google_sheet.py
+   - Script Python utilisé pour les corrections
+
+═══════════════════════════════════════════════════════════════════════
+✅ VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════
+
+✓ Compilation réussie : npm run build (2 fois)
+✓ Aucune erreur de syntaxe
+✓ 30 modes présents et correctement formatés
+✓ Noms de processus correspondent exactement à la Google Sheet
+✓ Page blanche résolue (virgule orpheline corrigée)
+
+═══════════════════════════════════════════════════════════════════════
+📝 FORMAT DES COMMANDES GÉNÉRÉES
+═══════════════════════════════════════════════════════════════════════
+
+Exemple pour "Trésorerie - Risque 1" :
+
+[Command] : Programme_controle_comptes
+[Processus] : Trésorerie
+[Niveau de risque R] = 1
+[Assertion] = Validité
+
+Exemple pour "charge d'exploitation - Risque 3" :
+
+[Command] : Programme_controle_comptes
+[Processus] : charge d'exploitation
+[Niveau de risque R] = 3
+[Assertion] = Validité, Exhaustivité, Comptabilisation, Séparation des périodes
+
+═══════════════════════════════════════════════════════════════════════
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════
+
+1. Redémarrer le serveur de développement
+2. Tester l'interface pour vérifier l'affichage des 30 modes
+3. Vérifier que les recherches dans la Google Sheet fonctionnent
+4. Valider que les assertions correspondent aux attentes
+
+═══════════════════════════════════════════════════════════════════════
+📌 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════
+
+⚠️ SENSIBILITÉ À LA CASSE :
+Les noms de processus sont sensibles à la casse dans la Google Sheet.
+Respecter EXACTEMENT la casse indiquée ci-dessus.
+
+⚠️ APOSTROPHES :
+Dans le code TypeScript, les apostrophes dans les labels doivent être
+échappées avec un backslash : \'
+
+⚠️ VIRGULES :
+Les virgules doivent être à la fin de chaque objet, pas sur une ligne seule.
+
+═══════════════════════════════════════════════════════════════════════

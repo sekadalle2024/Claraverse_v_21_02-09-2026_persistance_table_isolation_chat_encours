@@ -1,0 +1,165 @@
+================================================================================
+✅ ÉTAPE SUIVANTE - DIAGNOSTIC DE L'ERREUR "FAILED TO FETCH"
+Date: 06 Avril 2026 - 22h00
+================================================================================
+
+SITUATION ACTUELLE:
+-------------------
+✅ Backend redémarré avec: .\start-claraverse-conda.ps1
+✅ Backend accessible (test-backend-direct.ps1 réussi)
+❌ Erreur "failed to fetch" persiste lors de l'import de la balance
+
+PROCHAINE ÉTAPE:
+-----------------
+Observer les logs du backend EN TEMPS RÉEL lors de l'import d'une balance
+pour identifier l'erreur exacte.
+
+================================================================================
+MÉTHODE 1: OBSERVER LES LOGS DU BACKEND (RECOMMANDÉ)
+================================================================================
+
+1. Ouvrir une NOUVELLE fenêtre PowerShell
+
+2. Exécuter cette commande pour voir les logs en temps réel:
+   
+   $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+   Receive-Job -Id $jobs.Backend -Keep
+
+3. Dans le navigateur (http://localhost:5173):
+   - Aller dans "États Financiers"
+   - Importer: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   
+4. Observer IMMÉDIATEMENT les logs dans la fenêtre PowerShell
+
+5. Chercher les messages suivants:
+
+   ✅ SUCCÈS (ce qu'on veut voir):
+   ```
+   📊 Stockage des balances dans le cache global pour l'export...
+   ✅ Balances stockées dans le cache: N=XXX lignes
+   ```
+
+   ❌ ERREUR (ce qu'on cherche):
+   ```
+   ERROR: ...
+   Exception: ...
+   Traceback: ...
+   ```
+
+================================================================================
+MÉTHODE 2: TESTER AVEC UN SCRIPT PYTHON DIRECT
+================================================================================
+
+Si les logs ne montrent rien, tester directement avec Python:
+
+Commande:
+```powershell
+cd py_backend
+conda run -n claraverse_backend python test_simple_problemes.py
+```
+
+Ce script teste l'import d'une balance sans passer par le frontend.
+
+================================================================================
+MÉTHODE 3: VÉRIFIER LA CONSOLE DU NAVIGATEUR
+================================================================================
+
+1. Ouvrir le navigateur (http://localhost:5173)
+2. Appuyer sur F12 pour ouvrir les outils de développement
+3. Aller dans l'onglet "Network" ou "Réseau"
+4. Importer la balance
+5. Chercher la requête vers /etats-financiers/process
+6. Cliquer dessus et voir:
+   - Status Code (devrait être 200, probablement 500)
+   - Response (message d'erreur du backend)
+   - Headers (vérifier Content-Type)
+
+================================================================================
+INFORMATIONS À COLLECTER
+================================================================================
+
+Pour diagnostiquer l'erreur, nous avons besoin de:
+
+1. Les logs du backend lors de l'import (Méthode 1)
+   → Copier TOUT le message d'erreur Python
+
+2. Le status code de la requête HTTP (Méthode 3)
+   → 200 = OK, 500 = Erreur serveur, 0 = Pas de connexion
+
+3. Le message d'erreur exact dans le frontend
+   → Copier le message complet
+
+4. La réponse du serveur (Méthode 3)
+   → Onglet "Response" dans les outils de développement
+
+================================================================================
+CAUSES POSSIBLES DE L'ERREUR
+================================================================================
+
+Basé sur le contexte, voici les causes les plus probables:
+
+1️⃣  ERREUR LORS DU STOCKAGE DANS LE CACHE
+    Symptôme: Erreur Python dans les logs
+    Cause: Problème avec la ligne _balance_cache = {...}
+    Solution: Vérifier la syntaxe et les imports
+
+2️⃣  ERREUR LORS DE LA LECTURE DES ONGLETS
+    Symptôme: Erreur "BALANCE N " ou "BALANCE N-1 " non trouvé
+    Cause: Noms d'onglets avec espaces à la fin
+    Solution: Déjà corrigé normalement
+
+3️⃣  ERREUR DANS UN MODULE IMPORTÉ
+    Symptôme: Erreur lors de l'import de tableau_flux_tresorerie
+    Cause: Erreur de syntaxe dans un module dépendant
+    Solution: Vérifier les imports
+
+4️⃣  ERREUR DE SÉRIALISATION JSON
+    Symptôme: "Object of type DataFrame is not JSON serializable"
+    Cause: Un DataFrame a été ajouté à results_liasse par erreur
+    Solution: Vérifier qu'on utilise bien le cache
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Voir les logs du backend
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep
+
+# Tester directement avec Python
+cd py_backend
+conda run -n claraverse_backend python test_simple_problemes.py
+
+# Vérifier l'import du module
+cd py_backend
+conda run -n claraverse_backend python test_import_etats_financiers.py
+
+# Redémarrer le backend si nécessaire
+.\stop-claraverse.ps1
+.\start-claraverse-conda.ps1
+
+================================================================================
+APRÈS AVOIR COLLECTÉ LES INFORMATIONS
+================================================================================
+
+Une fois que vous avez les logs d'erreur, fournissez:
+
+1. Le message d'erreur Python complet (avec Traceback)
+2. La ligne exacte qui cause l'erreur
+3. Le status code HTTP de la requête
+4. Le message d'erreur dans le frontend
+
+Avec ces informations, nous pourrons identifier et corriger l'erreur rapidement.
+
+================================================================================
+FICHIERS DE RÉFÉRENCE
+================================================================================
+
+Pour plus de détails:
+- GUIDE_DEPANNAGE_RAPIDE_FAILED_TO_FETCH.txt
+- 00_DIAGNOSTIC_ERREUR_PERSISTANTE_06_AVRIL_2026.txt
+- 00_INSTRUCTIONS_TESTS_DIAGNOSTIC_06_AVRIL_2026.txt
+
+================================================================================
+FIN - EN ATTENTE DES LOGS D'ERREUR
+================================================================================

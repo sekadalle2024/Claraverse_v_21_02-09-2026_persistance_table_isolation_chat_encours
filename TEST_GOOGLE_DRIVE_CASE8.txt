@@ -1,0 +1,223 @@
+=================================================================
+🧪 TEST - GOOGLE DRIVE CASE 8 (iframe)
+=================================================================
+
+✅ FIX APPLIQUÉ : Remplacement fetch → iframe
+❌ PROBLÈME RÉSOLU : "docs.google.com refused to connect"
+
+=================================================================
+🌐 TESTER MAINTENANT
+=================================================================
+
+http://localhost:5173/test-modelisation-template-v2.html
+
+Chercher : Test 6 ou Test 7 (n8n_doc)
+
+=================================================================
+📝 TABLE DE TEST MINIMALE
+=================================================================
+
+<table>
+  <thead>
+    <tr>
+      <th>Template</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>n8n_doc</td>
+      <td>Test Google Drive</td>
+    </tr>
+  </tbody>
+</table>
+
+=================================================================
+✅ RÉSULTAT ATTENDU
+=================================================================
+
+1. Détection de la table "Template" avec "n8n_doc"
+2. Exécution du Case 8
+3. Génération d'un accordéon avec :
+   - Page de couverture "Document Google Drive"
+   - Section "☁️ Contenu du Document"
+   - Boutons : Ouvrir dans Google Docs, Télécharger PDF
+   - iframe affichant le document Google Drive
+4. AUCUNE erreur CORS dans la console
+
+=================================================================
+🔍 VÉRIFICATION CONSOLE (F12)
+=================================================================
+
+# Logs attendus
+✅ Modelisation_template_v2.js chargé
+🚀 Modelisation_template_v2.js - Génération séparée (Critère: Template)
+   Table X (Template): n8n_doc...
+   ✅ N8N_DOC détectée
+☁️ Case 8: n8n_doc (Google Drive Document)
+✅ Template X injecté
+
+# Aucune erreur
+❌ PAS de "refused to connect"
+❌ PAS d'erreur CORS
+❌ PAS d'erreur de chargement
+
+=================================================================
+🎨 INTERFACE GÉNÉRÉE
+=================================================================
+
+┌─────────────────────────────────────────┐
+│  📖 Page de Couverture                  │
+│  Document Google Drive                  │
+│  n8n_doc - Partage Cloud                │
+│  E-AUDIT PRO 2.0 - Guide Pratique       │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  ☁️ Contenu du Document        [－]     │
+├─────────────────────────────────────────┤
+│  [🔗 Ouvrir dans Google Docs]           │
+│  [⬇️ Télécharger (PDF)]                 │
+├─────────────────────────────────────────┤
+│  ┌───────────────────────────────────┐  │
+│  │                                   │  │
+│  │   [Document Google Drive]         │  │
+│  │   Affiché dans iframe             │  │
+│  │   Scroll, zoom fonctionnent       │  │
+│  │                                   │  │
+│  │                                   │  │
+│  │                                   │  │
+│  └───────────────────────────────────┘  │
+├─────────────────────────────────────────┤
+│  ☁️ Document chargé depuis Google Drive │
+└─────────────────────────────────────────┘
+
+=================================================================
+💻 COMMANDES CONSOLE
+=================================================================
+
+# Exécuter manuellement
+window.ModelisationTemplateV2.execute();
+
+# Vérifier la configuration
+console.log(window.ModelisationTemplateV2.config.keywords.n8n_doc);
+
+# Compter les documents générés
+console.log('Documents:', document.querySelectorAll('.modelisation-template-container').length);
+
+# Vérifier les iframes
+console.log('iframes:', document.querySelectorAll('iframe').length);
+
+=================================================================
+🔧 TESTER AVEC VOTRE PROPRE DOCUMENT
+=================================================================
+
+1. Ouvrir public/Modelisation_template_v2.js
+2. Chercher la fonction handleCase8()
+3. Modifier l'URL :
+
+const driveUrl = 'https://docs.google.com/document/d/VOTRE_ID/edit?usp=sharing';
+
+4. Sauvegarder et recharger la page
+
+=================================================================
+⚠️ PRÉREQUIS GOOGLE DRIVE
+=================================================================
+
+Le document doit être partagé :
+✅ "Toute personne disposant du lien"
+✅ Ou "Public sur Internet"
+
+Pour vérifier :
+1. Ouvrir le document dans Google Drive
+2. Cliquer sur "Partager"
+3. Vérifier que "Anyone with the link" est activé
+4. Définir sur "Viewer" (Lecteur)
+
+=================================================================
+🎯 FONCTIONNALITÉS À TESTER
+=================================================================
+
+[ ] L'accordéon s'ouvre/ferme correctement
+[ ] La page de couverture s'affiche
+[ ] Le bouton "Ouvrir dans Google Docs" fonctionne
+[ ] Le bouton "Télécharger (PDF)" fonctionne
+[ ] L'iframe affiche le document
+[ ] Le scroll fonctionne dans l'iframe
+[ ] Aucune erreur dans la console
+[ ] Le document est lisible
+
+=================================================================
+🐛 DÉPANNAGE
+=================================================================
+
+# Problème : iframe vide
+→ Vérifier que le document est partagé publiquement
+→ Tester l'URL manuellement dans le navigateur
+→ Vérifier l'ID du document
+
+# Problème : "Refused to connect"
+→ Le document est privé
+→ Partager avec "Anyone with the link"
+
+# Problème : Aucun document généré
+→ Vérifier que la table a une colonne "Template"
+→ Vérifier que la cellule contient "n8n_doc" ou "n8n doc"
+→ Ouvrir la console pour voir les logs
+
+=================================================================
+📊 URLS UTILISÉES
+=================================================================
+
+# Document par défaut
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/edit?usp=sharing
+
+# URL de visualisation (iframe)
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/preview
+
+# URL d'export PDF
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=pdf
+
+=================================================================
+✅ CHECKLIST DE TEST
+=================================================================
+
+[ ] Page de test ouverte
+[ ] Console ouverte (F12)
+[ ] Table "n8n_doc" détectée
+[ ] Case 8 exécuté
+[ ] Accordéon généré
+[ ] iframe présent
+[ ] Document visible
+[ ] Aucune erreur CORS
+[ ] Boutons fonctionnels
+[ ] Navigation dans le document OK
+
+=================================================================
+🎉 SUCCÈS ATTENDU
+=================================================================
+
+Le document Google Drive s'affiche correctement dans un iframe
+sans aucune erreur CORS. L'utilisateur peut :
+
+✅ Voir le document directement dans l'application
+✅ Ouvrir le document dans Google Docs (nouvel onglet)
+✅ Télécharger le document en PDF
+✅ Naviguer dans le document (scroll, zoom)
+✅ Interagir avec l'accordéon (ouvrir/fermer)
+
+=================================================================
+📞 SUPPORT
+=================================================================
+
+En cas de problème :
+1. Vérifier la console (F12)
+2. Vérifier les paramètres de partage du document
+3. Tester l'URL manuellement
+4. Vérifier que le script est chargé
+
+=================================================================
+Date : 13 décembre 2025
+Version : 2.1.1 (Fix iframe)
+Statut : ✅ PRÊT À TESTER
+=================================================================

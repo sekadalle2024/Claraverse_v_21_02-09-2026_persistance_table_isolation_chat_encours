@@ -1,0 +1,53 @@
+Fix: Bouton "Nouvelle conversation" invisible dans la sidebar
+
+🐛 Problème résolu:
+Le bouton "Nouvelle conversation" (New Chat) dans la barre latérale gauche
+n'apparaissait pas ou était masqué par les scripts de l'interface.
+
+✅ Solution appliquée:
+
+1. Modification de design_chat.js
+   - Ajout d'une exception pour ne jamais masquer le bouton "New Chat"
+   - Préservation du bouton même lors du masquage des sélecteurs LLM
+
+2. Nouveau script fix-new-chat-button.js
+   - Force l'affichage du bouton "New Chat"
+   - Injecte des styles CSS pour garantir la visibilité
+   - Observe le DOM pour réappliquer automatiquement le fix
+   - Réapplique le fix toutes les secondes pour garantir la persistance
+
+3. Intégration dans index.html
+   - Chargement du script après design_chat.js
+   - Ordre de chargement optimisé
+
+📁 Fichiers modifiés:
+- public/design_chat.js (exception ajoutée)
+- index.html (script intégré)
+
+📁 Fichiers créés:
+- public/fix-new-chat-button.js (script de correction)
+- public/test-new-chat-button.html (page de test)
+- FIX_BOUTON_NOUVELLE_CONVERSATION.md (documentation)
+- TESTEZ_BOUTON_NOUVELLE_CONVERSATION.md (guide de test)
+- RESUME_FIX_BOUTON_NOUVELLE_CONVERSATION.md (résumé)
+- COMMANDES_TEST_BOUTON_NOUVELLE_CONVERSATION.txt (commandes)
+- INDEX_FIX_BOUTON_NOUVELLE_CONVERSATION.md (index)
+
+🧪 Tests:
+- Page de test interactive créée
+- Commandes de diagnostic fournies
+- Documentation complète
+
+🎯 Résultat:
+- Bouton "New Chat" visible quand la sidebar est étendue
+- Bouton reste accessible après actualisation
+- Bouton fonctionne et crée une nouvelle conversation
+
+📝 Documentation:
+Voir INDEX_FIX_BOUTON_NOUVELLE_CONVERSATION.md pour la liste complète
+des fichiers et la documentation.
+
+---
+Type: fix
+Scope: ui/sidebar
+Impact: Améliore l'accessibilité du bouton "Nouvelle conversation"

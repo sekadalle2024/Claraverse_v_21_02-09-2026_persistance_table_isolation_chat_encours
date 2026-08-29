@@ -1,0 +1,246 @@
+═══════════════════════════════════════════════════════════════
+  COMMANDES RAPIDES - TÂCHE 7 [V5][CONSO] - FUSION REMARQUES
+═══════════════════════════════════════════════════════════════
+
+📋 DÉMARRAGE RAPIDE
+═══════════════════════════════════════════════════════════════
+
+1️⃣ Ouvrir le fichier de test
+──────────────────────────────────────────────────────────────
+start public/test-conso-v5-remarques.html
+
+
+2️⃣ Ouvrir avec serveur local
+──────────────────────────────────────────────────────────────
+npx http-server public -p 8080
+
+Puis ouvrir dans le navigateur :
+http://localhost:8080/test-conso-v5-remarques.html
+
+
+═══════════════════════════════════════════════════════════════
+🔍 COMMANDES DE VÉRIFICATION (Console F12)
+═══════════════════════════════════════════════════════════════
+
+Vérifier le chargement du script
+──────────────────────────────────────────────────────────────
+console.log(window.ClaraverseTableProcessor);
+
+
+Compter les cellules fusionnées
+──────────────────────────────────────────────────────────────
+document.querySelectorAll('[data-merged="true"]').length
+
+
+Compter les cellules avec rowspan
+──────────────────────────────────────────────────────────────
+document.querySelectorAll('[rowspan]').length
+
+
+Afficher les données sauvegardées
+──────────────────────────────────────────────────────────────
+console.log(JSON.parse(localStorage.getItem('claraverse_tables_data')));
+
+
+Vérifier les colonnes Remarques
+──────────────────────────────────────────────────────────────
+document.querySelectorAll('th, td').forEach(cell => {
+  if (cell.textContent.toLowerCase().includes('remarques')) {
+    console.log('Cellule:', cell.textContent.substring(0, 30));
+    console.log('Display:', cell.style.display);
+    console.log('Hidden:', cell.getAttribute('data-hidden'));
+    console.log('Merged:', cell.getAttribute('data-merged'));
+    console.log('Rowspan:', cell.getAttribute('rowspan'));
+    console.log('---');
+  }
+});
+
+
+═══════════════════════════════════════════════════════════════
+🧹 COMMANDES DE NETTOYAGE
+═══════════════════════════════════════════════════════════════
+
+Vider localStorage et recharger
+──────────────────────────────────────────────────────────────
+localStorage.clear(); location.reload();
+
+
+Vider la console
+──────────────────────────────────────────────────────────────
+console.clear();
+
+
+Recharger la page (force)
+──────────────────────────────────────────────────────────────
+Ctrl + F5
+
+
+═══════════════════════════════════════════════════════════════
+🐛 COMMANDES DE DÉPANNAGE
+═══════════════════════════════════════════════════════════════
+
+Vérifier si conso.js est chargé
+──────────────────────────────────────────────────────────────
+console.log(document.querySelector('script[src*="conso.js"]'));
+
+
+Lister toutes les tables
+──────────────────────────────────────────────────────────────
+console.log('Nombre de tables:', document.querySelectorAll('table').length);
+document.querySelectorAll('table').forEach((t, i) => {
+  console.log(`Table ${i+1}:`, t.dataset.tableId);
+});
+
+
+Vérifier les en-têtes de colonnes
+──────────────────────────────────────────────────────────────
+document.querySelectorAll('table').forEach((table, i) => {
+  console.log(`\nTable ${i+1}:`);
+  const headers = table.querySelectorAll('th');
+  headers.forEach((h, j) => {
+    console.log(`  Colonne ${j}: ${h.textContent.trim()}`);
+  });
+});
+
+
+Forcer le retraitement des tables
+──────────────────────────────────────────────────────────────
+// Supprimer le marqueur de traitement
+document.querySelectorAll('table').forEach(t => {
+  delete t.dataset.observerInstalled;
+});
+location.reload();
+
+
+═══════════════════════════════════════════════════════════════
+📊 COMMANDES D'ANALYSE
+═══════════════════════════════════════════════════════════════
+
+Analyser la structure d'une table
+──────────────────────────────────────────────────────────────
+const table = document.querySelector('table');
+console.log('ID:', table.dataset.tableId);
+console.log('Colonnes:', table.querySelectorAll('th').length);
+console.log('Lignes:', table.querySelectorAll('tbody tr').length);
+console.log('Cellules fusionnées:', table.querySelectorAll('[data-merged="true"]').length);
+console.log('Cellules avec rowspan:', table.querySelectorAll('[rowspan]').length);
+
+
+Afficher toutes les cellules Remarques
+──────────────────────────────────────────────────────────────
+document.querySelectorAll('table').forEach((table, i) => {
+  console.log(`\n📊 Table ${i+1}:`);
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach((row, j) => {
+    const cells = row.querySelectorAll('td');
+    cells.forEach((cell, k) => {
+      const header = table.querySelectorAll('th')[k];
+      if (header && header.textContent.toLowerCase().includes('remarques')) {
+        console.log(`  Ligne ${j+1}:`, cell.textContent.substring(0, 50));
+        console.log(`    Display: ${cell.style.display}`);
+        console.log(`    Merged: ${cell.getAttribute('data-merged')}`);
+        console.log(`    Rowspan: ${cell.getAttribute('rowspan')}`);
+      }
+    });
+  });
+});
+
+
+Statistiques globales
+──────────────────────────────────────────────────────────────
+console.log('═══════════════════════════════════════════════');
+console.log('📊 STATISTIQUES GLOBALES');
+console.log('═══════════════════════════════════════════════');
+console.log('Tables:', document.querySelectorAll('table').length);
+console.log('Cellules fusionnées:', document.querySelectorAll('[data-merged="true"]').length);
+console.log('Cellules avec rowspan:', document.querySelectorAll('[rowspan]').length);
+console.log('Colonnes masquées:', document.querySelectorAll('[data-hidden="true"]').length);
+console.log('Checkboxes:', document.querySelectorAll('input[type="checkbox"]').length);
+console.log('Checkboxes cochées:', document.querySelectorAll('input[type="checkbox"]:checked').length);
+console.log('═══════════════════════════════════════════════');
+
+
+═══════════════════════════════════════════════════════════════
+✅ VALIDATION RAPIDE
+═══════════════════════════════════════════════════════════════
+
+Test complet en une commande
+──────────────────────────────────────────────────────────────
+(function() {
+  console.log('🧪 TEST DE VALIDATION TÂCHE 7');
+  console.log('═══════════════════════════════════════════════');
+  
+  const tests = {
+    'Script chargé': !!window.ClaraverseTableProcessor,
+    'Tables détectées': document.querySelectorAll('table').length > 0,
+    'Cellules fusionnées': document.querySelectorAll('[data-merged="true"]').length > 0,
+    'Rowspan présent': document.querySelectorAll('[rowspan]').length > 0,
+    'Colonnes masquées': document.querySelectorAll('[data-hidden="true"]').length > 0,
+    'localStorage actif': !!localStorage.getItem('claraverse_tables_data')
+  };
+  
+  let passed = 0;
+  let failed = 0;
+  
+  for (const [test, result] of Object.entries(tests)) {
+    const status = result ? '✅' : '❌';
+    console.log(`${status} ${test}: ${result}`);
+    result ? passed++ : failed++;
+  }
+  
+  console.log('═══════════════════════════════════════════════');
+  console.log(`Résultat: ${passed}/${Object.keys(tests).length} tests réussis`);
+  
+  if (failed === 0) {
+    console.log('🎉 TOUS LES TESTS SONT PASSÉS !');
+  } else {
+    console.log(`⚠️ ${failed} test(s) échoué(s)`);
+  }
+  
+  console.log('═══════════════════════════════════════════════');
+})();
+
+
+═══════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+Ouvrir la documentation
+──────────────────────────────────────────────────────────────
+start INDEX_TACHE_7_V5_CONSO.md
+start TACHE_7_V5_CONSO_COMPLETE.md
+start TESTEZ_FUSION_REMARQUES_MAINTENANT.md
+start RESUME_TACHE_7_V5_CONSO.md
+
+
+═══════════════════════════════════════════════════════════════
+🎯 CHECKLIST RAPIDE
+═══════════════════════════════════════════════════════════════
+
+[ ] Ouvrir test-conso-v5-remarques.html
+[ ] Ouvrir la console (F12)
+[ ] Vérifier les logs de démarrage
+[ ] Exécuter le test de validation (commande ci-dessus)
+[ ] Vérifier visuellement les tables
+[ ] Inspecter les cellules Remarques
+[ ] Tester les checkboxes
+[ ] Vérifier localStorage
+[ ] Recharger la page et vérifier la restauration
+
+
+═══════════════════════════════════════════════════════════════
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════
+
+En cas de problème :
+1. Vérifier les logs dans la console
+2. Exécuter le test de validation
+3. Consulter INDEX_TACHE_7_V5_CONSO.md
+4. Consulter TACHE_7_V5_CONSO_COMPLETE.md
+
+
+═══════════════════════════════════════════════════════════════
+Date : 8 décembre 2024
+Version : V5.0
+Statut : ✅ COMPLÉTÉ
+═══════════════════════════════════════════════════════════════

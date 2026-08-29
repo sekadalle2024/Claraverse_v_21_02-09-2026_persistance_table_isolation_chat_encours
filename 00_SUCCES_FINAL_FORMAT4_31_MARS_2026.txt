@@ -1,0 +1,104 @@
+================================================================
+✅ SUCCÈS - FORMAT 4 FONCTIONNE !
+31 Mars 2026
+================================================================
+
+PROBLÈME RÉSOLU:
+----------------
+✅ Le webhook n8n retourne bien { data: {...} }
+✅ Le front-end détecte le FORMAT 4A
+✅ Les données sont reçues correctement
+
+RÉSULTAT ACTUEL:
+----------------
+Le texte s'affiche en front-end mais sans formatage Markdown (pas de tableaux).
+
+CAUSE:
+------
+La fonction convertStructuredDataToMarkdown() cherche des clés contenant:
+- "etape", "mission", "programme", "recos"
+
+Mais les données du workflow "Programme contrôle comptes" ont:
+- "Tableau entete"
+- "Tableau processus"
+
+SOLUTION À APPLIQUER:
+---------------------
+Modifier la fonction convertStructuredDataToMarkdown() dans claraApiService.ts
+pour détecter aussi les clés "Tableau entete" et "Tableau processus".
+
+Ligne ~500 dans src/services/claraApiService.ts:
+
+AVANT:
+```typescript
+const etapeMissionKey =
+  Object.keys(data).find(
+    (key) =>
+      key.toLowerCase().includes("etape") ||
+      key.toLowerCase().includes("mission") ||
+      key.toLowerCase().includes("programme") ||
+      key.toLowerCase().includes("recos"),
+  ) || Object.keys(data)[0];
+```
+
+APRÈS:
+```typescript
+const etapeMissionKey =
+  Object.keys(data).find(
+    (key) =>
+      key.toLowerCase().includes("etape") ||
+      key.toLowerCase().includes("mission") ||
+      key.toLowerCase().includes("programme") ||
+      key.toLowerCase().includes("recos") ||
+      key.toLowerCase().includes("tableau"),
+  ) || Object.keys(data)[0];
+```
+
+STRUCTURE DES DONNÉES REÇUES:
+------------------------------
+{
+  "Tableau entete": {
+    "Etape de mission": "...",
+    "Normes": "...",
+    "Reference": "...",
+    "Methode": "..."
+  },
+  "Tableau processus": [
+    {
+      "no": 1,
+      "Cycle": "...",
+      "Domaines": "...",
+      "Test": "...",
+      "Controle audit": "...",
+      "Objectif": "...",
+      "Evaluation globale des risques": "...",
+      "Echantillon": "..."
+    },
+    ...
+  ]
+}
+
+FICHIERS MODIFIÉS:
+------------------
+✅ n8n_node_code_SOLUTION_FINALE.js
+   - Retourne { data: finalData } directement
+   
+✅ src/services/claraApiService.ts
+   - Ajout FORMAT 4A (objet direct)
+   - Ajout FORMAT 4B (array)
+   
+⏳ À MODIFIER:
+   - Ajouter "tableau" dans la détection de clés (ligne ~500)
+
+LOGS CONSOLE ACTUELS:
+----------------------
+✅ FORMAT 4A DETECTE: Objet direct avec propriété "data" (webhook n8n)
+📊 Contenu de data: { type: 'object', keys: [...], firstKey: '...' }
+🔄 Début de la conversion en Markdown...
+✅ Conversion terminée: XXXX caractères générés
+
+PROCHAINE ÉTAPE:
+-----------------
+Modifier claraApiService.ts ligne ~500 pour ajouter "tableau" dans la détection.
+
+================================================================

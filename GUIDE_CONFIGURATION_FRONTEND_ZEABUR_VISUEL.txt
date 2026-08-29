@@ -1,0 +1,397 @@
+═══════════════════════════════════════════════════════════════════
+📊 GUIDE VISUEL - CONFIGURATION FRONTEND ZEABUR
+═══════════════════════════════════════════════════════════════════
+Date: 20 avril 2026
+
+┌─────────────────────────────────────────────────────────────────┐
+│              🎯 CONFIGURATION RECOMMANDÉE                       │
+└─────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  SERVICE: Frontend (prclaravi.zeabur.app)                     ║
+║  ─────────────────────────────────────────────────────────    ║
+║                                                               ║
+║  Repository:     github.com/user/claraverse                   ║
+║  Branch:         master                                       ║
+║  Build Method:   Dockerfile  ← IMPORTANT !                    ║
+║  Dockerfile:     Dockerfile.frontend                          ║
+║  Root Directory: /  (racine)                                  ║
+║  Port:           80                                           ║
+║                                                               ║
+║  RÉSULTAT:                                                    ║
+║  → Build avec Dockerfile.frontend                             ║
+║  → Logs montrent: npm ci, Vite build, Nginx                   ║
+║  → Frontend fonctionne ! ✅                                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════
+🔍 EXPLICATION: BUILD METHOD
+═══════════════════════════════════════════════════════════════════
+
+Zeabur propose plusieurs Build Methods:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. DOCKERFILE                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│ Utilise un Dockerfile spécifique                               │
+│                                                                 │
+│ Configuration:                                                  │
+│ • Build Method: Dockerfile                                      │
+│ • Dockerfile: Dockerfile.frontend                               │
+│ • Root Directory: /                                             │
+│                                                                 │
+│ Zeabur exécute:                                                │
+│ docker build -f Dockerfile.frontend .                          │
+│                                                                 │
+│ ✅ RECOMMANDÉ pour votre cas                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 2. DOCKER COMPOSE                                               │
+├─────────────────────────────────────────────────────────────────┤
+│ Utilise docker-compose.yml                                      │
+│                                                                 │
+│ Configuration:                                                  │
+│ • Build Method: Docker Compose                                  │
+│ • Service Name: frontend                                        │
+│                                                                 │
+│ Zeabur exécute:                                                │
+│ docker-compose up frontend                                      │
+│                                                                 │
+│ ❌ PAS RECOMMANDÉ (backend déjà séparé)                        │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 3. BUILDPACK (Auto-detect)                                      │
+├─────────────────────────────────────────────────────────────────┤
+│ Détection automatique (Node.js, Python, etc.)                  │
+│                                                                 │
+│ ❌ PAS RECOMMANDÉ (vous avez un Dockerfile custom)             │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+📋 COMPARAISON: DOCKERFILE VS DOCKER COMPOSE
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ AVEC DOCKERFILE (RECOMMANDÉ)                                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Zeabur Dashboard:                                               │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ Build Method:   [Dockerfile ▼]                             │ │
+│ │ Dockerfile:     [Dockerfile.frontend]                       │ │
+│ │ Root Directory: [/]                                         │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ Zeabur exécute:                                                │
+│ $ docker build -f Dockerfile.frontend -t frontend:latest .     │
+│ $ docker run -p 80:80 frontend:latest                          │
+│                                                                 │
+│ Logs attendus:                                                 │
+│ ✅ npm ci                                                       │
+│ ✅ npm run build                                                │
+│ ✅ vite v5.0.0 building for production...                       │
+│ ✅ dist/assets/index-abc123.js                                  │
+│ ✅ Starting nginx...                                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ AVEC DOCKER COMPOSE (PAS RECOMMANDÉ)                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Zeabur Dashboard:                                               │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ Build Method:   [Docker Compose ▼]                          │ │
+│ │ Service Name:   [frontend]                                  │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ Zeabur exécute:                                                │
+│ $ docker-compose up frontend                                    │
+│                                                                 │
+│ Problème:                                                      │
+│ ❌ Nécessite docker-compose.yml                                │
+│ ❌ Backend déjà déployé séparément                             │
+│ ❌ Confusion entre les 2 services                              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+🎯 ROOT DIRECTORY: EXPLICATION
+═══════════════════════════════════════════════════════════════════
+
+Le Root Directory indique où Zeabur doit chercher les fichiers.
+
+**Votre structure de repo:**
+
+```
+claraverse/  ← Racine du repo
+├── Dockerfile.frontend  ← À la racine
+├── docker-compose.yml
+├── package.json
+├── vite.config.ts
+├── index.html
+├── src/
+│   └── (code React)
+├── public/
+│   └── (assets)
+└── py_backend/
+    └── (backend Python)
+```
+
+**Configuration Root Directory:**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Root Directory: /  (ou vide)                                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Zeabur va:                                                      │
+│ 1. Se placer à la racine du repo                               │
+│ 2. Chercher Dockerfile.frontend                                 │
+│ 3. Exécuter: docker build -f Dockerfile.frontend .             │
+│                                                                 │
+│ Le Dockerfile.frontend peut accéder à:                          │
+│ • src/                                                          │
+│ • public/                                                       │
+│ • package.json                                                  │
+│ • vite.config.ts                                                │
+│ • index.html                                                    │
+│                                                                 │
+│ ✅ CORRECT                                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Root Directory: src  ← ❌ INCORRECT                             │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Zeabur va:                                                      │
+│ 1. Se placer dans src/                                          │
+│ 2. Chercher Dockerfile.frontend ← N'existe pas ici !           │
+│ 3. ERREUR: Dockerfile not found                                │
+│                                                                 │
+│ ❌ NE PAS FAIRE                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+📊 WORKFLOW COMPLET
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. VOUS CONFIGUREZ DANS ZEABUR                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ Build Method:   Dockerfile                                      │
+│ Dockerfile:     Dockerfile.frontend                             │
+│ Root Directory: /                                               │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 2. ZEABUR CLONE LE REPO                                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ $ git clone github.com/user/claraverse                          │
+│ $ cd claraverse                                                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 3. ZEABUR BUILD L'IMAGE DOCKER                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ $ docker build -f Dockerfile.frontend -t frontend:latest .     │
+│                                                                 │
+│ Étapes du Dockerfile.frontend:                                 │
+│ • Stage 1: Build React (Node.js)                               │
+│   - npm ci                                                      │
+│   - npm run build                                               │
+│   - Génère dist/                                                │
+│                                                                 │
+│ • Stage 2: Servir avec Nginx                                    │
+│   - Copie dist/ vers /usr/share/nginx/html                     │
+│   - Configure Nginx                                             │
+│   - Expose port 80                                              │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 4. ZEABUR DÉMARRE LE CONTAINER                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ $ docker run -p 80:80 frontend:latest                          │
+│                                                                 │
+│ Nginx démarre et sert l'application React                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│ 5. FRONTEND ACCESSIBLE                                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│ URL: https://prclaravi.zeabur.app                              │
+│                                                                 │
+│ ✅ Application React fonctionne                                │
+│ ✅ Peut appeler le backend                                     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+🔧 CONFIGURATION DANS ZEABUR (ÉTAPE PAR ÉTAPE)
+═══════════════════════════════════════════════════════════════════
+
+**ÉTAPE 1: Add Service**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Zeabur Dashboard → Votre Projet → [Add Service]                │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 2: Choisir Git**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ [Git] [Prebuilt] [Marketplace]                                 │
+│  ↑                                                              │
+│  Cliquer ici                                                    │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 3: Sélectionner le Repo**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Repositories:                                                   │
+│ • claraverse  ← Sélectionner                                    │
+│ • py_backend                                                    │
+│ • autres repos...                                               │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 4: Aller dans Settings**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ [Overview] [Variable] [Metrics] [Settings]                     │
+│                                   ↑                             │
+│                                   Cliquer ici                   │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 5: Configurer Build Method**
+
+D'après votre capture d'écran:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Build Method                                                    │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ [Dockerfile ▼]  ← Sélectionner "Dockerfile"                │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ Dockerfile                                                      │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ Dockerfile.frontend  ← Taper ici                            │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ Root Directory                                                  │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ /  ← Laisser "/" ou vide                                    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ [Save] [Cancel]                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 6: Configurer le Port (optionnel)**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Port                                                            │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 80  ← Zeabur détecte automatiquement                        │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 7: Variables d'Environnement (optionnel)**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ Environment Variables                                           │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ VITE_BACKEND_URL                                            │ │
+│ │ https://votre-backend.zeabur.app                            │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│                                                                 │
+│ [Add Variable]                                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+**ÉTAPE 8: Deploy**
+
+┌─────────────────────────────────────────────────────────────────┐
+│ [Save & Redeploy]  ← Cliquer ici                               │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════
+✅ VÉRIFICATION APRÈS DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════
+
+**1. Vérifier les Logs**
+
+Aller dans l'onglet "Logs" et chercher:
+
+✅ Logs corrects:
+```
+npm ci
+added 1234 packages
+npm run build
+vite v5.0.0 building for production...
+✓ 1234 modules transformed
+dist/assets/index-abc123.js
+dist/assets/vendor-def456.js
+Starting nginx...
+```
+
+❌ Logs incorrects:
+```
+Dockerfile not found
+Error: Cannot find Dockerfile.frontend
+```
+
+**2. Tester l'URL**
+
+```
+https://prclaravi.zeabur.app
+```
+
+Résultat attendu:
+✅ Application React s'affiche
+✅ Pas d'erreur dans la console
+✅ Peut appeler le backend
+
+═══════════════════════════════════════════════════════════════════
+🆘 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════
+
+**Problème 1: "Dockerfile not found"**
+
+Solution:
+- Vérifier que Dockerfile.frontend existe à la racine
+- Vérifier l'orthographe exacte
+- Vérifier que le repo est à jour sur GitHub
+
+**Problème 2: "npm: command not found"**
+
+Solution:
+- Vérifier que le Dockerfile.frontend utilise node:18-alpine
+- Vérifier que le stage builder est correct
+
+**Problème 3: Build très lent**
+
+Solution:
+- Normal pour le premier build (5-10 minutes)
+- Les builds suivants seront plus rapides (cache)
+
+**Problème 4: Frontend ne peut pas appeler le backend**
+
+Solution:
+- Vérifier CORS dans le backend
+- Ajouter variable VITE_BACKEND_URL
+- Vérifier que le backend est accessible
+
+═══════════════════════════════════════════════════════════════════
+
+PROCHAINE ÉTAPE: Configurer le frontend dans Zeabur ! 🚀
+
+═══════════════════════════════════════════════════════════════════

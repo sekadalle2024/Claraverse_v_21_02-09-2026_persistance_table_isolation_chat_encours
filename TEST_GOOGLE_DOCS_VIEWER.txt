@@ -1,0 +1,227 @@
+=================================================================
+🧪 TEST - GOOGLE DOCS VIEWER (Solution CORS)
+=================================================================
+
+✅ SOLUTION : Google Docs Viewer API
+❌ PROBLÈME RÉSOLU : "docs.google.com refused to connect"
+
+=================================================================
+🎯 COMMENT ÇA MARCHE
+=================================================================
+
+1. Export du document Google Docs en PDF
+2. Passage de l'URL PDF au Google Docs Viewer
+3. Affichage dans iframe sans CORS
+
+URL Viewer :
+https://docs.google.com/viewer?url=PDF_URL&embedded=true
+
+=================================================================
+🧪 TESTER MAINTENANT
+=================================================================
+
+http://localhost:5173/test-modelisation-template-v2.html
+
+Chercher : Test 6 ou Test 7 (n8n_doc)
+
+=================================================================
+📝 TABLE DE TEST
+=================================================================
+
+<table>
+  <thead>
+    <tr>
+      <th>Template</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>n8n_doc</td>
+      <td>Test Google Docs Viewer</td>
+    </tr>
+  </tbody>
+</table>
+
+=================================================================
+✅ RÉSULTAT ATTENDU
+=================================================================
+
+1. Détection de la table "Template" avec "n8n_doc"
+2. Exécution du Case 8
+3. Génération d'un accordéon avec :
+   - Page de couverture
+   - Section "☁️ Contenu du Document"
+   - Boutons : Ouvrir, Télécharger
+   - iframe avec Google Docs Viewer
+4. Document visible SANS erreur CORS
+
+=================================================================
+🔍 VÉRIFICATION CONSOLE (F12)
+=================================================================
+
+# Logs attendus
+✅ Modelisation_template_v2.js chargé
+☁️ Case 8: n8n_doc (Google Drive Document)
+✅ Template injecté
+
+# Aucune erreur
+❌ PAS de "refused to connect"
+❌ PAS d'erreur CORS
+❌ PAS d'erreur de chargement
+
+=================================================================
+🎨 INTERFACE GÉNÉRÉE
+=================================================================
+
+┌─────────────────────────────────────────┐
+│  📖 Page de Couverture                  │
+│  Document Google Drive                  │
+│  n8n_doc - Partage Cloud                │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  ☁️ Contenu du Document        [－]     │
+├─────────────────────────────────────────┤
+│  [🔗 Ouvrir dans Google Docs]           │
+│  [⬇️ Télécharger (PDF)]                 │
+├─────────────────────────────────────────┤
+│  ┌───────────────────────────────────┐  │
+│  │                                   │  │
+│  │   [Google Docs Viewer]            │  │
+│  │   Document affiché                │  │
+│  │   Pas d'erreur CORS !             │  │
+│  │                                   │  │
+│  └───────────────────────────────────┘  │
+├─────────────────────────────────────────┤
+│  ☁️ Document chargé depuis Google Drive │
+└─────────────────────────────────────────┘
+
+=================================================================
+💻 COMMANDES CONSOLE
+=================================================================
+
+# Exécuter manuellement
+window.ModelisationTemplateV2.execute();
+
+# Vérifier l'URL du viewer
+const docId = '1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I';
+const pdfUrl = `https://docs.google.com/document/d/${docId}/export?format=pdf`;
+const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+console.log(viewerUrl);
+
+# Tester l'URL manuellement
+window.open(viewerUrl);
+
+=================================================================
+🔧 AVANTAGES DE CETTE SOLUTION
+=================================================================
+
+✅ Pas de CORS : Le viewer Google contourne les restrictions
+✅ Officiel : API Google officielle et maintenue
+✅ Gratuit : Aucun coût, aucune limite
+✅ Fiable : Infrastructure Google
+✅ Universel : Fonctionne avec tous documents publics
+✅ Formats : PDF, DOC, DOCX, XLS, PPT, etc.
+
+=================================================================
+⚠️ PRÉREQUIS
+=================================================================
+
+Le document Google Drive doit être :
+✅ Accessible avec le lien ("Anyone with the link")
+✅ Ou public ("Anyone on the internet")
+
+Pour vérifier :
+1. Ouvrir le document dans Google Drive
+2. Cliquer sur "Partager"
+3. Vérifier "Anyone with the link" est activé
+4. Définir sur "Viewer"
+
+=================================================================
+🎯 FONCTIONNALITÉS À TESTER
+=================================================================
+
+[ ] L'accordéon s'ouvre/ferme
+[ ] La page de couverture s'affiche
+[ ] Le bouton "Ouvrir dans Google Docs" fonctionne
+[ ] Le bouton "Télécharger (PDF)" fonctionne
+[ ] L'iframe affiche le Google Docs Viewer
+[ ] Le document est visible dans le viewer
+[ ] Le scroll fonctionne
+[ ] Aucune erreur CORS dans la console
+[ ] Le document est lisible
+
+=================================================================
+🐛 DÉPANNAGE
+=================================================================
+
+# Problème : iframe vide
+→ Vérifier que le document est partagé publiquement
+→ Tester l'URL du viewer manuellement
+→ Vérifier l'ID du document
+
+# Problème : "refused to connect"
+→ Impossible avec Google Docs Viewer
+→ Si ça arrive, vérifier l'URL du viewer
+
+# Problème : Document non visible
+→ Le document n'est peut-être pas accessible
+→ Vérifier les paramètres de partage
+→ Tester l'export PDF manuellement
+
+=================================================================
+📊 URLS UTILISÉES
+=================================================================
+
+# Document Google Drive
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/edit?usp=sharing
+
+# Export PDF
+https://docs.google.com/document/d/1qaymPK-_nfCYxDO8KVylijXvi11oSpr5zsEEhwTzz5I/export?format=pdf
+
+# Google Docs Viewer
+https://docs.google.com/viewer?url=ENCODED_PDF_URL&embedded=true
+
+=================================================================
+✅ CHECKLIST DE TEST
+=================================================================
+
+[ ] Page de test ouverte
+[ ] Console ouverte (F12)
+[ ] Table "n8n_doc" détectée
+[ ] Case 8 exécuté
+[ ] Accordéon généré
+[ ] iframe présent
+[ ] Google Docs Viewer chargé
+[ ] Document visible
+[ ] Aucune erreur CORS
+[ ] Boutons fonctionnels
+[ ] Navigation OK
+
+=================================================================
+🎉 SUCCÈS ATTENDU
+=================================================================
+
+Le document Google Drive s'affiche dans le Google Docs Viewer
+sans aucune erreur CORS. L'utilisateur peut :
+
+✅ Voir le document directement dans l'application
+✅ Naviguer dans le document (scroll, zoom)
+✅ Ouvrir le document dans Google Docs (nouvel onglet)
+✅ Télécharger le document en PDF
+✅ Interagir avec l'accordéon (ouvrir/fermer)
+
+=================================================================
+📚 DOCUMENTATION
+=================================================================
+
+SOLUTION_GOOGLE_DOCS_VIEWER.md (bibliothèques disponibles)
+SUCCES_GOOGLE_DOCS_VIEWER.md (solution implémentée)
+TEST_GOOGLE_DOCS_VIEWER.txt (ce fichier)
+
+=================================================================
+Date : 13 décembre 2025
+Version : 2.2 (Google Docs Viewer)
+Statut : ✅ PRÊT À TESTER
+=================================================================

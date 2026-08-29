@@ -1,0 +1,368 @@
+# ═══════════════════════════════════════════════════════════════
+# COMMANDES KOYEB - CLARA BACKEND
+# ═══════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────────
+# 1. INSTALLATION ET CONFIGURATION
+# ───────────────────────────────────────────────────────────────
+
+# Installer Koyeb CLI (Linux/Mac)
+curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
+export PATH=$HOME/.koyeb/bin:$PATH
+
+# Installer via Docker
+docker pull koyeb/koyeb-cli:latest
+
+# Se connecter
+koyeb login
+
+# Vérifier la version
+koyeb version
+
+# ───────────────────────────────────────────────────────────────
+# 2. DÉPLOIEMENT RAPIDE
+# ───────────────────────────────────────────────────────────────
+
+# Déploiement avec script automatique (Windows)
+.\deploy-koyeb.ps1 dev
+
+# Déploiement avec script automatique (Linux/Mac)
+./deploy-koyeb.sh dev
+
+# Déploiement manuel depuis py_backend
+cd py_backend
+koyeb deploy . clara-backend/clara-service \
+  --archive-builder docker \
+  --archive-docker-dockerfile Dockerfile \
+  --type WEB \
+  --ports 5000:http \
+  --routes /:5000 \
+  --regions fra \
+  --instance-type nano \
+  --min-scale 1 \
+  --max-scale 1
+
+# Déploiement avec variables d'environnement
+koyeb deploy . clara-backend/clara-service \
+  --archive-builder docker \
+  --type WEB \
+  --ports 5000:http \
+  --routes /:5000 \
+  --regions fra \
+  --instance-type small \
+  --env HOST=0.0.0.0 \
+  --env PORT=5000 \
+  --env PYTHONUNBUFFERED=1 \
+  --env OPENAI_API_KEY=sk-...
+
+# ───────────────────────────────────────────────────────────────
+# 3. GESTION DES SERVICES
+# ───────────────────────────────────────────────────────────────
+
+# Lister tous les services
+koyeb service list
+
+# Voir les détails d'un service
+koyeb service get clara-backend/clara-service
+
+# Mettre à jour un service
+koyeb service update clara-backend/clara-service \
+  --instance-type small
+
+# Redéployer un service
+koyeb service redeploy clara-backend/clara-service
+
+# Supprimer un service
+koyeb service delete clara-backend/clara-service
+
+# Mettre en pause un service
+koyeb service pause clara-backend/clara-service
+
+# Reprendre un service
+koyeb service resume clara-backend/clara-service
+
+# ───────────────────────────────────────────────────────────────
+# 4. LOGS ET MONITORING
+# ───────────────────────────────────────────────────────────────
+
+# Voir les logs en temps réel
+koyeb service logs clara-backend/clara-service
+
+# Voir les logs de build
+koyeb service logs clara-backend/clara-service --type build
+
+# Voir les logs avec filtre
+koyeb service logs clara-backend/clara-service --filter "ERROR"
+
+# Suivre les logs (tail -f)
+koyeb service logs clara-backend/clara-service --follow
+
+# Limiter le nombre de lignes
+koyeb service logs clara-backend/clara-service --lines 100
+
+# ───────────────────────────────────────────────────────────────
+# 5. VARIABLES D'ENVIRONNEMENT
+# ───────────────────────────────────────────────────────────────
+
+# Ajouter une variable
+koyeb service update clara-backend/clara-service \
+  --env NEW_VAR=value
+
+# Modifier une variable
+koyeb service update clara-backend/clara-service \
+  --env OPENAI_API_KEY=new-key
+
+# Supprimer une variable
+koyeb service update clara-backend/clara-service \
+  --unset-env OLD_VAR
+
+# Lister les variables
+koyeb service get clara-backend/clara-service
+
+# ───────────────────────────────────────────────────────────────
+# 6. SCALING
+# ───────────────────────────────────────────────────────────────
+
+# Modifier le scaling
+koyeb service update clara-backend/clara-service \
+  --min-scale 2 \
+  --max-scale 4
+
+# Changer le type d'instance
+koyeb service update clara-backend/clara-service \
+  --instance-type medium
+
+# Types d'instances disponibles :
+# - nano   : 0.1 vCPU, 512 MB RAM (gratuit)
+# - micro  : 0.25 vCPU, 1 GB RAM
+# - small  : 0.5 vCPU, 2 GB RAM
+# - medium : 1 vCPU, 4 GB RAM
+# - large  : 2 vCPU, 8 GB RAM
+
+# ───────────────────────────────────────────────────────────────
+# 7. RÉGIONS
+# ───────────────────────────────────────────────────────────────
+
+# Lister les régions disponibles
+koyeb regions list
+
+# Déployer dans plusieurs régions
+koyeb service update clara-backend/clara-service \
+  --regions fra,was
+
+# Régions disponibles :
+# - fra : Frankfurt (Europe)
+# - was : Washington DC (US East)
+# - sin : Singapore (Asia)
+
+# ───────────────────────────────────────────────────────────────
+# 8. DOMAINES PERSONNALISÉS
+# ───────────────────────────────────────────────────────────────
+
+# Ajouter un domaine personnalisé
+koyeb domain create api.claraverse.com
+
+# Lister les domaines
+koyeb domain list
+
+# Supprimer un domaine
+koyeb domain delete api.claraverse.com
+
+# ───────────────────────────────────────────────────────────────
+# 9. SECRETS
+# ───────────────────────────────────────────────────────────────
+
+# Créer un secret
+koyeb secret create openai-key --value sk-...
+
+# Lister les secrets
+koyeb secret list
+
+# Utiliser un secret dans un service
+koyeb service update clara-backend/clara-service \
+  --env OPENAI_API_KEY=@openai-key
+
+# Supprimer un secret
+koyeb secret delete openai-key
+
+# ───────────────────────────────────────────────────────────────
+# 10. APPS (APPLICATIONS)
+# ───────────────────────────────────────────────────────────────
+
+# Lister les apps
+koyeb app list
+
+# Créer une app
+koyeb app create clara-backend
+
+# Supprimer une app (et tous ses services)
+koyeb app delete clara-backend
+
+# ───────────────────────────────────────────────────────────────
+# 11. ARCHIVES
+# ───────────────────────────────────────────────────────────────
+
+# Créer une archive du projet
+koyeb archives create clara-backend-v1 .
+
+# Lister les archives
+koyeb archives list
+
+# Déployer depuis une archive
+koyeb service create clara-backend/clara-service \
+  --archive clara-backend-v1 \
+  --type WEB \
+  --ports 5000:http
+
+# Supprimer une archive
+koyeb archives delete clara-backend-v1
+
+# ───────────────────────────────────────────────────────────────
+# 12. TESTS ET VÉRIFICATION
+# ───────────────────────────────────────────────────────────────
+
+# Tester le health check
+curl https://clara-backend-[your-org].koyeb.app/health
+
+# Tester l'API root
+curl https://clara-backend-[your-org].koyeb.app/
+
+# Ouvrir la documentation Swagger
+# https://clara-backend-[your-org].koyeb.app/docs
+
+# Tester avec curl
+curl -X POST https://clara-backend-[your-org].koyeb.app/notebooks \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Notebook","description":"Test"}'
+
+# ───────────────────────────────────────────────────────────────
+# 13. DÉPLOIEMENT DEPUIS GIT (ALTERNATIVE)
+# ───────────────────────────────────────────────────────────────
+
+# Déployer depuis GitHub
+koyeb service create clara-backend/clara-service \
+  --git github.com/your-org/claraverse \
+  --git-branch main \
+  --git-workdir py_backend \
+  --type WEB \
+  --ports 5000:http
+
+# Activer le déploiement automatique
+koyeb service update clara-backend/clara-service \
+  --git-auto-deploy
+
+# ───────────────────────────────────────────────────────────────
+# 14. ROLLBACK
+# ───────────────────────────────────────────────────────────────
+
+# Lister les déploiements
+koyeb deployment list clara-backend/clara-service
+
+# Revenir à un déploiement précédent
+koyeb service rollback clara-backend/clara-service \
+  --deployment-id <deployment-id>
+
+# ───────────────────────────────────────────────────────────────
+# 15. INFORMATIONS SYSTÈME
+# ───────────────────────────────────────────────────────────────
+
+# Voir les informations du compte
+koyeb profile get
+
+# Voir les quotas
+koyeb quotas get
+
+# Voir l'utilisation
+koyeb usage get
+
+# ───────────────────────────────────────────────────────────────
+# 16. AIDE
+# ───────────────────────────────────────────────────────────────
+
+# Aide générale
+koyeb help
+
+# Aide sur une commande spécifique
+koyeb service help
+koyeb deploy help
+
+# Documentation en ligne
+# https://www.koyeb.com/docs
+
+# ═══════════════════════════════════════════════════════════════
+# EXEMPLES COMPLETS
+# ═══════════════════════════════════════════════════════════════
+
+# Exemple 1 : Déploiement complet en dev
+cd py_backend
+koyeb deploy . clara-backend/clara-service \
+  --archive-builder docker \
+  --archive-docker-dockerfile Dockerfile \
+  --type WEB \
+  --ports 5000:http \
+  --routes /:5000 \
+  --regions fra \
+  --instance-type nano \
+  --min-scale 1 \
+  --max-scale 1 \
+  --env HOST=0.0.0.0 \
+  --env PORT=5000 \
+  --env PYTHONUNBUFFERED=1
+
+# Exemple 2 : Déploiement en production
+cd py_backend
+koyeb deploy . clara-backend/clara-service \
+  --archive-builder docker \
+  --archive-docker-dockerfile Dockerfile \
+  --type WEB \
+  --ports 5000:http \
+  --routes /:5000 \
+  --regions fra,was \
+  --instance-type medium \
+  --min-scale 2 \
+  --max-scale 4 \
+  --env HOST=0.0.0.0 \
+  --env PORT=5000 \
+  --env PYTHONUNBUFFERED=1 \
+  --env OPENAI_API_KEY=@openai-key \
+  --env NEO4J_URI=@neo4j-uri
+
+# Exemple 3 : Mise à jour avec nouvelles variables
+koyeb service update clara-backend/clara-service \
+  --env NEW_FEATURE_FLAG=true \
+  --env DEBUG_MODE=false
+
+# Exemple 4 : Scale up pour plus de trafic
+koyeb service update clara-backend/clara-service \
+  --instance-type large \
+  --min-scale 3 \
+  --max-scale 6
+
+# ═══════════════════════════════════════════════════════════════
+# WORKFLOW RECOMMANDÉ
+# ═══════════════════════════════════════════════════════════════
+
+# 1. Développement local
+# - Tester localement avec : python py_backend/main.py
+
+# 2. Déploiement en dev
+./deploy-koyeb.sh dev
+
+# 3. Vérifier les logs
+koyeb service logs clara-backend/clara-service
+
+# 4. Tester l'API
+curl https://clara-backend-[your-org].koyeb.app/health
+
+# 5. Si OK, déployer en staging
+./deploy-koyeb.sh staging
+
+# 6. Tests de charge et validation
+
+# 7. Déploiement en production
+./deploy-koyeb.sh production
+
+# 8. Monitoring continu
+koyeb service logs clara-backend/clara-service --follow
+
+# ═══════════════════════════════════════════════════════════════

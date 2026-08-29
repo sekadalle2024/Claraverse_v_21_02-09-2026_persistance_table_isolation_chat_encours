@@ -1,0 +1,113 @@
+═══════════════════════════════════════════════════════════════════════════════
+   ⚡ QUICK START : DÉPLOIEMENT HUGGING FACE EN 5 MINUTES
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date : 18 Avril 2026
+🎯 Objectif : Déployer rapidement sur Hugging Face Spaces
+
+═══════════════════════════════════════════════════════════════════════════════
+   🚀 MÉTHODE RAPIDE (Recommandée)
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣  CRÉER LE SPACE
+   ─────────────────
+   → Aller sur : https://huggingface.co/new-space
+   → Remplir :
+     • Space name : claraverse-backend
+     • SDK : Docker
+     • Hardware : CPU basic (gratuit)
+   → Cliquer "Create Space"
+
+2️⃣  OBTENIR LE TOKEN
+   ──────────────────
+   → Aller sur : https://huggingface.co/settings/tokens
+   → Cliquer "New token"
+   → Type : Write
+   → Copier le token
+
+3️⃣  EXÉCUTER LE SCRIPT
+   ────────────────────
+   → Ouvrir PowerShell dans le dossier py_backend
+   → Exécuter :
+   
+   cd py_backend
+   ..\Doc Hugging Face deploy\deploy-huggingface.ps1
+
+   → Entrer votre username Hugging Face
+   → Entrer votre token
+   → Confirmer le déploiement
+
+4️⃣  ATTENDRE LE BUILD
+   ───────────────────
+   → Aller sur votre Space
+   → Cliquer sur "Logs"
+   → Attendre 5-10 minutes
+   → Statut passe à "Running" ✅
+
+5️⃣  TESTER L'API
+   ──────────────
+   → Ouvrir : https://[votre-username]-claraverse-backend.hf.space/health
+   → Ouvrir : https://[votre-username]-claraverse-backend.hf.space/docs
+
+═══════════════════════════════════════════════════════════════════════════════
+   📝 MÉTHODE MANUELLE (Alternative)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si le script ne fonctionne pas, voici la méthode manuelle :
+
+1. Créer le Space (comme ci-dessus)
+
+2. Dans PowerShell (dossier py_backend) :
+
+   git init
+   git remote add hf https://huggingface.co/spaces/[username]/claraverse-backend
+   git add .
+   git commit -m "Initial deployment"
+   git push hf main
+
+3. Entrer vos credentials quand demandé
+
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ VÉRIFICATION RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Après le déploiement, vérifier :
+
+✓ Space status = "Running"
+✓ /health retourne {"status": "healthy"}
+✓ /docs affiche la documentation Swagger
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔧 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Build échoue
+   → Vérifier les logs dans l'onglet "Logs"
+   → Vérifier que requirements.txt est correct
+
+❌ Application ne démarre pas
+   → Vérifier que le port 7860 est configuré
+   → Vérifier les logs du container
+
+❌ Erreur Git
+   → Vérifier que Git est installé : git --version
+   → Vérifier vos credentials Hugging Face
+
+═══════════════════════════════════════════════════════════════════════════════
+   📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails, consulter :
+→ 00_COMMENCER_ICI_HUGGINGFACE.txt
+→ GUIDE_DEPLOIEMENT_HUGGINGFACE.md
+
+═══════════════════════════════════════════════════════════════════════════════
+   🎉 C'EST TOUT !
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre backend sera accessible à :
+https://[votre-username]-claraverse-backend.hf.space
+
+N'oubliez pas de mettre à jour votre frontend avec cette URL !
+
+═══════════════════════════════════════════════════════════════════════════════

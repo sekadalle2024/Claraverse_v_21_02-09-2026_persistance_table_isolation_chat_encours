@@ -1,0 +1,249 @@
+═══════════════════════════════════════════════════════════════════════════════
+   DIAGNOSTIC : UNE SEULE VARIABLE DÉTECTÉE (cycle = Achats)
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 SYMPTÔME OBSERVÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[user_message] = Message non fourni      ❌ Valeur par défaut
+[cycle_detecte] = Achats                 ✅ Valeur détectée !
+[constat] = À compléter                  ❌ Valeur par défaut
+[anomalie] = À compléter                 ❌ Valeur par défaut
+
+🔍 ANALYSE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ BONNE NOUVELLE : La syntaxe N8N fonctionne (cycle = "Achats" est détecté)
+
+❌ PROBLÈME : Le node "Code integrate7" n'envoie PAS les autres variables
+   (user_message, constat, anomalie)
+
+🎯 CAUSE RACINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Code integrate7" transforme les données du webhook mais ne crée PAS
+les champs user_message, constat, anomalie dans son output.
+
+Il crée seulement :
+{
+  "data": [
+    { "User_message": [...] },
+    { "filename.xlsx": [...] }
+  ]
+}
+
+Mais l'agent RAG attend :
+{
+  "user_message": "...",
+  "cycle": "...",
+  "constat": "...",
+  "anomalie": "..."
+}
+
+✅ SOLUTION 1 : MODIFIER LE NODE "CODE INTEGRATE7"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ajouter à la fin du code JavaScript du node "Code integrate7" :
+
+// ============================================================================
+// EXTRACTION DES VARIABLES POUR L'AGENT RAG
+// ============================================================================
+
+let extractedMessage = "";
+let extractedCycle = "Achats";
+let extractedConstat = "";
+let extractedAnomalie = "";
+
+// Extraire user_message depuis User_message array
+if (result.length > 0 && result[0].User_message) {
+    const userMsgArray = result[0].User_message;
+    
+    for (const item of userMsgArray) {
+        const key = Object.keys(item)[0];
+        const value = item[key];
+        
+        if (key.includes('Message') || key.includes('message')) {
+            extractedMessage += value + " ";
+        }
+        if (key.includes('Cycle') || key.includes('cycle')) {
+            extractedCycle = value;
+        }
+        if (key.includes('Constat') || key.includes('constat')) {
+            extractedConstat = value;
+        }
+        if (key.includes('Anomalie') || key.includes('anomalie')) {
+            extractedAnomalie = value;
+        }
+    }
+}
+
+// Retourner avec les variables extraites
+return [{
+    json: {
+        data: result,
+        user_message: extractedMessage.trim() || "Message non fourni",
+        cycle: extractedCycle,
+        constat: extractedConstat || "À compléter",
+        anomalie: extractedAnomalie || "À compléter"
+    }
+}];
+
+
+✅ SOLUTION 2 : UTILISER LE NODE "SET" AVEC ACCÈS AUX DONNÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si vous avez déjà ajouté le node "Set Variables RAG", modifiez sa configuration :
+
+Champ 1 : user_message
+  Value : {{ $json.data[0].User_message[0]['[Message]'] || "Message non fourni" }}
+
+Champ 2 : cycle
+  Value : {{ $json.data[0].User_message.find(item => Object.keys(item)[0].includes('Cycle'))?.[Object.keys($json.data[0].User_message.find(item => Object.keys(item)[0].includes('Cycle')))[0]] || "Achats" }}
+
+Champ 3 : constat
+  Value : {{ $json.data[0].User_message.find(item => Object.keys(item)[0].includes('Constat'))?.[Object.keys($json.data[0].User_message.find(item => Object.keys(item)[0].includes('Constat')))[0]] || "À compléter" }}
+
+Champ 4 : anomalie
+  Value : {{ $json.data[0].User_message.find(item => Object.keys(item)[0].includes('Anomalie'))?.[Object.keys($json.data[0].User_message.find(item => Object.keys(item)[0].includes('Anomalie')))[0]] || "À compléter" }}
+
+⚠️ ATTENTION : Cette syntaxe est complexe et peut ne pas fonctionner dans N8N.
+
+✅ SOLUTION 3 : AJOUTER UN NODE "CODE" APRÈS "CODE INTEGRATE7"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RECOMMANDÉ : Ajouter un nouveau node "Code" entre "Code integrate7" et "Alea16"
+
+Nom du node : "Extract Variables for RAG"
+
+Code JavaScript :
+
+const inputData = $input.first().json;
+const result = {
+    data: inputData.data,
+    user_message: "Message non fourni",
+    cycle: "Achats",
+    constat: "À compléter",
+    anomalie: "À compléter"
+};
+
+// Extraire les variables depuis User_message
+if (inputData.data && inputData.data.length > 0) {
+    const userMessageObj = inputData.data.find(item => item.User_message);
+    
+    if (userMessageObj && userMessageObj.User_message) {
+        const userMsgArray = userMessageObj.User_message;
+        
+        for (const item of userMsgArray) {
+            const key = Object.keys(item)[0];
+            const value = item[key];
+            
+            // Extraire selon le nom de la clé
+            if (key.toLowerCase().includes('message')) {
+                result.user_message = value;
+            } else if (key.toLowerCase().includes('cycle')) {
+                result.cycle = value;
+            } else if (key.toLowerCase().includes('constat')) {
+                result.constat = value;
+            } else if (key.toLowerCase().includes('anomalie')) {
+                result.anomalie = value;
+            }
+        }
+    }
+}
+
+return [{ json: result }];
+
+📋 ÉTAPES D'IMPLÉMENTATION (SOLUTION 3 - RECOMMANDÉE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Ajouter le node Code
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Dans N8N, cliquez sur le "+" entre "Code integrate7" et "Alea16"
+   2. Cherchez "Code" dans la liste
+   3. Ajoutez le node "Code"
+   4. Renommez-le "Extract Variables for RAG"
+
+ÉTAPE 2 : Copier le code JavaScript
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Copiez le code JavaScript ci-dessus
+   2. Collez-le dans le champ "JavaScript Code"
+   3. Sauvegardez
+
+ÉTAPE 3 : Reconnecter les nodes
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Nouveau flux :
+   Code integrate7 → Extract Variables for RAG → Alea16 → Agent RAG
+
+ÉTAPE 4 : Supprimer le node "Set Variables RAG" (si vous l'aviez ajouté)
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Le nouveau node "Extract Variables for RAG" le remplace.
+
+ÉTAPE 5 : Tester
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Exécutez le workflow
+   2. Cliquez sur "Extract Variables for RAG"
+   3. Vérifiez l'output :
+   
+   {
+     "data": [...],
+     "user_message": "Facture non comptabilisée",
+     "cycle": "Achats",
+     "constat": "Facture reçue",
+     "anomalie": "Charge manquante"
+   }
+
+🔍 DEBUGGING : VÉRIFIER LA STRUCTURE DES DONNÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Pour comprendre pourquoi seul "cycle" fonctionne :
+
+1. Cliquez sur le node "Code integrate7"
+2. Regardez l'output
+3. Cherchez la structure User_message
+
+Exemple attendu :
+{
+  "data": [
+    {
+      "User_message": [
+        { "[Message]": "Facture non comptabilisée" },
+        { "[Cycle]": "Achats" },
+        { "[Constat]": "Facture reçue" },
+        { "[Anomalie]": "Charge manquante" }
+      ]
+    }
+  ]
+}
+
+Si vous voyez seulement :
+{
+  "data": [
+    {
+      "User_message": [
+        { "[Cycle]": "Achats" }
+      ]
+    }
+  ]
+}
+
+→ Le problème est AVANT "Code integrate7" (dans le webhook ou les données envoyées)
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 00_PROBLEME_UNE_SEULE_VARIABLE_DETECTEE.txt - Ce fichier (diagnostic)
+
+🚀 PROCHAINE ÉTAPE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Vérifier l'output de "Code integrate7" pour voir si User_message contient
+   les 4 variables
+2. Si oui → Ajouter le node "Extract Variables for RAG" (Solution 3)
+3. Si non → Le problème est dans les données envoyées au webhook
+
+═══════════════════════════════════════════════════════════════════════════════

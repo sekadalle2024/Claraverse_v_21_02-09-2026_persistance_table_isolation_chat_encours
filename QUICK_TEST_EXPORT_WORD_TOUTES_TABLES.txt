@@ -1,0 +1,238 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 GUIDE TEST RAPIDE - EXPORT TEMPLATE WORD (TOUTES LES TABLES)
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 OBJECTIF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Valider que l'export template Word exporte TOUTES les tables d'un message
+et que le timeout de la bibliothèque docx est suffisant.
+
+
+🎯 SCÉNARIO DE TEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1: PRÉPARER UN MESSAGE AVEC PLUSIEURS TABLES
+────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir E-audit dans le navigateur
+2. Créer un nouveau message avec 3 tables (ou plus)
+3. Exemple de structure:
+
+   Table 1: Risques identifiés
+   ┌─────────────┬──────────┬────────────┐
+   │ Risque      │ Impact   │ Probabilité│
+   ├─────────────┼──────────┼────────────┤
+   │ Risque A    │ Élevé    │ Moyenne    │
+   │ Risque B    │ Moyen    │ Faible     │
+   └─────────────┴──────────┴────────────┘
+
+   Table 2: Actions correctives
+   ┌─────────────┬──────────┬────────────┐
+   │ Action      │ Délai    │ Responsable│
+   ├─────────────┼──────────┼────────────┤
+   │ Action 1    │ 30 jours │ Manager A  │
+   │ Action 2    │ 60 jours │ Manager B  │
+   └─────────────┴──────────┴────────────┘
+
+   Table 3: Budget
+   ┌─────────────┬──────────┐
+   │ Poste       │ Montant  │
+   ├─────────────┼──────────┤
+   │ Personnel   │ 50 000 € │
+   │ Matériel    │ 20 000 € │
+   └─────────────┴──────────┘
+
+
+ÉTAPE 2: OUVRIR LA CONSOLE DU NAVIGATEUR
+────────────────────────────────────────────────────────────────────────────
+
+1. Appuyer sur F12 (ou Ctrl+Shift+I)
+2. Aller dans l'onglet "Console"
+3. Effacer les logs existants (icône poubelle)
+
+
+ÉTAPE 3: LANCER L'EXPORT WORD
+────────────────────────────────────────────────────────────────────────────
+
+1. Clic droit sur N'IMPORTE QUELLE table du message
+2. Sélectionner "Export template Word"
+3. Observer les logs dans la console
+
+
+✅ CRITÈRES DE SUCCÈS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOGS CONSOLE ATTENDUS:
+────────────────────────────────────────────────────────────────────────────
+
+✅ 🔍 [Export Word] Wrapper individuel trouvé: container-xxx-X
+✅ 🔍 [Export Word] Conteneur testé: prose prose-base..., wrappers: 3
+✅ ✅ [Export Word] Conteneur du message trouvé avec 3 wrappers
+✅ ✅ [Export Word] 3 table(s) trouvée(s) dans le message
+✅ 🔍 [Export Word] Tables détectées:
+     Table 1: { rows: 3, cols: 3 }
+     Table 2: { rows: 3, cols: 3 }
+     Table 3: { rows: 3, cols: 2 }
+✅ 📄 Export Word: 3 tables seront exportées
+
+SI BACKEND PYTHON DISPONIBLE:
+✅ ✅ Export Word terminé! (3 tables)
+
+SI FALLBACK JAVASCRIPT:
+✅ ✅ Bibliothèque docx chargée avec succès
+✅ ✅ Export Word terminé! (3 tables)
+
+
+FICHIER WORD GÉNÉRÉ:
+────────────────────────────────────────────────────────────────────────────
+
+✅ Nom: claraverse_template_YYYY-MM-DD-HH-MM-SS.docx
+✅ Contient les 3 tables
+✅ Tables séparées par des espaces
+✅ En-têtes avec style rouge bordeaux (#800020)
+✅ Bordures noires
+✅ Fond blanc
+
+
+❌ ERREURS À ÉVITER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SI VOUS VOYEZ:
+────────────────────────────────────────────────────────────────────────────
+
+❌ "1 table(s) trouvée(s) dans le message"
+   → PROBLÈME: La correction n'a pas été appliquée correctement
+   → SOLUTION: Vérifier que le fichier menu.js a bien été modifié
+
+❌ "Timeout: docx non accessible"
+   → PROBLÈME: Le timeout est encore trop court
+   → SOLUTION: Vérifier que ensureDocxLibraryLoaded() a été corrigé
+
+❌ "Conteneur parent non trouvé"
+   → PROBLÈME: Les tables ne sont pas dans des wrappers data-container-id
+   → SOLUTION: Vérifier que wrap-tables-auto.js fonctionne
+
+❌ "Aucune table trouvée"
+   → PROBLÈME: Aucune table sélectionnée
+   → SOLUTION: Cliquer d'abord sur une table avant d'ouvrir le menu
+
+
+🔍 DIAGNOSTIC AVANCÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VÉRIFIER LA STRUCTURE DOM:
+────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir les DevTools (F12)
+2. Onglet "Elements"
+3. Chercher une table dans le DOM
+4. Vérifier la structure:
+
+   ✅ STRUCTURE CORRECTE:
+   <div data-container-id="container-xxx-1">
+     <table>...</table>
+   </div>
+   <div data-container-id="container-xxx-2">
+     <table>...</table>
+   </div>
+
+   ❌ STRUCTURE INCORRECTE:
+   <table>...</table>
+   <table>...</table>
+   (pas de wrappers data-container-id)
+
+
+VÉRIFIER LE CHARGEMENT DE DOCX:
+────────────────────────────────────────────────────────────────────────────
+
+Dans la console, taper:
+  window.docx
+
+✅ SI CHARGÉ:
+  → Affiche: Object { Document: ..., Packer: ..., ... }
+
+❌ SI NON CHARGÉ:
+  → Affiche: undefined
+  → Attendre 30 secondes et réessayer
+
+
+📊 TESTS COMPLÉMENTAIRES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TEST 1: MESSAGE AVEC 1 SEULE TABLE
+────────────────────────────────────────────────────────────────────────────
+
+Résultat attendu:
+  ✅ 1 table(s) trouvée(s) dans le message
+  ✅ Export Word terminé! (1 tables)
+
+
+TEST 2: MESSAGE AVEC 5+ TABLES
+────────────────────────────────────────────────────────────────────────────
+
+Résultat attendu:
+  ✅ 5 table(s) trouvée(s) dans le message
+  ✅ Export Word terminé! (5 tables)
+
+
+TEST 3: CONNEXION LENTE (TIMEOUT)
+────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir DevTools (F12)
+2. Onglet "Network"
+3. Sélectionner "Slow 3G" dans le throttling
+4. Lancer l'export Word
+
+Résultat attendu:
+  ✅ Pas d'erreur de timeout (30 secondes suffisent)
+  ✅ ✅ Bibliothèque docx chargée avec succès
+  ✅ Export Word terminé!
+
+
+TEST 4: BACKEND PYTHON INDISPONIBLE
+────────────────────────────────────────────────────────────────────────────
+
+1. Arrêter le backend Python (si lancé)
+2. Lancer l'export Word
+
+Résultat attendu:
+  ⚠️ Backend non disponible, tentative avec JS...
+  ✅ ✅ Bibliothèque docx chargée avec succès
+  ✅ Export Word terminé! (X tables)
+
+
+📝 RAPPORT DE TEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Date du test: _________________
+Testeur:      _________________
+
+RÉSULTATS:
+
+□ Test 1: Message avec 3 tables          ✅ RÉUSSI  ❌ ÉCHOUÉ
+□ Test 2: Message avec 1 table           ✅ RÉUSSI  ❌ ÉCHOUÉ
+□ Test 3: Message avec 5+ tables         ✅ RÉUSSI  ❌ ÉCHOUÉ
+□ Test 4: Connexion lente (timeout)      ✅ RÉUSSI  ❌ ÉCHOUÉ
+□ Test 5: Backend indisponible           ✅ RÉUSSI  ❌ ÉCHOUÉ
+
+LOGS CONSOLE:
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+FICHIER WORD GÉNÉRÉ:
+□ Contient toutes les tables             ✅ OUI    ❌ NON
+□ En-têtes rouge bordeaux                ✅ OUI    ❌ NON
+□ Bordures noires                        ✅ OUI    ❌ NON
+□ Tables séparées                        ✅ OUI    ❌ NON
+
+PROBLÈMES RENCONTRÉS:
+_________________________________________________________________
+_________________________________________________________________
+_________________________________________________________________
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ FIN DU GUIDE DE TEST
+═══════════════════════════════════════════════════════════════════════════════

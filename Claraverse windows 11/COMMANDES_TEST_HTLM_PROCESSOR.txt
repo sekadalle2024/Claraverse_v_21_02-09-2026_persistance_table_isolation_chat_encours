@@ -1,0 +1,102 @@
+===========================================
+🧪 COMMANDES TEST WORKFLOW HTLM_PROCESSOR
+===========================================
+
+📋 OUVRIR LA PAGE DE TEST
+--------------------------
+http://localhost:5173/test-htlm-processor-response.html
+
+
+🔧 TESTER LE WORKFLOW N8N DIRECTEMENT
+--------------------------------------
+curl -X POST "http://localhost:5678/webhook/htlm_processor" ^
+  -H "Content-Type: application/json" ^
+  -d "{\"question\":\"[Command] = /Programme de travail - [Processus] = facturation des ventes \"}"
+
+
+📊 VÉRIFIER LE FORMAT DE RÉPONSE
+---------------------------------
+# La réponse doit contenir:
+- "output": "| Rubrique | Description |..."
+- "status": "success"
+- "table_format": "markdown_tables"
+- "processing_stats": {...}
+
+
+🚀 DÉMARRER LE SERVEUR DE DÉVELOPPEMENT
+----------------------------------------
+npm run dev
+
+
+🔍 VÉRIFIER LES LOGS CONSOLE
+-----------------------------
+# Ouvrir la console (F12) et chercher:
+✅ Format détecté: Workflow htlm_processor (output + status + table_format)
+📊 Status: success
+📋 Table format: markdown_tables
+
+
+🧹 NETTOYER LE CACHE
+---------------------
+# Dans la console du navigateur:
+localStorage.removeItem('claraverse_n8n_data_v17')
+
+
+📝 EXEMPLE DE TABLE FLOWISE
+----------------------------
+| Flowise | Rubrique | Description |
+|---------|----------|-------------|
+| Programme de travail | Processus | facturation des ventes |
+
+
+💬 EXEMPLE DE MESSAGE UTILISATEUR
+----------------------------------
+[Command] = /Programme de travail - [Processus] = facturation des ventes
+
+
+🎯 RÉSULTAT ATTENDU
+-------------------
+1. Table déclencheuse disparaît
+2. Nouvelles tables apparaissent
+3. Format markdown converti en HTML
+4. URLs cliquables
+5. Style Claraverse appliqué
+
+
+❌ DÉPANNAGE
+-------------
+Problème: "Format de réponse non reconnu"
+Solution: Vérifier que status="success" et output contient du markdown
+
+Problème: Tables non affichées
+Solution: Vérifier la console (F12) pour les erreurs
+
+Problème: Erreur n8n
+Solution: Vérifier que le workflow est actif sur localhost:5678
+
+
+📚 DOCUMENTATION
+----------------
+FIX_SUPPORT_HTLM_PROCESSOR_WORKFLOW.md - Documentation complète
+TESTEZ_MAINTENANT_HTLM_PROCESSOR.md - Guide de test rapide
+
+
+✅ CHECKLIST
+------------
+[ ] Serveur dev démarré (npm run dev)
+[ ] Workflow n8n actif (localhost:5678)
+[ ] Page de test ouverte
+[ ] Tests unitaires passés
+[ ] Test en production réussi
+[ ] Compatibilité vérifiée
+
+
+🎉 SUCCÈS
+---------
+Si tous les tests passent, le workflow htlm_processor est opérationnel !
+
+
+===========================================
+Date: 2 décembre 2025
+Version: Flowise.js v17.1+
+===========================================

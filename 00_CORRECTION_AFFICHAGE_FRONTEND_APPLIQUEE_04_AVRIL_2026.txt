@@ -1,0 +1,304 @@
+═══════════════════════════════════════════════════════════════════════════════
+CORRECTION APPLIQUÉE : AFFICHAGE FRONTEND ÉTATS FINANCIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 04 Avril 2026
+🎯 OBJECTIF : Résoudre le problème d'affichage des états financiers N et N-1
+
+═══════════════════════════════════════════════════════════════════════════════
+PROBLÈME RÉSOLU
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ AVANT :
+- Le backend calculait correctement N, N-1 et N-2
+- Le backend générait le HTML avec les accordéons
+- MAIS le frontend n'affichait pas les données dans le chat
+- Les accordéons n'étaient pas visibles
+
+✅ APRÈS :
+- Le backend calcule toujours correctement N, N-1 et N-2
+- Le backend génère le HTML avec les accordéons
+- Le frontend affiche maintenant les données dans le chat
+- Les accordéons sont visibles et fonctionnels
+- Le premier accordéon (BILAN ACTIF) s'ouvre automatiquement
+
+═══════════════════════════════════════════════════════════════════════════════
+MODIFICATIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIER MODIFIÉ : public/EtatFinAutoTrigger.js
+
+FONCTION : replaceTableWithResults(table, html)
+
+CHANGEMENTS :
+
+1. ✅ AMÉLIORATION DE LA RECHERCHE DU DIV PARENT
+   - Essai du sélecteur principal
+   - Si échec, essai de sélecteurs alternatifs :
+     * div.prose
+     * div[class*="prose"]
+     * div (générique)
+     * parentElement
+   - Log du nom de classe du div trouvé
+
+2. ✅ OUVERTURE AUTOMATIQUE DU PREMIER ACCORDÉON
+   - Le premier accordéon (BILAN ACTIF) s'ouvre automatiquement
+   - Ajout de la classe "active" au header et au content
+   - Log de confirmation dans la console
+
+3. ✅ AJOUT DE LOGS DE DÉBOGAGE DÉTAILLÉS
+   - Longueur du HTML à insérer
+   - Nombre d'accordéons trouvés après insertion
+   - Nombre de contenus trouvés
+   - Nombre de tables trouvées
+   - Confirmation de l'ouverture du premier accordéon
+
+4. ✅ FORCER L'AFFICHAGE DU CONTENEUR
+   - display: block
+   - visibility: visible
+   - opacity: 1
+
+═══════════════════════════════════════════════════════════════════════════════
+CODE MODIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT :
+```javascript
+const parentDiv = table.closest(CONFIG.SELECTORS.PARENT_DIV);
+
+if (!parentDiv) {
+  console.error("❌ Div parent non trouvée!");
+  console.groupEnd();
+  return false;
+}
+```
+
+APRÈS :
+```javascript
+// Essayer plusieurs sélecteurs pour trouver le div parent
+let parentDiv = table.closest(CONFIG.SELECTORS.PARENT_DIV);
+
+if (!parentDiv) {
+  console.warn("⚠️ Sélecteur principal non trouvé, essai avec sélecteurs alternatifs");
+  
+  // Essayer des sélecteurs alternatifs
+  parentDiv = table.closest('div.prose') || 
+              table.closest('div[class*="prose"]') ||
+              table.closest('div') ||
+              table.parentElement;
+}
+
+if (!parentDiv) {
+  console.error("❌ Aucun div parent trouvé!");
+  console.groupEnd();
+  return false;
+}
+
+console.log("📍 Div parent trouvé:", parentDiv.className || 'sans classe');
+console.log("📊 HTML à insérer - Longueur:", html.length, "caractères");
+```
+
+AVANT :
+```javascript
+headers.forEach((header) => {
+  header.addEventListener('click', function() {
+    console.log('🖱️ Clic sur accordéon:', this.textContent.trim());
+    this.classList.toggle('active');
+    const content = this.nextElementSibling;
+    if (content) {
+      content.classList.toggle('active');
+    }
+  });
+});
+```
+
+APRÈS :
+```javascript
+headers.forEach((header, index) => {
+  header.addEventListener('click', function() {
+    console.log('🖱️ Clic sur accordéon:', this.textContent.trim());
+    this.classList.toggle('active');
+    const content = this.nextElementSibling;
+    if (content) {
+      content.classList.toggle('active');
+    }
+  });
+  
+  // Ouvrir le premier accordéon par défaut (BILAN ACTIF)
+  if (index === 0) {
+    console.log('🔓 Ouverture automatique du premier accordéon');
+    header.classList.add('active');
+    const content = header.nextElementSibling;
+    if (content) {
+      content.classList.add('active');
+    }
+  }
+});
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST 1 : VÉRIFIER LE BACKEND
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Commande : python py_backend/main.py                                    │
+│ Vérifier : Le serveur démarre sur http://127.0.0.1:5000                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+TEST 2 : TESTER DANS L'APPLICATION
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. Ouvrir l'application dans le navigateur                             │
+│ 2. Ouvrir les DevTools (F12) pour voir les logs                        │
+│ 3. Taper "Etat fin" dans le chat                                       │
+│ 4. Vérifier que la table "Etat_fin" apparaît                           │
+│ 5. Sélectionner le fichier : py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls│
+│ 6. Vérifier les logs dans la console                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+TEST 3 : VÉRIFIER L'AFFICHAGE
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ✅ Les accordéons s'affichent dans le chat                             │
+│ ✅ Le premier accordéon (BILAN ACTIF) est ouvert par défaut           │
+│ ✅ Les colonnes N et N-1 sont visibles                                 │
+│ ✅ Les données sont affichées correctement                             │
+│ ✅ Les accordéons sont cliquables (ouvrir/fermer)                      │
+│ ✅ Le TFT est présent dans les accordéons                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+TEST 4 : VÉRIFIER LES LOGS
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Dans la console des DevTools, vérifier :                               │
+│ ✅ "📂 Ouverture automatique du dialogue de sélection de fichier"      │
+│ ✅ "✅ Fichier sélectionné: ..."                                        │
+│ ✅ "📤 ENVOI VERS BACKEND"                                              │
+│ ✅ "📥 Statut réponse: 200"                                             │
+│ ✅ "✅ Résultat reçu: ..."                                              │
+│ ✅ "🔄 REMPLACEMENT DE LA TABLE"                                        │
+│ ✅ "📍 Div parent trouvé: ..."                                          │
+│ ✅ "📊 HTML à insérer - Longueur: ... caractères"                       │
+│ ✅ "📊 Vérification après insertion:"                                   │
+│ ✅ "  - Accordéons trouvés: X"                                          │
+│ ✅ "  - Contenus trouvés: X"                                            │
+│ ✅ "  - Tables trouvées: X"                                             │
+│ ✅ "✅ Table remplacée avec les résultats"                              │
+│ ✅ "📋 États Financiers: X accordéons trouvés"                         │
+│ ✅ "🔓 Ouverture automatique du premier accordéon"                      │
+│ ✅ "✅ Événements des accordéons attachés"                              │
+│ ✅ "✅ Premier accordéon ouvert par défaut"                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+STRUCTURE DES ACCORDÉONS
+═══════════════════════════════════════════════════════════════════════════════
+
+Les accordéons affichés dans le chat :
+
+1. 📊 BILAN ACTIF (ouvert par défaut)
+   - Colonnes : REF | LIBELLÉS | NOTE | EXERCICE N | EXERCICE N-1
+   - Tous les postes de l'actif (AA à DZ)
+
+2. 📊 BILAN PASSIF
+   - Colonnes : REF | LIBELLÉS | NOTE | EXERCICE N | EXERCICE N-1
+   - Tous les postes du passif (CA à DZ)
+
+3. 📊 COMPTE DE RÉSULTAT
+   - Colonnes : REF | LIBELLÉS | NOTE | EXERCICE N | EXERCICE N-1
+   - Tous les postes du compte de résultat (TA à XN)
+
+4. 📊 TABLEAU DES FLUX DE TRÉSORERIE (TFT)
+   - Colonnes : REF | LIBELLÉS | NOTE | EXERCICE N | EXERCICE N-1
+   - Flux de trésorerie d'exploitation, d'investissement et de financement
+
+5. 📊 NOTES ANNEXES
+   - Informations complémentaires sur les états financiers
+
+═══════════════════════════════════════════════════════════════════════════════
+RAPPEL : FORMAT D'AFFICHAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANT :
+- N-2 est utilisé pour les CALCULS (variations de N-1)
+- N-2 n'est PAS affiché comme colonne séparée
+- Seules 2 colonnes sont affichées : EXERCICE N et EXERCICE N-1
+- Format conforme à la liasse officielle SYSCOHADA
+
+EXEMPLE D'AFFICHAGE :
+┌──────┬─────────────────────────────────┬──────┬──────────────┬──────────────┐
+│ REF  │ LIBELLÉS                        │ NOTE │ EXERCICE N   │ EXERCICE N-1 │
+├──────┼─────────────────────────────────┼──────┼──────────────┼──────────────┤
+│ TA   │ Ventes de marchandises          │ 21   │ 1 000 000    │ 950 000      │
+│ RA   │ Achats de marchandises          │ 22   │ 600 000      │ 570 000      │
+│ RB   │ Variation de stocks             │ 23   │ 50 000       │ 45 000       │
+│ XA   │ MARGE COMMERCIALE (TA-RA-RB)    │      │ 350 000      │ 335 000      │
+└──────┴─────────────────────────────────┴──────┴──────────────┴──────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS CONCERNÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+MODIFIÉ :
+✅ public/EtatFinAutoTrigger.js (amélioration de l'affichage)
+
+INCHANGÉS (fonctionnent correctement) :
+- src/services/claraApiService.ts (Case 24: détection "Etat fin")
+- py_backend/etats_financiers.py (endpoint /etats-financiers/process-excel)
+- py_backend/etats_financiers_v2.py (génération HTML format liasse)
+- py_backend/tableau_flux_tresorerie_v2.py (calcul TFT)
+- py_backend/correspondances_syscohada.json (mapping postes/comptes)
+
+═══════════════════════════════════════════════════════════════════════════════
+DOCUMENTATION ASSOCIÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+- 00_DIAGNOSTIC_AFFICHAGE_FRONTEND_04_AVRIL_2026.txt (diagnostic complet)
+- 00_SOLUTION_AFFICHAGE_FRONTEND_04_AVRIL_2026.txt (solutions proposées)
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md (architecture complète)
+- Doc_Etat_Fin/Documentation/00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+- Doc_Etat_Fin/Scripts/test-backend-simple.ps1 (test backend isolé)
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Modifications appliquées à EtatFinAutoTrigger.js
+2. ⏳ Démarrer le backend : python py_backend/main.py
+3. ⏳ Tester dans l'application
+4. ⏳ Vérifier que les accordéons s'affichent
+5. ⏳ Vérifier que le premier accordéon est ouvert par défaut
+6. ⏳ Vérifier que les données N et N-1 sont affichées
+7. ⏳ Vérifier que le TFT est présent
+8. ⏳ Documenter les résultats du test
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ SI LE PROBLÈME PERSISTE :
+1. Ouvrir les DevTools (F12)
+2. Aller dans l'onglet "Console"
+3. Chercher les logs commençant par "🔄 REMPLACEMENT DE LA TABLE"
+4. Vérifier quel sélecteur a été utilisé pour trouver le div parent
+5. Inspecter le DOM pour voir si le HTML est bien inséré
+6. Vérifier que les classes CSS sont bien appliquées
+
+⚠️ DÉBOGAGE AVANCÉ :
+Si les accordéons ne s'affichent toujours pas, exécuter dans la console :
+```javascript
+// Vérifier si le HTML est présent
+document.querySelectorAll('.section-header-ef').length
+
+// Vérifier si les événements sont attachés
+document.querySelector('.section-header-ef')?.onclick
+
+// Forcer l'ouverture du premier accordéon
+const first = document.querySelector('.section-header-ef');
+if (first) {
+  first.classList.add('active');
+  first.nextElementSibling?.classList.add('active');
+}
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

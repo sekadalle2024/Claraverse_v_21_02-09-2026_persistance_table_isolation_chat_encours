@@ -1,0 +1,83 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    📝 MÉMO DÉMARRAGE E-AUDIT                             ║
+║                     À garder sous la main                                ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                        🚀 DÉMARRAGE RAPIDE                             ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  MÉTHODE 1: Double-clic sur start-containers.bat (Windows)
+  
+  MÉTHODE 2: Depuis WSL2
+    wsl
+    cd /mnt/d/ClaraVerse-v\ firebase
+    docker compose up -d
+  
+  MÉTHODE 3: Depuis Windows (une ligne)
+    wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose up -d"
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                        🌐 ACCÈS APPLICATION                            ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  Frontend:     http://localhost:8080
+  Backend:      http://localhost:5000
+  Health Check: http://localhost:5000/health
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                        ⏹️  ARRÊT                                       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  MÉTHODE 1: Double-clic sur stop-containers.bat (Windows)
+  
+  MÉTHODE 2: Depuis WSL2
+    docker compose down
+  
+  MÉTHODE 3: Depuis Windows (une ligne)
+    wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose down"
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                        🔍 VÉRIFICATION                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  État:  docker compose ps
+  Logs:  docker compose logs -f
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                        🐛 DÉPANNAGE                                    ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  Docker ne démarre pas:
+    sudo service docker start
+  
+  Redémarrer les conteneurs:
+    docker compose restart
+  
+  Voir les logs détaillés:
+    docker compose logs --tail=50 backend
+
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                        📚 DOCUMENTATION                                ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+  DEMARRAGE-CONTENEURS.txt       → Guide complet
+  COMMANDES-DEMARRAGE-RAPIDE.txt → Commandes essentielles
+  README-DOCKER.md                → Documentation complète
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ TOUT EST PRÊT!                                     ║
+║                                                                           ║
+║              Utilisez start-containers.bat pour démarrer                 ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

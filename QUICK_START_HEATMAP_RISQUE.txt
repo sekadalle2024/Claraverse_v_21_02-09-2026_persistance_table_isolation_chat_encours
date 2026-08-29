@@ -1,0 +1,109 @@
+═══════════════════════════════════════════════════════════════════════════
+  QUICK START - HEATMAP RISQUE
+  Test rapide de l'intégration
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+1. TESTER L'ENDPOINT N8N (PowerShell)
+
+   $body = @{
+       question = "heatmap"
+   } | ConvertTo-Json
+
+   Invoke-RestMethod -Uri "https://t22wtwxl.rpcld.app/webhook/heatmap_risque" `
+       -Method Post `
+       -ContentType "application/json" `
+       -Body $body
+
+2. DÉMARRER CLARAVERSE
+
+   npm run dev
+
+3. TESTER DANS LE CHAT
+
+   Taper: "Heatmap"
+   
+   Résultat attendu:
+   ✅ Router détecte Case 34
+   ✅ Appel à heatmap_risque
+   ✅ Affichage du composant accordéon
+   ✅ 3 sections visibles
+
+═══════════════════════════════════════════════════════════════════════════
+  VÉRIFICATIONS VISUELLES
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Section 1: Page de Couverture
+  - Tableau avec métadonnées
+  - En-tête violet
+  - Ouverte par défaut
+
+✓ Section 2: Heatmap
+  - Grille 3x3 visible
+  - Couleurs: Vert, Jaune/Orange, Rouge
+  - Compteurs de risques affichés
+  - Clic sur cellule → détails
+
+✓ Section 3: Tableau Risques
+  - Toutes les colonnes visibles
+  - Badges colorés
+  - Bordure gauche colorée
+
+═══════════════════════════════════════════════════════════════════════════
+  CONSOLE LOGS À VÉRIFIER
+═══════════════════════════════════════════════════════════════════════════
+
+Dans la console du navigateur (F12):
+
+1. Router:
+   🔀 Router → Case 34 : heatmap_risque
+   📍 URL: https://t22wtwxl.rpcld.app/webhook/heatmap_risque
+
+2. Normalisation:
+   ✅ FORMAT 8 DETECTE: Heatmap Risque
+   📊 Structure détectée: { totalRisques: X, ... }
+
+3. Rendu:
+   Heatmap Risque Accordion rendered
+
+═══════════════════════════════════════════════════════════════════════════
+  DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Rien ne s'affiche
+SOLUTION: 
+  - Vérifier la console (F12)
+  - Vérifier que le workflow n8n retourne le bon format
+  - Vérifier les logs du router
+
+PROBLÈME: Erreur de parsing
+SOLUTION:
+  - Vérifier la structure JSON de la réponse
+  - S'assurer que "Etape mission - Cartographie" existe
+  - Vérifier que table 2 est un array
+
+PROBLÈME: Couleurs incorrectes
+SOLUTION:
+  - Vérifier les valeurs: "Élevé", "Moyen", "Faible"
+  - Attention aux accents (é)
+  - Vérifier la casse (majuscule/minuscule)
+
+═══════════════════════════════════════════════════════════════════════════
+  COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le serveur de dev
+npm run dev
+
+# Vérifier les erreurs TypeScript
+npm run type-check
+
+# Build de production
+npm run build
+
+# Voir les logs en temps réel
+# (Dans la console du navigateur, onglet Console)
+
+═══════════════════════════════════════════════════════════════════════════

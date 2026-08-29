@@ -1,0 +1,184 @@
+═══════════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC ERREUR "FAILED TO FETCH" - 07 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ:
+L'erreur "failed to fetch" se produit lors de l'import de la balance Excel.
+Le frontend envoie la requête mais ne reçoit pas de réponse du backend.
+
+🎯 CAUSES POSSIBLES:
+
+1. ❌ Backend non démarré ou crashé
+   - Le serveur Python n'est pas en cours d'exécution
+   - Le serveur a crashé pendant le traitement
+
+2. ⏱️ Timeout de la requête
+   - Le traitement prend trop de temps (> 30 secondes par défaut)
+   - Pas de timeout configuré dans le fetch()
+
+3. 💥 Erreur dans le traitement backend
+   - Exception non capturée dans etats_financiers.py
+   - Erreur dans un module importé (TFT, annexes, états de contrôle)
+
+4. 🔒 Problème CORS
+   - Headers CORS mal configurés
+   - Préflight request échoue
+
+5. 📦 Données trop volumineuses
+   - Fichier Excel trop gros
+   - Réponse HTML trop volumineuse
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 SOLUTIONS À TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: VÉRIFIER QUE LE BACKEND EST DÉMARRÉ
+───────────────────────────────────────────────────────────────────────────────
+Commande PowerShell:
+    $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+    Get-Job -Id $jobs.Backend
+
+Résultat attendu: Status = Running
+
+Si le backend n'est pas démarré:
+    .\start-claraverse-conda.ps1
+
+
+ÉTAPE 2: TESTER L'ENDPOINT DIRECTEMENT
+───────────────────────────────────────────────────────────────────────────────
+Utiliser le script de test Python créé:
+    python py_backend/test_direct_import.py
+
+Ce script teste l'import directement en Python sans passer par HTTP.
+Si ce test réussit, le problème est dans la communication HTTP.
+
+
+ÉTAPE 3: VOIR LES LOGS DU BACKEND EN TEMPS RÉEL
+───────────────────────────────────────────────────────────────────────────────
+Commande PowerShell (dans une nouvelle fenêtre):
+    $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+    Receive-Job -Id $jobs.Backend -Keep
+
+Puis importer la balance dans le navigateur et observer les logs.
+
+
+ÉTAPE 4: TESTER AVEC CURL (SANS NAVIGATEUR)
+───────────────────────────────────────────────────────────────────────────────
+Créer un fichier test-curl-etat-fin.ps1:
+
+$balance = [Convert]::ToBase64String([IO.File]::ReadAllBytes("P000 -BALANCE DEMO N_N-1_N-2.xls"))
+$body = @{
+    file_base64 = $balance
+    filename = "P000 -BALANCE DEMO N_N-1_N-2.xls"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/etats-financiers/process-excel" `
+    -Method POST `
+    -ContentType "application/json" `
+    -Body $body `
+    -TimeoutSec 120
+
+
+ÉTAPE 5: AJOUTER UN TIMEOUT AU FETCH()
+───────────────────────────────────────────────────────────────────────────────
+Modifier public/EtatFinAutoTrigger.js ligne 165:
+
+AVANT:
+    const response = await fetch(CONFIG.ETAT_FIN.endpoint, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        file_base64: fileBase64,
+        filename: file.name
+      })
+    });
+
+APRÈS:
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 secondes
+
+    try {
+      const response = await fetch(CONFIG.ETAT_FIN.endpoint, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          file_base64: fileBase64,
+          filename: file.name
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      
+      // ... reste du code
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        throw new Error('Timeout: Le traitement prend trop de temps (> 2 minutes)');
+      }
+      throw error;
+    }
+
+
+ÉTAPE 6: VÉRIFIER LES IMPORTS PYTHON
+───────────────────────────────────────────────────────────────────────────────
+Le backend importe plusieurs modules qui pourraient échouer:
+- etats_financiers_v2
+- tableau_flux_tresorerie_v2
+- annexes_liasse_complete
+- html_liasse_complete
+- etats_controle_exhaustifs
+- etats_controle_exhaustifs_html
+
+Tester les imports:
+    python py_backend/test_imports.py
+
+
+ÉTAPE 7: RÉDUIRE LA TAILLE DE LA RÉPONSE
+───────────────────────────────────────────────────────────────────────────────
+Si le HTML généré est trop volumineux, le navigateur peut rejeter la réponse.
+
+Vérifier la taille dans les logs backend:
+    logger.info(f"📊 Taille HTML générée: {len(html)} caractères")
+
+Si > 1 MB, envisager de:
+- Compresser le HTML
+- Paginer les résultats
+- Utiliser un format plus compact
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 DIAGNOSTIC RAPIDE (30 SECONDES)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Backend démarré?
+   $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json; Get-Job -Id $jobs.Backend
+
+2. Test Python direct:
+   python py_backend/test_direct_import.py
+
+3. Logs backend:
+   $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+   Receive-Job -Id $jobs.Backend -Keep | Select-Object -Last 50
+
+4. Si tout fonctionne en Python mais pas en HTTP:
+   → Problème de timeout ou de taille de réponse
+   → Ajouter timeout au fetch() (ÉTAPE 5)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Exécuter le diagnostic rapide ci-dessus
+2. Noter les résultats de chaque test
+3. Identifier quelle étape échoue
+4. Appliquer la solution correspondante
+5. Retester l'import dans le navigateur
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,66 @@
+========================================
+  RECONNEXION NETLIFY REQUISE
+========================================
+Date: 22 avril 2026
+
+SITUATION ACTUELLE
+==================
+- La session Netlify CLI a expiré
+- Le fichier de configuration avait un problème de permissions
+- Le problème a été résolu, mais vous devez vous reconnecter
+
+SOLUTION IMMEDIATE
+==================
+
+Étape 1: Se reconnecter à Netlify
+----------------------------------
+Exécutez cette commande dans votre terminal :
+
+    netlify login
+
+Cette commande va :
+1. Ouvrir votre navigateur
+2. Vous demander de vous connecter à Netlify
+3. Autoriser l'accès
+4. Sauvegarder le token d'authentification
+
+Étape 2: Vérifier la connexion
+-------------------------------
+Après la connexion, vérifiez avec :
+
+    netlify status
+
+Vous devriez voir :
+- Votre nom
+- Email: ohada.finance@gmail.com
+- Team: SEKA
+
+Étape 3: Relancer le déploiement
+---------------------------------
+Une fois connecté, relancez le script :
+
+    cd deploiement-netlify
+    .\deploy.ps1 -Message "Mise a jour application ClaraVerse - Deploiement v14 - 22 avril 2026"
+
+INFORMATIONS DU PROJET
+=======================
+- Site ID: 0cafe68b-1d02-42c0-a757-5ce59fb99d42
+- Nom du site: prclaravi
+- URL: https://prclaravi.netlify.app
+- Dashboard: https://app.netlify.com/projects/prclaravi
+
+NOTES IMPORTANTES
+=================
+1. La connexion Netlify est nécessaire UNE SEULE FOIS
+2. Le token sera sauvegardé pour les prochains déploiements
+3. Cette étape est normale après une longue période sans déploiement
+4. Aucune donnée n'a été perdue
+
+PROCHAINES ÉTAPES
+=================
+1. Exécutez: netlify login
+2. Connectez-vous dans le navigateur
+3. Revenez au terminal
+4. Relancez le script deploy.ps1
+
+========================================

@@ -1,0 +1,161 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  COMMANDES DE REDEPLOIEMENT RAPIDES                        ║
+║                         ClaraVerse - Netlify                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+🚀 DEPLOIEMENT EN UN CLIC (LE PLUS SIMPLE)
+═══════════════════════════════════════════════════════════════════════════════
+
+Double-cliquez sur:
+  DEPLOYER_NETLIFY.bat
+
+C'est tout ! Le script va faire le build et déployer automatiquement.
+Durée: 5-8 minutes
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 COMMANDES POWERSHELL
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VERIFIER AVANT DEPLOIEMENT
+   cd deploiement-netlify
+   .\verifier-avant-deploiement-rapide.ps1
+
+2. DEPLOIEMENT COMPLET (Build + Déploiement)
+   cd deploiement-netlify
+   .\deploy.ps1
+
+3. DEPLOIEMENT RAPIDE (Sans rebuild)
+   cd deploiement-netlify
+   .\deploy-rapide.ps1
+
+4. BUILD UNIQUEMENT
+   cd deploiement-netlify
+   .\build-only.ps1
+
+5. VERIFIER LA CONFIGURATION
+   cd deploiement-netlify
+   .\verifier-config.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 COMMANDES NETLIFY CLI
+═══════════════════════════════════════════════════════════════════════════════
+
+1. AUTHENTIFICATION
+   netlify login
+
+2. VERIFIER LE STATUT
+   netlify status
+
+3. VOIR LES LOGS
+   netlify logs
+
+4. DEPLOYER MANUELLEMENT
+   netlify deploy --prod --dir=dist
+
+5. OUVRIR LE DASHBOARD
+   netlify open
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🏗️ COMMANDES NPM
+═══════════════════════════════════════════════════════════════════════════════
+
+1. BUILD UNIQUEMENT
+   npm run build
+
+2. DEVELOPPEMENT LOCAL
+   npm run dev
+
+3. PREVIEW DU BUILD
+   npm run preview
+
+4. TESTS
+   npm run test
+
+
+═══════════════════════════════════════════════════════════════════════════════
+⚡ WORKFLOW RECOMMANDE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Développement
+   npm run dev
+
+2. Tests locaux
+   npm run test
+
+3. Vérification avant déploiement
+   cd deploiement-netlify
+   .\verifier-avant-deploiement-rapide.ps1
+
+4. Déploiement
+   .\deploy.ps1
+
+5. Vérification post-déploiement
+   netlify logs
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🌐 URLS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+Site en production:
+  https://prclaravi.netlify.app
+
+Dashboard Netlify:
+  https://app.netlify.com/projects/prclaravi
+
+Documentation Netlify:
+  https://docs.netlify.com/
+
+CLI Reference:
+  https://cli.netlify.com/
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🆘 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Problème: "Netlify CLI non installé"
+Solution: npm install -g netlify-cli
+
+Problème: "Non authentifié"
+Solution: netlify login
+
+Problème: "Dossier dist non trouvé"
+Solution: npm run build
+
+Problème: "Déploiement échoue"
+Solution: Consultez deploiement-netlify/MEMO_PROBLEMES_SOLUTIONS.md
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 INFORMATIONS DU PROJET
+═══════════════════════════════════════════════════════════════════════════════
+
+Nom:           prclaravi
+Version:       0.1.25
+URL:           https://prclaravi.netlify.app
+Build:         npm run build
+Publish:       dist/
+Node.js:       20+
+
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CHECKLIST AVANT DEPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+☐ Modifications testées localement
+☐ Changements committé sur GitHub
+☐ Node.js 18+ installé
+☐ Netlify CLI installé
+☐ Authentification Netlify OK
+☐ Vérification pré-déploiement réussie
+
+
+═══════════════════════════════════════════════════════════════════════════════
+Dernière mise à jour: Avril 2, 2026
+Statut: ✅ PRET POUR LE DEPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════

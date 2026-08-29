@@ -1,0 +1,140 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION EXPORT TEMPLATE EXCEL - TOUTES LES TABLES
+  Date: 09 Mai 2026
+  Problème résolu: Export de toutes les tables dans la div (pas seulement la table active)
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Lorsque l'utilisateur exécute l'action "Exporter template Excel" depuis le menu contextuel,
+seule la table active est exportée en Excel sur le desktop.
+
+Les autres tables présentes dans la même div ne sont PAS exportées.
+
+🔍 CAUSE RACINE
+═══════════════════════════════════════════════════════════════════════════════
+
+La fonction exportTemplate() utilisait une approche complexe:
+1. Chercher le conteneur parent de la table active
+2. Chercher les tables dans ce conteneur
+
+❌ PROBLÈME: Le conteneur n'était pas trouvé correctement car:
+   - Les classes CSS complètes sont: "prose prose-base dark:prose-invert max-w-none"
+   - Le sélecteur closest('div.prose.prose-base.dark\\:prose-invert.max-w-none') 
+     ne fonctionnait pas de manière fiable
+
+✅ SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Utiliser le MÊME sélecteur que exportSyntheseCAC() qui fonctionne parfaitement:
+
+  document.querySelectorAll('div.prose table')
+
+Ce sélecteur:
+✅ Trouve TOUTES les tables dans les divs avec la classe "prose"
+✅ Fonctionne de manière fiable et testée
+✅ Est déjà utilisé avec succès dans exportSyntheseCAC()
+
+📝 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. public/menu.js
+   - Fonction: exportTemplate() (ligne ~4029)
+   - Fonction: exportTemplateWord() (ligne ~4140)
+
+🔧 CHANGEMENTS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT (approche complexe qui ne fonctionnait pas):
+─────────────────────────────────────────────────────────────────────────────
+let tables = [];
+
+if (this.targetTable) {
+  const container = this.targetTable.closest('div.prose.prose-base...')
+    || this.targetTable.closest('.chat-message')
+    || ...;
+  
+  if (container) {
+    tables = Array.from(container.querySelectorAll('table'));
+  }
+}
+
+if (tables.length === 0) {
+  tables = Array.from(document.querySelectorAll('div.prose table'));
+}
+─────────────────────────────────────────────────────────────────────────────
+
+APRÈS (approche simple et efficace):
+─────────────────────────────────────────────────────────────────────────────
+// Utiliser directement le sélecteur global 'div.prose table'
+// C'est le même sélecteur que exportSyntheseCAC qui fonctionne correctement
+const tables = Array.from(document.querySelectorAll('div.prose table'));
+
+console.log(`✅ [Export Template] Sélecteur utilisé: div.prose table`);
+console.log(`🔍 [Export Template] ${tables.length} table(s) trouvée(s)`);
+─────────────────────────────────────────────────────────────────────────────
+
+🎯 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+Maintenant, quand l'utilisateur exécute "Exporter template Excel":
+
+✅ TOUTES les tables dans la div sont détectées
+✅ TOUTES les tables sont exportées dans le fichier Excel
+✅ Les tables sont séparées par des lignes vides
+✅ Les en-têtes de chaque table ont le style rouge bordeaux
+✅ Le même comportement s'applique à "Exporter template Word"
+
+📊 DIAGNOSTIC AJOUTÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Des logs de diagnostic ont été ajoutés pour faciliter le débogage:
+
+console.log("🔍 [Export Template] DIAGNOSTIC - Test des sélecteurs:");
+console.log("  - document.querySelectorAll('table'):", ...);
+console.log("  - document.querySelectorAll('div.prose table'):", ...);
+
+console.log("🔍 [Export Template] Premières tables détectées:");
+tables.slice(0, 3).forEach((table, i) => {
+  console.log(`  Table ${i + 1}:`, {
+    classes: table.className,
+    rows: table.querySelectorAll('tr').length,
+    cols: ...,
+    parent: ...
+  });
+});
+
+🧪 COMMENT TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir Claraverse dans le navigateur
+2. Générer plusieurs tables dans le chat (par exemple avec un prompt)
+3. Cliquer droit sur n'importe quelle table
+4. Sélectionner "Exporter template Excel"
+5. Vérifier que le fichier Excel contient TOUTES les tables
+6. Ouvrir la console (F12) pour voir les logs de diagnostic
+
+✅ VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+La correction utilise exactement le même sélecteur que exportSyntheseCAC()
+qui est déjà testé et validé dans le projet.
+
+Cette approche garantit:
+✅ Cohérence avec le code existant
+✅ Fiabilité prouvée
+✅ Maintenance simplifiée
+
+📚 RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Fonction de référence: exportSyntheseCAC() (ligne ~9130 dans menu.js)
+Sélecteur utilisé: document.querySelectorAll('div.prose table')
+
+Cette fonction exporte avec succès toutes les tables FRAP, Recos Révision
+et Recos Contrôle Interne en utilisant ce sélecteur.
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DE LA DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════

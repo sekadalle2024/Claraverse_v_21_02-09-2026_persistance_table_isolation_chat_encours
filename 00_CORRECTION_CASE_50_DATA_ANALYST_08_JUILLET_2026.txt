@@ -1,0 +1,63 @@
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ CORRECTION CASE 50 DATA ANALYST ALÉATOIRE SIMPLE - 08 JUILLET 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+━━━━━━━━━━━━━━━━━━━━━
+Le case pour "Data analyst" et "Aléatoire simple" était assigné au Case 49
+au lieu du Case 50 comme demandé.
+
+🔧 CORRECTION APPLIQUÉE
+━━━━━━━━━━━━━━━━━━━━━
+Fichier: src/services/claraApiService.ts
+
+AVANT (Case 49 - INCORRECT):
+────────────────────────────
+// Case 49: Programme de travail OU Data analyst Aléatoire simple
+else if (msg.includes("Programme de travail") || ...) {
+  routeKey = "programme_travail";
+  caseName = "Case 49";
+} else if ((msg.includes("Data analyst") || msg.includes("Data Analyst")) && 
+           (msg.includes("Aléatoire simple") || msg.includes("aléatoire simple"))) {
+  routeKey = "data_analyst_aleatoire_simple";
+  caseName = "Case 49";  ❌ ERREUR ICI
+}
+
+APRÈS (Case 50 - CORRECT):
+──────────────────────────
+// Case 49: Programme de travail
+else if (msg.includes("Programme de travail") || ...) {
+  routeKey = "programme_travail";
+  caseName = "Case 49";
+}
+
+// Case 50: Data analyst Aléatoire simple
+else if ((msg.includes("Data analyst") || msg.includes("Data Analyst")) && 
+         (msg.includes("Aléatoire simple") || msg.includes("aléatoire simple"))) {
+  routeKey = "data_analyst_aleatoire_simple";
+  caseName = "Case 50";  ✅ CORRIGÉ
+}
+
+📊 DÉTAILS DE LA MODIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Case 49 : "Programme de travail" uniquement
+✅ Case 50 : "Data analyst" + "Aléatoire simple"
+✅ Endpoint: http://127.0.0.1:500 (inchangé)
+✅ routeKey: data_analyst_aleatoire_simple (inchangé)
+
+🎯 CONDITIONS DE DÉTECTION (Case 50)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Le Case 50 se déclenche si:
+✓ user_message contient "Data analyst" OU "Data Analyst"
+   ET
+✓ user_message contient "Aléatoire simple" OU "aléatoire simple"
+
+📝 EXEMPLES DE MESSAGES QUI DÉCLENCHENT LE CASE 50
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ "Data analyst Aléatoire simple"
+✅ "Data Analyst Aléatoire simple"
+✅ "Data analyst aléatoire simple"
+✅ "Utilise Data analyst avec Aléatoire simple"
+
+✅ CORRECTION TERMINÉE - 08 JUILLET 2026
+═══════════════════════════════════════════════════════════════════════════════

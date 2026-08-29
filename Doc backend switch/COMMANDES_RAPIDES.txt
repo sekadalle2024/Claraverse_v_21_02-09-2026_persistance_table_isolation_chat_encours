@@ -1,0 +1,150 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║  ⚡ COMMANDES RAPIDES - SYNCHRONISATION BACKEND/FRONTEND                ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+
+🔍 VÉRIFIER L'ÉTAT ACTUEL
+═══════════════════════════════════════════════════════════════════════════
+
+# Vérifier les fichiers modifiés
+git status
+
+# Vérifier les fichiers critiques
+Test-Path "public/backendConfig.js"
+Test-Path "public/LeadBalanceAutoTrigger.js"
+Test-Path "public/EtatFinAutoTrigger.js"
+Test-Path "py_backend/main.py"
+
+
+🚀 SYNCHRONISER VERS GITHUB (DÉJÀ FAIT)
+═══════════════════════════════════════════════════════════════════════════
+
+# Ajouter les fichiers
+git add index.html
+git add public/backendConfig.js
+git add public/LeadBalanceAutoTrigger.js
+git add public/EtatFinAutoTrigger.js
+git add py_backend/main.py
+git add py_backend/etats_financiers.py
+
+# Créer le commit
+git commit -m "Fix: Integration backendConfig.js + Sync endpoints Zeabur"
+
+# Pusher vers GitHub
+git push origin master
+
+✅ DÉJÀ EFFECTUÉ - Commit 38d8c30
+
+
+🌐 TESTER LES ENDPOINTS
+═══════════════════════════════════════════════════════════════════════════
+
+# Tester le backend Zeabur
+curl https://pybackend.zeabur.app/
+
+# Tester le backend local (si démarré)
+curl http://localhost:5000/
+
+# Tester l'endpoint états financiers (Zeabur)
+curl https://pybackend.zeabur.app/etats-financiers/process-excel
+
+
+🔧 FORCER UN REDÉPLOIEMENT (SI NÉCESSAIRE)
+═══════════════════════════════════════════════════════════════════════════
+
+# Netlify (via CLI)
+netlify deploy --prod
+
+# Zeabur (via interface web)
+# Aller sur https://zeabur.com/ > Cliquer "Redeploy"
+
+
+📊 VÉRIFIER LES DÉPLOIEMENTS
+═══════════════════════════════════════════════════════════════════════════
+
+# Netlify
+# Ouvrir: https://app.netlify.com/sites/prclaravi/deploys
+
+# Zeabur
+# Ouvrir: https://zeabur.com/ > Logs
+
+
+🧹 VIDER LE CACHE NAVIGATEUR
+═══════════════════════════════════════════════════════════════════════════
+
+# Chrome/Edge/Firefox
+Ctrl + Shift + R
+
+# Ou ouvrir en navigation privée
+Ctrl + Shift + N (Chrome/Edge)
+Ctrl + Shift + P (Firefox)
+
+
+✅ TESTER LA CONFIGURATION (CONSOLE NAVIGATEUR)
+═══════════════════════════════════════════════════════════════════════════
+
+# Ouvrir la console (F12) sur https://prclaravi.netlify.app/
+
+# Vérifier l'URL du backend
+console.log(window.CLARA_BACKEND_URL);
+# Doit afficher: "https://pybackend.zeabur.app"
+
+# Vérifier le mode
+console.log(window.CLARA_IS_LOCAL_DEV);
+# Doit afficher: false
+
+# Vérifier l'URL du frontend
+console.log(window.CLARA_FRONTEND_URL);
+# Doit afficher: "https://prclaravi.netlify.app"
+
+
+🐛 DIAGNOSTIC RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+# Vérifier que backendConfig.js est chargé dans index.html
+Select-String -Path "index.html" -Pattern "backendConfig.js"
+
+# Vérifier le contenu de backendConfig.js
+Get-Content "public/backendConfig.js" | Select-String "CLARA_BACKEND_URL"
+
+# Vérifier les AutoTriggers
+Select-String -Path "public/LeadBalanceAutoTrigger.js" -Pattern "CLARA_BACKEND_URL"
+Select-String -Path "public/EtatFinAutoTrigger.js" -Pattern "CLARA_BACKEND_URL"
+
+
+📝 LOGS ET MONITORING
+═══════════════════════════════════════════════════════════════════════════
+
+# Netlify Logs
+# https://app.netlify.com/sites/prclaravi/deploys
+
+# Zeabur Logs
+# https://zeabur.com/ > Sélectionner projet > Logs
+
+# Logs locaux (si backend démarré)
+# Voir le terminal où uvicorn tourne
+
+
+🔄 ROLLBACK (SI PROBLÈME)
+═══════════════════════════════════════════════════════════════════════════
+
+# Revenir au commit précédent
+git log --oneline -5
+git revert 38d8c30
+git push origin master
+
+# Ou via Netlify
+# Dashboard > Deploys > Sélectionner ancien deploy > "Publish deploy"
+
+
+═══════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════
+
+Voir:
+  - LIRE_MAINTENANT.txt
+  - 00_SYNCHRONISATION_REUSSIE_19_AVRIL_2026.txt
+  - 00_INDEX_SESSION_19_AVRIL_2026.md
+  - PLAN_ACTION_SYNCHRONISATION_COMPLETE.md
+
+═══════════════════════════════════════════════════════════════════════════

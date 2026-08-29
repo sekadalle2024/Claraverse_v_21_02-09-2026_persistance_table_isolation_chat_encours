@@ -1,0 +1,167 @@
+===============================================================
+  GUIDE VISUEL - DIAGNOSTIC X-REF
+  Date: 28 avril 2026
+===============================================================
+
+
+SITUATION ACTUELLE
+===============================================================
+
+[CLARAVERSE]                    [TEST]
+    |                              |
+    v                              v
+Table X-Ref                   Table X-Ref
+    |                              |
+    v                              v
+Menu contextuel               Tests JavaScript
+    |                              |
+    v                              v
+"Ouvrir X-Ref"                Boutons de test
+    |                              |
+    v                              v
+ERREUR:                       RESULTATS:
+"Aucune table                 OK Detection
+X-Ref trouvee"                OK Index
+                              OK Donnees
+
+
+OBJECTIF
+===============================================================
+
+Trouver pourquoi la table dans Claraverse n'est pas detectee
+alors que la table de test fonctionne.
+
+
+METHODE DE DIAGNOSTIC
+===============================================================
+
+ETAPE 1: TESTER LA PAGE DE TEST
+--------------------------------
+
+[Navigateur - test-detection-xref-table.html]
++--------------------------------------------------+
+|  TABLE X-REF DOCUMENTAIRE                        |
+|                                                  |
+|  Cross references | Document                     |
+|  ------------------|----------                   |
+|  AFRILAND         | Doc1.pdf                     |
+|  BICEC            | Doc2.pdf                     |
+|                                                  |
+|  [Tester Detection]  [Tester Index Colonnes]    |
+|  [Tester Donnees Ligne]  [Effacer Resultats]    |
+|                                                  |
+|  RESULTATS:                                      |
+|  OK Table detectee                               |
+|  OK Colonnes: Cross references, Document         |
+|  OK Index: 0, 1                                  |
++--------------------------------------------------+
+
+
+ETAPE 2: INSPECTER CLARAVERSE
+------------------------------
+
+[Claraverse - F12 DevTools]
++--------------------------------------------------+
+|  Elements | Console | Network | ...              |
+|                                                  |
+|  <div class="table-container">                   |
+|    <table>                                       |
+|      <thead>  ← VERIFIER SI PRESENT              |
+|        <tr>                                      |
+|          <th>Cross references</th>  ← NOM EXACT  |
+|          <th>Document</th>                       |
+|        </tr>                                     |
+|      </thead>                                    |
+|      <tbody>                                     |
+|        <tr>                                      |
+|          <td>AFRILAND</td>                       |
+|          <td>Doc1.pdf</td>                       |
+|        </tr>                                     |
+|      </tbody>                                    |
+|    </table>                                      |
+|  </div>                                          |
++--------------------------------------------------+
+
+
+ETAPE 3: COMPARER LES STRUCTURES
+---------------------------------
+
+TEST                          CLARAVERSE
+----                          ----------
+<thead>                       <thead> ou <tbody> ?
+  <tr>                          <tr>
+    <th>Cross references</th>     <th> ou <td> ?
+    <th>Document</th>              Nom exact ?
+  </tr>                          </tr>
+
+
+POINTS A VERIFIER
+===============================================================
+
+1. STRUCTURE HTML
+   [ ] La table a un <thead> ?
+   [ ] Les en-tetes sont des <th> ou <td> ?
+   [ ] L'ordre des colonnes est le meme ?
+
+2. NOMS DES COLONNES
+   [ ] "Cross references" (pluriel) ?
+   [ ] "Cross reference" (singulier) ?
+   [ ] "X-Ref" ou "Xref" ?
+   [ ] "Document" ou "Documents" ?
+
+3. CONTENU DES CELLULES
+   [ ] Les cellules contiennent du texte ?
+   [ ] Pas d'elements HTML imbriques ?
+   [ ] Pas d'espaces invisibles ?
+
+
+SCENARIOS POSSIBLES
+===============================================================
+
+SCENARIO 1: Pas de <thead>
+---------------------------
+La table utilise seulement <tbody>
+
+SOLUTION:
+  Modifier la ligne 9905 de menu.js:
+  
+  const headerRow = table.querySelector('thead tr') || 
+                    table.querySelector('tr:first-child');
+
+
+SCENARIO 2: Nom de colonne different
+-------------------------------------
+La colonne s'appelle "Cross reference" (singulier)
+
+SOLUTION:
+  Ajouter la variante dans la detection:
+  
+  if (text.includes('cross') || 
+      text.includes('xref') || 
+      text.includes('x-ref'))
+
+
+SCENARIO 3: Mauvaise table selectionnee
+----------------------------------------
+Plusieurs tables dans la page
+
+SOLUTION:
+  Verifier que c'est la bonne table:
+  
+  console.log('Table:', table);
+  console.log('Headers:', headers);
+
+
+PROCHAINE ETAPE
+===============================================================
+
+1. Executez les tests dans le navigateur
+2. Copiez le HTML de la table Claraverse
+3. Comparez les deux structures
+4. Identifiez la difference
+5. Appliquez la correction appropriee
+
+
+===============================================================
+  FIN
+===============================================================

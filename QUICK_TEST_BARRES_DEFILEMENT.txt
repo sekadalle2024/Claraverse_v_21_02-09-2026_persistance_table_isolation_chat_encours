@@ -1,0 +1,80 @@
+═══════════════════════════════════════════════════════════════════════════════
+  TEST RAPIDE - BARRES DE DÉFILEMENT HEATMAP
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 TEST EN 3 ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Démarrer l'application
+  npm run dev
+
+ÉTAPE 2: Envoyer le message
+  "heatmap risque"
+
+ÉTAPE 3: Vérifier les barres de défilement
+  ✓ Barre verticale visible si > 800px de hauteur
+  ✓ Barre horizontale visible si nécessaire
+  ✓ Barres stylisées (gradient violet)
+  ✓ Défilement fluide
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 POINTS DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTENEUR PRINCIPAL:
+  □ max-height: 800px appliqué
+  □ Barre verticale apparaît si contenu > 800px
+  □ Barre horizontale apparaît si nécessaire
+  □ Gradient violet sur les barres
+  □ Défilement fluide
+
+CELLULES INDIVIDUELLES:
+  □ max-height: 400px par cellule
+  □ Barre verticale dans cellule si > 10 risques
+  □ Défilement indépendant par cellule
+  □ Barres semi-transparentes
+
+STYLE:
+  □ Barres arrondies (border-radius: 6px)
+  □ Hover effect sur les barres
+  □ Cohérence visuelle avec le design
+
+MODE SOMBRE:
+  □ Barres visibles en mode sombre
+  □ Track sombre (#3a3a3a)
+  □ Thumb gradient violet maintenu
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 TESTS AVANCÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST 1: Avec 10 risques
+  - Pas de barre de défilement
+  - Affichage normal
+
+TEST 2: Avec 50 risques
+  - Barre verticale visible
+  - Navigation fluide
+
+TEST 3: Avec 100 risques
+  - Barres verticale et horizontale
+  - Performance OK
+  - Toutes les cellules accessibles
+
+TEST 4: Cellule avec 15 risques
+  - Barre dans la cellule
+  - Défilement indépendant
+  - Autres cellules non affectées
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Barres de défilement visibles
+□ Styles personnalisés appliqués
+□ Défilement fluide
+□ Mode sombre fonctionne
+□ Responsive OK
+□ Performance optimale
+
+═══════════════════════════════════════════════════════════════════════════════

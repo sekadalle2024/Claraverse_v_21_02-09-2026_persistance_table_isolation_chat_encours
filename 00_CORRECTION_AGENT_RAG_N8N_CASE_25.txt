@@ -1,0 +1,269 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION AGENT RAG N8N - CASE 25
+  Date: 29 Mars 2026 - 22h30
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈMES IDENTIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. CYCLE HARDCODÉ
+───────────────────────────────────────────────────────────────────────────
+Le cycle était hardcodé sur "Trésorerie" dans le prompt de l'agent RAG.
+
+AVANT:
+- Quel est le cycle concerné ? → Trésorerie
+
+PROBLÈME:
+L'agent RAG cherchait toujours des comptes de trésorerie, même si
+l'utilisateur spécifiait un autre cycle (RH, Ventes, Achats, etc.)
+
+2. USER MESSAGE NON VISIBLE
+───────────────────────────────────────────────────────────────────────────
+Les variables utilisées ne pointaient pas vers les bonnes données.
+
+AVANT:
+*** [user_message] = "{{JSON.stringify($json.data, null, 2)}}"
+** [messagz] = "{{JSON.stringify($json.Code integrate7, null, 2)}}"
+
+PROBLÈME:
+- $json.data pointe vers les données brutes du webhook
+- $json.Code integrate7 n'existe pas
+- L'agent RAG ne voyait pas le message utilisateur structuré
+
+SOLUTIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════
+
+SOLUTION 1: INDEXER LE CYCLE SUR [Cycle]
+───────────────────────────────────────────────────────────────────────────
+
+AVANT (hardcodé):
+```
+- Quel est le cycle concerné ? → Trésorerie
+```
+
+APRÈS (dynamique):
+```
+- Quel est le cycle concerné ? → {{ $json.data[0].User_message.find(item => item['[Cycle]'])?.['[Cycle]'] || 'Non spécifié' }}
+```
+
+EXPLICATION:
+- $json.data[0].User_message : Array des clés-valeurs du message utilisateur
+- .find(item => item['[Cycle]']) : Cherche l'objet contenant [Cycle]
+- ?.['[Cycle]'] : Extrait la valeur de [Cycle]
+- || 'Non spécifié' : Fallback si [Cycle] n'est pas trouvé
+
+SOLUTION 2: CORRIGER LES VARIABLES USER MESSAGE
+───────────────────────────────────────────────────────────────────────────
+
+AVANT (incorrect):
+```
+[user_message] = "{{JSON.stringify($json.data, null, 2)}}"
+[messagz] = "{{JSON.stringify($json.Code integrate7, null, 2)}}"
+```
+
+APRÈS (correct):
+```
+[user_message] = {{ JSON.stringify($json.data[0].User_message, null, 2) }}
+
+[cycle_detecte] = {{ $json.data[0].User_message.find(item => item['[Cycle]'])?.['[Cycle]'] || 'Non spécifié' }}
+
+[constat] = {{ $json.data[0].User_message.find(item => item['[Constat]'])?.['[Constat]'] || 'Non spécifié' }}
+
+[anomalie] = {{ $json.data[0].User_message.find(item => item['[Anomalie]'])?.['[Anomalie]'] || 'Non spécifié' }}
+```
+
+EXPLICATION:
+- $json.data[0].User_message : Pointe vers le message structuré par Code integrate7
+- Variables séparées pour cycle, constat, anomalie
+- Facilite l'utilisation dans les queries RAG
+
+SOLUTION 3: ADAPTER LES QUERIES RAG AU CYCLE
+───────────────────────────────────────────────────────────────────────────
+
+AVANT (hardcodé sur trésorerie):
+```
+RECHERCHE 1:
+Query → "compte caisse trésorerie SYSCOHADA fonctionnement débit crédit"
+```
+
+APRÈS (dynamique selon le cycle):
+```
+RECHERCHE 1 - COMPTE PRINCIPAL DU CYCLE :
+Query → "compte {{ $json.data[0].User_message.find(item => item['[Cycle]'])?.['[Cycle]'] || 'trésorerie' }} SYSCOHADA fonctionnement débit crédit"
+```
+
+EXPLICATION:
+- La query s'adapte automatiquement au cycle spécifié
+- Si [Cycle] = "RH" → cherche "compte RH SYSCOHADA..."
+- Si [Cycle] = "Ventes" → cherche "compte Ventes SYSCOHADA..."
+- Fallback sur "trésorerie" si [Cycle] non spécifié
+
+STRUCTURE DES DONNÉES
+═══════════════════════════════════════════════════════════════════════════
+
+FLUX DE DONNÉES:
+───────────────────────────────────────────────────────────────────────────
+
+1. Webhook reçoit le message:
+```json
+{
+  "question": "[Command] : Recos contrôle interne comptable\n[Cycle] : RH\n[test] : AA010\n[Constat] = Absence de procédure\n[Anomalie] = Inexistence de fiche de poste"
+}
+```
+
+2. Code integrate7 transforme en:
+```json
+{
+  "data": [
+    {
+      "User_message": [
+        { "[Command]": "Recos contrôle interne comptable" },
+        { "[Cycle]": "RH" },
+        { "[test]": "AA010" },
+        { "[Constat]": "Absence de procédure" },
+        { "[Anomalie]": "Inexistence de fiche de poste" }
+      ]
+    }
+  ]
+}
+```
+
+3. Agent RAG extrait les variables:
+```javascript
+[cycle_detecte] = "RH"
+[constat] = "Absence de procédure"
+[anomalie] = "Inexistence de fiche de poste"
+```
+
+4. Agent RAG adapte les queries:
+```
+Query 1 → "compte RH SYSCOHADA fonctionnement débit crédit"
+Query 2 → "compte charges produits Absence de procédure SYSCOHADA"
+Query 4 → "écriture régularisation extourne Inexistence de fiche de poste SYSCOHADA"
+```
+
+FICHIER MODIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+n8n_prompt_agent_rag_corrige.txt
+→ Prompt complet corrigé pour le node "Agent RAG révision des comptes1"
+
+INSTRUCTIONS D'APPLICATION
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir n8n: https://t22wtwxl.rpcld.app
+2. Ouvrir le workflow "recos_contrôle_interne_comptable"
+3. Cliquer sur le node "Agent RAG révision des comptes1"
+4. Remplacer le contenu du champ "text" par le contenu de:
+   n8n_prompt_agent_rag_corrige.txt
+5. Sauvegarder le workflow
+6. Tester avec différents cycles
+
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 1: CYCLE TRÉSORERIE
+───────────────────────────────────────────────────────────────────────────
+Message:
+[Command] : Recos contrôle interne comptable
+[Cycle] : trésorerie
+[test] : AA010
+[Constat] = Dépassement plafond caisse
+[Anomalie] = Absence de contrôles inopinés
+
+Résultat attendu:
+✅ Agent RAG cherche des comptes de trésorerie (57X)
+✅ Queries adaptées au cycle trésorerie
+
+TEST 2: CYCLE RH
+───────────────────────────────────────────────────────────────────────────
+Message:
+[Command] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA020
+[Constat] = Absence de procédure de recrutement
+[Anomalie] = Inexistence de fiche de poste DG
+
+Résultat attendu:
+✅ Agent RAG cherche des comptes RH (66X - charges de personnel)
+✅ Queries adaptées au cycle RH
+
+TEST 3: CYCLE VENTES
+───────────────────────────────────────────────────────────────────────────
+Message:
+[Command] : Recos contrôle interne comptable
+[Cycle] : ventes
+[test] : AA030
+[Constat] = Factures non numérotées
+[Anomalie] = Rupture de séquence numérotation
+
+Résultat attendu:
+✅ Agent RAG cherche des comptes de ventes (70X)
+✅ Queries adaptées au cycle ventes
+
+TEST 4: CYCLE ACHATS
+───────────────────────────────────────────────────────────────────────────
+Message:
+[Command] : Recos contrôle interne comptable
+[Cycle] : achats
+[test] : AA040
+[Constat] = Bons de commande non signés
+[Anomalie] = Absence de validation hiérarchique
+
+Résultat attendu:
+✅ Agent RAG cherche des comptes d'achats (60X)
+✅ Queries adaptées au cycle achats
+
+VÉRIFICATIONS DANS N8N
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir le workflow en mode test
+2. Envoyer un message avec [Cycle] : RH
+3. Cliquer sur le node "Agent RAG révision des comptes1"
+4. Vérifier dans les logs d'exécution:
+   ✅ [cycle_detecte] = "RH"
+   ✅ [constat] = "..."
+   ✅ [anomalie] = "..."
+   ✅ Queries contiennent "RH" au lieu de "trésorerie"
+
+AVANTAGES DE CETTE CORRECTION
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Agent RAG s'adapte automatiquement au cycle spécifié
+✅ Queries RAG pertinentes pour chaque cycle
+✅ Comptes SYSCOHADA corrects identifiés
+✅ Recommandations spécifiques au cycle
+✅ Pas besoin de créer un workflow par cycle
+
+DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════
+
+n8n_prompt_agent_rag_corrige.txt
+→ Prompt complet avec toutes les corrections
+
+STATUT
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Prompt corrigé créé
+✅ Variables dynamiques implémentées
+✅ Queries RAG adaptatives
+⏳ Application dans n8n à effectuer
+⏳ Tests avec différents cycles à effectuer
+
+PROCHAINES ACTIONS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Copier le contenu de n8n_prompt_agent_rag_corrige.txt
+2. Ouvrir n8n et le workflow Case 25
+3. Remplacer le prompt de l'agent RAG
+4. Sauvegarder
+5. Tester avec RH, Ventes, Achats, Trésorerie
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 22h30
+Version: 1.0 (correction agent RAG dynamique)
+Priorité: HAUTE
+Statut: PROMPT CORRIGÉ - APPLICATION DANS N8N REQUISE
+
+═══════════════════════════════════════════════════════════════════════════

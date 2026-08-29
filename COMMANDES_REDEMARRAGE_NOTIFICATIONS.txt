@@ -1,0 +1,109 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ COMMANDES REDÉMARRAGE - NOTIFICATIONS
+  29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 SOLUTION IMPLÉMENTÉE
+─────────────────────────────────────────────────────────────────────────────
+Le service de notification a été créé et intégré.
+Les notifications sont maintenant fonctionnelles.
+
+⚡ REDÉMARRAGE REQUIS
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1 : ARRÊTER L'APPLICATION
+────────────────────────────────
+Dans le terminal où tourne l'application :
+Appuyer sur Ctrl+C
+
+ÉTAPE 2 : REDÉMARRER
+─────────────────────
+npm run dev
+
+ÉTAPE 3 : ATTENDRE "READY"
+───────────────────────────
+Attendre que le message suivant apparaisse :
+  VITE v... ready in ...ms
+  ➜  Local:   http://localhost:5173/
+
+ÉTAPE 4 : OUVRIR L'APPLICATION
+───────────────────────────────
+http://localhost:5173
+
+ÉTAPE 5 : VIDER LE CACHE
+─────────────────────────
+Windows : Ctrl+Shift+R
+Mac : Cmd+Shift+R
+
+Ou :
+F12 → Onglet Network → Cocher "Disable cache" → Rafraîchir
+
+ÉTAPE 6 : TESTER
+────────────────
+Envoyer un message : "CIA Cours"
+
+ÉTAPE 7 : VÉRIFIER
+──────────────────
+✅ Notification visible en haut à droite
+✅ Durée : 8 secondes
+✅ Contenu : Case 11, route cia_cours, URL
+
+📊 VÉRIFICATION CONSOLE
+─────────────────────────────────────────────────────────────────────────────
+
+F12 → Console → Chercher :
+
+📢 Notification info: {
+  title: "🔀 Router n8n - Case 11",
+  message: "Route: cia_cours\nURL: http://localhost:5678/webhook/cia_cours_gemini",
+  duration: 8000
+}
+
+🔔 Notification envoyée: {
+  case: "Case 11",
+  route: "cia_cours",
+  url: "http://localhost:5678/webhook/cia_cours_gemini"
+}
+
+✅ SI LA NOTIFICATION APPARAÎT
+─────────────────────────────────────────────────────────────────────────────
+→ Succès ! Les notifications fonctionnent correctement.
+
+❌ SI LA NOTIFICATION N'APPARAÎT PAS
+─────────────────────────────────────────────────────────────────────────────
+
+1. Vérifier que l'application a bien redémarré
+2. Vérifier qu'il n'y a pas d'erreurs dans la console (F12)
+3. Vérifier que le cache a été vidé (Ctrl+Shift+R)
+4. Essayer avec un autre navigateur
+5. Vérifier les logs console pour voir si le code est exécuté
+
+🔍 DÉBOGAGE
+─────────────────────────────────────────────────────────────────────────────
+
+Si le log "🔔 Notification envoyée:" apparaît mais pas la notification :
+→ Problème d'affichage du composant NotificationContainer
+
+Si aucun log n'apparaît :
+→ Le code n'est pas exécuté, vérifier que l'application a bien redémarré
+
+Si erreur dans la console :
+→ Vérifier le message d'erreur et corriger
+
+📝 COMMANDES ALTERNATIVES
+─────────────────────────────────────────────────────────────────────────────
+
+# Rebuild complet
+npm run build
+npm run dev
+
+# Nettoyer et redémarrer
+rm -rf node_modules/.vite
+npm run dev
+
+# Forcer le rebuild
+npm run dev -- --force
+
+═══════════════════════════════════════════════════════════════════════════════
+  PRÊT À TESTER
+═══════════════════════════════════════════════════════════════════════════════

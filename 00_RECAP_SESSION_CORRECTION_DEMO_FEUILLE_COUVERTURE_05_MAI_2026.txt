@@ -1,0 +1,122 @@
+═══════════════════════════════════════════════════════════════════════════════
+  RÉCAPITULATIF SESSION - Correction Position [Demo] = Activate
+  Date: 05 Mai 2026
+  Feuille Couverture - E-audit Pro - Phase de Réalisation
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 CONTEXTE
+-----------
+L'étape "Feuille couverture" de E-audit Pro dispose d'un mode Demo, mais la
+ligne [Demo] = Activate est ajoutée en PREMIÈRE position au lieu de la DERNIÈRE.
+
+🎯 OBJECTIF
+-----------
+Déplacer [Demo] = Activate de la première ligne vers la dernière ligne
+(après [Nb de lignes] = X)
+
+🔍 ANALYSE
+----------
+Le problème vient de la définition du mode Demo dans DemarrerMenu.tsx:
+
+  { id: 'demo', label: 'Demo', prefix: '[Demo] = Activate\n' }
+
+Le "prefix" ajoute la ligne AU DÉBUT de la commande.
+Il faut utiliser un "suffix" pour l'ajouter À LA FIN.
+
+✅ SOLUTION APPLIQUÉE
+---------------------
+
+1. Ajout de la propriété "suffix" à l'interface ModeItem
+2. Modification du mode Demo pour utiliser suffix au lieu de prefix
+3. Modification de la logique de génération de commande
+
+🔧 FICHIERS CRÉÉS
+-----------------
+
+1. Script Python:
+   Doc menu demarrer/Scripts/fix_demo_position_feuille_couverture.py
+   
+   Fonctionnalités:
+   - Ajoute suffix à l'interface ModeItem
+   - Modifie le mode Demo (prefix → suffix)
+   - Modifie la logique de génération
+   - Crée un backup automatique
+
+2. Script PowerShell de test:
+   test-fix-demo-position-feuille-couverture.ps1
+   
+   Utilisation:
+   .\test-fix-demo-position-feuille-couverture.ps1
+
+3. Documentation complète:
+   Doc menu demarrer/Documentation/CORRECTION_POSITION_DEMO_FEUILLE_COUVERTURE_05_MAI_2026.md
+
+4. Quick Start:
+   QUICK_START_CORRECTION_DEMO_FEUILLE_COUVERTURE.txt
+
+5. Ce récapitulatif:
+   00_RECAP_SESSION_CORRECTION_DEMO_FEUILLE_COUVERTURE_05_MAI_2026.txt
+
+📊 MODIFICATIONS TECHNIQUES
+---------------------------
+
+Interface ModeItem:
+  AVANT: prefix?: string;
+  APRÈS: prefix?: string; suffix?: string;
+
+Mode Demo:
+  AVANT: { id: 'demo', label: 'Demo', prefix: '[Demo] = Activate\n' }
+  APRÈS: { id: 'demo', label: 'Demo', prefix: '', suffix: '\n[Demo] = Activate' }
+
+Logique de génération:
+  AVANT: mode.prefix + activeEtape.command
+  APRÈS: mode.prefix + activeEtape.command + (mode.suffix || '')
+
+🚀 PROCHAINES ÉTAPES
+--------------------
+
+1. Exécuter le script:
+   .\test-fix-demo-position-feuille-couverture.ps1
+
+2. Relancer l'application:
+   npm run dev
+
+3. Tester:
+   - Ouvrir le menu Démarrer
+   - E-audit pro > Phase de réalisation > Feuille couverture
+   - Sélectionner le mode "Demo"
+   - Vérifier que [Demo] = Activate est en DERNIÈRE ligne
+
+✅ RÉSULTAT ATTENDU
+-------------------
+
+Commande générée par le mode Demo:
+
+[Command] = Couverture
+[Processus] = Sécurité trésorerie
+[Contrôle] = Verifier l exhaustivite des inventaires de caisse
+[Instruction] = Template
+[Modele de test] = no, compte, site, libelle, solde BG, Solde Pv inventaire
+[Nb de lignes] = 15
+[Demo] = Activate          ← EN DERNIÈRE LIGNE ✅
+
+📝 NOTES
+--------
+
+- Backup automatique créé avant toute modification
+- Rollback possible en cas de problème
+- Solution réutilisable pour d'autres modes si nécessaire
+- Cohérence avec les autres modes qui ajoutent leurs variables à la fin
+
+🎉 STATUT
+---------
+
+✅ Scripts créés et prêts à l'exécution
+✅ Documentation complète rédigée
+✅ Quick Start disponible
+⏳ En attente d'exécution par l'utilisateur
+
+═══════════════════════════════════════════════════════════════════════════════
+Auteur: Kiro AI Assistant
+Date: 05 Mai 2026
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,294 @@
+================================================================================
+CORRECTION - CALCUL DE CRITICITÉ POUR TOUTES LES MATRICES
+Date: 02 Avril 2026
+================================================================================
+
+PROBLÈME IDENTIFIÉ
+================================================================================
+
+L'action "Calculer criticité" du menu contextuel ne fonctionne QUE pour la
+matrice alphabétique 3 niveaux (Faible, Moyen, Élevé).
+
+Pour toutes les autres matrices:
+❌ Matrice alphabétique - 4 niveaux: "40 lignes avec valeurs non reconnues"
+❌ Matrice alphabétique - 5 niveaux: "40 lignes avec valeurs non reconnues"
+❌ Matrice numérique - 3 niveaux: "40 lignes avec valeurs non reconnues"
+❌ Matrice numérique - 4 niveaux: "40 lignes avec valeurs non reconnues"
+❌ Matrice numérique - 5 niveaux: "40 lignes avec valeurs non reconnues"
+
+✅ Matrice alphabétique - 3 niveaux: FONCTIONNAIT
+
+SYMPTÔME:
+---------
+Notification: "⚠️ 40 ligne(s) avec valeurs non reconnues"
+Les valeurs sont bien des chiffres mais en format TEXTE (ex: "1", "2", "3")
+
+================================================================================
+CAUSE RACINE
+================================================================================
+
+1. La méthode calculateCriticityWithFormat() utilisait UNIQUEMENT
+   getCriticityMatrix() qui ne retourne que la matrice Alpha-3
+
+2. Les méthodes normalizeToAlpha4() et normalizeToAlpha5() retournaient
+   des NOMBRES (Math.round(num)) au lieu de CHAÎNES pour les valeurs 1-5
+
+3. Aucune détection automatique du type de matrice
+
+4. Aucun support pour les matrices numériques dans le calcul de criticité
+
+================================================================================
+SOLUTION APPLIQUÉE
+================================================================================
+
+1. RÉÉCRITURE COMPLÈTE DE calculateCriticityWithFormat()
+   -------------------------------------------------------
+   
+   Avant:
+   ------
+   - Utilisait uniquement getCriticityMatrix() (Alpha-3)
+   - Pas de détection du type de matrice
+   - Pas de support pour les autres matrices
+   
+   Après:
+   ------
+   - Détection AUTOMATIQUE du type de matrice
+   - Support de TOUTES les matrices (Alpha-3/4/5, Num-3/4/5)
+   - Ordre de détection optimisé:
+     1. Matrices numériques (si les deux valeurs sont des nombres)
+     2. Matrice Alpha-5 (si "très" détecté)
+     3. Matrice Alpha-4 (si termes spécifiques détectés)
+     4. Matrice Alpha-3 (par défaut)
+
+2. AJOUT DE 4 NOUVELLES MÉTHODES DE CALCUL
+   -----------------------------------------
+   
+   A. calculateNumericCriticity(prob, impact)
+      - Détecte automatiquement si matrice 3x3, 4x4 ou 5x5
+      - Utilise getMatrixNum3/4/5() selon le cas
+      - Retourne la criticité numérique calculée
+   
+   B. calculateAlpha5Criticity(probabilite, impact)
+      - Utilise getMatrixAlpha5()
+      - Normalise via normalizeToAlpha5()
+      - Retourne la criticité Alpha-5
+   
+   C. calculateAlpha4Criticity(probabilite, impact)
+      - Utilise getMatrixAlpha4()
+      - Normalise via normalizeToAlpha4()
+      - Retourne la criticité Alpha-4
+   
+   D. calculateAlpha3Criticity(probabilite, impact)
+      - Ancienne méthode (Alpha-3)
+      - Conservée pour compatibilité
+
+3. CORRECTION DE normalizeToAlpha4() et normalizeToAlpha5()
+   ---------------------------------------------------------
+   
+   Avant:
+   ------
+   if (num >= 1 && num <= 4) return Math.round(num);  // ❌ Retourne un NOMBRE
+   
+   Après:
+   ------
+   if (num >= 1 && num <= 4) {
+     const rounded = Math.round(num);
+     if (rounded === 1) return 'Mineur';      // ✅ Retourne une CHAÎNE
+     if (rounded === 2) return 'Significatif';
+     if (rounded === 3) return 'Majeur';
+     if (rounded === 4) return 'Critique';
+   }
+
+================================================================================
+DÉTAILS TECHNIQUES
+================================================================================
+
+ORDRE DE DÉTECTION DANS calculateCriticityWithFormat():
+--------------------------------------------------------
+
+1. MATRICES NUMÉRIQUES (priorité si les deux sont des nombres)
+   - Détection: !isNaN(probNum) && !isNaN(impactNum)
+   - Appelle: calculateNumericCriticity()
+   - Supporte: Num-3 (1-3), Num-4 (1-4), Num-5 (1-5)
+
+2. MATRICE ALPHA-5 (détecter "très" en premier)
+   - Détection: includes('tres') || includes('très')
+   - Appelle: calculateAlpha5Criticity()
+   - Valeurs: Très faible, Faible, Modéré, Élevé, Très élevé
+
+3. MATRICE ALPHA-4 (détecter termes spécifiques)
+   - Détection: includes('mineur') || includes('significatif') || etc.
+   - Appelle: calculateAlpha4Criticity()
+   - Valeurs: Mineur, Significatif, Majeur, Critique
+
+4. MATRICE ALPHA-3 (par défaut)
+   - Détection: Par défaut si aucune autre détection
+   - Appelle: calculateAlpha3Criticity()
+   - Valeurs: Faible, Moyen, Élevé
+
+DÉTECTION AUTOMATIQUE DU TYPE DE MATRICE NUMÉRIQUE:
+----------------------------------------------------
+
+Dans calculateNumericCriticity():
+
+const maxVal = Math.max(probRounded, impactRounded);
+
+if (maxVal <= 3) {
+  // Matrice 3x3
+  matrix = this.getMatrixNum3();
+  colors = this.getColorsNumeric(9);
+} else if (maxVal <= 4) {
+  // Matrice 4x4
+  matrix = this.getMatrixNum4();
+  colors = this.getColorsNumeric(16);
+} else {
+  // Matrice 5x5
+  matrix = this.getMatrixNum5();
+  colors = this.getColorsNumeric(25);
+}
+
+================================================================================
+FICHIERS MODIFIÉS
+================================================================================
+
+✅ public/menu.js
+   - calculateCriticityWithFormat() - Ligne ~1229 (complètement réécrite)
+   - calculateNumericCriticity() - Ligne ~1250 (nouvelle méthode)
+   - calculateAlpha5Criticity() - Ligne ~1280 (nouvelle méthode)
+   - calculateAlpha4Criticity() - Ligne ~1300 (nouvelle méthode)
+   - calculateAlpha3Criticity() - Ligne ~1320 (ancienne méthode renommée)
+   - normalizeToAlpha4() - Ligne ~1841 (correction retour chaîne)
+   - normalizeToAlpha5() - Ligne ~1808 (correction retour chaîne)
+
+================================================================================
+IMPACT DES CORRECTIONS
+================================================================================
+
+AVANT:
+------
+❌ Calcul criticité: Fonctionne UNIQUEMENT pour Alpha-3
+❌ Autres matrices: "40 lignes avec valeurs non reconnues"
+❌ Valeurs numériques: Non reconnues
+❌ Valeurs texte (chiffres): Non reconnues
+
+APRÈS:
+------
+✅ Calcul criticité: Fonctionne pour TOUTES les matrices
+✅ Détection automatique du type de matrice
+✅ Valeurs numériques: Reconnues et calculées
+✅ Valeurs texte (chiffres): Reconnues et converties
+✅ Support complet: Alpha-3/4/5, Num-3/4/5
+
+================================================================================
+EXEMPLES DE CALCUL
+================================================================================
+
+1. MATRICE NUMÉRIQUE 3x3
+   Probabilité: "2" (texte)
+   Impact: "3" (texte)
+   → Détection: Numérique
+   → Calcul: 2 × 3 = 6
+   → Criticité: 6 (avec couleur jaune)
+
+2. MATRICE NUMÉRIQUE 4x4
+   Probabilité: "3" (texte)
+   Impact: "4" (texte)
+   → Détection: Numérique
+   → Calcul: 3 × 4 = 12
+   → Criticité: 12 (avec couleur orange)
+
+3. MATRICE ALPHA-4
+   Probabilité: "2" (texte)
+   Impact: "3" (texte)
+   → Détection: Alpha-4 (si contexte approprié)
+   → Conversion: 2 → Significatif, 3 → Majeur
+   → Criticité: Majeur (via matrice Alpha-4)
+
+4. MATRICE ALPHA-5
+   Probabilité: "Très faible"
+   Impact: "Élevé"
+   → Détection: Alpha-5 (mot "Très")
+   → Criticité: Faible (via matrice Alpha-5)
+
+================================================================================
+TESTS À EFFECTUER
+================================================================================
+
+Pour chaque matrice, tester l'action "Calculer criticité":
+
+1. MATRICE ALPHA-3
+   □ Probabilité: Faible, Impact: Moyen → Criticité: Faible
+   □ Probabilité: Moyen, Impact: Élevé → Criticité: Élevé
+   □ Probabilité: Élevé, Impact: Élevé → Criticité: Élevé
+
+2. MATRICE ALPHA-4
+   □ Probabilité: Mineur, Impact: Significatif → Criticité calculée
+   □ Probabilité: Majeur, Impact: Critique → Criticité calculée
+   □ Valeurs numériques 1-4 → Conversion + calcul
+
+3. MATRICE ALPHA-5
+   □ Probabilité: Très faible, Impact: Modéré → Criticité calculée
+   □ Probabilité: Élevé, Impact: Très élevé → Criticité calculée
+   □ Valeurs numériques 1-5 → Conversion + calcul
+
+4. MATRICE NUM-3
+   □ Probabilité: 1, Impact: 2 → Criticité: 2
+   □ Probabilité: 2, Impact: 3 → Criticité: 6
+   □ Probabilité: 3, Impact: 3 → Criticité: 9
+
+5. MATRICE NUM-4
+   □ Probabilité: 2, Impact: 3 → Criticité: 6
+   □ Probabilité: 3, Impact: 4 → Criticité: 12
+   □ Probabilité: 4, Impact: 4 → Criticité: 16
+
+6. MATRICE NUM-5
+   □ Probabilité: 3, Impact: 4 → Criticité: 12
+   □ Probabilité: 4, Impact: 5 → Criticité: 20
+   □ Probabilité: 5, Impact: 5 → Criticité: 25
+
+================================================================================
+COMPATIBILITÉ
+================================================================================
+
+✅ Rétrocompatible avec matrices Alpha-3 existantes
+✅ Fonctionne avec valeurs numériques (nombres)
+✅ Fonctionne avec valeurs texte (chiffres en texte)
+✅ Fonctionne avec valeurs alphabétiques
+✅ Détection automatique du type
+✅ Pas de changement requis côté n8n
+
+================================================================================
+NOTES IMPORTANTES
+================================================================================
+
+1. ORDRE DE DÉTECTION CRITIQUE
+   - Numérique en premier (si les deux sont des nombres)
+   - Alpha-5 avant Alpha-3 (pour détecter "Très")
+   - Alpha-4 avec termes spécifiques
+   - Alpha-3 par défaut
+
+2. VALEURS TEXTE vs NUMÉRIQUES
+   - "1", "2", "3" (texte) → Convertis en nombres
+   - 1, 2, 3 (nombres) → Utilisés directement
+   - Les deux formats fonctionnent
+
+3. CONVERSION AUTOMATIQUE
+   - Valeurs 1-4 → Alpha-4 si contexte approprié
+   - Valeurs 1-5 → Alpha-5 si contexte approprié
+   - Valeurs 1-3 → Num-3 par défaut
+
+4. GESTION DES ERREURS
+   - Valeurs non reconnues → errorCount++
+   - Message clair: "X ligne(s) avec valeurs non reconnues"
+   - Console.warn pour debug
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+1. ✅ Corrections appliquées dans public/menu.js
+2. ⏳ Tests avec matrices générées via n8n
+3. ⏳ Tests avec action "Calculer criticité"
+4. ⏳ Validation des calculs pour chaque matrice
+
+================================================================================

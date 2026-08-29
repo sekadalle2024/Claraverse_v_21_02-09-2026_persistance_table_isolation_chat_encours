@@ -1,0 +1,78 @@
+🔍 ANALYSE DE L'ERREUR WORKFLOW N8N - 12 AVRIL 2026
+====================================================
+
+❌ ERREUR RENCONTRÉE
+--------------------
+"Cannot read properties of undefined (reading 'execute')"
+
+🎯 CAUSE RÉELLE
+---------------
+L'API Google Drive v3 de n8n n'a PAS d'opération "search" pour les dossiers.
+
+Les opérations disponibles pour Google Drive v3 sont:
+- Folder: create, delete, list, share
+- File: copy, delete, download, list, move, share, upload, update
+
+❗ PROBLÈMES IDENTIFIÉS DANS LE WORKFLOW
+----------------------------------------
+
+1. ❌ Opération "search" n'existe pas
+   - Utilisée dans: "Rechercher Dossier CAC", "Rechercher Dossier Client", "Rechercher Cycle"
+   - Solution: Utiliser "list" avec options.queryString
+
+2. ❌ Paramètre "query" incorrect
+   - Doit être dans "options.queryString" pour l'opération "list"
+
+3. ❌ Structure des nodes de création incorrecte
+   - Manque le paramètre "parentId" pour spécifier où créer le dossier
+
+4. ❌ Upload de fichier mal configuré
+   - Paramètre "binaryData" obsolète
+   - Doit utiliser "options.binaryPropertyName"
+
+✅ SOLUTION CORRECTE
+--------------------
+
+Pour RECHERCHER un dossier:
+{
+  "parameters": {
+    "operation": "list",
+    "options": {
+      "queryString": "name='Nom Dossier' and mimeType='application/vnd.google-apps.folder'"
+    }
+  }
+}
+
+Pour CRÉER un dossier:
+{
+  "parameters": {
+    "operation": "create",
+    "name": "Nom du dossier",
+    "options": {
+      "parentId": "ID_du_dossier_parent"
+    }
+  }
+}
+
+Pour UPLOADER un fichier:
+{
+  "parameters": {
+    "operation": "upload",
+    "name": "nom_fichier.ext",
+    "options": {
+      "parentId": "ID_du_dossier",
+      "binaryPropertyName": "data"
+    }
+  }
+}
+
+📝 NOTES IMPORTANTES
+--------------------
+- L'opération "list" retourne un tableau dans $json.files
+- Chaque fichier/dossier a un "id" utilisable comme parentId
+- Le queryString utilise la syntaxe de recherche Google Drive
+- typeVersion: 3 est la version actuelle de l'API
+
+🔄 PROCHAINE ÉTAPE
+------------------
+Créer un workflow simplifié et fonctionnel avec la bonne structure

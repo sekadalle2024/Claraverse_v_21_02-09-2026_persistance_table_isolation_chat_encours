@@ -1,0 +1,51 @@
+================================================================================
+TRAVAIL ACCOMPLI - Menu Accordéon Format Liasse
+================================================================================
+Date: 23 mars 2026
+Statut: ✅ COMPLET
+
+================================================================================
+1. PROBLÈME RÉSOLU
+================================================================================
+
+PROBLÈME:
+  CSS des accordéons non appliqué dans le frontend
+  Menu accordéon ne s'affichait pas
+  Modifications du code non prises en compte
+
+CAUSE:
+  Python mettait en cache le module importé (etats_financiers_v2.py)
+  Même après suppression du cache et redémarrage du backend
+
+SOLUTION:
+  CSS ajouté directement inline dans etats_financiers.py (ligne 1548)
+  Évite les problèmes de cache Python
+
+RÉSULTAT:
+  ✅ Menu accordéon fonctionnel
+  ✅ 5 sections cliquables
+  ✅ Format liasse officielle
+  ✅ Colonnes N et N-1
+  ✅ TFT 19 lignes
+  ✅ Annexes 14 notes
+
+================================================================================
+2. MODIFICATIONS EFFECTUÉES
+================================================================================
+
+FICHIER 1: py_backend/etats_financiers.py
+  Ligne: 1548
+  Type: Modification du code
+  Changement: CSS inline ajouté
+  Impact: CSS accordéon maintenant appliqué
+  Taille: +25336 caractères dans le HTML généré
+
+FICHIER 2: start-claraverse-conda.ps1
+  Version: 2.0.0 (anciennement 1.0.0)
+  Type: Amélioration du script
+  Changements:
+    - Arrêt des processus Python existants
+    - Suppression des fichiers .pyc
+    - Suppression des dossiers __pycache__
+    - Suppression des fichiers temporaires
+    - Vérification du 

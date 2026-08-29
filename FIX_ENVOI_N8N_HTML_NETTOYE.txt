@@ -1,0 +1,166 @@
+✅ FIX APPLIQUÉ - NETTOYAGE HTML + LOGS DÉTAILLÉS
+═══════════════════════════════════════════════════════════════
+
+🎯 MODIFICATIONS APPLIQUÉES
+
+1. ✅ Fonction cleanHTMLForN8n() ajoutée
+   - Supprime les attributs parasites
+   - node, data-table-id, data-stable-table-id, data-observer-installed
+
+2. ✅ Logs détaillés avant envoi
+   - Affiche TOUT le HTML envoyé
+   - Taille avant/après nettoyage
+
+3. ✅ Logs détaillés après réception
+   - Affiche TOUTE la réponse n8n
+   - Structure JSON complète
+
+4. ✅ Nouvelle étape 5: Nettoyage du HTML
+   - Les étapes suivantes sont renumérotées (6-11)
+
+═══════════════════════════════════════════════════════════════
+
+📋 NOUVELLES ÉTAPES DU TRAITEMENT
+
+ÉTAPE 1: Extraction du mot-clé
+ÉTAPE 2: Marquage de la table
+ÉTAPE 3: Recherche du message utilisateur
+ÉTAPE 4: Collecte des tables correspondantes
+ÉTAPE 5: Nettoyage du HTML avant envoi ⭐ NOUVEAU
+ÉTAPE 6: Appel à l'endpoint n8n
+ÉTAPE 7: Normalisation de la réponse n8n
+ÉTAPE 8: Extraction des tables de la réponse
+ÉTAPE 9: Recherche du conteneur cible
+ÉTAPE 10: Intégration des tables dans le DOM
+ÉTAPE 11: Suppression de la table déclencheuse
+
+═══════════════════════════════════════════════════════════════
+
+🔍 LOGS QUE VOUS VERREZ
+
+ÉTAPE 5: NETTOYAGE DU HTML AVANT ENVOI
+├─ Suppression des attributs parasites
+└─ Nettoyage en cours...
+
+🧹 Nettoyage du HTML...
+   Table 1: Suppression des attributs parasites
+   Table 2: Suppression des attributs parasites
+✅ Nettoyage terminé
+
+✅ HTML nettoyé
+├─ Taille avant: 1250 caractères
+├─ Taille après: 950 caractères
+└─ Réduction: 300 caractères
+
+ÉTAPE 6: APPEL À L'ENDPOINT N8N
+├─ Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+├─ Taille des données: 950 caractères
+└─ Envoi en cours...
+
+═══════════════════════════════════════════════════════════════
+📤 HTML ENVOYÉ VERS N8N
+═══════════════════════════════════════════════════════════════
+<table class="min-w-full border border-gray-200...">
+  <thead><tr><th>Flowise</th></tr></thead>
+  <tbody><tr><td>Sous-unité 1...</td></tr></tbody>
+</table>
+<table class="min-w-full border border-gray-200...">
+  <thead><tr><th>user_message</th></tr></thead>
+  <tbody><tr><td>[command] = Table_Template...</td></tr></tbody>
+</table>
+═══════════════════════════════════════════════════════════════
+
+📦 Payload JSON:
+├─ Clé: 'question'
+├─ Taille HTML: 950 caractères
+└─ Aperçu: {"question":"<table class=\"min-w-full...
+
+═══════════════════════════════════════════════════════════════
+📥 RÉPONSE COMPLÈTE DE N8N
+═══════════════════════════════════════════════════════════════
+Type: Array
+Structure complète:
+[
+  {
+    "output": "...",
+    "data": {...}
+  }
+]
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+
+🚀 TESTEZ MAINTENANT
+
+1. VIDER LE CACHE
+   ─────────────
+   Ctrl+Shift+Delete
+   Vider complètement
+   Recharger avec Ctrl+Shift+R
+
+2. CRÉER UNE TABLE FLOWISE
+   ────────────────────────
+   En-tête: "Flowise"
+   Mot-clé: "Sous-unité 1 : Gestion stratégique et planification"
+
+3. OBSERVER LES LOGS
+   ─────────────────
+   - HTML AVANT nettoyage (avec attributs)
+   - HTML APRÈS nettoyage (sans attributs)
+   - HTML ENVOYÉ vers n8n
+   - RÉPONSE COMPLÈTE de n8n
+
+4. VÉRIFIER GOOGLE SHEETS
+   ───────────────────────
+   Les données devraient maintenant apparaître!
+
+═══════════════════════════════════════════════════════════════
+
+💡 POURQUOI ÇA DEVRAIT MARCHER
+
+AVANT:
+<table node="[object Object]" data-table-id="table_saphhv" 
+       data-stable-table-id="table_saphhv" data-observer-installed="true">
+  <thead><tr><th>Flowise</th></tr></thead>
+  <tbody><tr><td>Sous-unité 1...</td></tr></tbody>
+</table>
+
+APRÈS:
+<table class="min-w-full border border-gray-200...">
+  <thead><tr><th>Flowise</th></tr></thead>
+  <tbody><tr><td>Sous-unité 1...</td></tr></tbody>
+</table>
+
+Les attributs parasites (node, data-*) peuvent perturber:
+- Le parsing HTML dans n8n
+- L'extraction des données
+- L'envoi vers Google Sheets
+
+═══════════════════════════════════════════════════════════════
+
+🔍 SI LE PROBLÈME PERSISTE
+
+Avec les nouveaux logs, vous pourrez voir:
+
+1. Le HTML exact envoyé (nettoyé)
+2. La réponse exacte de n8n
+3. Si n8n parse correctement le HTML
+4. Si les données sont dans la réponse
+
+Partagez ces logs pour diagnostic précis!
+
+═══════════════════════════════════════════════════════════════
+
+📁 FICHIERS CRÉÉS
+
+1. Flowise.js (modifié avec nettoyage HTML + logs)
+2. DIAGNOSTIC_ENVOI_N8N_GOOGLE_SHEETS.txt (guide diagnostic)
+3. FIX_ENVOI_N8N_HTML_NETTOYE.txt (ce fichier)
+
+═══════════════════════════════════════════════════════════════
+
+✅ STATUT
+
+PRÊT À TESTER - Videz le cache et testez!
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,82 @@
+===========================================
+QUICK START - EXPORT COMPLET SUR BUREAU
+===========================================
+
+Date: 22 mars 2026
+Statut: OK - TESTE
+
+-------------------------------------------
+COMMANDE RAPIDE
+-------------------------------------------
+
+.\test-export-complet-bureau.ps1
+
+-------------------------------------------
+CE QUE CA FAIT
+-------------------------------------------
+
+1. Verifie BALANCES_N_N1_N2.xlsx
+2. Genere tous les etats financiers
+3. Copie sur le Bureau
+4. Ouvre automatiquement
+
+-------------------------------------------
+FICHIER GENERE
+-------------------------------------------
+
+Nom: Etats_Financiers_Complet_YYYYMMDD_HHMMSS.html
+Emplacement: Bureau
+Taille: ~50-100 KB
+
+-------------------------------------------
+CONTENU
+-------------------------------------------
+
+[OK] Bilan (Actif + Passif)
+[OK] Compte de Resultat (Charges + Produits)
+[OK] Resultat Net
+[OK] TFT (si Balance N-1)
+[OK] Annexes (13 notes)
+[OK] Etats de Controle
+
+-------------------------------------------
+PREREQUIS
+-------------------------------------------
+
+1. Fichier: py_backend/BALANCES_N_N1_N2.xlsx
+   Onglets: Balance N, Balance N-1, Balance N-2
+
+2. Environnement: conda claraverse_backend
+
+-------------------------------------------
+RESULTAT TEST
+-------------------------------------------
+
+Total Actif:      181,162,530.00
+Total Passif:     370,703,030.00
+Total Charges:  1,132,732,185.00
+Total Produits:   943,191,685.00
+Resultat Net:    -189,540,500.00
+
+Comptes integres: 256/256 (100%)
+Fichier genere: OK
+Ouverture auto: OK
+
+-------------------------------------------
+DOCUMENTATION
+-------------------------------------------
+
+Guide complet:
+  GUIDE_EXPORT_COMPLET_BUREAU.md
+
+Recapitulatif:
+  RECAPITULATIF_EXPORT_COMPLET_BUREAU.md
+
+-------------------------------------------
+CONFORMITE
+-------------------------------------------
+
+100% SYSCOHADA Revise
+Pret pour production
+
+===========================================

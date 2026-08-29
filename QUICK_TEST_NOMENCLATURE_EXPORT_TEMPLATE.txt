@@ -1,0 +1,187 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 TEST RAPIDE - Nomenclature Export Template Excel
+  📅 Date: 10 Mai 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+─────────────────────────────────────────────────────────────────────────────
+Vérifier que les fichiers exportés via "Export template Excel" utilisent la
+nouvelle nomenclature avec le nom de l'étape de mission.
+
+📋 PRÉREQUIS
+─────────────────────────────────────────────────────────────────────────────
+✅ Fichier public/menu.js modifié
+✅ Fonction extractEtapeMission() ajoutée
+✅ Fonction exportTemplate() mise à jour
+✅ Navigateur avec console ouverte (F12)
+
+🧪 SCÉNARIOS DE TEST
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TEST 1: Étape de mission présente                                      │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Générer un message avec une table contenant:
+   
+   | Rubrique | Description |
+   |----------|-------------|
+   | Client | FILTRACI |
+   | Exercice | 2023 |
+   | Etape de mission | Leadsheet |
+
+2. Clic droit sur la table → "Export template Excel"
+
+3. ✅ VÉRIFICATIONS:
+   - Fichier téléchargé: E-audit_Etape-mission-Leadsheet_YYYY-MM-DDTHH-MM-SS.xlsx
+   - Console logs:
+     ✅ 🔍 [Extract Etape Mission] Recherche de l'étape de mission dans X table(s)
+     ✅ ✅ Table 1: Colonnes trouvées - Rubrique: col 0, Description: col 1
+     ✅ 🎯 [Extract Etape Mission] Trouvé: "Leadsheet" (Table 1, Ligne X)
+     ✅ ✅ [Export Template] Nom fichier avec étape: E-audit_Etape-mission-Leadsheet_...
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TEST 2: Étape de mission non trouvée (Fallback)                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Générer un message avec une table SANS "Etape de mission":
+   
+   | Colonne A | Colonne B |
+   |-----------|-----------|
+   | Valeur 1 | Valeur 2 |
+
+2. Clic droit sur la table → "Export template Excel"
+
+3. ✅ VÉRIFICATIONS:
+   - Fichier téléchargé: E-audit_Etape-mission-X_YYYY-MM-DDTHH-MM-SS.xlsx
+   - Console logs:
+     ✅ ⏭️ Table 1: Pas de colonnes Rubrique/Description
+     ✅ ⚠️ [Extract Etape Mission] Étape de mission non trouvée dans aucune table
+     ✅ ⚠️ [Export Template] Étape de mission non trouvée, nom fichier fallback: E-audit_Etape-mission-X_...
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TEST 3: Plusieurs tables, étape dans la 2ème                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Générer un message avec 2 tables:
+   
+   Table 1:
+   | Colonne A | Colonne B |
+   |-----------|-----------|
+   | Valeur 1 | Valeur 2 |
+   
+   Table 2:
+   | Rubrique | Description |
+   |----------|-------------|
+   | Etape de mission | Programme de travail |
+
+2. Clic droit sur n'importe quelle table → "Export template Excel"
+
+3. ✅ VÉRIFICATIONS:
+   - Fichier téléchargé: E-audit_Etape-mission-Programme-de-travail_YYYY-MM-DDTHH-MM-SS.xlsx
+   - Console logs:
+     ✅ ⏭️ Table 1: Pas de colonnes Rubrique/Description
+     ✅ ✅ Table 2: Colonnes trouvées - Rubrique: col 0, Description: col 1
+     ✅ 🎯 [Extract Etape Mission] Trouvé: "Programme de travail" (Table 2, Ligne X)
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TEST 4: Caractères spéciaux dans le nom                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Générer un message avec:
+   
+   | Rubrique | Description |
+   |----------|-------------|
+   | Etape de mission | Cartographie des risques! |
+
+2. Clic droit sur la table → "Export template Excel"
+
+3. ✅ VÉRIFICATIONS:
+   - Fichier téléchargé: E-audit_Etape-mission-Cartographie-des-risques_YYYY-MM-DDTHH-MM-SS.xlsx
+   - Les caractères spéciaux (!) sont supprimés
+   - Les espaces sont remplacés par des tirets
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TEST 5: Variations de casse                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. Tester avec différentes casses:
+   - "Etape de mission"
+   - "ETAPE DE MISSION"
+   - "étape de mission"
+
+2. ✅ VÉRIFICATIONS:
+   - Toutes les variations sont détectées
+   - Le nom du fichier utilise la valeur exacte de "Description"
+
+📊 RÉSULTATS ATTENDUS
+─────────────────────────────────────────────────────────────────────────────
+
+✅ Nomenclature correcte:
+   - Format: E-audit_Etape-mission-{NomEtape}_{timestamp}.xlsx
+   - Fallback: E-audit_Etape-mission-X_{timestamp}.xlsx
+
+✅ Logs de diagnostic:
+   - Recherche dans toutes les tables
+   - Détection des colonnes Rubrique/Description
+   - Extraction de la valeur
+
+✅ Sanitisation:
+   - Caractères spéciaux supprimés
+   - Espaces remplacés par tirets
+   - Nom compatible avec tous les systèmes de fichiers
+
+❌ PROBLÈMES POSSIBLES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Fichier toujours nommé "claraverse_template_..."
+   → Vérifier que le fichier menu.js a été rechargé (Ctrl+F5)
+   → Vérifier les logs console pour voir si extractEtapeMission() est appelée
+
+2. Erreur JavaScript dans la console
+   → Vérifier la syntaxe de la fonction extractEtapeMission()
+   → Vérifier que la fonction est bien placée dans la classe
+
+3. Étape de mission non détectée alors qu'elle existe
+   → Vérifier les logs: colonnes Rubrique/Description trouvées?
+   → Vérifier l'orthographe: "Etape de mission" (avec ou sans accent)
+   → Vérifier que la valeur dans Description n'est pas vide
+
+🔧 DÉPANNAGE RAPIDE
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir la console (F12)
+2. Chercher les logs "[Extract Etape Mission]"
+3. Vérifier les étapes:
+   - Nombre de tables analysées
+   - Colonnes trouvées ou non
+   - Valeur extraite
+
+4. Si aucun log "[Extract Etape Mission]":
+   - La fonction n'est pas appelée
+   - Vérifier que le code a été modifié correctement
+   - Recharger la page (Ctrl+F5)
+
+📝 COMMANDES CONSOLE UTILES
+─────────────────────────────────────────────────────────────────────────────
+
+// Vérifier que la fonction existe
+console.log(typeof window.contextualMenuManager?.extractEtapeMission);
+// Devrait afficher: "function"
+
+// Tester manuellement l'extraction
+const tables = document.querySelectorAll('table');
+const etape = window.contextualMenuManager?.extractEtapeMission(Array.from(tables));
+console.log("Étape trouvée:", etape);
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Fichiers exportés avec la nouvelle nomenclature
+✅ Logs de diagnostic visibles dans la console
+✅ Fallback automatique si étape non trouvée
+✅ Caractères spéciaux correctement gérés
+✅ Détection insensible à la casse
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,193 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📋 RÉPONSE: ENDPOINT EDITEUR ET SWAGGER
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 20 Avril 2026
+❓ Question: L'endpoint n'apparaît pas dans Swagger, est-ce normal?
+✅ Réponse: OUI, c'est normal dans certains cas
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 POURQUOI L'ENDPOINT N'APPARAÎT PAS DANS SWAGGER
+═══════════════════════════════════════════════════════════════════════════════
+
+RAISON 1: TAG NON CONFIGURÉ DANS FASTAPI
+─────────────────────────────────────────────────────────────────────────────
+
+Le router utilise le tag "editeur":
+  router = APIRouter(prefix="/editeur", tags=["editeur"])
+
+Mais FastAPI peut ne pas afficher ce tag dans Swagger si:
+  • Le tag n'est pas dans la liste des tags principaux
+  • Le tag n'a pas de métadonnées (description, etc.)
+
+RAISON 2: ORDRE D'AFFICHAGE
+─────────────────────────────────────────────────────────────────────────────
+
+Swagger affiche les endpoints par ordre alphabétique des tags.
+Le tag "editeur" peut être en bas de la liste ou masqué.
+
+RAISON 3: CONFIGURATION SWAGGER
+─────────────────────────────────────────────────────────────────────────────
+
+FastAPI peut avoir une configuration Swagger qui filtre certains tags.
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ COMMENT VÉRIFIER QUE L'ENDPOINT FONCTIONNE
+═══════════════════════════════════════════════════════════════════════════════
+
+MÉTHODE 1: TESTER DIRECTEMENT L'ENDPOINT
+─────────────────────────────────────────────────────────────────────────────
+
+Exécuter le script de test:
+  .\test-endpoint-editeur-zeabur.ps1
+
+Ou tester manuellement:
+
+  # Health Check
+  curl https://pybackend.zeabur.app/editeur/health
+
+  # Endpoint Process
+  curl -X POST https://pybackend.zeabur.app/editeur/process \
+    -H "Content-Type: application/json" \
+    -d '{"command": "editeur", "message": "test"}'
+
+MÉTHODE 2: VÉRIFIER OPENAPI.JSON
+─────────────────────────────────────────────────────────────────────────────
+
+Aller sur:
+  https://pybackend.zeabur.app/openapi.json
+
+Chercher "/editeur" dans le JSON.
+Si présent → L'endpoint est bien enregistré.
+
+MÉTHODE 3: VÉRIFIER LES LOGS ZEABUR
+─────────────────────────────────────────────────────────────────────────────
+
+Chercher dans les logs:
+  "✅ Endpoint Editeur router loaded successfully"
+
+Si présent → Le router est bien chargé.
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔧 COMMENT FAIRE APPARAÎTRE L'ENDPOINT DANS SWAGGER
+═══════════════════════════════════════════════════════════════════════════════
+
+OPTION 1: AJOUTER DES MÉTADONNÉES AU TAG
+─────────────────────────────────────────────────────────────────────────────
+
+Dans main.py, ajouter:
+
+  tags_metadata = [
+      {
+          "name": "editeur",
+          "description": "Endpoint de test pour le switch backend",
+      },
+      # ... autres tags
+  ]
+
+  app = FastAPI(
+      title="Clara Backend API",
+      version="1.0.0",
+      openapi_tags=tags_metadata
+  )
+
+OPTION 2: UTILISER UN TAG EXISTANT
+─────────────────────────────────────────────────────────────────────────────
+
+Dans endpoint_editeur.py, changer:
+
+  router = APIRouter(prefix="/editeur", tags=["default"])
+
+Ou utiliser un tag déjà configuré dans main.py.
+
+OPTION 3: NE RIEN FAIRE
+─────────────────────────────────────────────────────────────────────────────
+
+Si l'endpoint fonctionne (tests réussis), ce n'est pas grave qu'il
+n'apparaisse pas dans Swagger. C'est un endpoint de test interne.
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 LISTE DES ENDPOINTS ACTUELS
+═══════════════════════════════════════════════════════════════════════════════
+
+D'après main.py, voici les routers enregistrés:
+
+1.  pandas_api                  (Pandas API)
+2.  pandas_agent                (Pandas Agent - LangChain + Gemini)
+3.  gdrive_proxy                (Google Drive PDF Proxy)
+4.  endpoint_editeur            (Endpoint Editeur) ← NOUVEAU
+5.  word_export                 (Word Export)
+6.  pandas_lead                 (Lead Balance)
+7.  etats_financiers            (États Financiers SYSCOHADA)
+8.  export_liasse               (Export Liasse)
+9.  echantillonnage             (Échantillonnage Audit)
+10. export_synthese_cac         (Export Synthèse CAC)
+11. export_synthese_cac_v2      (Export Synthèse CAC V2)
+12. export_synthese_cac_final   (Export Synthèse CAC FINAL)
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: EXÉCUTER LE SCRIPT DE TEST
+─────────────────────────────────────────────────────────────────────────────
+
+  .\test-endpoint-editeur-zeabur.ps1
+
+Ce script va tester:
+  • Health Check (/editeur/health)
+  • Endpoint Process (/editeur/process)
+  • Présence dans Swagger
+  • Présence dans OpenAPI JSON
+
+ÉTAPE 2: ANALYSER LES RÉSULTATS
+─────────────────────────────────────────────────────────────────────────────
+
+Si les tests 1 et 2 sont ✅ SUCCÈS:
+  → L'endpoint fonctionne correctement
+  → Le problème 404 est résolu
+  → Peu importe s'il n'apparaît pas dans Swagger
+
+Si les tests 1 et 2 sont ❌ ÉCHEC:
+  → Le fichier n'a pas été déployé correctement
+  → Vérifier les logs Zeabur
+  → Forcer un rebuild manuel
+
+ÉTAPE 3: TESTER SUR LE FRONTEND
+─────────────────────────────────────────────────────────────────────────────
+
+1. Aller sur https://prclaravi.netlify.app
+2. Envoyer un message contenant "editeur"
+3. Vérifier que la table s'affiche avec les résultats
+
+═══════════════════════════════════════════════════════════════════════════════
+  💡 CONCLUSION
+═══════════════════════════════════════════════════════════════════════════════
+
+L'ABSENCE DANS SWAGGER N'EST PAS UN PROBLÈME si:
+  ✅ L'endpoint répond correctement aux requêtes HTTP
+  ✅ Les tests curl/PowerShell fonctionnent
+  ✅ Le frontend peut appeler l'endpoint
+
+C'EST UN PROBLÈME si:
+  ❌ L'endpoint retourne 404
+  ❌ Les tests échouent
+  ❌ Le frontend ne peut pas appeler l'endpoint
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Exécuter: .\test-endpoint-editeur-zeabur.ps1
+2. Vérifier les résultats des tests
+3. Si ✅ SUCCÈS → Tester sur le frontend
+4. Si ❌ ÉCHEC → Vérifier les logs Zeabur
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 NOTE: Le serveur local tourne encore, vous pouvez aussi tester en local:
+  • http://localhost:5000/editeur/health
+  • http://localhost:5000/editeur/process
+  • http://localhost:5000/docs (Swagger local)
+
+═══════════════════════════════════════════════════════════════════════════════

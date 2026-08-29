@@ -1,0 +1,100 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION SÉPARATEUR TABLEAU - CASE 25
+  Date: 29 Mars 2026 - 22h00
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ
+───────────────────────────────────────────────────────────────────────────
+Les tableaux s'affichaient en une seule ligne sans structure:
+
+| Intitule | |──────────────| | Défaut de sécurisation...
+
+Au lieu de:
+
+┌──────────────────────────────────────────────────────────┐
+│ Intitule (EN GRAS)                                       │
+├──────────────────────────────────────────────────────────┤
+│ Défaut de sécurisation physique des fonds...            │
+└──────────────────────────────────────────────────────────┘
+
+CAUSE
+───────────────────────────────────────────────────────────────────────────
+Le séparateur utilisait des caractères Unicode `─` (U+2500) au lieu de
+tirets simples `-` (U+002D).
+
+Les tableaux Markdown nécessitent des TIRETS SIMPLES pour le séparateur.
+
+CODE INCORRECT
+───────────────────────────────────────────────────────────────────────────
+```typescript
+let md = `\n| **${headerText}** |\n`;
+md += `|${'─'.repeat(headerText.length + 6)}|\n`;  // ❌ Caractère Unicode
+md += `| ${cellValue.replace(/\n\n/g, '<br><br>')} |\n\n`;
+```
+
+Génère:
+```markdown
+| **Intitule** |
+|──────────────|  ← Caractères Unicode (ne fonctionne pas)
+| Défaut de sécurisation... |
+```
+
+CODE CORRIGÉ
+───────────────────────────────────────────────────────────────────────────
+```typescript
+let md = `\n| **${headerText}** |\n`;
+md += `|${'-'.repeat(headerText.length + 6)}|\n`;  // ✅ Tirets simples
+md += `| ${cellValue.replace(/\n\n/g, '<br><br>')} |\n\n`;
+```
+
+Génère:
+```markdown
+| **Intitule** |
+|--------------|  ← Tirets simples (fonctionne)
+| Défaut de sécurisation... |
+```
+
+FICHIER MODIFIÉ
+───────────────────────────────────────────────────────────────────────────
+src/services/claraApiService.ts
+→ Fonction convertHeaderTableToMarkdown() (ligne ~665)
+
+CHANGEMENT
+───────────────────────────────────────────────────────────────────────────
+AVANT: `|${'─'.repeat(headerText.length + 6)}|\n`
+APRÈS:  `|${'-'.repeat(headerText.length + 6)}|\n`
+
+RÉSULTAT ATTENDU
+───────────────────────────────────────────────────────────────────────────
+Les tableaux Markdown seront maintenant correctement rendus avec:
+✅ En-tête en gras
+✅ Séparateur visible
+✅ Contenu dans une cellule distincte
+✅ Structure de tableau claire
+
+TEST RAPIDE
+───────────────────────────────────────────────────────────────────────────
+.\test-formatage-tables-case25.ps1
+
+OU MANUELLEMENT:
+1. .\stop-claraverse.ps1; .\start-claraverse.ps1
+2. Envoyer: [Command] : Recos contrôle interne comptable
+            [Cycle] : trésorerie
+            [test] : AA010
+            [Anomalie] = Absence de contrôles inopinés
+3. Vérifier que les tableaux sont bien structurés
+
+STATUT
+───────────────────────────────────────────────────────────────────────────
+✅ Correction appliquée
+✅ Aucune erreur TypeScript
+⏳ Tests à effectuer
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 22h00
+Version: 11.1 (correction séparateur tableau)
+Priorité: CRITIQUE
+Statut: CORRECTION APPLIQUÉE - REDÉMARRER ET TESTER
+
+═══════════════════════════════════════════════════════════════════════════

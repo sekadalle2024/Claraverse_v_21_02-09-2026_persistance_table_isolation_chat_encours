@@ -1,0 +1,61 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📊 SYNTHÈSE VISUELLE - CORRECTION EXPORT TEMPLATE WORD
+  Date: 09 Mai 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+
+🎯 DEUX CORRECTIONS APPLIQUÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CORRECTION 1: DÉTECTION DES TABLES                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ AVANT ❌                          APRÈS ✅                                   │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ Cherche div.prose uniquement     Compte les wrappers data-container-id     │
+│ Trouve 1 table                    Trouve TOUTES les tables                  │
+│ Logique différente d'Excel        MÊME LOGIQUE que Excel                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ CORRECTION 2: TIMEOUT BIBLIOTHÈQUE DOCX                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│ AVANT ❌                          APRÈS ✅                                   │
+│ ─────────────────────────────────────────────────────────────────────────── │
+│ Timeout: 5 secondes               Timeout: 30 secondes                      │
+│ Erreur fréquente                  Laisse le temps au CDN                    │
+│ Message générique                 Message explicite                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+📁 FICHIER MODIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+public/menu.js
+├── exportTemplateWord() (lignes 4171-4283)
+│   └── ✅ Nouvelle logique de détection des tables
+└── ensureDocxLibraryLoaded() (lignes 5009-5067)
+    └── ✅ Timeout augmenté à 30 secondes
+
+
+🔄 FLUX DE DÉTECTION DES TABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+wrap-tables-auto.js enveloppe chaque table
+              ↓
+    div[data-container-id] × N
+              ↓
+    exportTemplateWord() compte les wrappers
+              ↓
+    Trouve le conteneur parent
+              ↓
+    Extrait TOUTES les tables
+              ↓
+    Export réussi ✅
+
+
+═══════════════════════════════════════════════════════════════════════════════

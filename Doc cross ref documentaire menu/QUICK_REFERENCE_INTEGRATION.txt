@@ -1,0 +1,150 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    QUICK REFERENCE - INTÉGRATION XREF                       ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🎯 FICHIERS CLÉS
+
+Composants React :
+  • src/components/Clara_Components/XRefSidebar.tsx
+  • src/components/Clara_Components/XRefSidebar.css
+  • src/components/Clara_Components/XRefSidebarWrapper.tsx
+
+Intégration App :
+  • src/App.tsx (ligne 28 : import, ligne 378 : rendu)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔄 ÉVÉNEMENTS CUSTOMEVENTS
+
+Ouvrir la sidebar :
+  document.dispatchEvent(new CustomEvent('xref:open', {
+    detail: {
+      documents: [...],
+      title: 'Titre optionnel'
+    }
+  }));
+
+Fermer la sidebar :
+  document.dispatchEvent(new CustomEvent('xref:close'));
+
+Événements émis :
+  • 'xref:closed' - Sidebar fermée
+  • 'xref:document:opened' - Document ouvert
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📦 STRUCTURE DOCUMENT
+
+interface XRefDocument {
+  crossRef: string;           // [I1], [I20], etc.
+  document: string;           // Nom du document
+  client?: string;            // Client optionnel
+  exercice?: string;          // Exercice optionnel
+  cycle?: string;             // Cycle comptable optionnel
+  dateUpload?: string;        // Date d'upload optionnelle
+  fileId?: string;            // ID Google Drive optionnel
+  fileUrl?: string;           // URL du fichier optionnelle
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎨 STYLES
+
+Couleurs principales :
+  • Bordeaux : #380101, #2A0101
+  • Largeur : 400px fixe
+  • Animation : slide-in depuis la droite
+  • Mode sombre : supporté
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔗 WORKFLOW N8N
+
+Endpoint : https://hkj0631c.rpcl.app/webhook/cross_reference
+
+Payload :
+  {
+    "index": "[I150]",
+    "document": "Balances generale",
+    "client": "Client A",
+    "exercice": "2025",
+    "cycle": "Trésorerie"
+  }
+
+Réponse :
+  {
+    "success": true,
+    "fileUrl": "https://drive.google.com/...",
+    "fileId": "abc123..."
+  }
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ FONCTIONNALITÉS
+
+Recherche :
+  • En temps réel
+  • Par index, nom, client, cycle
+
+Filtrage :
+  • Par cycle comptable
+  • Dropdown avec compteur
+
+Actions :
+  • 👁️ Prévisualisation
+  • 📥 Téléchargement
+  • 🔗 Ouvrir dans Drive
+  • ❌ Fermer
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 TESTS RAPIDES
+
+Test 1 - Ouverture :
+  Vérifier que la sidebar s'affiche avec animation
+
+Test 2 - Recherche :
+  Taper dans le champ de recherche et vérifier les résultats
+
+Test 3 - Filtrage :
+  Sélectionner un cycle et vérifier la mise à jour
+
+Test 4 - Actions :
+  Cliquer sur les boutons et vérifier les actions
+
+Test 5 - Mode sombre :
+  Activer le mode sombre et vérifier les couleurs
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 NOTES
+
+• Le composant est rendu globalement dans App.tsx
+• Il écoute les événements du menu.js
+• La communication avec n8n est asynchrone
+• Les erreurs sont gérées avec des alertes utilisateur
+• Le mode sombre est supporté automatiquement
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE RAPIDE
+
+1. Vérifier que XRefSidebarWrapper est importé dans App.tsx
+2. Vérifier que le composant est rendu
+3. Ouvrir la console du navigateur
+4. Dispatcher un événement 'xref:open' depuis le menu.js
+5. Vérifier que la sidebar s'affiche
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ STATUT
+
+✓ Composants créés
+✓ Intégration complète
+✓ Pas d'erreurs TypeScript
+✓ Prêt pour les tests
+
+═══════════════════════════════════════════════════════════════════════════════
+

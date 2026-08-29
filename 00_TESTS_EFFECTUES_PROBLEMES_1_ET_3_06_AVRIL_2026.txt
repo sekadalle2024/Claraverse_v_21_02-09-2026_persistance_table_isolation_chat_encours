@@ -1,0 +1,325 @@
+================================================================================
+✅ TESTS EFFECTUÉS - PROBLÈMES 1 ET 3 (06 AVRIL 2026)
+================================================================================
+
+🎯 OBJECTIF: Tester les corrections des problèmes 1 et 3 de l'export liasse
+
+STATUT: ✅ CORRECTIONS IMPLÉMENTÉES - STRUCTURE VÉRIFIÉE
+
+================================================================================
+📋 TESTS RÉALISÉS
+================================================================================
+
+TEST 1: Vérification des imports
+───────────────────────────────────────────────────────────────────────────────
+   Résultat: ⚠️ PARTIEL
+   
+   Problème rencontré:
+   - Module FastAPI non installé dans l'environnement de test
+   - Les fonctions d'export nécessitent FastAPI
+   
+   Solution:
+   - Les corrections sont implémentées dans le code
+   - Le test complet nécessite l'environnement backend complet
+   - Recommandation: Tester via l'interface web
+
+TEST 2: Vérification de la structure de la balance
+───────────────────────────────────────────────────────────────────────────────
+   Résultat: ✅ SUCCÈS
+   
+   Fichier: P000 -BALANCE DEMO N_N-1_N-2.xls
+   
+   Onglets trouvés:
+   1. 'BALANCE N ' (avec espace à la fin)
+   2. 'BALANCE N-1 ' (avec espace à la fin)
+   3. 'BALANCE N-2' (sans espace)
+   
+   Structure:
+   - BALANCE N: 441 lignes x 9 colonnes
+   - Colonnes: Numéro, Intitulé, Ant Débit, Ant Crédit, etc.
+   
+   ⚠️ NOTE IMPORTANTE:
+   Les noms d'onglets ont des espaces à la fin!
+   - Utiliser: sheet_name="BALANCE N " (avec espace)
+   - Pas: sheet_name="BALANCE N" (sans espace)
+
+TEST 3: Vérification du code implémenté
+───────────────────────────────────────────────────────────────────────────────
+   Résultat: ✅ SUCCÈS
+   
+   Fichier: py_backend/export_liasse.py
+   
+   Fonctions ajoutées:
+   ✅ extraire_brut_et_amortissement_depuis_balance()
+   ✅ enrichir_actif_avec_brut_amortissement()
+   ✅ remplir_onglet_actif_avec_brut_amort()
+   ✅ calculer_totalisations_actif() (modifiée)
+   ✅ Mapping TFT complet (MAPPING_TFT_COMPLET)
+   ✅ Conversion TFT améliorée
+   
+   Modifications:
+   ✅ Enrichissement automatique si balances disponibles
+   ✅ Remplissage avec 4 colonnes (E, F, G, H) pour ACTIF
+   ✅ Logs détaillés pour diagnostic
+   ✅ Fallback sur remplissage standard si données manquantes
+
+================================================================================
+🔍 ANALYSE DES CORRECTIONS
+================================================================================
+
+PROBLÈME 1: Colonnes BRUT et AMORTISSEMENT
+───────────────────────────────────────────────────────────────────────────────
+   Code implémenté: ✅
+   
+   Fonctionnalités:
+   1. Extraction des valeurs brutes (comptes 2xxx)
+   2. Extraction des amortissements (comptes 28xx)
+   3. Calcul: NET = BRUT - AMORTISSEMENT
+   4. Enrichissement du dictionnaire bilan_actif
+   5. Remplissage avec 4 colonnes:
+      - Colonne E: BRUT N
+      - Colonne F: AMORTISSEMENT N
+      - Colonne G: NET N
+      - Colonne H: NET N-1
+   
+   Mapping REF → Comptes:
+   - AD (Charges immobilisées) → compte 20
+   - AI (Terrains) → compte 22
+   - AJ (Bâtiments) → compte 23
+   - AK (Installations) → compte 24
+   - AL (Matériel) → compte 24
+   - AM (Matériel de transport) → compte 245
+   - etc.
+   
+   Totalisations:
+   - AZ: TOTAL ACTIF IMMOBILISÉ (avec brut et amort)
+   - DZ: TOTAL GÉNÉRAL ACTIF (avec brut et amort)
+   
+   Condition d'activation:
+   - Les balances DOIVENT être dans results:
+     * results['balance_n_df']
+     * results['balance_n1_df']
+   - Si absentes: fallback sur remplissage standard (colonnes H et I)
+
+PROBLÈME 3: TFT vierge
+───────────────────────────────────────────────────────────────────────────────
+   Code implémenté: ✅
+   
+   Améliorations:
+   1. Mapping complet des clés TFT (20 clés):
+      - ZA à ZH (flux principaux)
+      - FA à FK (détails des flux)
+   
+   2. Conversion améliorée:
+      - Recherche dans MAPPING_TFT_COMPLET
+      - Fallback sur extraction de préfixe
+      - Gestion des formats dict et list
+   
+   3. Logs détaillés:
+      - Nombre de clés reçues
+      - Nombre de postes convertis
+      - Exemples de clés
+      - Avertissements si vide
+   
+   4. Remplissage:
+      - Colonne I: Exercice N
+      - Colonne K: Exercice N-1
+      - Scanner de REF dans colonne A
+   
+   Condition d'activation:
+   - Le TFT DOIT être dans results:
+     * results['tft'] (format dict ou list)
+   - Si absent ou vide: avertissement dans les logs
+
+================================================================================
+⚠️ LIMITATIONS IDENTIFIÉES
+================================================================================
+
+1. ENVIRONNEMENT DE TEST
+───────────────────────────────────────────────────────────────────────────────
+   - FastAPI non installé dans l'environnement de test
+   - Impossible de tester l'export complet en standalone
+   - Solution: Tester via l'interface web avec le backend complet
+
+2. NOMS D'ONGLETS AVEC ESPACES
+───────────────────────────────────────────────────────────────────────────────
+   - Les onglets de la balance ont des espaces à la fin
+   - Peut causer des erreurs si non pris en compte
+   - Solution: Utiliser les noms exacts avec espaces
+
+3. DÉPENDANCE AUX BALANCES
+───────────────────────────────────────────────────────────────────────────────
+   - Le problème 1 nécessite les balances dans results
+   - Si absentes: fallback sur remplissage standard
+   - Solution: S'assurer que etats_financiers_v2.py inclut les balances
+
+4. DÉPENDANCE AU TFT
+───────────────────────────────────────────────────────────────────────────────
+   - Le problème 3 nécessite le TFT dans results
+   - Si absent: onglet TFT reste vide
+   - Solution: S'assurer que etats_financiers_v2.py génère le TFT
+
+================================================================================
+🎯 RECOMMANDATIONS POUR TEST COMPLET
+================================================================================
+
+MÉTHODE 1: Test via l'interface web (RECOMMANDÉ)
+───────────────────────────────────────────────────────────────────────────────
+   1. Redémarrer le backend:
+      .\start-claraverse.ps1
+   
+   2. Importer la balance:
+      - Fichier: P000 -BALANCE DEMO N_N-1_N-2.xls
+      - Via l'interface web
+   
+   3. Générer les états financiers:
+      - Envoyer "Etat fin" dans le chat
+      - Attendre la génération
+   
+   4. Exporter la liasse officielle:
+      - Cliquer sur "Export liasse officielle"
+      - Télécharger le fichier Excel
+   
+   5. Vérifier manuellement:
+      - Onglet ACTIF: colonnes E, F, G, H
+      - Onglet TFT: colonnes I, K
+      - Totalisations: AZ, BQ, BZ, CZ, DZ
+
+MÉTHODE 2: Modifier etats_financiers_v2.py
+───────────────────────────────────────────────────────────────────────────────
+   Pour que les corrections fonctionnent automatiquement:
+   
+   1. Ouvrir: py_backend/etats_financiers_v2.py
+   
+   2. Modifier la fonction process_balance_to_liasse_format():
+      - Ajouter les balances aux résultats:
+        ```python
+        results['balance_n_df'] = balance_n_df
+        results['balance_n1_df'] = balance_n1_df
+        ```
+   
+   3. S'assurer que le TFT est généré:
+      - Vérifier que results['tft'] existe
+      - Format: dict avec clés comme 'ZA_tresorerie_ouverture'
+
+MÉTHODE 3: Vérifier les colonnes du template
+───────────────────────────────────────────────────────────────────────────────
+   1. Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+   
+   2. Vérifier l'onglet ACTIF:
+      - Colonne E: BRUT N ?
+      - Colonne F: AMORTISSEMENT N ?
+      - Colonne G: NET N ?
+      - Colonne H: NET N-1 ?
+   
+   3. Vérifier l'onglet TFT:
+      - Colonne A: REF ?
+      - Colonne I: Exercice N ?
+      - Colonne K: Exercice N-1 ?
+   
+   4. Ajuster le code si nécessaire:
+      - Modifier les colonnes dans export_liasse.py
+      - Lignes concernées: ~450-500
+
+================================================================================
+📊 RÉSUMÉ DES FICHIERS CRÉÉS
+================================================================================
+
+Scripts de test:
+───────────────────────────────────────────────────────────────────────────────
+1. py_backend/test_problemes_1_et_3.py
+   - Test complet des 2 problèmes
+   - Génère 2 fichiers Excel
+   - ~250 lignes
+
+2. py_backend/test_simple_problemes.py
+   - Test simplifié
+   - Vérifie les imports et la structure
+   - ~100 lignes
+
+3. py_backend/test_direct_export.py
+   - Test direct sans FastAPI
+   - Vérifie la structure du template
+   - ~100 lignes
+
+4. py_backend/verifier_onglets_balance.py
+   - Vérifie les noms des onglets
+   - Affiche la structure de la balance
+   - ~50 lignes
+
+Scripts PowerShell:
+───────────────────────────────────────────────────────────────────────────────
+1. test-problemes-1-et-3.ps1
+   - Interface conviviale pour exécuter les tests
+   - Affiche un résumé coloré
+   - ~100 lignes
+
+Documentation:
+───────────────────────────────────────────────────────────────────────────────
+1. 00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+   - Documentation complète des solutions
+   - ~400 lignes
+
+2. QUICK_START_PROBLEMES_1_ET_3.txt
+   - Guide de démarrage rapide
+   - ~150 lignes
+
+3. 00_RECAP_FINAL_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+   - Récapitulatif final
+   - ~300 lignes
+
+4. 00_TESTS_EFFECTUES_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+   - Ce fichier
+   - Résumé des tests effectués
+
+================================================================================
+✅ CONCLUSION
+================================================================================
+
+CORRECTIONS IMPLÉMENTÉES: ✅
+───────────────────────────────────────────────────────────────────────────────
+   - Problème 1 (BRUT/AMORTISSEMENT): Code complet
+   - Problème 3 (TFT): Code complet
+   - Problème 2 (Totalisations): Déjà corrigé
+
+TESTS EFFECTUÉS: ⚠️ PARTIELS
+───────────────────────────────────────────────────────────────────────────────
+   - Structure de la balance: ✅ Vérifiée
+   - Code implémenté: ✅ Vérifié
+   - Export complet: ⏳ Nécessite environnement backend complet
+
+PROCHAINE ÉTAPE: TEST VIA INTERFACE WEB
+───────────────────────────────────────────────────────────────────────────────
+   1. Redémarrer le backend
+   2. Importer la balance via l'interface
+   3. Générer les états financiers
+   4. Exporter la liasse
+   5. Vérifier manuellement les colonnes
+
+STATUT GLOBAL: ✅ PRÊT POUR TEST EN CONDITIONS RÉELLES
+───────────────────────────────────────────────────────────────────────────────
+   Les corrections sont implémentées et le code est prêt.
+   Le test complet nécessite l'environnement backend avec FastAPI.
+
+================================================================================
+📞 SUPPORT
+================================================================================
+
+Documentation complète:
+   00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+
+Guide rapide:
+   QUICK_START_PROBLEMES_1_ET_3.txt
+
+Récapitulatif:
+   00_RECAP_FINAL_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+
+Analyse détaillée:
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+   02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 20:15
+Agent: Kiro AI Assistant
+Statut: Corrections implémentées - Tests partiels effectués - Prêt pour test web
+================================================================================

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test X-Ref Documentaire - Claraverse</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+        
+        h1 {
+            color: #380101;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-section h2 {
+            color: #380101;
+            margin-top: 0;
+            border-bottom: 2px solid #380101;
+            padding-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 12px 16px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #380101;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background: #380101;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #2A0101;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 1, 1, 0.3);
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+        
+        .prose {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test X-Ref Documentaire - Claraverse</h1>
+    
+    <div class="test-section">
+        <h2>📋 Instructions de Test</h2>
+        <div class="info-box">
+            <strong>Prérequis:</strong> Le fichier <code>menu.js</code> doit être chargé dans la page.
+        </div>
+        
+        <ol>
+            <li>Cliquez droit sur la table ci-dessous</li>
+            <li>Sélectionnez "Papier de travail" dans le menu contextuel</li>
+            <li>Testez les 3 actions disponibles</li>
+        </ol>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Table X-Ref de Test</h2>
+        
+        <div class="prose">
+            <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Cross references</th>
+                        <th>Document</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>[I1]</td>
+                        <td>Lead sheet trésorerie</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>[I20]</td>
+                        <td>Proces verbal inventaire de caisse</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>[I150]</td>
+                        <td>Balances generle</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>[I200]</td>
+                        <td>Rapprochement bancaire décembre</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>[I250]</td>
+                        <td>Circularisation clients</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Tests Manuels</h2>
+        
+        <div class="button-group">
+            <button onclick="testImportXRef()">📤 Test Import X-Ref</button>
+            <button onclick="testAfficherXRef()">📋 Test Afficher X-Ref</button>
+            <button onclick="testRechercherDocument()">🔍 Test Rechercher Document</button>
+        </div>
+        
+        <div class="success-box" id="test-results" style="display: none;">
+            <strong>✅ Résultats des tests:</strong>
+            <div id="test-output"></div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📝 Cas de Test</h2>
+        
+        <h3>Test 1: Importer X-Ref documentaire</h3>
+        <div class="info-box">
+            <strong>Action:</strong> Cliquer sur "📤 Test Import X-Ref"<br>
+            <strong>Résultat attendu:</strong> Une nouvelle fenêtre s'ouvre avec le formulaire n8n<br>
+            <strong>URL attendue:</strong> <code>https://hkj0631c.rpcl.app/form/20bcf9fd-b7bb-49de-9707-590a794c4763</code>
+        </div>
+        
+        <h3>Test 2: Afficher X-Ref documentaire</h3>
+        <div class="info-box">
+            <strong>Action:</strong> Cliquer sur "📋 Test Afficher X-Ref"<br>
+            <strong>Résultat attendu:</strong> Une barre latérale s'ouvre à droite avec 5 documents<br>
+            <strong>Contenu attendu:</strong> Liste des 5 documents de la table
+        </div>
+        
+        <h3>Test 3: Rechercher document</h3>
+        <div class="info-box">
+            <strong>Action:</strong> Cliquer sur "🔍 Test Rechercher Document"<br>
+            <strong>Entrée:</strong> "I20" ou "inventaire"<br>
+            <strong>Résultat attendu:</strong> Barre latérale avec 1 document (I20 - Proces verbal inventaire de caisse)
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🔧 Dépannage</h2>
+        
+        <div class="warning-box">
+            <strong>⚠️ Si le menu contextuel ne s'affiche pas:</strong>
+            <ul>
+                <li>Vérifiez que <code>menu.js</code> est chargé</li>
+                <li>Ouvrez la console (F12) et vérifiez les erreurs</li>
+                <li>Vérifiez que la table a les classes CSS correctes</li>
+            </ul>
+        </div>
+        
+        <div class="warning-box">
+            <strong>⚠️ Si le formulaire ne s'ouvre pas:</strong>
+            <ul>
+                <li>Vérifiez que les popups ne sont pas bloquées</li>
+                <li>Testez l'URL directement dans le navigateur</li>
+                <li>Vérifiez la connexion internet</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="../menu.js"></script>
+    <script>
+        // Fonctions de test
+        function testImportXRef() {
+            console.log("🧪 Test: Import X-Ref");
+            const results = document.getElementById('test-results');
+            const output = document.getElementById('test-output');
+            
+            try {
+                // Simuler l'appel de la méthode
+                if (window.contextualMenuManager) {
+                    window.contextualMenuManager.importerXRefDocumentaire();
+                    output.innerHTML = "✅ Formulaire ouvert avec succès";
+                } else {
+                    output.innerHTML = "❌ contextualMenuManager non disponible";
+                }
+                results.style.display = 'block';
+            } catch (error) {
+                output.innerHTML = `❌ Erreur: ${error.message}`;
+                results.style.display = 'block';
+            }
+        }
+        
+        function testAfficherXRef() {
+            console.log("🧪 Test: Afficher X-Ref");
+            const results = document.getElementById('test-results');
+            const output = document.getElementById('test-output');
+            
+            try {
+                if (window.contextualMenuManager) {
+                    window.contextualMenuManager.afficherXRefDocumentaire();
+                    output.innerHTML = "✅ Barre latérale affichée";
+                } else {
+                    output.innerHTML = "❌ contextualMenuManager non disponible";
+                }
+                results.style.display = 'block';
+            } catch (error) {
+                output.innerHTML = `❌ Erreur: ${error.message}`;
+                results.style.display = 'block';
+            }
+        }
+        
+        function testRechercherDocument() {
+            console.log("🧪 Test: Rechercher Document");
+            const results = document.getElementById('test-results');
+            const output = document.getElementById('test-output');
+            
+            try {
+                if (window.contextualMenuManager) {
+                    window.contextualMenuManager.rechercherDocument();
+                    output.innerHTML = "✅ Recherche lancée";
+                } else {
+                    output.innerHTML = "❌ contextualMenuManager non disponible";
+                }
+                results.style.display = 'block';
+            } catch (error) {
+                output.innerHTML = `❌ Erreur: ${error.message}`;
+                results.style.display = 'block';
+            }
+        }
+        
+        // Initialisation
+        window.addEventListener('load', () => {
+            console.log("✅ Page de test chargée");
+            console.log("📋 Menu contextuel:", window.contextualMenuManager ? "Disponible" : "Non disponible");
+        });
+    </script>
+</body>
+</html>

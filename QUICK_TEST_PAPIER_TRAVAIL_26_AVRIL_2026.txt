@@ -1,0 +1,32 @@
+# Guide de Test Rapide - Affinage Papier de Travail
+# Date : 26 Avril 2026
+
+## 1. Vérification de la Fusion (Colspan)
+1. Ouvrez une table de test.
+2. Ajoutez un "Schéma de calcul" via le menu contextuel (Ctrl+Shift+K).
+3. Inspectez le DOM : les cellules vides avant les variables doivent avoir un attribut `colspan`.
+4. Vérifiez que la table n'a plus de "bordures hachées" à cause de multiples cellules vides.
+
+## 2. Vérification des Formules
+1. Dans le schéma de calcul généré, identifiez une cellule avec "=" (ex: (C) = (A) + (B)).
+2. La cellule doit être sensiblement plus large que les autres (130px vs 80px).
+3. Redimensionnez la fenêtre : la formule ne doit JAMAIS passer à la ligne.
+
+## 3. Vérification de la Détection (Nature de test)
+1. Simulez une réponse N8N où "Nature de test" est une colonne dans la Table 2.
+2. Exemple de structure :
+   | Nature de test | Valeur |
+   |----------------|--------|
+   | Validation     | ...    |
+3. Le menu contextuel doit correctement identifier "Validation" et proposer le schéma correspondant.
+
+## 4. Vérification des Dropdowns (conso.js)
+1. Cliquez sur une cellule "Assertion" dans une table modélisée.
+2. Le menu doit proposer uniquement : Validité, Exhaustivité, Formalisation, Application, Permanence.
+3. Cliquez sur une cellule "Conclusion".
+4. Le menu doit proposer : Satisfaisant, Non-Satisfaisant, Limitation, Non-Applicable.
+5. Vérifiez que la sélection est bien sauvegardée après un rechargement de la page.
+
+## 5. Vérification de la Table RÉSULTAT
+1. Affichez une table nommée "Table RÉSULTAT" ou ayant une colonne "Résultat".
+2. Vérifiez qu'elle est reconnue comme une table modélisée (icône d'édition présente).

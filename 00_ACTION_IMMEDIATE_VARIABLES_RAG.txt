@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════════════════════════
+   ACTION IMMÉDIATE : VARIABLES NON REÇUES PAR L'AGENT RAG
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+L'agent RAG affiche les valeurs par défaut au lieu des valeurs réelles :
+[user_message] = Message non fourni
+[cycle_detecte] = Non détecté
+
+✅ SOLUTION EN 3 ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : AJOUTER UN NODE "SET" AVANT L'AGENT RAG
+   ─────────────────────────────────────────────────────────────────────────
+
+   1. Dans N8N, cliquez sur le "+" entre le node précédent et l'agent RAG
+   2. Cherchez "Set" et ajoutez-le
+   3. Configurez le node Set avec ces champs :
+
+   Nom du champ : user_message
+   Valeur : {{ $json.message || $json.user_message || $json.input || "Message non fourni" }}
+
+   Nom du champ : cycle
+   Valeur : {{ $json.cycle || $json.category || "Achats" }}
+
+   Nom du champ : constat
+   Valeur : {{ $json.constat || $json.observation || "À compléter" }}
+
+   Nom du champ : anomalie
+   Valeur : {{ $json.anomalie || $json.issue || "À compléter" }}
+
+ÉTAPE 2 : TESTER LE NODE SET
+   ─────────────────────────────────────────────────────────────────────────
+
+   1. Exécutez le workflow jusqu'au node Set
+   2. Cliquez sur le node Set
+   3. Vérifiez l'output - vous devriez voir :
+   
+   {
+     "user_message": "...",
+     "cycle": "...",
+     "constat": "...",
+     "anomalie": "..."
+   }
+
+ÉTAPE 3 : CONNECTER À L'AGENT RAG
+   ─────────────────────────────────────────────────────────────────────────
+
+   Le prompt de l'agent RAG reste INCHANGÉ :
+   
+   [user_message] = {{ $json.user_message || "Message non fourni" }}
+   [cycle_detecte] = {{ $json.cycle || "Non détecté" }}
+   [constat] = {{ $json.constat || "Non fourni" }}
+   [anomalie] = {{ $json.anomalie || "Non fournie" }}
+
+🔍 SI ÇA NE FONCTIONNE TOUJOURS PAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ajoutez cette ligne TEMPORAIREMENT dans le prompt de l'agent RAG :
+
+DEBUG COMPLET : {{ JSON.stringify($json) }}
+
+Cela affichera TOUTE la structure JSON disponible.
+
+Ensuite, ajustez les noms de variables en fonction de ce que vous voyez.
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 00_DIAGNOSTIC_VARIABLES_N8N_PERSISTANT.txt - Diagnostic complet
+✅ 00_ACTION_IMMEDIATE_VARIABLES_RAG.txt - Ce fichier (action rapide)
+
+═══════════════════════════════════════════════════════════════════════════════

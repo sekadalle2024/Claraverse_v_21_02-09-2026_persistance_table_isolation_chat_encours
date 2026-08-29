@@ -1,0 +1,67 @@
+🚨 PROBLÈME IDENTIFIÉ : LOCALSTORAGE SATURÉ (5119.93 KB)
+================================================================
+
+Cela empêche l'envoi vers n8n !
+
+🎯 SOLUTION IMMÉDIATE (30 secondes)
+====================================
+
+1. Ouvrez dans votre navigateur :
+   http://localhost:3000/fix-localstorage-maintenant.html
+
+2. Cliquez sur : "🗑️ Nettoyer Caches N8N"
+
+3. Rechargez votre application
+
+C'EST TOUT ! ✅
+
+
+📋 ALTERNATIVE (Console du navigateur)
+=======================================
+
+Si vous préférez utiliser la console (F12) :
+
+// Copier-coller cette commande :
+for (let key in localStorage) {
+    if (key.startsWith('n8n_')) {
+        localStorage.removeItem(key);
+    }
+}
+location.reload();
+
+
+🔍 VÉRIFIER QUE ÇA FONCTIONNE
+==============================
+
+Après le nettoyage :
+
+1. Ouvrez : http://localhost:3000/test-envoi-n8n-complet.html
+2. Cliquez : "3️⃣ Envoi Complet"
+3. Vérifiez : Vous devriez recevoir une réponse de n8n
+
+
+💡 POURQUOI CE PROBLÈME ?
+==========================
+
+Flowise.js met en cache les réponses n8n dans le localStorage.
+Quand c'est plein, il ne peut plus :
+- Sauvegarder de nouvelles données
+- Potentiellement envoyer vers n8n
+
+La solution : Vider les caches n8n (ils seront recréés au besoin)
+
+
+🎯 FICHIERS CRÉÉS POUR VOUS
+============================
+
+1. fix-localstorage-maintenant.html  → Interface de nettoyage
+2. nettoyage-urgent-localstorage.js  → Script automatique
+3. patch-flowise-sans-cache.js       → Désactive le cache
+4. test-envoi-n8n-complet.html       → Test de l'envoi n8n
+
+
+📞 PROCHAINE ÉTAPE
+==================
+
+Une fois le nettoyage fait, testez l'envoi vers n8n et dites-moi :
+✅ ou ❌ L'envoi fonctionne maintenant ?

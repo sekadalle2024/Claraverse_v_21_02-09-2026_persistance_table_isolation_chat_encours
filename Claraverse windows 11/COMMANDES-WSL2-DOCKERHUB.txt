@@ -1,0 +1,148 @@
+═══════════════════════════════════════════════════════════════
+    PUSH VERS DOCKER HUB VIA WSL2 - E-AUDIT
+═══════════════════════════════════════════════════════════════
+
+🚀 MÉTHODE 1: AUTOMATIQUE (LA PLUS SIMPLE)
+═══════════════════════════════════════════════════════════════
+
+Double-cliquez sur:
+    PUSH-DOCKERHUB-MAINTENANT.bat
+
+→ Tout se fait automatiquement via WSL2 !
+
+
+🖥️ MÉTHODE 2: COMMANDES WSL2 MANUELLES
+═══════════════════════════════════════════════════════════════
+
+Ouvrez un terminal et tapez:
+
+wsl
+
+Puis dans WSL:
+
+cd /mnt/d/ClaraVerse-v\ firebase
+chmod +x push-dockerhub-wsl.sh
+./push-dockerhub-wsl.sh
+
+
+📝 MÉTHODE 3: COMMANDES COMPLÈTES DANS WSL
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir WSL:
+   wsl
+
+2. Aller dans le répertoire:
+   cd /mnt/d/ClaraVerse-v\ firebase
+
+3. Démarrer Docker:
+   sudo service docker start
+
+4. Connexion Docker Hub:
+   echo "VOTRE_TOKEN_DOCKER" | docker login -u sekadalle --password-stdin
+
+5. Build Frontend:
+   docker build -f Dockerfile.frontend -t e-audit-frontend:latest .
+
+6. Build Backend:
+   docker build -f Dockerfile.backend -t e-audit-backend:latest .
+
+7. Tag Frontend:
+   docker tag e-audit-frontend:latest sekadalle/mes_images_docker:e-audit-frontend
+
+8. Tag Backend:
+   docker tag e-audit-backend:latest sekadalle/mes_images_docker:e-audit-backend
+
+9. Tag Latest:
+   docker tag e-audit-frontend:latest sekadalle/mes_images_docker:e-audit-latest
+
+10. Push Frontend:
+    docker push sekadalle/mes_images_docker:e-audit-frontend
+
+11. Push Backend:
+    docker push sekadalle/mes_images_docker:e-audit-backend
+
+12. Push Latest:
+    docker push sekadalle/mes_images_docker:e-audit-latest
+
+
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════
+
+Dans WSL, vérifier les images:
+docker images
+
+Voir les images sur Docker Hub:
+https://hub.docker.com/r/sekadalle/mes_images_docker/tags
+
+
+⏱️ TEMPS ESTIMÉ
+═══════════════════════════════════════════════════════════════
+
+Build Frontend:  3-5 minutes
+Build Backend:   2-3 minutes
+Push (total):    3-5 minutes
+TOTAL:          8-13 minutes
+
+
+📊 TAILLES APPROXIMATIVES
+═══════════════════════════════════════════════════════════════
+
+Frontend: ~50-100 MB
+Backend:  ~200-300 MB
+Total:    ~250-400 MB
+
+
+⚠️ DÉPANNAGE
+═══════════════════════════════════════════════════════════════
+
+Erreur "docker: command not found":
+→ sudo service docker start
+
+Erreur "permission denied":
+→ chmod +x push-dockerhub-wsl.sh
+
+Erreur "unauthorized":
+→ Vérifier le token d'accès
+
+Erreur de build:
+→ Vérifier que vous êtes dans le bon répertoire
+→ Vérifier que les Dockerfile existent
+
+
+💡 ASTUCES WSL2
+═══════════════════════════════════════════════════════════════
+
+Copier-coller dans WSL:
+- Clic droit pour coller
+- Ctrl+Shift+V (dans certains terminaux)
+
+Voir les logs en temps réel:
+- Les commandes affichent la progression
+
+Arrêter un build:
+- Ctrl+C
+
+
+🔐 INFORMATIONS COMPTE
+═══════════════════════════════════════════════════════════════
+
+Username:    sekadalle
+Repository:  mes_images_docker
+Token:       [VOTRE_TOKEN_DOCKER_HUB]
+Expire:      31 octobre 2026
+
+
+✅ APRÈS LE PUSH
+═══════════════════════════════════════════════════════════════
+
+Vos images seront disponibles:
+• sekadalle/mes_images_docker:e-audit-frontend
+• sekadalle/mes_images_docker:e-audit-backend
+• sekadalle/mes_images_docker:e-audit-latest
+
+Pour les utiliser sur une autre machine:
+docker pull sekadalle/mes_images_docker:e-audit-frontend
+docker pull sekadalle/mes_images_docker:e-audit-backend
+
+
+═══════════════════════════════════════════════════════════════

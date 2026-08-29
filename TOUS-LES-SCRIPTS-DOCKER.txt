@@ -1,0 +1,198 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              📦 TOUS LES SCRIPTS DOCKER DISPONIBLES                      ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+📁 EMPLACEMENT DES SCRIPTS
+═══════════════════════════════════════════════════════════════════════════
+
+Tous les scripts se trouvent à la racine du projet:
+  D:\ClaraVerse-v firebase\
+
+
+🎯 SCRIPTS WINDOWS (.bat) - DOUBLE-CLIC
+═══════════════════════════════════════════════════════════════════════════
+
+GESTION QUOTIDIENNE:
+  ✅ start-containers.bat      → Démarrer les conteneurs
+  ✅ stop-containers.bat        → Arrêter les conteneurs
+
+MISE À JOUR:
+  ✅ update-containers.bat      → Mettre à jour après modification du code
+  ✅ rebuild-no-cache.bat       → Rebuild complet sans cache
+
+
+🐧 SCRIPTS LINUX (.sh) - DEPUIS WSL2
+═══════════════════════════════════════════════════════════════════════════
+
+GESTION COMPLÈTE:
+  ✅ start-docker.sh            → Démarrer avec vérifications
+  ✅ stop-docker.sh             → Arrêter proprement
+  ✅ build-docker.sh            → Builder les images
+  ✅ check-docker-setup.sh      → Vérifier l'environnement
+  ✅ deploy-e-audit.sh          → Déploiement automatique complet
+
+
+📚 DOCUMENTATION DISPONIBLE
+═══════════════════════════════════════════════════════════════════════════
+
+POUR DÉMARRER:
+  📄 LISEZ-MOI-DABORD.txt              → Point de départ
+  📄 MEMO-DEMARRAGE.txt                → Mémo rapide
+  📄 DEPLOIEMENT_RAPIDE_3_COMMANDES.txt → Ultra-rapide
+  📄 COMMANDES-DEMARRAGE-RAPIDE.txt    → Commandes essentielles
+
+POUR METTRE À JOUR:
+  📄 MISE-A-JOUR-DOCKER.txt            → Guide complet
+  📄 COMMANDES-MISE-A-JOUR.txt         → Commandes essentielles
+  📄 GUIDE-MISE-A-JOUR-VISUEL.txt      → Guide visuel
+
+DOCUMENTATION COMPLÈTE:
+  📄 README-DOCKER.md                   → Documentation complète
+  📄 GUIDE-VISUEL-DOCKER.txt            → Architecture visuelle
+  📄 DOCKER-SETUP-COMPLET.md            → Vue technique
+  📄 SUCCES-DEPLOIEMENT-DOCKER.txt      → Résumé du déploiement
+  📄 INDEX-DOCKER.txt                   → Index de tout
+
+
+🚀 UTILISATION DES SCRIPTS
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ DÉMARRAGE QUOTIDIEN                                                   │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Windows:  Double-clic sur start-containers.bat                      │
+│  WSL2:     ./start-docker.sh                                         │
+│  Manuel:   docker compose up -d                                      │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ ARRÊT                                                                 │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Windows:  Double-clic sur stop-containers.bat                       │
+│  WSL2:     ./stop-docker.sh                                          │
+│  Manuel:   docker compose down                                       │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MISE À JOUR (après modification du code)                             │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Windows:  Double-clic sur update-containers.bat                     │
+│  WSL2:     docker compose down && docker compose build &&            │
+│            docker compose up -d                                      │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ REBUILD COMPLET (si problème)                                        │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Windows:  Double-clic sur rebuild-no-cache.bat                      │
+│  WSL2:     docker compose down && docker compose build --no-cache && │
+│            docker compose up -d                                      │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+🌐 ACCÈS À L'APPLICATION
+═══════════════════════════════════════════════════════════════════════════
+
+Frontend:     http://localhost:8080
+Backend:      http://localhost:5000
+Health Check: http://localhost:5000/health
+
+
+🔍 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════
+
+# Voir l'état
+docker compose ps
+
+# Voir les logs
+docker compose logs -f
+
+# Redémarrer
+docker compose restart
+
+# Voir les images
+docker images | grep claraverse
+
+# Nettoyer Docker
+docker system prune -a
+
+
+📊 RÉCAPITULATIF
+═══════════════════════════════════════════════════════════════════════════
+
+SCRIPTS WINDOWS:     4 fichiers (.bat)
+SCRIPTS LINUX:       5 fichiers (.sh)
+DOCUMENTATION:      15+ fichiers
+CONFIGURATION:       5 fichiers (Dockerfile, docker-compose, etc.)
+
+TOTAL: 30+ fichiers pour Docker
+
+
+🎯 PAR USAGE
+═══════════════════════════════════════════════════════════════════════════
+
+DÉMARRAGE RAPIDE:
+  → start-containers.bat
+  → MEMO-DEMARRAGE.txt
+
+MISE À JOUR:
+  → update-containers.bat
+  → MISE-A-JOUR-DOCKER.txt
+
+DÉPANNAGE:
+  → rebuild-no-cache.bat
+  → README-DOCKER.md
+
+RÉFÉRENCE COMPLÈTE:
+  → INDEX-DOCKER.txt
+  → COMMANDES-DOCKER-WSL2.txt
+
+
+💡 CONSEILS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Utilisez les scripts .bat pour plus de simplicité
+2. Consultez MEMO-DEMARRAGE.txt pour les commandes rapides
+3. Lisez MISE-A-JOUR-DOCKER.txt avant de mettre à jour
+4. Gardez INDEX-DOCKER.txt comme référence
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ TOUT EST PRÊT!                                     ║
+║                                                                           ║
+║              Utilisez start-containers.bat pour démarrer                 ║
+║              Utilisez update-containers.bat pour mettre à jour           ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+   docker compose ps
+
+3. Redémarrer:
+   docker compose restart
+
+4. Rebuild:
+   Double-clic sur rebuild-no-cache.bat
+
+5. Documentation:
+   Lire README-DOCKER.md
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ TOUT EST PRÊT!                                     ║
+║                                                                           ║
+║              Double-cliquez sur start-containers.bat                     ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

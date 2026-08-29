@@ -1,0 +1,112 @@
+═══════════════════════════════════════════════════════════════════════════════
+   GUIDE CONFIGURATION NODE "ALEA16" - 8 CHAMPS
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Configurer le node "Alea16" pour :
+1. Générer un nombre aléatoire (alea) entre 1 et 4
+2. PRÉSERVER les 7 variables extraites par "Extract Variables for RAG"
+
+📋 CONFIGURATION MANUELLE DANS N8N
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvre le node "Alea16" dans N8N
+2. Sélectionne le type de node : "Edit Fields (Set)"
+3. Configure 8 champs (clique sur "Add Field" 8 fois si nécessaire)
+
+FIELD 1 : alea
+─────────────────────────────────────────────────────────────────────────
+Name:  alea
+Type:  Number
+Value: ={{ Math.floor(Math.random() * 4) + 1 }}
+
+FIELD 2 : command
+─────────────────────────────────────────────────────────────────────────
+Name:  command
+Type:  String
+Value: ={{ $json.command }}
+
+FIELD 3 : cycle
+─────────────────────────────────────────────────────────────────────────
+Name:  cycle
+Type:  String
+Value: ={{ $json.cycle }}
+
+FIELD 4 : test
+─────────────────────────────────────────────────────────────────────────
+Name:  test
+Type:  String
+Value: ={{ $json.test }}
+
+FIELD 5 : reference
+─────────────────────────────────────────────────────────────────────────
+Name:  reference
+Type:  String
+Value: ={{ $json.reference }}
+
+FIELD 6 : nature_test
+─────────────────────────────────────────────────────────────────────────
+Name:  nature_test
+Type:  String
+Value: ={{ $json.nature_test }}
+
+FIELD 7 : assertion
+─────────────────────────────────────────────────────────────────────────
+Name:  assertion
+Type:  String
+Value: ={{ $json.assertion }}
+
+FIELD 8 : anomalie
+─────────────────────────────────────────────────────────────────────────
+Name:  anomalie
+Type:  String
+Value: ={{ $json.anomalie }}
+
+✅ RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après configuration, l'output du node "Alea16" devrait être :
+
+{
+  "alea": 2,
+  "command": "Recos contrôle interne comptable",
+  "cycle": "trésorerie",
+  "test": "AA010",
+  "reference": "test sur la validation du compte caisse",
+  "nature_test": "Rapprochement",
+  "assertion": "validité",
+  "anomalie": "VOL de caisse de 600 0000 FCFA sur les petites depenses fournisseurs"
+}
+
+📝 NOTES IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. La syntaxe N8N utilise ={{ }} pour les expressions
+2. $json fait référence aux données du node précédent
+3. Tous les champs doivent être de type "String" sauf "alea" qui est "Number"
+4. Si tu supprimes un champ par erreur, clique sur "Add Field" pour en ajouter un nouveau
+5. L'ordre des champs n'a pas d'importance
+
+🔧 ALTERNATIVE : IMPORT JSON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si tu préfères importer la configuration directement :
+
+1. Ouvre le node "Alea16"
+2. Clique sur les 3 points (...) en haut à droite
+3. Sélectionne "Import from JSON"
+4. Colle le contenu du fichier : n8n_node_alea16_config_complete.json
+5. Sauvegarde
+
+⚠️ ATTENTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si tu ne préserves pas TOUTES les variables dans "Alea16", elles seront ÉCRASÉES
+et l'agent RAG recevra des valeurs vides ou undefined.
+
+Le node "Edit Fields (Set)" en mode "Manual Mapping" crée un NOUVEAU JSON.
+Il faut donc EXPLICITEMENT copier chaque variable avec ={{ $json.variable }}.
+
+═══════════════════════════════════════════════════════════════════════════════

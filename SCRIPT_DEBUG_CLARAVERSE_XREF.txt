@@ -1,0 +1,154 @@
+===============================================================
+  SCRIPT DE DEBUG POUR CLARAVERSE - X-REF DOCUMENTAIRE
+  Date: 29 avril 2026 - Version améliorée
+===============================================================
+
+INSTRUCTIONS
+===============================================================
+
+1. Ouvrez Claraverse dans votre navigateur
+2. Affichez la table X-Ref documentaire
+3. Appuyez sur F12 pour ouvrir les DevTools
+4. Allez dans l'onglet "Console"
+5. Copiez-collez le script ci-dessous
+
+
+SCRIPT A COPIER-COLLER DANS LA CONSOLE
+===============================================================
+
+// ============================================
+// SCRIPT DE DIAGNOSTIC X-REF DOCUMENTAIRE
+// ============================================
+
+(function() {
+  console.log("🔍 === DIAGNOSTIC X-REF DOCUMENTAIRE ===");
+  
+  // 1. Trouver toutes les tables
+  const tables = document.querySelectorAll('table');
+  console.log(`📊 Nombre de tables trouvées: ${tables.length}`);
+  
+  tables.forEach((table, index) => {
+    console.log(`\n📋 === TABLE ${index + 1} ===`);
+    
+    // Chercher les en-têtes
+    let headerRow = null;
+    if (table.querySelector('thead')) {
+      headerRow = table.querySelector('thead tr');
+      console.log("✅ En-tête trouvé dans <thead>");
+    } else if (table.querySelector('tbody')) {
+      headerRow = table.querySelector('tbody tr');
+      console.log("✅ En-tête trouvé dans <tbody>");
+    } else {
+      headerRow = table.querySelector('tr');
+      console.log("✅ En-tête trouvé dans <tr>");
+    }
+    
+    if (!headerRow) {
+      console.log("❌ Aucun en-tête trouvé");
+      return;
+    }
+    
+    // Extraire les en-têtes
+    const headerCells = Array.from(headerRow.querySelectorAll('th, td'));
+    const headers = headerCells.map(cell => cell.textContent.trim());
+    
+    console.log("📝 En-têtes:", headers);
+    
+    // Tester la détection
+    const hasCrossRef = headers.some(h => {
+      const text = h.toLowerCase();
+      const normalized = text.replace(/[\s\-_]/g, '');
+      return normalized.includes('cross') || 
+             normalized.includes('xref') || 
+             normalized.includes('reference') ||
+             text.includes('cross') ||
+             text.includes('x-ref') ||
+             text.includes('x ref');
+    });
+    
+    const hasDocument = headers.some(h => {
+      const text = h.toLowerCase();
+      const normalized = text.replace(/[\s\-_]/g, '');
+      return normalized.includes('document') || 
+             normalized.includes('doc');
+    });
+    
+    console.log("🔍 Détection Cross Ref:", hasCrossRef ? "✅ OUI" : "❌ NON");
+    console.log("🔍 Détection Document:", hasDocument ? "✅ OUI" : "❌ NON");
+    
+    if (hasCrossRef && hasDocument) {
+      console.log("✅ Cette table est une table X-Ref documentaire !");
+      
+      // Afficher les index des colonnes
+      headerCells.forEach((cell, idx) => {
+        const text = cell.textContent.trim().toLowerCase();
+        const normalized = text.replace(/[\s\-_]/g, '');
+        
+        if (normalized.includes('cross') || normalized.includes('xref') || normalized.includes('reference')) {
+          console.log(`  📌 Colonne Cross Ref à l'index ${idx}: "${cell.textContent.trim()}"`);
+        }
+        if (normalized.includes('document') || normalized.includes('doc')) {
+          console.log(`  📌 Colonne Document à l'index ${idx}: "${cell.textContent.trim()}"`);
+        }
+      });
+      
+      // Afficher quelques lignes de données
+      const dataRows = Array.from(table.querySelectorAll('tr')).slice(1, 4);
+      console.log("\n📄 Aperçu des données:");
+      dataRows.forEach((row, rowIdx) => {
+        const cells = Array.from(row.querySelectorAll('td, th'));
+        console.log(`  Ligne ${rowIdx + 1}:`, cells.map(c => c.textContent.trim()));
+      });
+    }
+  });
+  
+  console.log("\n✅ === FIN DU DIAGNOSTIC ===");
+})();
+
+
+RESULTAT ATTENDU
+===============================================================
+
+Le script va afficher pour chaque table :
+- ✅ Où se trouve l'en-tête (<thead>, <tbody>, ou <tr>)
+- 📝 Les noms exacts des colonnes
+- 🔍 Si les colonnes "Cross references" et "Document" sont détectées
+- 📌 Les index des colonnes trouvées
+- 📄 Un aperçu des 3 premières lignes de données
+
+
+QUE FAIRE ENSUITE
+===============================================================
+
+1. Si une table est détectée comme "X-Ref documentaire" :
+   - Cliquez sur une ligne de cette table
+   - Faites clic droit
+   - Sélectionnez "Papier de travail" > "Ouvrir X-Ref documentaire"
+   - Ça devrait fonctionner !
+
+2. Si aucune table n'est détectée :
+   - Copiez TOUT le résultat de la console
+   - Collez-le dans le chat
+   - Je pourrai voir exactement ce qui ne va pas
+
+
+CORRECTIONS APPLIQUEES
+===============================================================
+
+✅ Détection ultra-flexible des en-têtes :
+   - Cherche dans <thead>, <tbody>, ou <tr>
+   - Accepte "Cross references", "Cross reference", "X-Ref", "Xref", etc.
+   - Accepte "Document" ou "Documents"
+   - Ignore les espaces, tirets et underscores
+
+✅ Messages d'erreur détaillés :
+   - Affiche les colonnes détectées en cas d'erreur
+   - Affiche les valeurs extraites pour debug
+
+✅ Logs de debug dans la console :
+   - Vous pouvez voir exactement ce qui est détecté
+
+
+===============================================================
+  FIN
+===============================================================

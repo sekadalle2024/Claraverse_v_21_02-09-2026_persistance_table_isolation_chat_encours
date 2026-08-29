@@ -1,0 +1,99 @@
+================================================================================
+QUICK START - SUPPRESSION TESTS BB02, BB03, BB04 SECTION VENTES E-REVISION
+================================================================================
+
+📅 Date: 16 Mai 2026
+🎯 Objectif: Supprimer les tests BB02, BB03, BB04 de la section Ventes
+📂 Fichier: src/components/Clara_Components/DemarrerMenu.tsx
+
+================================================================================
+COMMANDE RAPIDE
+================================================================================
+
+# Exécuter le script de test (recommandé)
+.\test-suppression-ventes-bb02-bb03-bb04.ps1
+
+# OU exécuter directement le script Python
+python "Doc menu demarrer/Scripts/remove_ventes_tests_bb02_bb03_bb04_e_revision.py"
+
+================================================================================
+TESTS SUPPRIMÉS
+================================================================================
+
+1. ✅ BB02 - Feuilles maîtresses-CHIFFRE D'AFFAIRES (sans modes)
+2. ✅ BB02 - Travaux analytiques CA (avec 6 modes)
+3. ✅ BB03 - Revue du Contrôle interne (avec 6 modes)
+4. ✅ BB04 - Revue des techniques comptables (avec 6 modes)
+
+Total: 4 tests supprimés, 18 modes supprimés
+
+================================================================================
+MODES SUPPRIMÉS PAR TEST
+================================================================================
+
+Pour chaque test (sauf BB02 Feuilles maîtresses):
+- Normal
+- Papier de travail
+- Demo
+- Avancé
+- Methodo revision
+- Guide des commandes
+
+================================================================================
+VÉRIFICATION RAPIDE
+================================================================================
+
+# Rechercher les tests supprimés (ne doit rien retourner)
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "ventes-bb02[^-]|ventes-bb02-travaux|ventes-bb03|ventes-bb04"
+
+# Si la commande ne retourne rien, la suppression a réussi ✅
+
+================================================================================
+TESTS RESTANTS DANS VENTES
+================================================================================
+
+Après suppression, ces tests doivent rester:
+✅ BB040 - Rapprochement CA
+✅ BB145 - Test de séparation des exercices ventes
+✅ BB160 - Test de séparation des exercices avoir
+✅ BB300 - Test de validation analytique
+✅ BB545 - Note de synthèse Test de séparation des exercices
+✅ BB30 - CA-TSE-TVA
+✅ BB20 - Rapprochement de solde CA TVA_TSE
+
+================================================================================
+COMMIT
+================================================================================
+
+git add src/components/Clara_Components/DemarrerMenu.tsx
+git add "Doc menu demarrer/Scripts/remove_ventes_tests_bb02_bb03_bb04_e_revision.py"
+git add "Doc menu demarrer/Documentation/SUPPRESSION_TESTS_VENTES_BB02_BB03_BB04_E_REVISION_16_MAI_2026.md"
+git add test-suppression-ventes-bb02-bb03-bb04.ps1
+git add QUICK_START_SUPPRESSION_VENTES_BB02_BB03_BB04.txt
+
+git commit -m "feat(e-revision): Suppression tests BB02, BB03, BB04 section Ventes"
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+📄 Documentation complète:
+   Doc menu demarrer/Documentation/SUPPRESSION_TESTS_VENTES_BB02_BB03_BB04_E_REVISION_16_MAI_2026.md
+
+🐍 Script Python:
+   Doc menu demarrer/Scripts/remove_ventes_tests_bb02_bb03_bb04_e_revision.py
+
+⚡ Script PowerShell de test:
+   test-suppression-ventes-bb02-bb03-bb04.ps1
+
+================================================================================
+AIDE
+================================================================================
+
+En cas de problème:
+1. Vérifier que Python est installé: python --version
+2. Vérifier que le fichier existe: Test-Path "src/components/Clara_Components/DemarrerMenu.tsx"
+3. Consulter la documentation complète
+4. Restaurer la sauvegarde si nécessaire (créée automatiquement par le script de test)
+
+================================================================================

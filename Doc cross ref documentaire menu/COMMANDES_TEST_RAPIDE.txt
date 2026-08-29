@@ -1,0 +1,117 @@
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDES ET TESTS RAPIDES - WORKFLOW N8N CROSS-RÉFÉRENCES
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 CHECKLIST AVANT DE COMMENCER
+═══════════════════════════════════════════════════════════════════════════════
+
+□ n8n est installé et accessible
+□ Compte Google disponible
+□ Accès à Google Drive
+□ Fichier workflow téléchargé : WORKFLOW_N8N_XREF_HTTP_SOLUTION.json
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPE 1 : CRÉER LE CREDENTIAL OAUTH2
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir n8n : http://localhost:5678 (ou votre URL)
+
+2. Aller dans : Settings > Credentials > New Credential
+
+3. Chercher et sélectionner : "Google OAuth2 API"
+
+4. Copier-coller ces informations :
+
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Credential Name: Google Drive OAuth2                                    │
+   │                                                                          │
+   │ Client ID:                                                               │
+   │ ${GOOGLE_OAUTH_CLIENT_ID}                                                │
+   │                                                                          │
+   │ Client Secret:                                                           │
+   │ ${GOOGLE_OAUTH_CLIENT_SECRET}                                            │
+   │                                                                          │
+   │ Scopes (ajouter ces 2 lignes):                                          │
+   │ https://www.googleapis.com/auth/drive                                   │
+   │ https://www.googleapis.com/auth/drive.file                              │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+5. Cliquer sur "Connect my account"
+
+6. Autoriser l'accès dans la popup Google
+
+7. Cliquer sur "Save"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPE 2 : IMPORTER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Dans n8n, cliquer sur "+" (nouveau workflow)
+
+2. Cliquer sur le menu (⋮) en haut à droite
+
+3. Sélectionner "Import from File"
+
+4. Choisir le fichier : WORKFLOW_N8N_XREF_HTTP_SOLUTION.json
+
+5. Le workflow s'ouvre avec tous les nodes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPE 3 : CONFIGURER LES 7 NODES HTTP REQUEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour CHAQUE node suivant, faire :
+1. Cliquer sur le node
+2. Dans "Authentication", sélectionner "OAuth2"
+3. Dans "Credential to connect with", sélectionner "Google Drive OAuth2"
+4. Fermer le node
+
+Liste des 7 nodes à configurer :
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ✓ Rechercher Dossier CAC                                                │
+│ ✓ Créer Dossier CAC                                                     │
+│ ✓ Rechercher Dossier Client                                             │
+│ ✓ Créer Dossier Client                                                  │
+│ ✓ Créer Cycles                                                          │
+│ ✓ Rechercher Cycle                                                      │
+│ ✓ Upload Fichier                                                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPE 4 : TEST RAPIDE D'UN NODE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cliquer sur le node "Rechercher Dossier CAC"
+
+2. Cliquer sur "Execute Node"
+
+3. Résultat attendu :
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ {                                                                        │
+   │   "files": []                                                            │
+   │ }                                                                        │
+   │                                                                          │
+   │ OU                                                                       │
+   │                                                                          │
+   │ {                                                                        │
+   │   "files": [                                                             │
+   │     {                                                                    │
+   │       "id": "1abc...",                                                   │
+   │       "name": "Dossier CAC"                                              │
+   │     }                                                                    │
+   │   ]                                                                      │
+   │ }                                                                        │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+4. Si vous voyez une erreur 401 ou 403 :
+   → Le credential n'est pas bien configuré
+   → Retourner à l'étape 3
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPE 5 : ACTIVER LE WORKFLOW
+════════════════════════════════════════════════

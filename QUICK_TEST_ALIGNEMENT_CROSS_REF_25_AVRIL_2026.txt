@@ -1,0 +1,180 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GUIDE TEST RAPIDE - ALIGNEMENT ET POSITIONNEMENT
+═══════════════════════════════════════════════════════════════════════════════
+Date: 25 avril 2026
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 OBJECTIF DU TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Vérifier que:
+1. ✅ Schéma de calcul est AU-DESSUS de la table principale
+2. ✅ Cross référence est EN DESSOUS de la table principale
+3. ✅ Les 3 tables ont le MÊME nombre de colonnes
+4. ✅ Les variables se terminent sur la colonne "Ecart"
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPES DU TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Créer une table avec "Nature de test"
+   ┌─────────────────────────────────┐
+   │ Nature de test │ Rapprochement  │
+   └─────────────────────────────────┘
+
+2. Créer une table principale (6 colonnes)
+   ┌──────────────────────────────────────────────────────────────┐
+   │ Compte │ Libellé │ Solde BG │ Solde PV │ Ecart │ Conclusion │
+   ├──────────────────────────────────────────────────────────────┤
+   │ 411000 │ Clients │ 100 000  │ 95 000   │ 5 000 │            │
+   └──────────────────────────────────────────────────────────────┘
+
+3. Cliquer sur une cellule de la table principale
+
+4. Ajouter le Schéma de calcul
+   - Menu contextuel → Papier de travail → Ajouter Schéma de calcul
+   - OU raccourci: Ctrl+Shift+K
+
+5. Ajouter la Cross référence
+   - Menu contextuel → Papier de travail → Ajouter Cross référence horizontale
+   - OU raccourci: Ctrl+Shift+H
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+ORDRE DES TABLES (de haut en bas):
+
+1. SCHÉMA DE CALCUL (AU-DESSUS)
+   ┌──────────────────────────────────────────────────────────────┐
+   │        │         │          │ (A)      │ (B)   │ (C)=(A)-(B) │
+   └──────────────────────────────────────────────────────────────┘
+   └─ 3 colonnes vides ─┘└────── 3 variables alignées ──────────┘
+
+2. TABLE PRINCIPALE (AU MILIEU)
+   ┌──────────────────────────────────────────────────────────────┐
+   │ Compte │ Libellé │ Solde BG │ Solde PV │ Ecart │ Conclusion │
+   ├──────────────────────────────────────────────────────────────┤
+   │ 411000 │ Clients │ 100 000  │ 95 000   │ 5 000 │            │
+   └──────────────────────────────────────────────────────────────┘
+
+3. CROSS RÉFÉRENCE (EN DESSOUS)
+   ┌──────────────────────────────────────────────────────────────┐
+   │        │         │          │ [  ]     │ [  ]  │ [  ]        │
+   └──────────────────────────────────────────────────────────────┘
+   └─ 3 colonnes vides ─┘└────── 3 références alignées ─────────┘
+
+ALIGNEMENT VERTICAL:
+   Compte   Libellé   Solde BG   Solde PV   Ecart   Conclusion
+     │        │          │          │         │         │
+     │        │          │          │         │         │
+     │        │          │          (A)      (B)    (C)=(A)-(B)
+     │        │          │          │         │         │
+     │        │          │          │         │         │
+   Compte   Libellé   Solde BG   Solde PV   Ecart   Conclusion
+     │        │          │          │         │         │
+     │        │          │          │         │         │
+     │        │          │         [  ]     [  ]      [  ]
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 POINTS DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ 1. POSITIONNEMENT
+   - Schéma de calcul est-il AU-DESSUS de la table principale ?
+   - Cross référence est-elle EN DESSOUS de la table principale ?
+
+✅ 2. NOMBRE DE COLONNES
+   - Les 3 tables ont-elles le même nombre de colonnes (6) ?
+   - Compter visuellement les bordures verticales
+
+✅ 3. ALIGNEMENT HORIZONTAL
+   - La dernière variable (C) est-elle alignée avec la colonne "Ecart" ?
+   - La dernière référence [  ] est-elle alignée avec la colonne "Ecart" ?
+
+✅ 4. COLONNES VIDES
+   - Y a-t-il 3 colonnes vides AVANT les variables ?
+   - Y a-t-il 0 colonne vide APRÈS les variables ?
+   - Même chose pour les références ?
+
+═══════════════════════════════════════════════════════════════════════════════
+🧪 TESTS SUPPLÉMENTAIRES
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST 1: Nature "Validation" (5 variables)
+┌──────────────────────────────────────────────────────────────────────┐
+│ Compte │ Libellé │ Solde N-1 │ Solde N │ Variation │ Ecart │ Concl │
+└──────────────────────────────────────────────────────────────────────┘
+
+Schéma attendu (7 colonnes):
+┌──────────────────────────────────────────────────────────────────────┐
+│        │         │ (A) │ (B) │ (C)=(A)+(B) │ (D) │ (E)=(C)-(D)      │
+└──────────────────────────────────────────────────────────────────────┘
+└─ 2 vides ─┘└────────── 5 variables alignées ──────────────────────┘
+
+TEST 2: Nature "Mouvement" (6 variables)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ Compte │ Libellé │ N-1 │ Aug │ Dim │ N │ Ecart │ Conclusion │
+└────────────────────────────────────────────────────────────────────────────┘
+
+Schéma attendu (8 colonnes):
+┌────────────────────────────────────────────────────────────────────────────┐
+│        │         │ (A) │ (B) │ (C) │ (D)=(A)+(B)-(C) │ (E) │ (F)=(D)-(E)  │
+└────────────────────────────────────────────────────────────────────────────┘
+└─ 2 vides ─┘└──────────────── 6 variables alignées ──────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+🐛 PROBLÈMES POSSIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ Cross référence AU-DESSUS au lieu d'EN DESSOUS
+   → Vérifier public/papier-travail-cross-ref-horizontale.js ligne 374
+   → Doit utiliser insertBefore(nextSibling) ou appendChild()
+
+❌ Nombre de colonnes différent
+   → Vérifier que findEcartColumnIndex() trouve bien la colonne "Ecart"
+   → Vérifier les logs dans la console (F12)
+
+❌ Variables pas alignées sur "Ecart"
+   → Vérifier calculateEmptyColumnsCount()
+   → Formule: ecartIndex - nbVariables + 1
+
+❌ Modules standalone ne fonctionnent pas
+   → Vérifier que les méthodes d'alignement sont présentes
+   → Vérifier que buildSchemaTable/buildCrossRefTable reçoivent tablePrincipale
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 LOGS DE DEBUG
+═══════════════════════════════════════════════════════════════════════════════
+
+Ouvrir la console (F12) et chercher:
+
+Pour Schéma de calcul:
+  📐 [Alignement] Total colonnes table: 6
+  📐 [Alignement] Index colonne Ecart: 4
+  📐 [Alignement] Nombre de variables: 3
+  📐 [Alignement] Formule: 4 - 3 + 1 = 2
+  📐 [Build] Colonnes vides avant: 2
+  📐 [Build] Colonnes vides après: 1
+
+Pour Cross référence:
+  📎 [Alignement] Total colonnes table: 6
+  📎 [Alignement] Index colonne Ecart: 4
+  📎 [Alignement] Nombre de références: 3
+  📎 [Alignement] Formule: 4 - 3 + 1 = 2
+  📎 [Build] Colonnes vides avant: 2
+  📎 [Build] Colonnes vides après: 1
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+Si tous les tests passent:
+✅ Positionnement correct (Schéma ABOVE, Cross ref BELOW)
+✅ Alignement parfait des colonnes
+✅ Variables/références alignées sur "Ecart"
+✅ Modules standalone fonctionnels
+
+🎉 Le système de papier de travail est opérationnel!
+
+═══════════════════════════════════════════════════════════════════════════════

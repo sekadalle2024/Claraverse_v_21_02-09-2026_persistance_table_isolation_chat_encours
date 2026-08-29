@@ -1,0 +1,172 @@
+================================================================================
+🚀 DÉMARRAGE ULTRA-RAPIDE - PROBLÈMES 1 ET 3 (06 AVRIL 2026)
+================================================================================
+
+⏱️ TEMPS ESTIMÉ: 5 minutes
+
+================================================================================
+ÉTAPE 1: EXÉCUTER LES TESTS (2 min)
+================================================================================
+
+Commande:
+   .\test-problemes-1-et-3.ps1
+
+Ce script va:
+   ✅ Charger les balances de test
+   ✅ Générer les états financiers
+   ✅ Exporter 2 fichiers Excel
+   ✅ Afficher un résumé
+
+Fichiers générés:
+   📄 py_backend/test_probleme_1_brut_amort.xlsx
+   📄 py_backend/test_probleme_3_tft.xlsx
+
+================================================================================
+ÉTAPE 2: VÉRIFIER PROBLÈME 1 - BRUT/AMORTISSEMENT (2 min)
+================================================================================
+
+1. Ouvrir: py_backend/test_probleme_1_brut_amort.xlsx
+
+2. Aller à l'onglet ACTIF
+
+3. Vérifier les colonnes:
+   ✅ Colonne E: BRUT (Valeurs brutes N)
+   ✅ Colonne F: AMORTISSEMENT (Amortissements N)
+   ✅ Colonne G: NET (Valeurs nettes N)
+   ✅ Colonne H: NET N-1 (Valeurs nettes N-1)
+
+4. Vérifier quelques lignes:
+   - AI: Terrains
+   - AJ: Bâtiments
+   - AK: Installations
+   - AZ: TOTAL ACTIF IMMOBILISÉ
+   - DZ: TOTAL GÉNÉRAL ACTIF
+
+RÉSULTAT ATTENDU:
+   ✅ Les 4 colonnes sont remplies avec des valeurs
+   ✅ NET = BRUT - AMORTISSEMENT (cohérence)
+
+================================================================================
+ÉTAPE 3: VÉRIFIER PROBLÈME 3 - TFT (1 min)
+================================================================================
+
+1. Ouvrir: py_backend/test_probleme_3_tft.xlsx
+
+2. Aller à l'onglet TFT
+
+3. Vérifier les colonnes:
+   ✅ Colonne I: Exercice N
+   ✅ Colonne K: Exercice N-1
+
+4. Vérifier quelques lignes:
+   - ZA: Trésorerie ouverture
+   - ZB: Flux opérationnels
+   - ZH: Trésorerie clôture
+
+RÉSULTAT ATTENDU:
+   ✅ Les colonnes I et K sont remplies avec des valeurs
+   ✅ Le TFT n'est plus vierge
+
+================================================================================
+🎯 RÉSULTATS POSSIBLES
+================================================================================
+
+CAS 1: ✅ TOUT FONCTIONNE
+───────────────────────────────────────────────────────────────────────────────
+   → Les colonnes sont remplies correctement
+   → Les corrections sont OPÉRATIONNELLES
+   → Passer à l'étape suivante: tester via l'interface web
+
+CAS 2: ⚠️ BRUT/AMORT VIDES, TFT OK
+───────────────────────────────────────────────────────────────────────────────
+   → Le TFT fonctionne ✅
+   → Les balances ne sont pas disponibles dans results
+   → Solution: Modifier etats_financiers_v2.py pour inclure les balances
+   → Voir: 00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+
+CAS 3: ⚠️ BRUT/AMORT OK, TFT VIDE
+───────────────────────────────────────────────────────────────────────────────
+   → Les BRUT/AMORT fonctionnent ✅
+   → Le TFT n'est pas généré ou mal formaté
+   → Solution: Vérifier que etats_financiers_v2.py génère le TFT
+   → Vérifier les logs pour voir les clés TFT reçues
+
+CAS 4: ❌ TOUT EST VIDE
+───────────────────────────────────────────────────────────────────────────────
+   → Problème dans la génération des états financiers
+   → Vérifier les logs d'erreur
+   → Vérifier que la balance de test existe
+
+================================================================================
+📋 PROCHAINES ÉTAPES
+================================================================================
+
+SI TOUT FONCTIONNE:
+───────────────────────────────────────────────────────────────────────────────
+   1. Tester via l'interface web:
+      - Redémarrer le backend: .\start-claraverse.ps1
+      - Importer la balance
+      - Exporter la liasse
+      - Vérifier le fichier
+
+   2. (Optionnel) Modifier le frontend:
+      - Ajouter colonnes BRUT/AMORT au menu accordéon
+      - Pour cohérence avec l'export
+
+   3. Documenter les résultats:
+      - Ajouter captures d'écran
+      - Mettre à jour la documentation
+
+SI PROBLÈMES:
+───────────────────────────────────────────────────────────────────────────────
+   1. Lire la documentation complète:
+      00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+
+   2. Consulter l'analyse détaillée:
+      Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+      02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+   3. Vérifier les logs d'erreur dans la console
+
+================================================================================
+💡 COMMANDES UTILES
+================================================================================
+
+# Exécuter les tests
+.\test-problemes-1-et-3.ps1
+
+# Redémarrer le backend
+.\start-claraverse.ps1
+
+# Voir les logs du backend
+# (dans la console où le backend tourne)
+
+# Ouvrir les fichiers générés
+cd py_backend
+start test_probleme_1_brut_amort.xlsx
+start test_probleme_3_tft.xlsx
+
+================================================================================
+📞 AIDE
+================================================================================
+
+Documentation complète:
+   00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+
+Analyse détaillée:
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+   02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+Solutions précédentes:
+   00_CORRECTION_TOTALISATIONS_APPLIQUEE_06_AVRIL_2026.txt
+
+================================================================================
+✅ C'EST PARTI!
+================================================================================
+
+Exécutez maintenant:
+   .\test-problemes-1-et-3.ps1
+
+Et vérifiez les fichiers Excel générés!
+
+================================================================================

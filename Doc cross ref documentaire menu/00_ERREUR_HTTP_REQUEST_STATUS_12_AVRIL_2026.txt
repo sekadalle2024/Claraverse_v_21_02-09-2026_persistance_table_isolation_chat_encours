@@ -1,0 +1,101 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║         ERREUR HTTP REQUEST - Cannot read 'status' - 12 AVRIL 2026          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌ ERREUR RENCONTRÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+TypeError: Cannot read properties of undefined (reading 'status')
+at HttpRequestV3.node.ts:796:23
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 CAUSE DU PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+Le workflow utilise des nodes HTTP Request v4.2 avec une configuration incorrecte :
+
+1. ❌ Le paramètre "sendBody" est utilisé avec "bodyParameters"
+   → Cette combinaison n'est pas correcte pour HTTP Request v4
+
+2. ❌ Le format JSON n'est pas correctement spécifié
+   → Les requêtes POST doivent utiliser "bodyContent" avec "contentType: json"
+
+3. ❌ Les paramètres de query string utilisent "qs.parameters"
+   → Doit être "queryParameters" pour v4
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ SOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+Il faut corriger la structure des nodes HTTP Request pour utiliser la syntaxe
+correcte de la version 4.2.
+
+CHANGEMENTS NÉCESSAIRES :
+
+1. Pour les requêtes GET (recherche) :
+   ✓ Utiliser "sendQuery": true
+   ✓ Utiliser "queryParameters" au lieu de "qs.parameters"
+
+2. Pour les requêtes POST (création) :
+   ✓ Utiliser "sendBody": true
+   ✓ Utiliser "contentType": "json"
+   ✓ Utiliser "bodyContent" avec JSON.stringify()
+
+3. Pour l'upload de fichier :
+   ✓ Utiliser "contentType": "multipart-form-data"
+   ✓ Utiliser "bodyContent" avec les données binaires
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 EXEMPLE DE CORRECTION
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT (INCORRECT) :
+{
+  "parameters": {
+    "method": "POST",
+    "url": "https://www.googleapis.com/drive/v3/files",
+    "sendBody": true,
+    "bodyParameters": {
+      "parameters": [
+        { "name": "name", "value": "Dossier CAC" },
+        { "name": "mimeType", "value": "application/vnd.google-apps.folder" }
+      ]
+    }
+  }
+}
+
+APRÈS (CORRECT) :
+{
+  "parameters": {
+    "method": "POST",
+    "url": "https://www.googleapis.com/drive/v3/files",
+    "sendBody": true,
+    "contentType": "json",
+    "bodyContent": "={{ JSON.stringify({ name: 'Dossier CAC', mimeType: 'application/vnd.google-apps.folder' }) }}"
+  }
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════════
+
+Je vais créer un workflow corrigé avec la bonne syntaxe pour HTTP Request v4.2.
+
+Le nouveau fichier sera :
+WORKFLOW_N8N_XREF_HTTP_SOLUTION_V2.json
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ NOTE IMPORTANTE
+═══════════════════════════════════════════════════════════════════════════════
+
+La version HTTP Request v4.2 a une syntaxe différente de v3.
+Il est crucial d'utiliser la bonne structure pour éviter cette erreur.
+
+═══════════════════════════════════════════════════════════════════════════════

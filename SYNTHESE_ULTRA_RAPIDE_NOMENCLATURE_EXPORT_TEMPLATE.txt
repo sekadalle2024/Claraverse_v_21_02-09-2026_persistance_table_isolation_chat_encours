@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ SYNTHÈSE ULTRA-RAPIDE - Nomenclature Export Template Excel
+  📅 10 Mai 2026 | ✅ IMPLÉMENTÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 QUOI ?
+─────────────────────────────────────────────────────────────────────────────
+
+Nouveau nom pour les fichiers exportés via "Export template Excel"
+
+❌ Avant: claraverse_template_2026-05-09T23-39-26.xlsx
+✅ Après: E-audit_Etape-mission-Leadsheet_2026-05-10T14-30-45.xlsx
+
+🔧 COMMENT ?
+─────────────────────────────────────────────────────────────────────────────
+
+1. Nouvelle fonction extractEtapeMission() dans menu.js
+2. Cherche dans les tables: colonnes "Rubrique" + "Description"
+3. Extrait la valeur de la ligne "Etape de mission"
+4. Construit le nom: E-audit_Etape-mission-{NomEtape}_{timestamp}.xlsx
+5. Fallback si non trouvé: E-audit_Etape-mission-X_{timestamp}.xlsx
+
+🧪 TESTER (30 SECONDES)
+─────────────────────────────────────────────────────────────────────────────
+
+1. Recharger la page (Ctrl+F5)
+2. Ouvrir console (F12)
+3. Clic droit sur table → "Export template Excel"
+4. Vérifier le nom du fichier téléchargé
+
+✅ LOGS ATTENDUS
+─────────────────────────────────────────────────────────────────────────────
+
+🎯 [Extract Etape Mission] Trouvé: "Leadsheet" (Table X, Ligne X)
+✅ [Export Template] Nom fichier avec étape: E-audit_Etape-mission-Leadsheet_...
+
+📚 DOCUMENTATION
+─────────────────────────────────────────────────────────────────────────────
+
+🔴 LIRE EN PREMIER:
+   00_COMMENCER_ICI_NOMENCLATURE_EXPORT_TEMPLATE_10_MAI_2026.txt
+
+🧪 TESTER:
+   QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+⚡ COMMANDES:
+   COMMANDES_RAPIDES_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+📖 TECHNIQUE:
+   Doc menu contextuel menu.js update/NOMENCLATURE_FICHIER_EXPORT_TEMPLATE_10_MAI_2026.md
+
+❌ PROBLÈME ?
+─────────────────────────────────────────────────────────────────────────────
+
+Fichier toujours "claraverse_template_..." ?
+→ Ctrl+F5 pour recharger avec cache vidé
+
+Étape non détectée ?
+→ Vérifier les logs console (F12)
+→ Vérifier colonnes "Rubrique" et "Description"
+
+Erreur JavaScript ?
+→ Vérifier syntaxe dans menu.js
+→ Consulter COMMANDES_RAPIDES_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+✅ SUCCÈS
+─────────────────────────────────────────────────────────────────────────────
+
+✅ Fichier exporté avec le bon nom
+✅ Logs visibles dans la console
+✅ Fallback fonctionne si étape non trouvée
+
+═══════════════════════════════════════════════════════════════════════════════
+C'EST TOUT ! 🎉
+═══════════════════════════════════════════════════════════════════════════════

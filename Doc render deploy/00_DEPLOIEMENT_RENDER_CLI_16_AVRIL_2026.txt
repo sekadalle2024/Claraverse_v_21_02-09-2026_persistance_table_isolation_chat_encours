@@ -1,0 +1,144 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                  🚀 DÉPLOIEMENT RENDER CLI - PLAN HOBBY                      ║
+║                         Backend Python FastAPI                                ║
+║                          16 avril 2026                                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 PLAN HOBBY RENDER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Gratuit ($0/mois) + coûts compute
+💰 Web Service: ~$7/mois (plan Starter - pas de cold start)
+🎯 Idéal pour: Projets personnels, prototypes
+🌍 Région: Frankfurt (Europe)
+🔒 SSL gratuit (HTTPS)
+📧 Support email inclus
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 DÉMARRAGE RAPIDE (3 ÉTAPES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ INSTALLER RENDER CLI
+   
+   npm install -g render-cli
+   render --version
+
+2️⃣ SE CONNECTER
+   
+   render login
+   # Suivez les instructions dans le navigateur
+
+3️⃣ DÉPLOYER
+   
+   # Utiliser le script automatique
+   .\Doc` Koyeb` deploy\Scripts\deploy-render-cli.ps1
+   
+   # OU manuellement
+   render services create
+   render deploy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ render.yaml                                    # Configuration Render
+✅ Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RENDER_CLI_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/Scripts/deploy-render-cli.ps1 # Script automatique
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 CONFIGURATION render.yaml
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+services:
+  - type: web
+    name: clara-backend-hobby
+    env: python
+    region: frankfurt
+    plan: starter
+    buildCommand: pip install -r py_backend/requirements.txt
+    startCommand: python py_backend/main.py --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: PYTHONDONTWRITEBYTECODE
+        value: 1
+      - key: HOST
+        value: 0.0.0.0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 COMMANDES UTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir les services
+render services list
+
+# Voir les détails
+render services get clara-backend-hobby
+
+# Voir les logs en temps réel
+render logs --tail
+
+# Redéployer
+render deploy --service clara-backend-hobby
+
+# Suspendre (économiser)
+render services suspend clara-backend-hobby
+
+# Reprendre
+render services resume clara-backend-hobby
+
+# Variables d'environnement
+render env list
+render env set KEY=VALUE
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 TESTER L'API
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Obtenir l'URL
+$url = render services get clara-backend-hobby --format json | ConvertFrom-Json | Select-Object -ExpandProperty url
+
+# Tester
+curl "$url/health"
+curl "$url/api/health"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💰 ÉCONOMISER DE L'ARGENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Option 1: Plan Free (avec cold start)
+   - Gratuit mais service s'endort après 15 min d'inactivité
+   - Utilisez UptimeRobot pour ping toutes les 5 min
+
+Option 2: Suspendre quand non utilisé
+   render services suspend clara-backend-hobby
+
+Option 3: Utiliser Railway (alternative)
+   - Voir: Doc Koyeb deploy/00_DEPLOIEMENT_RAILWAY_CLI_16_AVRIL_2026.txt
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 DOCUMENTATION COMPLÈTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 Guide complet: Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RENDER_CLI_16_AVRIL_2026.md
+🔧 Script auto:    Doc Koyeb deploy/Scripts/deploy-render-cli.ps1
+🌐 Docs Render:    https://render.com/docs/cli
+💬 Support:        https://community.render.com
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ PRÊT À DÉPLOYER !
+
+Lancez le script:
+   .\Doc` Koyeb` deploy\Scripts\deploy-render-cli.ps1
+
+Ou suivez le guide complet pour un déploiement manuel.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

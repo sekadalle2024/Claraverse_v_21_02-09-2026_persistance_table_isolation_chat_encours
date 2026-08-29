@@ -1,0 +1,153 @@
+================================================================================
+CORRECTION DES BUGS D'ÉVALUATION DES RISQUES
+Date: 02 Avril 2026
+================================================================================
+
+PROBLÈMES IDENTIFIÉS ET CORRIGÉS
+================================================================================
+
+1. MATRICE ALPHABÉTIQUE - 4 NIVEAUX
+   ❌ Problème: 0 cellules mises à jour
+   🔍 Cause: Logique || incorrecte dans normalizeToAlpha4
+      - Ligne: if (num <= 1 || num <= 2) return 'Mineur';
+      - Cette condition est TOUJOURS vraie car num <= 2 est toujours vrai si num existe
+   ✅ Solution: Remplacer par logique correcte
+      - if (num >= 1 && num <= 4) return Math.round(num);
+      - Conversion depuis matrice 4x4 avec seuils corrects
+
+2. MATRICE ALPHABÉTIQUE - 5 NIVEAUX
+   ❌ Problème: Valeurs "Très faible" et "Très élevé" n'apparaissent pas
+   🔍 Cause: Même logique || incorrecte dans normalizeToAlpha5
+      - if (num <= 1 || num <= 2) return 'Tres faible';
+      - Toutes les valeurs retournent 'Tres faible' ou 'Faible'
+   ✅ Solution: Logique corrigée avec seuils appropriés
+      - if (num >= 1 && num <= 5) return Math.round(num);
+      - Conversion depuis matrice 5x5: ≤2, ≤6, ≤12, ≤20, ≤25
+
+3. MATRICE NUMÉRIQUE - 3 NIVEAUX
+   ❌ Problème: Toutes les cellules en vert (couleur incorrecte)
+   🔍 Cause: Logique de conversion incorrecte
+      - if (num >= 4 && num <= 9) { ... } ne couvre pas tous les cas
+   ✅ Solution: Simplification de la logique
+      - if (num >= 1 && num <= 3) return Math.round(num);
+      - Conversion directe: ≤2→1, ≤6→2, ≤9→3
+
+4. MATRICE NUMÉRIQUE - 4 NIVEAUX
+   ❌ Problème: Valeur 4 n'apparaît jamais
+   🔍 Cause: Condition if (num >= 5 && num <= 16) exclut la valeur 4
+   ✅ Solution: Correction de la logique
+      - if (num >= 1 && num <= 4) return Math.round(num);
+      - Ajout de: if (num <= 16) return 4;
+
+5. MATRICE NUMÉRIQUE - 5 NIVEAUX
+   ❌ Problème: Valeurs 4 et 5 n'apparaissent pas
+   🔍 Cause: Condition if (num >= 6 && num <= 25) exclut 4 et 5
+   ✅ Solution: Correction complète
+      - if (num >= 1 && num <= 5) return Math.round(num);
+      - Ajout de: if (num <= 25) return 5;
+
+================================================================================
+FICHIERS MODIFIÉS
+================================================================================
+
+✅ public/menu.js
+   - normalizeToAlpha4() - Lignes ~1650-1670
+   - normalizeToAlpha5() - Lignes ~1623-1648
+   - normalizeToNum3() - Lignes ~1674-1700
+   - normalizeToNum4() - Lignes ~1701-1725
+   - normalizeToNum5() - Lignes ~1728-1760
+
+================================================================================
+RÉSUMÉ DES CORRECTIONS
+================================================================================
+
+AVANT:
+------
+❌ Matrice Alpha-4: 0 cellules mises à jour
+❌ Matrice Alpha-5: Valeurs manquantes (Très faible, Très élevé)
+❌ Matrice Num-3: Toutes les cellules en vert
+❌ Matrice Num-4: Valeur 4 manquante
+❌ Matrice Num-5: Valeurs 4 et 5 manquantes
+
+APRÈS:
+------
+✅ Matrice Alpha-4: Toutes les valeurs (Mineur, Significatif, Majeur, Critique)
+✅ Matrice Alpha-5: Toutes les valeurs (Très faible → Très élevé)
+✅ Matrice Num-3: Couleurs correctes (vert, jaune, rouge)
+✅ Matrice Num-4: Toutes les valeurs 1-4 avec couleurs appropriées
+✅ Matrice Num-5: Toutes les valeurs 1-5 avec dégradé de couleurs
+
+================================================================================
+TESTS À EFFECTUER
+================================================================================
+
+Pour chaque matrice, vérifier:
+
+1. MATRICE ALPHABÉTIQUE - 3 NIVEAUX
+   □ Valeurs: Faible, Modéré, Élevé
+   □ Couleurs: Vert, Jaune, Rouge
+
+2. MATRICE ALPHABÉTIQUE - 4 NIVEAUX
+   □ Valeurs: Mineur, Significatif, Majeur, Critique
+   □ Couleurs: Vert, Jaune, Orange, Rouge
+
+3. MATRICE ALPHABÉTIQUE - 5 NIVEAUX
+   □ Valeurs: Très faible, Faible, Modéré, Élevé, Très élevé
+   □ Couleurs: Vert foncé, Vert clair, Jaune, Orange, Rouge
+
+4. MATRICE NUMÉRIQUE - 3 NIVEAUX
+   □ Valeurs: 1, 2, 3
+   □ Couleurs: Vert (1-3), Jaune (4-6), Rouge (7-9)
+
+5. MATRICE NUMÉRIQUE - 4 NIVEAUX
+   □ Valeurs: 1, 2, 3, 4
+   □ Couleurs: Vert (1-2), Jaune (3-6), Orange (7-12), Rouge (13-16)
+
+6. MATRICE NUMÉRIQUE - 5 NIVEAUX
+   □ Valeurs: 1, 2, 3, 4, 5
+   □ Couleurs: Vert foncé (1-2), Vert clair (3-6), Jaune (7-12), 
+               Orange (13-20), Rouge (21-25)
+
+================================================================================
+COMMANDES DE TEST
+================================================================================
+
+# Ouvrir la page de test
+start test-evaluation-risques.html
+
+# Ou créer une table de test dans l'application
+# Puis utiliser le menu contextuel pour tester chaque matrice
+
+================================================================================
+NOTES TECHNIQUES
+================================================================================
+
+PRINCIPE DE CORRECTION:
+-----------------------
+1. Utilisation de Math.round() pour éviter les décimales
+2. Logique && au lieu de || pour les conditions numériques
+3. Ajout de conditions de seuil manquantes (≤16, ≤25)
+4. Ordre correct des conditions (du plus spécifique au plus général)
+
+EXEMPLE DE LOGIQUE CORRIGÉE:
+-----------------------------
+AVANT (INCORRECT):
+  if (num <= 1 || num <= 2) return 'Mineur';  // Toujours vrai!
+
+APRÈS (CORRECT):
+  if (num >= 1 && num <= 4) return Math.round(num);
+  if (num <= 2) return 'Mineur';
+  if (num <= 6) return 'Significatif';
+  if (num <= 12) return 'Majeur';
+  return 'Critique';
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+1. ✅ Corrections appliquées dans public/menu.js
+2. ⏳ Tests à effectuer pour chaque matrice
+3. ⏳ Validation des couleurs et valeurs
+4. ⏳ Documentation des résultats de tests
+
+================================================================================

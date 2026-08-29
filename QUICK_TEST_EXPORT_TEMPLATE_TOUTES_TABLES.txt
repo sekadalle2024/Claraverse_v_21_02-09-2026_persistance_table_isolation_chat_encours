@@ -1,0 +1,141 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 GUIDE DE TEST RAPIDE - EXPORT TEMPLATE TOUTES LES TABLES
+  Date: 09 Mai 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF DU TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Vérifier que l'action "Exporter template Excel" exporte maintenant TOUTES les
+tables présentes dans la div, et non plus seulement la table active.
+
+📋 PRÉREQUIS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Claraverse est démarré (frontend + backend)
+✅ Le navigateur est ouvert sur http://localhost:5173
+✅ La console du navigateur est ouverte (F12)
+
+🧪 ÉTAPES DU TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Générer plusieurs tables dans le chat
+─────────────────────────────────────────────────────────────────────────────
+Prompt suggéré:
+"Crée-moi 3 tables différentes:
+1. Une table de risques avec 5 lignes
+2. Une table de contrôles avec 4 lignes  
+3. Une table de recommandations avec 6 lignes"
+
+Résultat attendu: 3 tables distinctes apparaissent dans le chat
+
+ÉTAPE 2: Ouvrir le menu contextuel
+─────────────────────────────────────────────────────────────────────────────
+1. Cliquer droit sur N'IMPORTE QUELLE table (peu importe laquelle)
+2. Le menu contextuel s'ouvre
+
+ÉTAPE 3: Exécuter l'export
+─────────────────────────────────────────────────────────────────────────────
+1. Cliquer sur "Excel" pour ouvrir la section
+2. Cliquer sur "Exporter template Excel"
+3. Observer la notification: "📊 Export template en cours..."
+
+ÉTAPE 4: Vérifier les logs dans la console
+─────────────────────────────────────────────────────────────────────────────
+Vous devriez voir:
+
+🔍 [Export Template] DIAGNOSTIC - Test des sélecteurs:
+  - document.querySelectorAll('table'): X
+  - document.querySelectorAll('div.prose table'): 3
+
+✅ [Export Template] Sélecteur utilisé: div.prose table
+🔍 [Export Template] 3 table(s) trouvée(s)
+
+🔍 [Export Template] Premières tables détectées:
+  Table 1: { classes: "...", rows: 6, cols: 4, parent: "..." }
+  Table 2: { classes: "...", rows: 5, cols: 3, parent: "..." }
+  Table 3: { classes: "...", rows: 7, cols: 5, parent: "..." }
+
+📊 Export template: 3 tables seront exportées
+
+ÉTAPE 5: Vérifier le fichier Excel téléchargé
+─────────────────────────────────────────────────────────────────────────────
+1. Ouvrir le fichier téléchargé: claraverse_template_YYYY-MM-DD-HH-MM-SS.xlsx
+2. Vérifier que le fichier contient:
+   ✅ Les 3 tables (ou le nombre de tables générées)
+   ✅ Chaque table est séparée par une ligne vide
+   ✅ Les en-têtes de chaque table ont le style rouge bordeaux
+   ✅ Les données sont correctement formatées
+
+✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+Le test est RÉUSSI si:
+
+✅ La console affiche le nombre correct de tables détectées
+✅ Le fichier Excel contient TOUTES les tables (pas seulement la table active)
+✅ Les tables sont bien séparées par des lignes vides
+✅ Les styles sont appliqués correctement (en-têtes rouge bordeaux)
+✅ La notification finale indique: "✅ Export template terminé! (X tables)"
+
+❌ CRITÈRES D'ÉCHEC
+═══════════════════════════════════════════════════════════════════════════════
+
+Le test ÉCHOUE si:
+
+❌ La console affiche "0 table(s) trouvée(s)"
+❌ Le fichier Excel ne contient qu'une seule table
+❌ Le fichier Excel ne contient pas toutes les tables générées
+❌ Une erreur apparaît dans la console
+❌ Le téléchargement ne démarre pas
+
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: "0 table(s) trouvée(s)"
+SOLUTION: 
+  - Vérifier que les tables ont bien la classe CSS "prose"
+  - Vérifier dans la console: document.querySelectorAll('div.prose table')
+  - Vérifier que les tables sont bien dans le DOM
+
+PROBLÈME: Une seule table exportée
+SOLUTION:
+  - Vérifier que la correction a bien été appliquée dans menu.js
+  - Rechercher "document.querySelectorAll('div.prose table')" dans exportTemplate()
+  - Redémarrer le frontend si nécessaire
+
+PROBLÈME: Erreur dans la console
+SOLUTION:
+  - Copier l'erreur complète
+  - Vérifier que SheetJS est bien chargé
+  - Vérifier la syntaxe dans menu.js
+
+🎯 TEST AVANCÉ (OPTIONNEL)
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour tester avec plus de tables:
+
+Prompt suggéré:
+"Crée-moi 10 tables différentes avec des données variées"
+
+Résultat attendu:
+✅ Les 10 tables sont détectées
+✅ Les 10 tables sont exportées dans le fichier Excel
+✅ Le fichier reste bien formaté malgré le nombre de tables
+
+📊 COMPARAISON AVANT/APRÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT LA CORRECTION:
+❌ Seule la table active était exportée
+❌ Les autres tables dans la div étaient ignorées
+❌ L'utilisateur devait exporter chaque table individuellement
+
+APRÈS LA CORRECTION:
+✅ TOUTES les tables dans la div sont exportées
+✅ Export en un seul clic
+✅ Comportement cohérent avec exportSyntheseCAC()
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU GUIDE DE TEST
+═══════════════════════════════════════════════════════════════════════════════

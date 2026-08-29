@@ -1,0 +1,88 @@
+=================================================================
+  ⚡ ACTION IMMÉDIATE - DIAGNOSTIC LAYOUT CHAT
+=================================================================
+
+🎯 PROBLÈME
+-----------------------------------------------------------------
+Les chats apparaissent en dehors de la zone de chat habituelle.
+
+
+✅ SOLUTION APPLIQUÉE
+-----------------------------------------------------------------
+1. Script fix-new-chat-button.js retiré de index.html
+2. Script de diagnostic ajouté: diagnostic-layout-chat.js
+
+
+🧪 TESTER MAINTENANT
+-----------------------------------------------------------------
+1. npm run dev
+2. Ouvrir http://localhost:5173
+3. Ouvrir la console (F12)
+4. Observer les messages du diagnostic
+
+
+📋 COMMANDES CONSOLE
+-----------------------------------------------------------------
+# Relancer le diagnostic
+window.diagnosticLayout.run()
+
+# Voir les résultats
+window.diagnosticLayoutResults
+
+# Mettre en évidence les zones (VISUEL)
+window.diagnosticLayout.highlightZones()
+
+# Retirer les mises en évidence
+window.diagnosticLayout.removeHighlights()
+
+
+🔍 QUE CHERCHER
+-----------------------------------------------------------------
+Dans la console, vérifier:
+
+✅ Sidebar: position, width, zIndex
+✅ Chat Window: position, left, width
+✅ Messages: position, top, left
+✅ Éléments fixed: nombre et position
+✅ Problèmes z-index: éléments avec z-index > 9000
+
+
+📸 CAPTURE VISUELLE
+-----------------------------------------------------------------
+Exécuter dans la console:
+window.diagnosticLayout.highlightZones()
+
+Zones colorées:
+🔴 Rouge = Sidebar
+🔵 Bleu = Chat window
+🟢 Vert = Messages (5 premiers)
+
+Prendre une capture d'écran et partager.
+
+
+🐛 PROBLÈMES COURANTS
+-----------------------------------------------------------------
+1. Sidebar trop large → Chat poussé hors écran
+2. Chat window en position fixed → Sort du flux
+3. Messages en position absolute → Positionnement erratique
+4. z-index trop élevé → Éléments superposés
+
+
+📝 PARTAGER LES RÉSULTATS
+-----------------------------------------------------------------
+Copier-coller de la console:
+1. Le résumé du diagnostic
+2. Les valeurs de sidebar
+3. Les valeurs de chat window
+4. Les problèmes z-index (si présents)
+
+
+📖 DOCUMENTATION COMPLÈTE
+-----------------------------------------------------------------
+Voir: DIAGNOSTIC_LAYOUT_CHAT_GUIDE.md
+
+
+=================================================================
+Exécutez maintenant: npm run dev
+Puis ouvrez la console (F12) pour voir le diagnostic
+=================================================================

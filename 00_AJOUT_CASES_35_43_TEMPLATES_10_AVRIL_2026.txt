@@ -1,0 +1,190 @@
+═══════════════════════════════════════════════════════════════════════════════
+  AJOUT DES CASES 35-43 : TEMPLATES DE TABLES
+  Date : 10 Avril 2026
+  Fichier modifié : src/services/claraApiService.ts
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ MISSION ACCOMPLIE
+
+Les cases 35 à 43 ont été ajoutés avec succès au switch router de claraApiService.ts.
+Ces cases génèrent des templates de tables localement sans appel à n8n.
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 LISTE DES CASES AJOUTÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+Case 35 : Template_table_unicolonne
+  - Condition : user_message contient "Template_table_unicolonne"
+  - Génère : Table unicolonne simple
+  - Endpoint : Non applicable (génération locale)
+
+Case 36 : Template_table_simple
+  - Condition : user_message contient "Template_table_simple"
+  - Génère : Table simple avec 10 lignes et 5 colonnes (A-E)
+  - Endpoint : Non applicable (génération locale)
+
+Case 37 : Template_table_etape_de_mission
+  - Condition : user_message contient "Template_table_etape_de_mission"
+  - Génère : Table d'en-tête + table de données (10 lignes)
+  - Endpoint : Non applicable (génération locale)
+
+Case 38 : Template_table_feuille_couverture_test_audit
+  - Condition : user_message contient "Template_table_feuille_couverture_test_audit"
+  - Génère : 5 tables (en-tête, objectifs, résultats, tests détaillés)
+  - Endpoint : Non applicable (génération locale)
+
+Case 39 : Template_table_frap
+  - Condition : user_message contient "Template_table_frap"
+  - Génère : 6 tables (en-tête, intitulé, observation, constat, risque, recommandation)
+  - Endpoint : Non applicable (génération locale)
+
+Case 40 : Template_table_synthèses_frap
+  - Condition : user_message contient "Template_table_synthèses_frap"
+  - Génère : Table d'en-tête + synthèse des FRAP (10 lignes)
+  - Endpoint : Non applicable (génération locale)
+
+Case 41 : Template_table_rapport_provisoire
+  - Condition : user_message contient "Template_table_rapport_provisoire"
+  - Génère : Table d'en-tête + rapport provisoire (10 lignes avec commentaires)
+  - Endpoint : Non applicable (génération locale)
+
+Case 42 : Template_table_rapport_final
+  - Condition : user_message contient "Template_table_rapport_final"
+  - Génère : Table d'en-tête + rapport final (10 lignes avec plan d'action)
+  - Endpoint : Non applicable (génération locale)
+
+Case 43 : Template_table_suivi_recos
+  - Condition : user_message contient "Template_table_suivi_recos"
+  - Génère : Table d'en-tête + suivi des recommandations (10 lignes avec évaluation)
+  - Endpoint : Non applicable (génération locale)
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 MODIFICATIONS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. AJOUT DE LA SENTINELLE INTERNE
+   --------------------------------
+   Fichier : src/services/claraApiService.ts
+   Ligne : ~42
+   
+   private readonly SENTINEL_TEMPLATE_TABLE = "__INTERNAL__TEMPLATE_TABLE__";
+   
+   Cette sentinelle indique que la réponse doit être générée localement.
+
+2. AJOUT DES CONDITIONS DANS getN8nEndpointWithInfo()
+   ---------------------------------------------------
+   Fichier : src/services/claraApiService.ts
+   Lignes : ~140-170
+   
+   Les 9 nouveaux cases ont été ajoutés AVANT les cases 2-10 pour respecter
+   la hiérarchie de priorisation demandée.
+
+3. AJOUT DES RÉSOLUTIONS D'ENDPOINTS
+   -----------------------------------
+   Fichier : src/services/claraApiService.ts
+   Lignes : ~268-277
+   
+   Tous les routeKeys des templates retournent la sentinelle SENTINEL_TEMPLATE_TABLE.
+
+4. AJOUT DE LA LOGIQUE DE TRAITEMENT
+   -----------------------------------
+   Fichier : src/services/claraApiService.ts
+   Lignes : ~1650-1670
+   
+   Détection de la sentinelle et appel de generateTemplateTable().
+
+5. CRÉATION DE LA MÉTHODE generateTemplateTable()
+   -----------------------------------------------
+   Fichier : src/services/claraApiService.ts
+   Lignes : ~893-1280
+   
+   Nouvelle méthode privée qui :
+   - Définit les 9 templates JSON
+   - Sélectionne le template approprié selon le routeKey
+   - Convertit le JSON en Markdown via convertStructuredDataToMarkdown()
+   - Retourne le contenu formaté
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 STRUCTURE DES TEMPLATES
+═══════════════════════════════════════════════════════════════════════════════
+
+Tous les templates suivent la structure JSON existante :
+
+{
+  "Etape mission - [Nom]": [
+    {
+      "table 1": { ... }  // En-tête ou données
+    },
+    {
+      "table 2": [ ... ]  // Tableau de données
+    }
+  ]
+}
+
+Cette structure est compatible avec la méthode convertStructuredDataToMarkdown()
+qui gère déjà ce format.
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ TESTS DE COMPILATION
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Aucune erreur de compilation
+✓ Seulement des warnings sur variables non utilisées (normaux)
+✓ Types TypeScript corrects
+✓ Intégration avec le code existant réussie
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 UTILISATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour utiliser ces templates, il suffit d'envoyer un message dans le chat
+contenant l'un des mots-clés suivants :
+
+- Template_table_unicolonne
+- Template_table_simple
+- Template_table_etape_de_mission
+- Template_table_feuille_couverture_test_audit
+- Template_table_frap
+- Template_table_synthèses_frap
+- Template_table_rapport_provisoire
+- Template_table_rapport_final
+- Template_table_suivi_recos
+
+Le système détectera automatiquement le mot-clé et générera le template
+correspondant sous forme de tables Markdown éditables.
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. HIÉRARCHIE RESPECTÉE
+   Les cases 35-43 sont placés AVANT les cases 2-10 dans le code, mais
+   APRÈS les cases 11-34 pour respecter la hiérarchie de priorisation.
+
+2. PAS D'APPEL N8N
+   Ces cases ne font aucun appel HTTP vers n8n. Tout est généré localement
+   pour des performances optimales.
+
+3. FORMAT COMPATIBLE
+   Les templates utilisent le même format JSON que les autres cases,
+   garantissant une cohérence dans l'affichage.
+
+4. EXTENSIBILITÉ
+   Pour ajouter un nouveau template, il suffit de :
+   - Ajouter une condition dans getN8nEndpointWithInfo()
+   - Ajouter le routeKey dans resolveEndpointFromRouteKey()
+   - Ajouter le template JSON dans generateTemplateTable()
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ STATUT FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Cases 35-43 ajoutés avec succès
+✓ Sentinelle SENTINEL_TEMPLATE_TABLE créée
+✓ Méthode generateTemplateTable() implémentée
+✓ 9 templates JSON définis
+✓ Intégration complète avec le système existant
+✓ Code compilé sans erreurs
+✓ Prêt pour utilisation en production
+
+═══════════════════════════════════════════════════════════════════════════════

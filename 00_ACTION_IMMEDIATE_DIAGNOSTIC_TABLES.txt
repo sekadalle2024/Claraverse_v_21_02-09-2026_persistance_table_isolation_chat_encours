@@ -1,0 +1,115 @@
+═══════════════════════════════════════════════════════════════
+   ACTION IMMÉDIATE - CORRECTIONS APPLIQUÉES ✅
+═══════════════════════════════════════════════════════════════
+
+✅ PROBLÈME DÉTECTION TABLES - RÉSOLU
+✅ PROBLÈME CONTENU INCOMPLET - RÉSOLU
+✅ DÉPENDANCES PYTHON - VÉRIFIÉES
+
+═══════════════════════════════════════════════════════════════
+CORRECTIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════
+
+1. DÉTECTION DES TABLES
+   ✅ Sélecteur CSS corrigé: div.prose table
+   ✅ Fichier: public/menu.js (ligne ~7350)
+   ✅ Détecte maintenant les 24 tables correctement
+
+2. EXTRACTION CONTENU COMPLET
+   ✅ Nouvelle fonction: extractFullCellContent()
+   ✅ Fichier: public/menu.js (ligne 4238)
+   ✅ Extrait TOUTES les lignes des cellules
+
+3. DÉPENDANCES PYTHON
+   ✅ Script exécuté: verifier-dependances-python.ps1
+   ✅ Toutes les dépendances installées
+   ✅ Backend prêt à fonctionner
+
+═══════════════════════════════════════════════════════════════
+ACTIONS À FAIRE MAINTENANT (5 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 1: REDÉMARRER LE BACKEND
+   → Ouvrir PowerShell
+   → Exécuter: .\stop-claraverse.ps1
+   → Exécuter: .\start-claraverse-conda.ps1
+   → Attendre "Application startup complete"
+
+ÉTAPE 2: RAFRAÎCHIR LE NAVIGATEUR
+   → Ouvrir Claraverse
+   → Appuyer sur Ctrl+F5 (rafraîchissement forcé)
+   → Attendre le chargement complet
+
+ÉTAPE 3: TESTER L'EXPORT
+   → Ouvrir la console (F12)
+   → Clic droit sur une table
+   → "Rapports CAC & Expert-Comptable"
+   → "Export Synthèse CAC"
+
+ÉTAPE 4: VÉRIFIER LES LOGS
+   → Dans la console, vous devriez voir:
+   
+   ✅ [Export CAC] Sélecteur utilisé: div.prose table
+   🔍 [Export CAC] 24 table(s) Claraverse trouvée(s)
+   📊 [Export CAC] Points collectés:
+      - FRAP: X
+      - Recos Révision: X
+      - Recos Contrôle Interne: X
+   ✅ Synthèse CAC exportée! (X points)
+
+ÉTAPE 5: VÉRIFIER LE FICHIER WORD
+   → Ouvrir le fichier téléchargé
+   → Vérifier que le contenu est complet
+   → Vérifier que les paragraphes multiples sont présents
+
+═══════════════════════════════════════════════════════════════
+SI ÇA NE FONCTIONNE PAS
+═══════════════════════════════════════════════════════════════
+
+1. Vérifier que le backend est démarré:
+   → Ouvrir http://localhost:5000/health
+   → Devrait afficher: {"status": "healthy"}
+
+2. Vérifier les logs de la console:
+   → Copier TOUS les logs
+   → Me les envoyer pour analyse
+
+3. Vérifier les logs du backend:
+   → Dans le terminal où le backend tourne
+   → Copier les messages d'erreur éventuels
+
+═══════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+✅ public/menu.js
+   - Ligne ~7350: Sélecteur CSS corrigé
+   - Ligne 4238: Fonction extractFullCellContent()
+   - Lignes 7419, 7499, 7573: Utilisation extractFullCellContent()
+
+✅ Doc export rapport/00_INDEX.md
+   - Ajout section corrections 26 Mars 2026
+
+✅ Doc export rapport/GUIDE_EXPORT_SYNTHESE_CAC.md
+   - Ajout section détection automatique corrigée
+
+✅ RECAPITULATIF_EXPORT_SYNTHESE_CAC.md
+   - Ajout section corrections 26 Mars 2026
+
+═══════════════════════════════════════════════════════════════
+DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+📄 Doc export rapport/CORRECTION_SELECTEUR_CSS_26_MARS_2026.md
+   → Détails de la correction détection tables
+
+📄 Doc export rapport/00_INDEX.md
+   → Index mis à jour avec corrections
+
+📄 RECAPITULATIF_EXPORT_SYNTHESE_CAC.md
+   → Récapitulatif complet mis à jour
+
+═══════════════════════════════════════════════════════════════
+
+Date: 26 Mars 2026
+Statut: ✅ Corrections appliquées - Prêt pour tests

@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🔕 DÉSACTIVATION DES NOTIFICATIONS JSON - 23 JUIN 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE: 23 juin 2026
+👤 DEMANDEUR: Utilisateur
+🎯 OBJECTIF: Désactiver temporairement les notifications JSON des fichiers
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ MODIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DÉSACTIVATION DES NOTIFICATIONS
+   ✓ Fichier modifié: src/components/Clara_Components/clara_assistant_input.tsx
+   ✓ Méthode: Commentaire du code d'appel à showExtractionAlert()
+   ✓ Ligne: ~3056-3064
+   ✓ Marqueur ajouté: 🔕 NOTIFICATIONS DÉSACTIVÉES TEMPORAIREMENT (23/06/2026)
+
+2. MISE À JOUR DE LA DOCUMENTATION
+   ✓ Fichier: Doc ClaraAttachmentService traitement/GUIDE_REACTIVATION_NOTIFICATIONS.md
+   ✓ Statut mis à jour: ❌ DÉSACTIVÉES
+   ✓ Date ajoutée: 23 juin 2026
+   ✓ Instructions de réactivation mises à jour
+
+═══════════════════════════════════════════════════════════════════════════════
+  📝 DÉTAILS DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+## Fichier: src/components/Clara_Components/clara_assistant_input.tsx
+
+### Code Désactivé (ligne ~3056-3064):
+```typescript
+// 🔕 NOTIFICATIONS DÉSACTIVÉES TEMPORAIREMENT (23/06/2026)
+// Pour réactiver, voir: Doc ClaraAttachmentService traitement/GUIDE_REACTIVATION_NOTIFICATIONS.md
+/*
+const hasDocuments = processedAttachments.some(att => 
+  (att.type === 'excel' || att.type === 'word' || att.type === 'document') 
+  && att.processed && att.processingResult?.success
+);
+
+if (hasDocuments) {
+  claraAttachmentService.showExtractionAlert(processedAttachments);
+}
+*/
+```
+
+### Raison de la Désactivation:
+- Les notifications affichaient le contenu JSON des fichiers convertis
+- L'utilisateur souhaite désactiver temporairement ces notifications
+- Le traitement des fichiers continue de fonctionner normalement
+- Seule l'affichage de la notification est désactivé
+
+═══════════════════════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour réactiver les notifications, consultez:
+📄 Doc ClaraAttachmentService traitement/GUIDE_REACTIVATION_NOTIFICATIONS.md
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 HISTORIQUE DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+| Date | Action | Statut |
+|------|--------|--------|
+| 06 mai 2026 | Désactivation initiale | ❌ DÉSACTIVÉES |
+| 23 juin 2026 | Réactivation | ✅ ACTIVÉES |
+| 23 juin 2026 | Nouvelle désactivation | ❌ DÉSACTIVÉES |
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔧 ARCHITECTURE SYSTÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                      FLUX DE TRAITEMENT DES FICHIERS                          │
+│                              (APRÈS DÉSACTIVATION)                            │
+└───────────────────────────────────────────────────────────────────────────────┘
+
+1. User upload fichier dans le chat
+   ↓
+2. claraAttachmentService.processFileAttachments()
+   ↓
+3. Extraction du contenu (JSON)
+   ↓
+4. 🔕 Pas d'alerte (showExtractionAlert() non appelée) ← DÉSACTIVÉ
+   ↓
+5. Envoi vers endpoint n8n avec les données
+
+═══════════════════════════════════════════════════════════════════════════════
+  📂 FICHIERS CONCERNÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+### 1. ClaraAttachmentService
+- **Fichier**: `src/services/claraAttachmentService.ts`
+- **Méthode**: `showExtractionAlert(attachments: ClaraFileAttachment[])`
+- **Statut**: Service intact, méthode non appelée
+- **Rôle**: Génère et affiche la notification avec le JSON formaté
+
+### 2. Clara Assistant Input
+- **Fichier**: `src/components/Clara_Components/clara_assistant_input.tsx`
+- **Méthode**: `handleFileAttachments()`
+- **Statut**: Appel commenté (désactivé)
+- **Rôle**: Traite les fichiers et appelle showExtractionAlert()
+
+═══════════════════════════════════════════════════════════════════════════════
+  ⚠️ NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Le traitement des fichiers continue de fonctionner normalement
+2. Les données JSON sont toujours générées et envoyées à n8n
+3. Seule l'affichage de la notification à l'utilisateur est désactivé
+4. La fonction showExtractionAlert() reste disponible dans le service
+5. La réactivation est simple: décommenter le code
+
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 RÉSULTAT
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Les notifications JSON des fichiers sont maintenant DÉSACTIVÉES
+✅ Le système continue de traiter les fichiers normalement
+✅ La documentation de réactivation est disponible et à jour
+✅ Un marqueur clair indique la désactivation temporaire
+
+═══════════════════════════════════════════════════════════════════════════════
+  📌 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour réactiver les notifications:
+1. Ouvrir: src/components/Clara_Components/clara_assistant_input.tsx
+2. Chercher: "🔕 NOTIFICATIONS DÉSACTIVÉES TEMPORAIREMENT"
+3. Décommenter le bloc de code
+4. Remplacer le marqueur 🔕 par ✅
+
+═══════════════════════════════════════════════════════════════════════════════

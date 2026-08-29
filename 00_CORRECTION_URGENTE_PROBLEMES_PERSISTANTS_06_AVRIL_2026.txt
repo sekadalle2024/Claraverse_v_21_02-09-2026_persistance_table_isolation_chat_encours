@@ -1,0 +1,97 @@
+================================================================================
+CORRECTION URGENTE - PROBLEMES PERSISTANTS (06 AVRIL 2026)
+================================================================================
+
+PROBLEMES IDENTIFIES:
+
+1. Colonnes BRUT/AMORT mal positionnées (confusion de colonnes)
+2. Totalisations manquantes pour exercice N
+3. TFT toujours vide
+4. Menu accordéon manque colonnes BRUT/AMORT
+
+================================================================================
+ANALYSE DES CAPTURES D'ECRAN
+================================================================================
+
+CAPTURE "EXERCICE N - VALEUR":
+   Structure visible dans le template:
+   - Colonne F: BRUT
+   - Colonne suivante: AMORT et DEPREC
+   - Colonne suivante: NET
+   
+   Problème: Le code actuel utilise E, F, G, H
+   Mais d'après la capture, il semble que ce soit F, G, H, I
+
+CAPTURE "EXERCICE N - TOTALISATION":
+   - Les lignes de totalisation (AZ, BQ, BZ, DZ) sont vides
+   - Seules les valeurs NET sont présentes, pas BRUT/AMORT
+
+CAPTURE "ACTIF MENU ACCORDEON":
+   - Affiche seulement NOTE, EXERCICE N, EXERCICE N-1
+   - Manque les colonnes BRUT et AMORT pour N
+
+CAPTURE "TFT vierge":
+   - L'onglet TFT est complètement vide
+   - Aucune valeur dans les colonnes
+
+================================================================================
+PLAN DE CORRECTION
+================================================================================
+
+ETAPE 1: Identifier les colonnes exactes du template
+   - Ouvrir le template manuellement
+   - Noter les colonnes exactes pour BRUT, AMORT, NET N, NET N-1
+   - Vérifier l'onglet TFT
+
+ETAPE 2: Corriger export_liasse.py
+   - Ajuster les colonnes dans remplir_onglet_actif_avec_brut_amort()
+   - S'assurer que les totalisations sont ajoutées au dict
+   - Vérifier que le TFT est bien converti et rempli
+
+ETAPE 3: Modifier etats_financiers_v2.py
+   - Ajouter les balances aux results
+   - S'assurer que le TFT est généré
+
+ETAPE 4: Modifier le frontend
+   - Ajouter colonnes BRUT et AMORT au menu accordéon
+
+================================================================================
+ACTIONS IMMEDIATES
+================================================================================
+
+1. Vérifier manuellement le template:
+   py_backend/Liasse_officielle_revise.xlsx
+   
+2. Noter les colonnes exactes:
+   - BRUT N: Colonne ?
+   - AMORT N: Colonne ?
+   - NET N: Colonne ?
+   - NET N-1: Colonne ?
+
+3. Vérifier l'onglet TFT:
+   - Colonne REF: A
+   - Colonne N: ?
+   - Colonne N-1: ?
+
+================================================================================
+FICHIERS A MODIFIER
+================================================================================
+
+1. py_backend/export_liasse.py
+   - Fonction remplir_onglet_actif_avec_brut_amort()
+   - Colonnes à ajuster
+
+2. py_backend/etats_financiers_v2.py
+   - Ajouter results['balance_n_df'] = balance_n_df
+   - Ajouter results['balance_n1_df'] = balance_n1_df
+
+3. src/components/Clara_Components/[Composant Menu Accordéon]
+   - Ajouter colonnes brut_n et amort_n
+
+================================================================================
+PROCHAINE ETAPE
+================================================================================
+
+Vérifier manuellement le template Excel pour identifier les colonnes exactes.
+
+================================================================================

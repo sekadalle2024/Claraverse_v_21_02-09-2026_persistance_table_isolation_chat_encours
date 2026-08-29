@@ -1,0 +1,301 @@
+================================================================================
+PROCHAINES ÉTAPES - VÉRIFICATION DANS L'INTERFACE WEB
+================================================================================
+Date: 23 mars 2026
+Statut: ✅ MODIFICATIONS CONFIRMÉES PRISES EN COMPTE
+
+================================================================================
+RÉSUMÉ DES TESTS CONSOLE
+================================================================================
+
+✅ Tous les fichiers Python créés et importables
+✅ Tous les imports présents dans etats_financiers.py
+✅ Tous les patterns de détection présents
+✅ Tous les appels de fonction présents
+✅ Backend opérationnel (Status: 200)
+✅ Frontend opérationnel (Status: 200)
+
+CONCLUSION: Les modifications SONT bien prises en compte!
+
+
+================================================================================
+ÉTAPES POUR VÉRIFIER DANS L'INTERFACE WEB
+================================================================================
+
+Étape 1: Ouvrir l'interface web
+---------------------------------
+URL: http://localhost:5173
+
+Résultat attendu:
+- Interface E-audit pro chargée
+- Menu principal visible
+
+
+Étape 2: Accéder aux États Financiers
+--------------------------------------
+1. Cliquer sur "Demarrer E-audit pro"
+2. Sélectionner "États Financiers"
+
+Résultat attendu:
+- Page États Financiers chargée
+- Bouton d'upload visible
+
+
+Étape 3: Uploader le fichier BALANCES_N_N1_N2.xlsx
+---------------------------------------------------
+1. Cliquer sur le bouton d'upload
+2. Sélectionner le fichier BALANCES_N_N1_N2.xlsx
+3. Attendre le traitement
+
+Résultat attendu:
+- Message de succès
+- Menu accordéon affiché
+
+
+Étape 4: Vérifier le Menu Accordéon
+------------------------------------
+Le menu accordéon doit afficher 5 sections:
+
+1. 🏢 BILAN - ACTIF
+   ├─ Colonnes: REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1
+   ├─ Tous les postes affichés (même vides avec "-")
+   └─ Format tableau liasse officielle
+
+2. 🏛️ BILAN - PASSIF
+   ├─ Colonnes: REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1
+   ├─ Tous les postes affichés (même vides avec "-")
+   └─ Format tableau liasse officielle
+
+3. 📊 COMPTE DE RÉSULTAT
+   ├─ Colonnes: REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1
+   ├─ 43 postes + 8 totaux
+   └─ Format tableau liasse officielle
+
+4. 💧 TABLEAU DES FLUX DE TRÉSORERIE
+   ├─ Colonnes: REF, LIBELLÉS, EXERCICE N, EXERCICE N-1
+   ├─ 19 lignes complètes (ZA à ZF)
+   └─ Format tableau liasse officielle
+
+5. 📋 NOTES ANNEXES
+   ├─ 14 notes détaillées
+   ├─ 50+ postes
+   ├─ Colonnes: REF, LIBELLÉS, EXERCICE N, EXERCICE N-1
+   └─ Format tableau liasse officielle
+
+
+Étape 5: Vérifier le Bilan Actif
+---------------------------------
+1. Cliquer sur "🏢 BILAN - ACTIF"
+2. Vérifier:
+   ✅ Tableau avec 5 colonnes (REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1)
+   ✅ Tous les postes affichés (AA, AB, AC, ...)
+   ✅ Montants formatés avec espaces (ex: 26 020 175)
+   ✅ Montants nuls affichés comme "-"
+   ✅ Totaux en gras
+
+
+Étape 6: Vérifier le Compte de Résultat
+----------------------------------------
+1. Cliquer sur "📊 COMPTE DE RÉSULTAT"
+2. Vérifier:
+   ✅ 43 postes affichés (TA à XI)
+   ✅ 8 totaux (XA, XB, XC, XD, XE, XF, XG, XI)
+   ✅ Colonnes N et N-1 présentes
+   ✅ Résultat net (XI) calculé correctement
+
+
+Étape 7: Vérifier le TFT
+------------------------
+1. Cliquer sur "💧 TABLEAU DES FLUX DE TRÉSORERIE"
+2. Vérifier:
+   ✅ 19 lignes présentes (ZA à ZF)
+   ✅ Colonnes EXERCICE N et EXERCICE N-1
+   ✅ Tous les flux calculés:
+      - ZA: Trésorerie nette au 1er janvier
+      - FA: CAFG
+      - FB-FE: Variations
+      - ZB: FLUX OPÉRATIONNELS
+      - FF-FI: Flux d'investissement
+      - ZC: FLUX D'INVESTISSEMENT
+      - FJ-FM: Flux de financement
+      - ZD: FLUX DE FINANCEMENT
+      - ZE: VARIATION DE TRÉSORERIE
+      - ZF: Trésorerie nette au 31 décembre
+   ✅ Totaux ZB, ZC, ZD, ZE, ZF en gras
+
+
+Étape 8: Vérifier les Annexes
+------------------------------
+1. Cliquer sur "📋 NOTES ANNEXES"
+2. Vérifier la présence de 14 notes:
+   ✅ NOTE 3A - Immobilisations incorporelles
+   ✅ NOTE 3B - Immobilisations corporelles
+   ✅ NOTE 4 - Immobilisations financières
+   ✅ NOTE 6 - État des stocks
+   ✅ NOTE 7 - État des créances
+   ✅ NOTE 8 - Trésorerie-Actif
+   ✅ NOTE 10 - Capital social
+   ✅ NOTE 11 - Réserves et report à nouveau
+   ✅ NOTE 13 - Résultat net
+   ✅ NOTE 14 - Emprunts et dettes financières
+   ✅ NOTE 16 - Dettes circulantes
+   ✅ NOTE 21 - Chiffre d'affaires
+   ✅ NOTE 22 - Achats consommés
+   ✅ NOTE 24 - Charges de personnel
+
+3. Pour chaque note, vérifier:
+   ✅ Titre de la note affiché
+   ✅ Tableau avec 4 colonnes (REF, LIBELLÉS, EXERCICE N, EXERCICE N-1)
+   ✅ Tous les postes affichés
+   ✅ Montants formatés correctement
+   ✅ "-" pour les montants nuls
+
+
+Étape 9: Vérifier la Cohérence
+-------------------------------
+1. Vérifier l'équilibre du bilan:
+   Total Actif N = Total Passif N + Résultat Net N
+
+2. Vérifier la cohérence du TFT:
+   Variation Trésorerie (ZE) = Flux Opérationnels (ZB) + Flux Investissement (ZC) + Flux Financement (ZD)
+   Trésorerie Fin (ZF) = Trésorerie Début (ZA) + Variation (ZE)
+
+3. Vérifier la cohérence des annexes:
+   Somme des postes d'une note = Total de la note (si applicable)
+
+
+================================================================================
+CHECKLIST DE VÉRIFICATION
+================================================================================
+
+Format Général
+- [ ] Menu accordéon avec 5 sections
+- [ ] Toutes les sections cliquables
+- [ ] Animations d'ouverture/fermeture fluides
+- [ ] CSS liasse appliqué correctement
+
+Bilan
+- [ ] Bilan Actif avec colonnes N et N-1
+- [ ] Bilan Passif avec colonnes N et N-1
+- [ ] Tous les postes affichés (même vides)
+- [ ] Totaux calculés correctement
+
+Compte de Résultat
+- [ ] 43 postes affichés
+- [ ] Colonnes N et N-1
+- [ ] 8 totaux (XA à XI)
+- [ ] Résultat net cohérent
+
+TFT
+- [ ] 19 lignes complètes
+- [ ] Colonnes N et N-1
+- [ ] Totaux ZB, ZC, ZD, ZE, ZF
+- [ ] Cohérence des calculs
+
+Annexes
+- [ ] 14 notes présentes
+- [ ] Chaque note avec colonnes N et N-1
+- [ ] Tous les postes détaillés
+- [ ] Format tableau uniforme
+
+
+================================================================================
+RÉSULTAT ATTENDU
+================================================================================
+
+✅ Menu accordéon avec 5 sections
+✅ Colonnes EXERCICE N et EXERCICE N-1 partout
+✅ Format tableau liasse officielle
+✅ TFT avec 19 lignes (ZA à ZF)
+✅ Annexes avec 14 notes
+✅ Tous les postes affichés (même vides)
+✅ Montants formatés correctement
+✅ Totaux calculés automatiquement
+✅ Cohérence des données
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problème: Menu accordéon vide
+Solution:
+  1. Vérifier que le fichier Excel a les bons onglets
+  2. Vérifier les logs backend: Receive-Job -Id 1 -Keep
+  3. Redémarrer le backend: .\stop-claraverse.ps1 puis .\start-claraverse-conda.ps1
+
+Problème: Colonnes N et N-1 manquantes
+Solution:
+  1. Vérifier que le fichier a Balance N et Balance N-1
+  2. Vérifier que les patterns de détection sont corrects
+  3. Vérifier les logs backend
+
+Problème: TFT vide
+Solution:
+  1. Vérifier que les balances N et N-1 sont présentes
+  2. Vérifier les logs backend pour erreurs de calcul
+  3. Exécuter le test: .\test-corrections-liasse.ps1
+
+Problème: Annexes incomplètes
+Solution:
+  1. Vérifier que les données sont présentes dans les balances
+  2. Vérifier les logs backend
+  3. Exécuter le test: .\test-corrections-liasse.ps1
+
+
+================================================================================
+COMMANDES UTILES
+================================================================================
+
+Voir les logs backend:
+  Receive-Job -Id 1 -Keep
+
+Redémarrer le backend:
+  .\stop-claraverse.ps1
+  .\start-claraverse-conda.ps1
+
+Exécuter le test console:
+  .\test-modifications-console.ps1
+
+Exécuter le test automatique:
+  .\test-corrections-liasse.ps1
+
+
+================================================================================
+FICHIERS DE RÉFÉRENCE
+================================================================================
+
+Documentation:
+- CONFIRMATION_MODIFICATIONS_PRISES_EN_COMPTE.md
+- CORRECTION_MENU_ACCORDEON_TFT_ANNEXES.md
+- GUIDE_TEST_CORRECTIONS_LIASSE.md
+- SYNTHESE_SESSION_23_MARS_2026.md
+
+Scripts:
+- test-modifications-console.ps1
+- test-corrections-liasse.ps1
+- start-claraverse-conda.ps1
+- stop-claraverse.ps1
+
+Modules Python:
+- py_backend/tableau_flux_tresorerie_v2.py
+- py_backend/annexes_liasse_complete.py
+- py_backend/html_liasse_complete.py
+- py_backend/etats_financiers.py (modifié)
+
+
+================================================================================
+CONCLUSION
+================================================================================
+
+Les modifications SONT bien prises en compte (confirmé par tests console).
+
+Maintenant, il faut vérifier que tout fonctionne correctement dans l'interface web
+en uploadant un fichier BALANCES_N_N1_N2.xlsx et en vérifiant le menu accordéon.
+
+Suivez les étapes ci-dessus pour valider complètement les modifications.
+
+
+================================================================================
+FIN DES PROCHAINES ÉTAPES
+================================================================================

@@ -1,0 +1,84 @@
+✅ CORRECTION WORKFLOW N8N APPLIQUÉE - 12 AVRIL 2026
+=====================================================
+
+🎯 PROBLÈME IDENTIFIÉ
+---------------------
+Erreur: "Cannot read properties of undefined (reading 'execute')"
+
+Cause RÉELLE: L'API Google Drive v3 de n8n n'a PAS d'opération "search"
+
+🔧 CORRECTIONS APPLIQUÉES
+-------------------------
+
+1. ✅ Remplacement de l'opération "search" par "list"
+   - L'opération "search" n'existe pas dans Google Drive v3
+   - Utilisation de "list" avec "options.queryString"
+   
+2. ✅ Ajout de nodes Code pour gérer les IDs
+   - Les IDs de dossiers doivent être passés entre les nodes
+   - Utilisation de nodes Code pour préparer les données
+   
+3. ✅ Correction de la structure des nodes
+   - operation: "list" pour rechercher
+   - operation: "create" pour créer des dossiers
+   - operation: "upload" pour uploader des fichiers
+   
+4. ✅ Correction des paramètres
+   - queryString dans options pour list
+   - parentId dans options pour create
+   - binaryPropertyName dans options pour upload
+
+5. ✅ Simplification du workflow
+   - Suppression des 10 nodes de création de cycles
+   - Création dynamique du cycle nécessaire uniquement
+
+📁 FICHIERS CRÉÉS
+-----------------
+✅ WORKFLOW_N8N_XREF_SIMPLIFIE.json - Workflow simplifié et fonctionnel
+✅ 00_ANALYSE_ERREUR_WORKFLOW.txt - Analyse détaillée de l'erreur
+
+🔑 DIFFÉRENCES CLÉS
+-------------------
+
+AVANT (❌ Ne fonctionne pas):
+```json
+{
+  "parameters": {
+    "operation": "search",  // ❌ N'existe pas
+    "query": "name='Dossier CAC'"
+  }
+}
+```
+
+APRÈS (✅ Fonctionne):
+```json
+{
+  "parameters": {
+    "operation": "list",  // ✅ Correct
+    "options": {
+      "queryString": "name='Dossier CAC' and mimeType='application/vnd.google-apps.folder'"
+    }
+  }
+}
+```
+
+🚀 PROCHAINES ÉTAPES
+--------------------
+1. Importer WORKFLOW_N8N_XREF_SIMPLIFIE.json dans n8n
+2. Configurer les credentials Google Drive
+3. Tester le workflow
+
+📝 STRUCTURE GOOGLE DRIVE CRÉÉE
+-------------------------------
+Dossier CAC/
+  └── [Client]-[Exercice]/
+      └── [Cycle comptable]/
+          └── [Cross référence]-Document.ext
+
+📄 EXEMPLE
+----------
+Dossier CAC/
+  └── Orange-2025/
+      └── Trésorerie/
+          └── [I1]-Lead sheet trésorerie.xlsx
+

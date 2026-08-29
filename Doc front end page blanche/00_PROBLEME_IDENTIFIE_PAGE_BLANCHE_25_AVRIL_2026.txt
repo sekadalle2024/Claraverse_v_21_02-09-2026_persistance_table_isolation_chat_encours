@@ -1,0 +1,61 @@
+═══════════════════════════════════════════════════════════════════════════
+🔴 PROBLÈME IDENTIFIÉ - PAGE BLANCHE
+═══════════════════════════════════════════════════════════════════════════
+
+📅 Date: 25 avril 2026
+🎯 Statut: PROBLÈME TROUVÉ - CORRECTION EN COURS
+
+═══════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════
+
+✅ FICHIERS VÉRIFIÉS:
+  1. public/papier-travail-schema-calcul.js ✅ COMPLET (991 lignes)
+  2. public/papier-travail-cross-ref-horizontale.js ✅ OK
+  3. public/menu-papier-travail-extension.js ⚠️ VIDE (normal, réservé)
+  4. src/services/claraPapierTravailService.ts ✅ VIDE (normal, nouveau fichier)
+
+❌ PROBLÈME TROUVÉ:
+  📁 Fichier: src/services/claraApiService.ts
+  📍 Ligne: 1948
+  🐛 Erreur: Propriété 'caseName' n'existe pas dans le type 'ClaraMessageMetadata'
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 DÉTAILS DE L'ERREUR
+═══════════════════════════════════════════════════════════════════════════
+
+Code problématique (ligne 1948):
+```typescript
+metadata: { 
+  model: "local",
+  caseName: "Case 44",      // ❌ Propriété non définie dans le type
+  routeKey: "editeur"       // ❌ Propriété non définie dans le type
+}
+```
+
+Le type ClaraMessageMetadata ne contient que:
+  - model?: string
+  - tokens?: number
+  - usage?: {...}
+  - timings?: {...}
+  - processingTime?: number
+
+═══════════════════════════════════════════════════════════════════════════
+✅ SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+Option 1: Ajouter les propriétés au type ClaraMessageMetadata
+Option 2: Retirer caseName et routeKey du code
+
+Je vais appliquer l'Option 1 (plus propre et conserve l'information de routing).
+
+═══════════════════════════════════════════════════════════════════════════
+📋 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✅ Diagnostic terminé
+2. 🔄 Correction du type ClaraMessageMetadata en cours...
+3. ⏳ Vérification des diagnostics
+4. ⏳ Test de l'application
+
+═══════════════════════════════════════════════════════════════════════════

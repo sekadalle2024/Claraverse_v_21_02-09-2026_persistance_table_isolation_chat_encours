@@ -1,0 +1,99 @@
+============================================
+🐼 COMMANDES TEST AGENT PANDAS - CLARAVERSE
+============================================
+
+1. INSTALLER LES DÉPENDANCES (si nécessaire)
+--------------------------------------------
+cd py_backend
+pip install beautifulsoup4
+
+Note: L'agent fonctionne en mode simple sans LLM.
+Les dépendances LangChain sont optionnelles.
+
+
+2. DÉMARRER LE BACKEND
+--------------------------------------------
+cd py_backend
+python main.py --host 127.0.0.1 --port 5000
+
+
+3. TESTER L'API (dans un autre terminal)
+--------------------------------------------
+
+# Vérifier le status
+curl http://127.0.0.1:5000/pandas-agent/status
+
+# Test rapide
+curl -X POST http://127.0.0.1:5000/pandas-agent/test
+
+
+4. TESTER VIA LA PAGE HTML
+--------------------------------------------
+Ouvrir dans le navigateur:
+http://localhost:5173/test-pandas-agent.html
+
+Ou directement:
+file:///chemin/vers/public/test-pandas-agent.html
+
+
+5. TESTER DANS L'APPLICATION
+--------------------------------------------
+1. Démarrer le frontend: npm run dev
+2. Ouvrir http://localhost:5173
+3. Aller dans un chat avec une table contenant "Ecart"
+4. Clic droit sur la table
+5. Cliquer sur "🐼 Pandas Agent - Calcul Ecarts"
+
+
+6. RACCOURCI CLAVIER
+--------------------------------------------
+Ctrl+P : Exécute l'agent Pandas sur la table sélectionnée
+
+
+7. VÉRIFIER LES LOGS BACKEND
+--------------------------------------------
+Les logs affichent:
+- ✅ Pandas Agent router loaded successfully
+- 📊 Traitement de X table(s)
+- 🎯 Table cible: table_xxx
+- 📋 DataFrame: X lignes, colonnes: [...]
+- Colonnes numériques détectées: [...]
+- Calcul: Solde final théorique - Solde BG clôture
+
+
+8. EN CAS D'ERREUR
+--------------------------------------------
+
+Erreur "Connection refused":
+→ Vérifier que le backend est démarré sur le port 5000
+
+Erreur "Colonne Ecart non trouvée":
+→ La table doit avoir une colonne nommée "Ecart" ou "Écart"
+
+Erreur "beautifulsoup4 not found":
+→ pip install beautifulsoup4
+
+
+============================================
+FICHIERS CRÉÉS/MODIFIÉS
+============================================
+- py_backend/pandas_agent.py    : Agent Pandas (mode simple)
+- py_backend/main.py            : Router ajouté
+- py_backend/requirements.txt   : Dépendances mises à jour
+- public/menu.js                : Action "Pandas Agent" ajoutée
+- public/test-pandas-agent.html : Page de test
+- GUIDE_PANDAS_AGENT.md         : Documentation complète
+
+
+============================================
+LOGIQUE DE CALCUL DES ÉCARTS
+============================================
+L'agent détecte automatiquement:
+1. La colonne "Ecart" (ou variantes: écart, difference)
+2. Les colonnes numériques (solde, montant, etc.)
+
+Formule appliquée:
+  Ecart = Solde final théorique - Solde BG clôture
+
+Si ces colonnes ne sont pas trouvées:
+  Ecart = Dernière colonne numérique - Première colonne numérique

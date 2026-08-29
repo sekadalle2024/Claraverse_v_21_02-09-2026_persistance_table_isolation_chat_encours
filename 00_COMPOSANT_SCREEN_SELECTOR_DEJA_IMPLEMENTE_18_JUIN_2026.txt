@@ -1,0 +1,277 @@
+═══════════════════════════════════════════════════════════════
+   ✅ COMPOSANT SCREEN SELECTOR - DÉJÀ IMPLÉMENTÉ ET FONCTIONNEL
+   Date: 18 Juin 2026
+═══════════════════════════════════════════════════════════════
+
+📌 STATUT: IMPLÉMENTATION COMPLÈTE ET OPÉRATIONNELLE
+
+Le composant React pour gérer "Wide Screen" et "Normal Screen" existe 
+déjà et est complètement fonctionnel dans l'application E-audit.
+
+═══════════════════════════════════════════════════════════════
+🎯 EMPLACEMENT DU COMPOSANT
+═══════════════════════════════════════════════════════════════
+
+📍 Position dans l'interface:
+   ┌────────────────────────────────────────────────────────┐
+   │ [Logo] ← [Titre projet] → [🖥️ Screen] [🎨 Theme] [👤] │
+   └────────────────────────────────────────────────────────┘
+                              ↑
+                    Composant ScreenSelector
+                    (à gauche du ThemeSelector)
+
+📂 Fichiers principaux:
+   • src/components/ScreenSelector.tsx - Composant React
+   • src/utils/screenManager.ts - Logique de gestion
+   • src/components/Topbar.tsx - Intégration dans la barre haute
+
+═══════════════════════════════════════════════════════════════
+⚡ FONCTIONNALITÉS IMPLÉMENTÉES
+═══════════════════════════════════════════════════════════════
+
+✅ Détection automatique des tables modelisées:
+   - CTR 1, CTR 2, CTR 3
+   - Conclusion
+   - Assertion
+   - Écart
+   - Résultat
+
+✅ Mode Wide Screen:
+   - Calcul dynamique de la largeur nécessaire
+   - Détection de la table la plus large
+   - Expansion automatique des conteneurs parents
+   - Centrage symétrique de l'interface
+   - Padding de 160px pour les ombres et marges
+
+✅ Mode Normal Screen:
+   - Restauration des styles d'origine
+   - Nettoyage complet des attributs data-orig-*
+
+✅ Persistance:
+   - Sauvegarde dans localStorage: 'clara-screen-mode'
+   - Initialisation au démarrage (main.tsx, ligne 45)
+   - Observer DOM pour détecter les nouvelles tables
+
+✅ Interface utilisateur:
+   - Icône Monitor (Lucide React)
+   - Menu déroulant avec 2 options
+   - Pastille verte pour le mode actif
+   - Événements CustomEvent pour synchronisation
+
+═══════════════════════════════════════════════════════════════
+🔧 ARCHITECTURE TECHNIQUE
+═══════════════════════════════════════════════════════════════
+
+1. DÉTECTION DES TABLES MODELISÉES
+   ──────────────────────────────────
+   Fonction: isModelizedTable(table: HTMLTableElement)
+   
+   Méthode:
+   • Examine les 5 premières lignes de la table
+   • Cherche les mots-clés dans les en-têtes th ou td
+   • Mots-clés: CTR 1-3, Conclusion, Assertion, Écart, Résultat
+   
+   Logique similaire à l'extension Chrome (background.js)
+
+2. CALCUL DYNAMIQUE DE LA LARGEUR
+   ────────────────────────────────
+   Fonction: adjustToWideScreen()
+   
+   Étapes:
+   a) Expansion temporaire de la table à max-content
+   b) Mesure scrollWidth de la table
+   c) Ajout de 160px de padding
+   d) Largeur cible = Math.max(neededWidth, 1200px)
+   e) Application des styles aux ancêtres
+   
+   Style appliqué aux conteneurs:
+   • max-width: ${targetWidth}px !important
+   • width: 95% !important
+
+3. RECHERCHE DES CONTENEURS À ÉLARGIR
+   ───────────────────────────────────
+   Critères de détection:
+   • max-width défini en CSS
+   • Classes avec 'max-w-'
+   • Classes 'mx-auto'
+   • Classes contenant 'chat', 'message', 'bubble'
+   • Attribut data-clara-container
+
+4. GESTION DES AUTRES TABLES
+   ──────────────────────────
+   Pour éviter l'étirement des tables non-modelisées:
+   • Détection du div.prose parent commun
+   • Restriction de largeur: max-width: 800px
+   • Alignement à gauche
+
+5. MUTATION OBSERVER
+   ──────────────────
+   Surveillance des changements DOM:
+   • childList: true
+   • subtree: true
+   • Debounce de 50ms pour éviter les boucles
+   • Déconnexion temporaire pendant les ajustements
+
+═══════════════════════════════════════════════════════════════
+📋 CODE CLÉS
+═══════════════════════════════════════════════════════════════
+
+🔹 INITIALISATION (main.tsx)
+   ──────────────────────────
+   setTimeout(() => {
+     initializeScreenMode();
+   }, 500);
+
+🔹 COMPOSANT REACT (ScreenSelector.tsx)
+   ────────────────────────────────────
+   const [currentMode, setCurrentMode] = useState<ScreenMode>(
+     getCurrentScreenMode()
+   );
+   
+   const handleModeChange = (mode: ScreenMode) => {
+     setScreenMode(mode);
+     setCurrentMode(mode);
+     setIsOpen(false);
+   };
+
+🔹 ÉVÉNEMENT DE SYNCHRONISATION
+   ─────────────────────────────
+   window.dispatchEvent(
+     new CustomEvent('clara-screen-mode-changed', { 
+       detail: { mode } 
+     })
+   );
+
+🔹 INTÉGRATION DANS TOPBAR
+   ────────────────────────
+   <ScreenSelector showLabel={false} />
+
+═══════════════════════════════════════════════════════════════
+🎨 STYLES DES TABLES CLARAVERSE (index.css)
+═══════════════════════════════════════════════════════════════
+
+Ligne 1253: /* STYLES POUR TABLES CLARAVERSE */
+
+Caractéristiques:
+• En-têtes: Rouge bordeaux #6b1102
+• Ombres multiples pour effet de profondeur
+• Scroll horizontal activé sur le wrapper
+• Scrollbar invisible (apparaît au survol)
+• Sticky header pour scroll vertical
+• Hover effect sur les lignes
+
+Structure:
+.prose table.min-w-full {
+  box-shadow: 0 12px 24px 0 rgba(0, 0, 0, 0.25);
+  table-layout: auto !important;
+  width: calc(100% - 40px) !important;
+}
+
+.prose table.min-w-full th {
+  background-color: #6b1102 !important;
+  color: white !important;
+}
+
+═══════════════════════════════════════════════════════════════
+✨ DIFFÉRENCES AVEC L'EXTENSION CHROME
+═══════════════════════════════════════════════════════════════
+
+EXTENSION CHROME (Doc fullscreen-extension-v8/background.js):
+└─ Fonctions: adjustToWideScreen() et restoreNormalScreen()
+└─ Injection via chrome.scripting.executeScript
+└─ Logique identique mais exécutée côté extension
+
+COMPOSANT REACT NATIF (src/utils/screenManager.ts):
+└─ Fonctions: adjustToWideScreen() et restoreNormalScreen()
+└─ Exécution directe dans l'application
+└─ Mutation Observer intégré
+└─ Persistance localStorage
+
+🔄 Migration réussie: Logique portée de Chrome Extension vers React
+
+═══════════════════════════════════════════════════════════════
+🧪 TESTS ET VALIDATION
+═══════════════════════════════════════════════════════════════
+
+✅ À tester:
+1. Ouvrir un chat avec des tables modelisées
+2. Cliquer sur l'icône Monitor dans le Topbar
+3. Sélectionner "Wide screen"
+   → Les tables modelisées s'élargissent
+   → L'interface reste centrée
+   → Scroll horizontal activé si nécessaire
+4. Sélectionner "Normal screen"
+   → Retour à la largeur d'origine
+   → Restauration complète des styles
+
+✅ Vérifications:
+• Les tables avec CTR 1, CTR 2, CTR 3 sont détectées
+• Les autres tables (non-modelisées) restent à 800px
+• Le mode est sauvegardé et restauré au redémarrage
+• Pas de latence ou scintillement
+
+═══════════════════════════════════════════════════════════════
+📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════
+
+1. AUCUNE MODIFICATION NÉCESSAIRE
+   Le composant est déjà complet et opérationnel.
+
+2. POSITION DANS L'INTERFACE
+   Le ScreenSelector est déjà placé dans le Topbar,
+   à gauche du ThemeSelector, exactement comme demandé.
+
+3. DÉTECTION DES TABLES
+   La fonction isModelizedTable() vérifie les colonnes:
+   CTR 1, CTR 2, CTR 3, Conclusion, Écart, Assertion, Résultat
+
+4. APPLICATION AUTOMATIQUE
+   Toutes les tables modelisées du chat sont affectées
+   simultanément, pas div par div.
+
+5. LARGEUR DYNAMIQUE
+   La largeur s'adapte automatiquement à la table la plus large.
+
+6. CENTRAGE SYMÉTRIQUE
+   L'interface reste centrée avec width: 95%.
+
+═══════════════════════════════════════════════════════════════
+🚀 PROCHAINES ÉTAPES (SI NÉCESSAIRE)
+═══════════════════════════════════════════════════════════════
+
+Aucune action requise - Le composant est fonctionnel.
+
+Si des ajustements sont nécessaires:
+1. Modifier src/utils/screenManager.ts pour la logique
+2. Modifier src/components/ScreenSelector.tsx pour l'UI
+3. Ajuster src/index.css pour les styles des tables
+
+═══════════════════════════════════════════════════════════════
+📚 RÉFÉRENCES
+═══════════════════════════════════════════════════════════════
+
+• Composant: src/components/ScreenSelector.tsx
+• Logique: src/utils/screenManager.ts
+• Intégration: src/components/Topbar.tsx
+• Initialisation: src/main.tsx (ligne 45)
+• Styles tables: src/index.css (ligne 1253)
+• Référence Chrome: Doc fullscreen-extension-v8/background.js
+
+═══════════════════════════════════════════════════════════════
+✅ CONCLUSION
+═══════════════════════════════════════════════════════════════
+
+Le composant React natif pour gérer Wide Screen / Normal Screen
+est DÉJÀ IMPLÉMENTÉ, INTÉGRÉ et FONCTIONNEL dans E-audit.
+
+Aucune modification n'est nécessaire.
+
+Le système détecte automatiquement les tables modelisées avec
+les colonnes CTR 1, CTR 2, CTR 3, Conclusion, Écart, Assertion,
+Résultat, et applique le mode Wide ou Normal à toutes les tables
+simultanément avec un centrage symétrique.
+
+L'icône Monitor est visible dans le Topbar, à gauche du sélecteur
+de thème, exactement comme demandé dans le cahier des charges.
+
+═══════════════════════════════════════════════════════════════

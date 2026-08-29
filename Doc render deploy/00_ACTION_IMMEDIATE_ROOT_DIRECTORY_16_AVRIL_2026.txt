@@ -1,0 +1,149 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    🚨 ACTION IMMÉDIATE - RENDER                              ║
+║                                                                              ║
+║              Erreur: Root directory 'py_backend' does not exist              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📅 Date: 16 Avril 2026
+⏰ Temps estimé: 2 MINUTES
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 SOLUTION RAPIDE (2 MINUTES)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Aller sur Render Dashboard
+────────────────────────────────────
+URL: https://dashboard.render.com
+
+ÉTAPE 2: Sélectionner votre service
+────────────────────────────────────
+Cliquer sur: clara-backend-production
+
+ÉTAPE 3: Aller dans Settings
+────────────────────────────────────
+Menu de gauche → "Settings"
+
+ÉTAPE 4: Trouver "Root Directory"
+────────────────────────────────────
+Scroller jusqu'à la section "Build & Deploy"
+Trouver le champ "Root Directory"
+Valeur actuelle: py_backend
+
+ÉTAPE 5: SUPPRIMER "py_backend"
+────────────────────────────────────
+1. Cliquer sur l'icône "Edit" (crayon)
+2. EFFACER complètement le texte "py_backend"
+3. Laisser le champ VIDE
+4. Cliquer sur "Save Changes"
+
+ÉTAPE 6: Attendre le redéploiement
+────────────────────────────────────
+⏳ Render va automatiquement redéployer (5-10 minutes)
+📊 Suivre les logs en temps réel
+✅ Attendre "Deploy succeeded"
+
+ÉTAPE 7: Vérifier
+────────────────────────────────────
+Tester: https://clara-backend-production.onrender.com/health
+
+═══════════════════════════════════════════════════════════════════════════════
+
+❓ POURQUOI CETTE SOLUTION?
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre repository GitHub:
+  https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+A probablement cette structure:
+  Back-end-python-V0_03_03_2026/
+  ├── Dockerfile          ← À la RACINE
+  ├── main.py
+  ├── requirements.txt
+  └── ...
+
+Render cherche:
+  Back-end-python-V0_03_03_2026/
+  └── py_backend/         ← Ce dossier N'EXISTE PAS
+      ├── Dockerfile
+      └── ...
+
+Solution: Dire à Render que les fichiers sont à la RACINE (Root Directory vide)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📸 CAPTURES D'ÉCRAN À VÉRIFIER
+
+═══════════════════════════════════════════════════════════════════════════════
+
+S4 (Build & Deploy):
+  ✅ Repository: https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+  ✅ Branch: main
+  ❌ Root Directory: py_backend  ← À SUPPRIMER
+  ✅ Build Command: (vide)
+  ✅ Start Command: py_backend/ $ python main.py --host 0.0.0.0 --port $PORT
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ ATTENTION
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Si après avoir supprimé "Root Directory", l'erreur persiste:
+
+VÉRIFIER sur GitHub:
+  1. Aller sur: https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+  2. Vérifier si vous voyez:
+     - Dockerfile à la racine? → Correct, Root Directory doit être vide
+     - Dossier py_backend/ avec Dockerfile dedans? → Garder Root Directory
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION COMPLÈTE
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Voir: Doc Koyeb deploy/SOLUTION_ERREUR_ROOT_DIRECTORY_RENDER_16_AVRIL_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CHECKLIST
+
+═══════════════════════════════════════════════════════════════════════════════
+
+[ ] Ouvert Render Dashboard
+[ ] Sélectionné clara-backend-production
+[ ] Allé dans Settings
+[ ] Trouvé "Root Directory"
+[ ] Supprimé "py_backend"
+[ ] Laissé le champ VIDE
+[ ] Cliqué sur "Save Changes"
+[ ] Redéploiement démarré
+[ ] Logs vérifiés
+[ ] Déploiement réussi
+[ ] Endpoint /health testé
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 APRÈS LE SUCCÈS
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre backend sera accessible à:
+  https://clara-backend-production.onrender.com
+
+Mettre à jour le frontend:
+  src/services/claraApiService.ts
+  const API_BASE_URL = 'https://clara-backend-production.onrender.com';
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Créé le: 16 Avril 2026
+Auteur: Clara Team
+Statut: Solution validée
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,341 @@
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                  📋 CONFIGURATION ACTUELLE KOYEB - CLARA BACKEND              ║
+║                           Date: 3 Avril 2026                                  ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+🎯 MÉTHODE DE DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ DÉPLOIEMENT VIA GITHUB (Méthode actuelle)
+   Le backend est déployé automatiquement depuis le repository Github
+   Koyeb surveille le repository et redéploie à chaque push sur main
+
+
+📦 INFORMATIONS DU SERVICE KOYEB
+═══════════════════════════════════════════════════════════════════════════════
+
+Service Name:
+   back-end-python-v0-03-03-2026
+
+Service Type:
+   WEB
+
+URL Publique:
+   https://proud-del-saasauditnterne-9f15de46.koyeb.app/
+
+Repository Github:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+   Branch: main
+
+
+⚙️ CONFIGURATION DU SERVICE
+═══════════════════════════════════════════════════════════════════════════════
+
+Région:
+   fra (Frankfurt)
+
+Instance Type:
+   free
+
+Scaling:
+   Min: 0
+   Max: 1
+   Sleep idle delay: 3900s (65 minutes)
+
+Port:
+   5000 (HTTP)
+
+Route:
+   / → port 5000
+
+Health Check:
+   Type: TCP
+   Port: 5000
+   Grace period: 5s
+   Interval: 30s
+   Timeout: 5s
+   Restart limit: 3
+
+Docker:
+   Dockerfile: Dockerfile
+   Workdir: /
+
+
+🌍 VARIABLES D'ENVIRONNEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Scope: region:fra
+
+HOST=0.0.0.0
+PORT=5000
+PYTHONDONTWRITEBYTECODE=1
+PYTHONUNBUFFERED=1
+
+
+🔄 WORKFLOW DE DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣ DÉVELOPPEMENT LOCAL
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ cd py_backend                                                           │
+   │ # Faire vos modifications                                               │
+   │ # Tester localement                                                     │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+2️⃣ COMMIT ET PUSH VERS GITHUB
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ git add .                                                               │
+   │ git commit -m "Description des modifications"                           │
+   │ git push origin main                                                    │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+3️⃣ DÉPLOIEMENT AUTOMATIQUE
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ Koyeb détecte le push sur main                                         │
+   │ → Build automatique avec Dockerfile                                     │
+   │ → Déploiement automatique                                               │
+   │ → Service disponible sur l'URL publique                                 │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+📊 SURVEILLANCE DU DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Via Dashboard Koyeb:
+   https://app.koyeb.com/services/back-end-python-v0-03-03-2026
+
+   Onglets disponibles:
+   - Overview: Vue d'ensemble du service
+   - Metrics: Métriques de performance
+   - Console: Logs en temps réel
+   - Settings: Configuration du service
+
+Via CLI Koyeb (optionnel):
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ # Voir le statut                                                        │
+   │ koyeb service get back-end-python-v0-03-03-2026                        │
+   │                                                                         │
+   │ # Voir les logs                                                         │
+   │ koyeb service logs back-end-python-v0-03-03-2026 --follow              │
+   │                                                                         │
+   │ # Voir les logs de build                                                │
+   │ koyeb service logs back-end-python-v0-03-03-2026 --type build          │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+🔧 CONFIGURATION GITHUB REPOSITORY
+═══════════════════════════════════════════════════════════════════════════════
+
+Repository:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+Structure attendue:
+   Back-end-python-V0_03_03_2026/
+   ├── Dockerfile                    ← Configuration Docker
+   ├── requirements.txt              ← Dépendances Python
+   ├── main.py                       ← Point d'entrée FastAPI
+   ├── .env.example                  ← Template variables d'environnement
+   └── ... (autres fichiers backend)
+
+Fichiers importants:
+   - Dockerfile: Définit comment construire l'image Docker
+   - requirements.txt: Liste des packages Python nécessaires
+   - main.py: Application FastAPI
+
+
+📝 DÉFINITION COMPLÈTE DU DÉPLOIEMENT (JSON)
+═══════════════════════════════════════════════════════════════════════════════
+
+{
+  "name": "back-end-python-v0-03-03-2026",
+  "type": "WEB",
+  "strategy": {
+    "type": "DEPLOYMENT_STRATEGY_TYPE_ROLLING"
+  },
+  "routes": [
+    {
+      "port": 5000,
+      "path": "/",
+      "security_policies": null
+    }
+  ],
+  "ports": [
+    {
+      "port": 5000,
+      "protocol": "http"
+    }
+  ],
+  "proxy_ports": [],
+  "env": [
+    {
+      "scopes": ["region:fra"],
+      "key": "HOST",
+      "value": "0.0.0.0"
+    },
+    {
+      "scopes": ["region:fra"],
+      "key": "PORT",
+      "value": "5000"
+    },
+    {
+      "scopes": ["region:fra"],
+      "key": "PYTHONDONTWRITEBYTECODE",
+      "value": "1"
+    },
+    {
+      "scopes": ["region:fra"],
+      "key": "PYTHONUNBUFFERED",
+      "value": "1"
+    }
+  ],
+  "regions": ["fra"],
+  "scalings": [
+    {
+      "scopes": ["region:fra"],
+      "min": 0,
+      "max": 1,
+      "targets": [
+        {
+          "sleep_idle_delay": {
+            "value": 0,
+            "deep_sleep_value": 3900,
+            "light_sleep_value": 0
+          }
+        }
+      ]
+    }
+  ],
+  "instance_types": [
+    {
+      "scopes": ["region:fra"],
+      "type": "free"
+    }
+  ],
+  "health_checks": [
+    {
+      "grace_period": 5,
+      "interval": 30,
+      "restart_limit": 3,
+      "timeout": 5,
+      "tcp": {
+        "port": 5000
+      }
+    }
+  ],
+  "volumes": [],
+  "config_files": [],
+  "skip_cache": false,
+  "mesh": "DEPLOYMENT_MESH_AUTO",
+  "git": {
+    "repository": "github.com/sekadalle2024/Back-end-python-V0_03_03_2026",
+    "branch": "main",
+    "tag": "",
+    "sha": "",
+    "build_command": "",
+    "run_command": "",
+    "no_deploy_on_push": false,
+    "workdir": "",
+    "docker": {
+      "dockerfile": "Dockerfile",
+      "entrypoint": [],
+      "command": "",
+      "args": [],
+      "target": "",
+      "privileged": false
+    }
+  }
+}
+
+
+🚀 COMMENT DÉPLOYER UNE NOUVELLE VERSION
+═══════════════════════════════════════════════════════════════════════════════
+
+MÉTHODE 1: Push direct vers Github (Recommandé)
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ cd py_backend                                                           │
+   │ # Faire vos modifications                                               │
+   │ git add .                                                               │
+   │ git commit -m "Ajout de nouvelles fonctionnalités"                      │
+   │ git push origin main                                                    │
+   │                                                                         │
+   │ # Koyeb déploie automatiquement                                         │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+MÉTHODE 2: Redéploiement manuel via Dashboard
+   1. Aller sur https://app.koyeb.com
+   2. Sélectionner le service "back-end-python-v0-03-03-2026"
+   3. Cliquer sur "Redeploy" (bouton vert en haut à droite)
+   4. Confirmer le redéploiement
+
+MÉTHODE 3: Via CLI Koyeb (si installée)
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │ koyeb service redeploy back-end-python-v0-03-03-2026                   │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+⚠️ POINTS IMPORTANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. INSTANCE FREE - SLEEP MODE
+   L'instance free s'endort après 65 minutes d'inactivité
+   → Premier appel après le sleep: temps de réponse ~30-60 secondes
+   → Appels suivants: temps de réponse normal
+
+2. NO_DEPLOY_ON_PUSH = false
+   Chaque push sur la branche main déclenche un déploiement automatique
+   → Attention aux commits fréquents pendant le développement
+   → Considérer une branche de développement séparée
+
+3. HEALTH CHECK TCP
+   Koyeb vérifie que le port 5000 répond
+   → Assurez-vous que FastAPI écoute sur 0.0.0.0:5000
+   → Ajoutez un endpoint /health pour des checks plus robustes
+
+4. DOCKERFILE
+   Le Dockerfile doit être à la racine du repository Github
+   → Vérifiez qu'il est bien présent et fonctionnel
+   → Testez le build localement avant de push
+
+
+🔗 LIENS UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+Dashboard Koyeb:
+   https://app.koyeb.com/services/back-end-python-v0-03-03-2026
+
+URL Publique API:
+   https://proud-del-saasauditnterne-9f15de46.koyeb.app/
+
+Repository Github:
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+
+Documentation Koyeb:
+   https://www.koyeb.com/docs
+
+
+✅ STATUT ACTUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+Service: ⚠️ No running instances
+   → Le service est configuré mais aucune instance n'est en cours d'exécution
+   → Cela peut être dû au sleep mode (instance free)
+   → Ou à un problème de déploiement
+
+Actions recommandées:
+   1. Vérifier les logs de déploiement dans le dashboard
+   2. Vérifier que le Dockerfile est correct dans le repository Github
+   3. Faire un redéploiement manuel si nécessaire
+   4. Tester l'URL publique pour réveiller l'instance
+
+
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+En cas de problème:
+   1. Consulter les logs dans le dashboard Koyeb
+   2. Vérifier la configuration du service dans Settings
+   3. Consulter la documentation dans Doc Koyeb deploy/Documentation/
+   4. Contacter le support Koyeb si nécessaire

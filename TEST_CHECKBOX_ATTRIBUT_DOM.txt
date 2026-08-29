@@ -1,0 +1,155 @@
+═══════════════════════════════════════════════════════════════
+  🧪 TEST - Attribut Checked dans le DOM (V6)
+═══════════════════════════════════════════════════════════════
+
+📍 OBJECTIF
+───────────────────────────────────────────────────────────────
+Vérifier que l'attribut checked="checked" est bien présent dans
+le HTML brut pour que n8n puisse identifier les réponses cochées.
+
+
+📍 TEST 1: PAGE DE TEST DÉDIÉE
+───────────────────────────────────────────────────────────────
+http://localhost:3000/test-checkbox-dom-attribute.html
+
+1. Cliquer sur "Cocher Option B"
+2. Cliquer sur "Vérifier le DOM"
+   → Doit afficher "✅ Tous les attributs sont synchronisés"
+
+3. Cliquer sur "Extraire HTML"
+   → Doit afficher "1 checkbox(es) avec attribut checked="checked""
+
+
+📍 TEST 2: DANS LA CONSOLE (DevTools)
+───────────────────────────────────────────────────────────────
+
+// Trouver une checkbox cochée
+const checkbox = document.querySelector('input[type="checkbox"]:checked');
+
+// Vérifier la propriété JavaScript
+checkbox.checked
+// → true ✅
+
+// Vérifier l'attribut HTML
+checkbox.hasAttribute('checked')
+// → true ✅
+
+// Vérifier la valeur de l'attribut
+checkbox.getAttribute('checked')
+// → "checked" ✅
+
+
+📍 TEST 3: INSPECTER LE HTML BRUT
+───────────────────────────────────────────────────────────────
+
+1. Ouvrir DevTools (F12)
+2. Onglet "Elements"
+3. Trouver une checkbox cochée
+4. Vérifier la présence de: checked="checked"
+
+EXEMPLE ATTENDU:
+<input type="checkbox" 
+       checked="checked"
+       style="width: 20px; height: 20px;">
+
+
+📍 TEST 4: EXTRAIRE HTML POUR N8N
+───────────────────────────────────────────────────────────────
+
+// Dans la console
+const table = document.querySelector('table[data-table-id]');
+const html = table.outerHTML;
+
+// Compter les checkboxes cochées
+const checkedCount = (html.match(/checked="checked"/g) || []).length;
+console.log(`${checkedCount} checkbox(es) cochée(s)`);
+
+// Afficher le HTML
+console.log(html);
+
+
+📍 TEST 5: VÉRIFIER LA SYNCHRONISATION
+───────────────────────────────────────────────────────────────
+
+// Trouver une cellule avec checkbox
+const cell = document.querySelector('td[data-checked="true"]');
+const checkbox = cell.querySelector('input[type="checkbox"]');
+
+// Vérifier les 3 indicateurs
+console.log('1. Property:', checkbox.checked);           // → true
+console.log('2. Attribute:', checkbox.hasAttribute('checked')); // → true
+console.log('3. Data-attr:', cell.dataset.checked);      // → "true"
+
+// Tous doivent être synchronisés ✅
+
+
+📍 TEST 6: TESTER LE CHANGEMENT D'ÉTAT
+───────────────────────────────────────────────────────────────
+
+1. Cocher une checkbox
+2. Vérifier: checked="checked" est ajouté
+3. Décocher la checkbox
+4. Vérifier: checked="checked" est supprimé
+
+
+📍 TEST 7: TESTER LA RESTAURATION
+───────────────────────────────────────────────────────────────
+
+1. Cocher une checkbox dans une table CIA
+2. Actualiser la page (F5)
+3. Vérifier que la checkbox est toujours cochée
+4. Inspecter le HTML: checked="checked" doit être présent
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+Checkbox cochée:
+<td data-checked="true" style="background-color: #e8f5e8;">
+  <input type="checkbox" 
+         checked="checked"
+         style="width: 20px; height: 20px;">
+</td>
+
+Checkbox non cochée:
+<td data-checked="false" style="background-color: #f8f9fa;">
+  <input type="checkbox" 
+         style="width: 20px; height: 20px;">
+</td>
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 POUR N8N
+═══════════════════════════════════════════════════════════════
+
+n8n peut maintenant identifier les checkboxes cochées avec:
+
+// Méthode 1: Regex
+const checkedInputs = html.match(/<input[^>]*checked="checked"[^>]*>/g);
+
+// Méthode 2: Parser HTML
+const parser = new DOMParser();
+const doc = parser.parseFromString(html, 'text/html');
+const checkedBoxes = doc.querySelectorAll('input[checked]');
+
+// Méthode 3: XPath
+const checkedBoxes = doc.evaluate(
+  '//input[@checked="checked"]',
+  doc,
+  null,
+  XPathResult.ANY_TYPE,
+  null
+);
+
+
+═══════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+Guide complet:  FIX_V6_CHECKBOX_ATTRIBUT_DOM.md
+Page de test:   public/test-checkbox-dom-attribute.html
+Code source:    public/conso.js (lignes ~630, ~660, ~2246)
+
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,127 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION FUSION CELLULES - TEMPLATES TABLES (CASES 35-43) - VERSION 2
+  Date: 10 Avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+
+Les cellules des colonnes étaient fusionnées dans les templates de tables pour
+certains cases:
+
+1. Cases 40-43: Cellules "Intitule" fusionnées
+2. Cases 36-37: Cellules "Colonne A" fusionnées  
+3. Case 38: Cellules "Domaines" fusionnées
+
+🔍 CAUSE RACINE
+─────────────────────────────────────────────────────────────────────────────
+
+Le problème n'était PAS dans les données JSON, mais dans la conversion Markdown.
+Les cellules vides (même avec un espace " ") étaient traitées comme vides par
+le parseur Markdown et fusionnées visuellement par le rendu HTML/CSS.
+
+✅ SOLUTION APPLIQUÉE (VERSION 2)
+─────────────────────────────────────────────────────────────────────────────
+
+1. Modification de la fonction convertArrayTableToMarkdown():
+   - Les cellules vides sont maintenant converties en tirets "-"
+   - Cela force le rendu Markdown à afficher des cellules distinctes
+
+2. Retour aux chaînes vides "" dans les templates JSON:
+   - Plus besoin d'espaces " " qui ne fonctionnaient pas
+   - La fonction de conversion gère automatiquement les cellules vides
+
+📝 FICHIER MODIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+
+src/services/claraApiService.ts
+
+🔧 MODIFICATIONS TECHNIQUES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Fonction convertArrayTableToMarkdown (ligne ~767):
+   ```typescript
+   // CORRECTION FUSION CELLULES: Utiliser un tiret pour les cellules vides
+   // au lieu d'un espace qui peut être ignoré par le rendu Markdown
+   return cleanValue || "-";
+   ```
+
+2. Templates JSON (cases 36-43):
+   - Toutes les valeurs vides sont maintenant "" (chaînes vides)
+   - La fonction convertArrayTableToMarkdown les convertit en "-"
+
+🎯 CASES CORRIGÉS
+─────────────────────────────────────────────────────────────────────────────
+
+✓ Case 36 - Template_table_simple
+  - Colonnes: No, Colonne A, Colonne B, Colonne C, Colonne D, Colonne E
+  - Valeurs vides converties en "-"
+
+✓ Case 37 - Template_table_etape_de_mission
+  - Table 2: No, Colonne A, Colonne B, Colonne C, Colonne D, Colonne E
+  - Valeurs vides converties en "-"
+
+✓ Case 38 - Template_table_feuille_couverture_test_audit
+  - Table 5: No, domaines, Transaction, Solde Théorique, Solde Physique, 
+             Ecart, Assertion, CTR1, CTR 2, CTR 3, Description, Conclusion
+  - Valeurs vides converties en "-"
+
+✓ Case 40 - Template_table_synthèses_frap
+  - Table 2: no, Intitule, Observation, Constat, Risque, Recommandation
+  - Valeurs vides converties en "-"
+
+✓ Case 41 - Template_table_rapport_provisoire
+  - Table 2: no, Intitule, Observation, Constat, Risque, Recommandation,
+             Commentaire audite, Commentaire auditeur
+  - Valeurs vides converties en "-"
+
+✓ Case 42 - Template_table_rapport_final
+  - Table 2: no, Intitule, Observation, Constat, Risque, Recommandation,
+             Commentaire audite, Commentaire auditeur, Plan action, 
+             Responsable, Delai
+  - Valeurs vides converties en "-"
+
+✓ Case 43 - Template_table_suivi_recos
+  - Table 2: no, Intitule, Observation, Constat, Risque, Recommandation,
+             Commentaire audite, Commentaire auditeur, Plan action, 
+             Responsable, Delai, Evaluation Risque
+  - Valeurs vides converties en "-"
+
+🧪 TESTS À EFFECTUER
+─────────────────────────────────────────────────────────────────────────────
+
+1. Redémarrer le serveur frontend (npm run dev)
+2. Tester chaque case (36-43) dans le chat
+3. Vérifier que les cellules affichent "-" au lieu d'être vides
+4. Vérifier que les cellules des colonnes sont bien distinctes
+5. Vérifier que les bordures des cellules sont visibles
+6. Confirmer qu'il n'y a plus de fusion de cellules
+
+📊 COMMANDES DE TEST
+─────────────────────────────────────────────────────────────────────────────
+
+Dans le chat Claraverse, envoyer:
+
+Template_table_simple
+Template_table_etape_de_mission
+Template_table_feuille_couverture_test_audit
+Template_table_synthèses_frap
+Template_table_rapport_provisoire
+Template_table_rapport_final
+Template_table_suivi_recos
+
+✨ RÉSULTAT ATTENDU
+─────────────────────────────────────────────────────────────────────────────
+
+Toutes les cellules des colonnes doivent être distinctes et séparées par des
+bordures visibles. Les cellules vides affichent maintenant un tiret "-" qui
+force le rendu de cellules distinctes.
+
+💡 POURQUOI CETTE SOLUTION FONCTIONNE
+─────────────────────────────────────────────────────────────────────────────
+
+Le tiret "-" est un caractère visible qui force le parseur Markdown et le
+rendu HTML/CSS à traiter chaque cellule comme ayant du contenu, empêchant
+ainsi la fusion visuelle des cellules.
+
+═══════════════════════════════════════════════════════════════════════════════

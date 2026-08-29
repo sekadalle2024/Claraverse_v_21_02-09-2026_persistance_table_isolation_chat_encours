@@ -1,0 +1,105 @@
+═══════════════════════════════════════════════════════════════
+   À LIRE MAINTENANT - DIAGNOSTIC EXPORT CAC
+═══════════════════════════════════════════════════════════════
+
+SITUATION:
+✅ Corrections appliquées (sélecteur CSS + extraction contenu)
+✅ Dépendances Python installées
+❌ Export CAC ne fonctionne toujours pas
+❌ Rapports audit vides
+
+CAUSE PROBABLE:
+Le problème n'est PAS le sélecteur CSS, mais la LOGIQUE DE DÉTECTION
+des tables FRAP/Recos dans le code JavaScript.
+
+═══════════════════════════════════════════════════════════════
+ACTION IMMÉDIATE (5 MINUTES)
+═══════════════════════════════════════════════════════════════
+
+1. Exécuter le diagnostic backend:
+   → .\diagnostic-export-complet.ps1
+
+2. Ouvrir Claraverse: http://localhost:5173
+
+3. Rafraîchir: Ctrl+F5
+
+4. Ouvrir console: F12
+
+5. Copier-coller ce code dans la console:
+
+// TEST COMPLET
+console.log("═══ TEST DÉTECTION TABLES ═══");
+
+const tables = document.querySelectorAll('div.prose table');
+console.log("1. Nombre de tables:", tables.length);
+
+if (tables.length > 0) {
+  const firstTable = tables[0];
+  console.log("2. Première table:");
+  
+  const rows = firstTable.querySelectorAll('tr');
+  const data = Array.from(rows).map(row => 
+    Array.from(row.querySelectorAll('td, th')).map(cell => cell.textContent.trim())
+  );
+  
+  console.log("   Données:", data);
+  
+  const hasFrap = data.some(row => 
+    row.some(cell => (cell || '').toLowerCase().includes('frap'))
+  );
+  
+  console.log("3. Contient 'frap':", hasFrap);
+  
+  const parentDiv = firstTable.closest('div[class*="prose"]');
+  console.log("4. Parent div trouvé:", !!parentDiv);
+  
+  if (parentDiv) {
+    const tablesInDiv = parentDiv.querySelectorAll('table');
+    console.log("5. Tables dans la div:", tablesInDiv.length);
+  }
+}
+
+console.log("═══ FIN TEST ═══");
+
+6. Copier TOUS les résultats et me les envoyer
+
+═══════════════════════════════════════════════════════════════
+INFORMATIONS CRITIQUES À COLLECTER
+═══════════════════════════════════════════════════════════════
+
+□ Nombre de tables détectées: ___
+□ Contenu de la première table: ___
+□ Contient le mot "frap": oui / non
+□ Parent div trouvé: oui / non
+□ Tables dans la div: ___
+
+═══════════════════════════════════════════════════════════════
+FICHIERS CRÉÉS POUR VOUS
+═══════════════════════════════════════════════════════════════
+
+1. diagnostic-export-complet.ps1
+   → Script PowerShell de diagnostic backend
+
+2. 00_DIAGNOSTIC_URGENT_26_MARS_2026.txt
+   → Instructions détaillées étape par étape
+
+3. ANALYSE_PROBLEME_DETECTION_26_MARS_2026.md
+   → Analyse technique complète du problème
+
+4. 00_LIRE_MAINTENANT_DIAGNOSTIC.txt
+   → Ce fichier (résumé ultra-rapide)
+
+═══════════════════════════════════════════════════════════════
+PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════
+
+Après avoir collecté les informations:
+→ Me les communiquer
+→ Je fournirai la correction exacte à appliquer
+
+═══════════════════════════════════════════════════════════════
+
+Date: 26 Mars 2026
+Priorité: URGENTE
+Temps estimé: 5 minutes
+

@@ -1,0 +1,146 @@
+# 🚀 TEST RAPIDE - CONFIRMATIONS BANCAIRES
+Date: 16 juin 2026
+
+## 🎯 OBJECTIF
+Vérifier que le schéma "Confirmations bancaires" (9 colonnes) fonctionne correctement.
+
+## ✅ ÉTAPES DE TEST
+
+### 1. Ouvrir Claraverse
+- Démarrer l'application
+- Ouvrir un chat
+
+### 2. Créer une table 2 avec Nature de test
+Coller dans le chat:
+```
+| Champ           | Valeur                    |
+|-----------------|---------------------------|
+| Nature de test  | Confirmation bancaire     |
+| Référence       | AA-001                    |
+| Cycle           | Trésorerie               |
+```
+
+### 3. Créer une table principale
+Coller dans le chat (après la table 2):
+```
+| Compte | Libellé          | N     | Ecart | Conclusion |
+|--------|------------------|-------|-------|------------|
+| 512    | Banque BNP       | 1000  | 0     | OK         |
+| 514    | Banque Société   | 2000  | 0     | OK         |
+```
+
+### 4. Utiliser le menu contextuel
+1. Clic droit sur la table principale
+2. Sélectionner "Papier de travail"
+3. Choisir "Cross référence horizontale"
+
+### 5. Vérifier les résultats attendus
+
+#### ✅ Vérification 1: Nombre de cellules
+- **Attendu**: 9 cellules de cross référence
+- **Vérifier**: Compter les cellules [AA1], [AA20], [AA30], etc.
+
+#### ✅ Vérification 2: Pré-remplissage
+- **Attendu**: [AA1] [AA20] [AA30] [AA40] [AA50] [AA60] [AA70] [AA80] [AA90]
+- **Vérifier**: Les références commencent par "AA"
+
+#### ✅ Vérification 3: Alignement
+- **Attendu**: Les 9 cellules s'alignent avec la colonne "Ecart"
+- **Vérifier**: Visuellement, la dernière cellule est sous "Ecart"
+
+#### ✅ Vérification 4: Édition
+1. Double-cliquer sur [AA20]
+2. Modifier en [AA25]
+3. Appuyer sur Entrée
+4. **Attendu**: La modification est sauvegardée
+
+#### ✅ Vérification 5: Persistence
+1. Rafraîchir la page (F5)
+2. **Attendu**: Les modifications sont conservées
+3. **Vérifier**: [AA25] est toujours présent
+
+## 🔍 COMMANDES DE DEBUG
+
+### Voir le stockage
+```javascript
+crossRefCommands.showStorage();
+```
+
+### Retraiter toutes les tables
+```javascript
+crossRefCommands.processAll();
+```
+
+### Restaurer les cross références
+```javascript
+crossRefCommands.restoreAll();
+```
+
+### Effacer le stockage (avec confirmation)
+```javascript
+crossRefCommands.clearStorage();
+```
+
+## 🐛 PROBLÈMES COURANTS
+
+### Problème 1: Pas de cross référence créée
+**Cause**: Nature de test non détectée
+**Solution**: Vérifier que la table 2 contient "Confirmation" ou "bancaire"
+
+### Problème 2: Mauvais nombre de colonnes
+**Cause**: Autre condition détectée en premier
+**Solution**: Utiliser "Confirmation bancaire" explicitement
+
+### Problème 3: Cross référence en double
+**Cause**: Table déjà traitée
+**Solution**: Recharger la page ou supprimer via menu contextuel
+
+### Problème 4: Sauvegarde ne fonctionne pas
+**Cause**: localStorage désactivé ou quota dépassé
+**Solution**: 
+```javascript
+// Tester localStorage
+crossRefCommands.showStorage();
+```
+
+## 📊 RÉSULTATS ATTENDUS
+
+### Table de cross référence horizontale
+```
+┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
+│ [AA1]│[AA20]│[AA30]│[AA40]│[AA50]│[AA60]│[AA70]│[AA80]│[AA90]│
+└──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
+```
+
+### Modèle de calcul
+```
+(A) (B) (C) (D)=(A+B-C) (E) (F) (G) (H)=(E+F-G) (I)=(D)-(H)
+ ↓   ↓   ↓     ↓        ↓   ↓   ↓     ↓           ↓
+[AA1][AA20][AA30][AA40][AA50][AA60][AA70][AA80][AA90]
+```
+
+## ✅ CHECKLIST FINALE
+
+- [ ] 9 cellules créées
+- [ ] Références pré-remplies avec "AA"
+- [ ] Alignement correct avec "Ecart"
+- [ ] Édition fonctionne
+- [ ] Sauvegarde persiste après F5
+- [ ] Console sans erreurs (F12)
+- [ ] Commandes debug fonctionnent
+
+## 📝 NOTES
+
+### Si tout fonctionne
+✅ Le schéma "Confirmations bancaires" est opérationnel!
+
+### Si des problèmes persistent
+1. Ouvrir la console (F12)
+2. Chercher les erreurs "[Cross Ref]"
+3. Vérifier les messages de debug
+4. Exécuter `crossRefCommands.showStorage()`
+
+---
+**Test créé le**: 16 juin 2026  
+**Version**: 1.0  
+**Module**: Cross Référence Horizontale

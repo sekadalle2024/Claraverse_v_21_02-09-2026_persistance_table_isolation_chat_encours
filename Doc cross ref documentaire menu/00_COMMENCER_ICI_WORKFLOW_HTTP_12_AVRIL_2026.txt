@@ -1,0 +1,247 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║          🚀 WORKFLOW N8N - CROSS RÉFÉRENCES DOCUMENTAIRES CAC 🚀           ║
+║                     SOLUTION HTTP REQUEST COMPLÈTE                          ║
+║                          12 AVRIL 2026                                      ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📖 COMMENCEZ ICI - GUIDE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Ce dossier contient TOUT ce dont vous avez besoin pour implémenter le workflow
+n8n d'importation de documents CAC dans Google Drive.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIERS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ WORKFLOW_N8N_XREF_HTTP_SOLUTION.json
+   → Le workflow n8n complet à importer
+   → Utilise des nodes HTTP Request (pas de problème de version)
+   → Prêt à l'emploi
+
+2. 📘 00_SOLUTION_HTTP_REQUEST_COMPLETE_12_AVRIL_2026.txt
+   → Vue d'ensemble de la solution
+   → Architecture du workflow
+   → Guide de test
+
+3. 📗 GUIDE_CONFIGURATION_OAUTH2_GOOGLE_DRIVE.md
+   → Configuration détaillée OAuth2
+   → Étape par étape avec captures d'écran textuelles
+   → Dépannage complet
+
+4. 📄 00_ANALYSE_ERREUR_WORKFLOW.txt
+   → Analyse du problème initial
+   → Pourquoi l'ancienne version ne fonctionnait pas
+
+5. 📄 00_SOLUTION_PROBLEME_GOOGLE_DRIVE_V2.txt
+   → Explication du problème de version
+   → Comparaison v2 vs v3
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 DÉMARRAGE RAPIDE (5 ÉTAPES)
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : CRÉER LE CREDENTIAL OAUTH2
+────────────────────────────────────────────────────────────────────────────────
+1. Ouvrir n8n
+2. Settings > Credentials > New Credential
+3. Choisir "Google OAuth2 API"
+4. Remplir :
+   Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+   Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+   Scopes: 
+   - https://www.googleapis.com/auth/drive
+   - https://www.googleapis.com/auth/drive.file
+5. Connect my account > Autoriser
+6. Save
+
+📖 Détails : Voir GUIDE_CONFIGURATION_OAUTH2_GOOGLE_DRIVE.md
+
+ÉTAPE 2 : IMPORTER LE WORKFLOW
+────────────────────────────────────────────────────────────────────────────────
+1. Ouvrir n8n
+2. Cliquer sur "+" (nouveau workflow)
+3. Menu (⋮) > Import from File
+4. Sélectionner : WORKFLOW_N8N_XREF_HTTP_SOLUTION.json
+5. Le workflow s'ouvre
+
+ÉTAPE 3 : CONFIGURER LES CREDENTIALS
+────────────────────────────────────────────────────────────────────────────────
+Pour CHAQUE node HTTP Request (7 nodes au total) :
+1. Cliquer sur le node
+2. Authentication > OAuth2
+3. Credential to connect with > Sélectionner le credential créé
+4. Fermer le node
+
+Les 7 nodes à configurer :
+✓ Rechercher Dossier CAC
+✓ Créer Dossier CAC
+✓ Rechercher Dossier Client
+✓ Créer Dossier Client
+✓ Créer Cycles
+✓ Rechercher Cycle
+✓ Upload Fichier
+
+ÉTAPE 4 : ACTIVER LE WORKFLOW
+────────────────────────────────────────────────────────────────────────────────
+1. Cliquer sur "Active" en haut à droite
+2. Le workflow est maintenant actif
+
+ÉTAPE 5 : TESTER
+────────────────────────────────────────────────────────────────────────────────
+1. Cliquer sur le node "Cross References Form"
+2. Copier l'URL du formulaire
+3. Ouvrir l'URL dans un navigateur
+4. Remplir le formulaire :
+   - Client: Orange
+   - Exercice: 2025
+   - Cycle: Trésorerie
+   - Cross référence: I1
+   - Document: Lead sheet trésorerie
+   - Fichier: Sélectionner un fichier test
+5. Submit
+6. Vérifier dans Google Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ CE QUE FAIT LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. 📝 Formulaire Web
+   └─> Collecte les informations du document
+
+2. 🔍 Vérification Dossier CAC
+   └─> Cherche si "Dossier CAC" existe
+   └─> Sinon, le crée
+
+3. 🔍 Vérification Dossier Client
+   └─> Cherche "Client-Exercice" (ex: Orange-2025)
+   └─> Sinon, le crée + crée les 10 cycles comptables
+
+4. 🔍 Vérification Cycle
+   └─> Cherche le dossier du cycle (ex: Trésorerie)
+
+5. 📤 Upload du Fichier
+   └─> Upload avec le nom : [Cross référence]-Document
+   └─> Exemple : [I1]-Lead sheet trésorerie.xlsx
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 STRUCTURE CRÉÉE DANS GOOGLE DRIVE
+═══════════════════════════════════════════════════════════════════════════════
+
+Google Drive (root)
+│
+└── 📁 Dossier CAC/
+    │
+    ├── 📁 Orange-2025/
+    │   ├── 📁 Capitaux propres/
+    │   ├── 📁 Charge d'exploitation/
+    │   ├── 📁 Client/
+    │   ├── 📁 Fournisseur/
+    │   ├── 📁 Immobilisations/
+    │   ├── 📁 Impôt et taxes/
+    │   ├── 📁 Personnel/
+    │   ├── 📁 Stock/
+    │   ├── 📁 Trésorerie/
+    │   │   └── 📄 [I1]-Lead sheet trésorerie.xlsx
+    │   └── 📁 Ventes/
+    │
+    └── 📁 Filtectci-2025/
+        └── ... (même structure)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 INTÉGRATION DANS CLARAVERSE
+═══════════════════════════════════════════════════════════════════════════════
+
+Une fois le workflow fonctionnel, vous pouvez l'intégrer dans le menu 
+contextuel de Claraverse :
+
+1. Récupérer l'URL du formulaire
+2. Ajouter une action dans menu.js
+3. Ouvrir l'URL dans une iframe ou nouvelle fenêtre
+4. Pré-remplir les champs si possible
+
+Voir : 00_INTEGRATION_REACT_COMPLETE_12_AVRIL_2026.txt (si disponible)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ POINTS IMPORTANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Utilise l'API REST Google Drive v3 directement
+✓ Pas de dépendance aux nodes Google Drive de n8n
+✓ Compatible avec toutes les versions de n8n
+✓ Nécessite un credential OAuth2 configuré
+✓ Les 7 nodes HTTP Request doivent avoir le credential
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+ERREUR 401 Unauthorized
+→ Le credential OAuth2 n'est pas configuré
+→ Solution : Configurer le credential dans chaque node HTTP Request
+
+ERREUR 403 Forbidden
+→ Les scopes sont incorrects
+→ Solution : Vérifier les 2 scopes dans le credential
+
+Le fichier n'est pas uploadé
+→ Problème avec les binary data
+→ Solution : Vérifier le node "Préparer Upload"
+
+Les dossiers ne sont pas créés
+→ Permissions Google Drive
+→ Solution : Vérifier les permissions du compte Google
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 BESOIN D'AIDE ?
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Lire : 00_SOLUTION_HTTP_REQUEST_COMPLETE_12_AVRIL_2026.txt
+2. Lire : GUIDE_CONFIGURATION_OAUTH2_GOOGLE_DRIVE.md
+3. Vérifier les logs d'exécution dans n8n
+4. Tester chaque node individuellement
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CHECKLIST DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Avant de tester :
+
+□ Credential OAuth2 créé
+□ Compte Google connecté
+□ 2 scopes ajoutés
+□ Workflow importé
+□ 7 nodes HTTP Request configurés avec le credential
+□ Workflow activé
+
+Après le test :
+
+□ Formulaire accessible
+□ Formulaire soumis sans erreur
+□ Dossier CAC créé dans Google Drive
+□ Dossier Client créé
+□ 10 cycles créés
+□ Fichier uploadé avec le bon nom
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 VOUS ÊTES PRÊT !
+═══════════════════════════════════════════════════════════════════════════════
+
+Suivez les 5 étapes du démarrage rapide et votre workflow sera opérationnel
+en moins de 10 minutes.
+
+Bonne chance ! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,244 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    SYNTHÈSE VISUELLE - TEST X-REF                            ║
+║                              28 avril 2026                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 VUE D'ENSEMBLE
+═════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         WORKFLOW "AFFICHER X-REF"                            │
+│                                                                              │
+│  Frontend Claraverse                  n8n Workflow              Google Drive│
+│  ┌──────────────┐                    ┌──────────┐              ┌──────────┐│
+│  │ Table X-Ref  │                    │ Webhook  │              │ Dossier  ││
+│  │              │                    │   POST   │              │   CAC    ││
+│  │ [I30]        │──────────────────▶ │          │──────────────▶│          ││
+│  │ AFRILAND     │  {index, dossier}  │ Search   │   API Call   │ ORANGE-  ││
+│  │              │                    │          │              │  2025    ││
+│  └──────────────┘                    └──────────┘              │          ││
+│         │                                  │                   │ [I30]-   ││
+│         │                                  │                   │ AFRILAND ││
+│         │                                  ▼                   │  .pdf    ││
+│         │                            ┌──────────┐              └──────────┘│
+│         │                            │ Response │                    │     │
+│         │                            │  {file}  │◀───────────────────┘     │
+│         │                            └──────────┘                          │
+│         │                                  │                               │
+│         ▼                                  │                               │
+│  ┌──────────────┐                         │                               │
+│  │ Barre        │◀────────────────────────┘                               │
+│  │ latérale     │                                                          │
+│  │              │                                                          │
+│  │ [I30]-       │                                                          │
+│  │ AFRILAND     │                                                          │
+│  │              │                                                          │
+│  │ [Ouvrir]     │                                                          │
+│  └──────────────┘                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+📁 STRUCTURE GOOGLE DRIVE
+══════════════════════════
+
+Google Drive
+    │
+    └── Dossier CAC
+            │
+            ├── ORANGE-2025
+            │       ├── Capitaux propres
+            │       ├── Charge d'exploitation
+            │       ├── Client
+            │       ├── Fournisseur
+            │       ├── Immobilisations
+            │       ├── Impôt et taxes
+            │       ├── Personnel
+            │       ├── Stock
+            │       ├── Trésorerie
+            │       │       └── [I30]-AFRILAND.pdf ◀── Document de test
+            │       └── Ventes
+            │
+            └── FILTECTCI-2025
+                    └── ...
+
+🔄 FLUX DE DONNÉES
+══════════════════
+
+1. UTILISATEUR CLIQUE SUR LA LIGNE
+   ┌─────────────────────────────────────┐
+   │ Cross references │ Document         │
+   ├─────────────────────────────────────┤
+   │ [I30]            │ AFRILAND    ◀─── │ CLIC
+   └─────────────────────────────────────┘
+
+2. EXTRACTION DES DONNÉES
+   ┌─────────────────────────────────────┐
+   │ Cross ref: [I30]                    │
+   │ Document: AFRILAND                  │
+   │ Nom fichier: [I30]-AFRILAND         │
+   └─────────────────────────────────────┘
+
+3. APPEL API N8N
+   ┌─────────────────────────────────────┐
+   │ POST /webhook/cross_reference       │
+   │ {                                   │
+   │   "index": "[I30]-AFRILAND",        │
+   │   "dossier": "Dossier CAC"          │
+   │ }                                   │
+   └─────────────────────────────────────┘
+
+4. RECHERCHE DANS GOOGLE DRIVE
+   ┌─────────────────────────────────────┐
+   │ 1. Trouver "Dossier CAC"            │
+   │ 2. Rechercher "[I30]-AFRILAND"      │
+   │ 3. Dans tous les sous-dossiers      │
+   └─────────────────────────────────────┘
+
+5. RÉPONSE
+   ┌─────────────────────────────────────┐
+   │ {                                   │
+   │   "success": true,                  │
+   │   "file": {                         │
+   │     "id": "1abc...",                │
+   │     "name": "[I30]-AFRILAND.pdf",   │
+   │     "webViewLink": "https://...",   │
+   │     "mimeType": "application/pdf"   │
+   │   }                                 │
+   │ }                                   │
+   └─────────────────────────────────────┘
+
+6. AFFICHAGE DANS LA BARRE LATÉRALE
+   ┌─────────────────────────────────────┐
+   │ ╔═══════════════════════════════╗   │
+   │ ║ [I30]-AFRILAND            [×] ║   │
+   │ ╠═══════════════════════════════╣   │
+   │ ║ [📂 Ouvrir dans Drive]        ║   │
+   │ ╠═══════════════════════════════╣   │
+   │ ║                               ║   │
+   │ ║   [Document PDF affiché]      ║   │
+   │ ║                               ║   │
+   │ ║                               ║   │
+   │ ╚═══════════════════════════════╝   │
+   └─────────────────────────────────────┘
+
+📋 FICHIERS CRÉÉS
+═════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ FICHIER                                              │ TAILLE │ USAGE        │
+├──────────────────────────────────────────────────────┼────────┼──────────────┤
+│ 00_INDEX_TEST_AFFICHER_XREF_28_AVRIL_2026.md        │  ~15KB │ Navigation   │
+│ 00_RECAP_FINAL_TEST_AFFICHER_XREF_28_AVRIL_2026.txt │  ~10KB │ Récapitulatif│
+│ QUICK_START_TEST_AFFICHER_XREF.txt                  │   ~5KB │ Démarrage    │
+│ 00_GUIDE_TEST_WORKFLOW_AFFICHER_XREF_28_AVRIL_2026  │  ~25KB │ Guide complet│
+│ 00_ANALYSE_WORKFLOW_AFFICHER_XREF_28_AVRIL_2026.md  │  ~20KB │ Analyse      │
+│ COMMANDES_COPIER_COLLER_TEST_XREF.txt               │   ~8KB │ Commandes    │
+│ test-workflow-afficher-xref.ps1                     │   ~5KB │ Script test  │
+│ 00_SYNTHESE_VISUELLE_TEST_XREF_28_AVRIL_2026.txt    │   ~8KB │ Ce fichier   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🎯 TESTS À EFFECTUER
+════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ TEST                                    │ COMMANDE                          │
+├─────────────────────────────────────────┼───────────────────────────────────┤
+│ 1. Test automatique PowerShell          │ .\test-workflow-afficher-xref.ps1 │
+│ 2. Test manuel curl                     │ Voir COMMANDES_COPIER_COLLER      │
+│ 3. Test dans Claraverse                 │ Menu contextuel → Ouvrir X-Ref    │
+│ 4. Test document inexistant             │ curl avec [I999]-Inexistant       │
+│ 5. Test différents types fichiers       │ PDF, Excel, Word, Image           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✅ CHECKLIST RAPIDE
+═══════════════════
+
+PRÉPARATION
+  [ ] n8n accessible (https://n8nsqlite.zeabur.app)
+  [ ] Workflow "Cross References - Search" ACTIF
+  [ ] Credentials Google Drive configurés
+  [ ] Dossier "Dossier CAC" existe
+  [ ] Document [I30]-AFRILAND.pdf créé et placé
+
+TESTS
+  [ ] Script PowerShell exécuté
+  [ ] Réponse JSON reçue avec success: true
+  [ ] Informations du fichier complètes
+  [ ] Affichage dans Claraverse OK
+  [ ] Barre latérale s'affiche
+  [ ] Document visible
+  [ ] Bouton "Ouvrir dans Drive" fonctionne
+
+VALIDATION
+  [ ] Tous les tests passent
+  [ ] Aucune erreur dans la console
+  [ ] Performance acceptable
+  [ ] Documentation complète
+
+📊 RÉSULTATS ATTENDUS
+═════════════════════
+
+SUCCÈS ✅
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ {                                                                            │
+│   "success": true,                                                           │
+│   "file": {                                                                  │
+│     "id": "1abc...",                                                         │
+│     "name": "[I30]-AFRILAND.pdf",                                            │
+│     "webViewLink": "https://drive.google.com/file/d/...",                    │
+│     "webContentLink": "https://drive.google.com/uc?id=...",                  │
+│     "thumbnailLink": "https://...",                                          │
+│     "iconLink": "https://...",                                               │
+│     "mimeType": "application/pdf",                                           │
+│     "size": "1234567",                                                       │
+│     "createdTime": "2026-04-28T10:00:00.000Z",                               │
+│     "modifiedTime": "2026-04-28T10:00:00.000Z"                               │
+│   },                                                                         │
+│   "searchTerm": "[I30]-AFRILAND",                                            │
+│   "dossier": "Dossier CAC"                                                   │
+│ }                                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+ÉCHEC ❌
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ {                                                                            │
+│   "success": false,                                                          │
+│   "message": "Document non trouvé dans Google Drive",                        │
+│   "searchTerm": "[I30]-AFRILAND",                                            │
+│   "dossier": "Dossier CAC"                                                   │
+│ }                                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🔧 DÉPANNAGE RAPIDE
+═══════════════════
+
+PROBLÈME: Document non trouvé
+  ➜ Vérifier le nom exact: [I30]-AFRILAND
+  ➜ Vérifier l'emplacement dans "Dossier CAC"
+  ➜ Vérifier les permissions Google Drive
+
+PROBLÈME: Erreur de connexion
+  ➜ Vérifier que n8n est actif
+  ➜ Vérifier les credentials Google Drive
+  ➜ Consulter les logs n8n
+
+PROBLÈME: Barre latérale ne s'affiche pas
+  ➜ Ouvrir la console (F12)
+  ➜ Vérifier les erreurs JavaScript
+  ➜ Rafraîchir la page (Ctrl+F5)
+
+🎉 CONCLUSION
+═════════════
+
+Le workflow "Afficher X-Ref documentaire" est:
+  ✅ Bien conçu
+  ✅ Efficace
+  ✅ Facile à utiliser
+  ✅ Bien intégré dans Claraverse
+
+Le test avec [I30]-AFRILAND validera le bon fonctionnement.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PROCHAINE ÉTAPE: .\test-workflow-afficher-xref.ps1
+
+═══════════════════════════════════════════════════════════════════════════════

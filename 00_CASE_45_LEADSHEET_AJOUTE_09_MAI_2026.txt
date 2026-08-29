@@ -1,0 +1,71 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CASE 45 : LEADSHEET - AJOUTÉ AVEC SUCCÈS
+  Date : 09 mai 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Case 45 ajouté dans le switch router de claraApiService.ts
+
+📍 EMPLACEMENT : src/services/claraApiService.ts
+
+🔧 MODIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣ AJOUT DE LA CONDITION DANS getN8nEndpointWithInfo()
+   Ligne ~150-156 :
+   
+   // Case 45: Leadsheet
+   else if (msg.includes("Leadsheet")) {
+     routeKey = "leadsheet";
+     caseName = "Case 45";
+   }
+
+2️⃣ AJOUT DE L'ENDPOINT DANS resolveEndpointFromRouteKey()
+   Ligne ~295-297 :
+   
+   case "leadsheet":
+     return "https://t22wtwxl.rpcld.app/webhook/leadsheet";
+
+📊 DÉTAILS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+• Condition de détection : user_message contient "Leadsheet"
+• Endpoint n8n : https://t22wtwxl.rpcld.app/webhook/leadsheet
+• Route key : "leadsheet"
+• Case name : "Case 45"
+• Position : Après Case 44 (Editeur), avant Cases 35-43 (Templates)
+
+🎯 COMPORTEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Lorsqu'un message utilisateur contient le mot "Leadsheet" :
+1. Le router détecte automatiquement le Case 45
+2. L'endpoint privé n8n est appelé : https://t22wtwxl.rpcld.app/webhook/leadsheet
+3. La réponse est traitée normalement par le service
+
+✅ VALIDATION
+═══════════════════════════════════════════════════════════════════════════════
+
+• Aucune erreur TypeScript détectée
+• Structure du switch router préservée
+• Cases 1-44 restent inchangés
+• Endpoint correctement configuré
+
+📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+• Le case 45 est sensible à la casse : "Leadsheet" (avec L majuscule)
+• L'endpoint est privé (domaine rpcld.app)
+• Le case 45 a la priorité sur les cases par défaut (Case 1 et Case 8)
+
+🧪 TEST SUGGÉRÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour tester le Case 45, envoyez un message contenant "Leadsheet" :
+Exemple : "Afficher le Leadsheet du dossier"
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ MISSION ACCOMPLIE - CASE 45 OPÉRATIONNEL
+═══════════════════════════════════════════════════════════════════════════════

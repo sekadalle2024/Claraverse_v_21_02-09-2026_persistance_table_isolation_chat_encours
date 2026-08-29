@@ -1,0 +1,302 @@
+═══════════════════════════════════════════════════════════════════════════════
+  QUICK TEST - REVUE MANAGER ACCORDÉON
+  Intégration complète avec persistance
+  26 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 OBJECTIF
+──────────
+Tester l'intégration du composant RevueManagerAccordion dans le système
+de papiers de travail avec support de la persistance localStorage.
+
+🎯 MODIFICATIONS EFFECTUÉES
+───────────────────────────
+
+1. ✅ claraPapierTravailService.ts
+   - Nouvelle méthode processManagerReview() avec persistance
+   - Nouvelle méthode detectStatut() pour détection automatique
+   - Chargement automatique depuis localStorage si disponible
+
+2. ✅ RevueManagerAccordion.tsx
+   - Composant complet avec toutes les fonctionnalités
+   - Ajout/suppression de points
+   - Modification en temps réel
+   - Sauvegarde persistante
+
+3. ✅ Documentation complète
+   - INTEGRATION_REVUE_MANAGER_ACCORDEON.md
+
+🧪 TEST 1 : VÉRIFIER LE SERVICE
+────────────────────────────────
+
+1. Ouvrir la console développeur (F12)
+
+2. Tester la détection de papier de travail :
+   
+   const service = new ClaraPapierTravailService();
+   const testData = {
+     "Etape mission - Feuille couverture": [
+       {
+         "table 1": [
+           { "Nature de test": "Rapprochement" }
+         ]
+       }
+     ]
+   };
+   console.log(service.detectPapierTravail(testData)); // Devrait retourner true
+
+3. Tester le traitement de la revue manager :
+
+   const fullData = {
+     "Etape mission - Feuille couverture": [
+       {
+         "table 0 - Signature worksheet": [
+           { "Référence": "TEST-001", "Preparer": "KMP", "Reviewer": "JFK" }
+         ]
+       },
+       {
+         "table 10 - Revue manager": [
+           { "no": "1", "Superviseur": "Commentaire superviseur", "Preparer": "Commentaire préparateur" },
+           { "no": "2", "Superviseur": "Autre commentaire", "Preparer": "Autre préparateur" }
+         ]
+       }
+     ]
+   };
+   
+   const result = service.process(fullData);
+   console.log(result); // Devrait contenir __PAPIER_TRAVAIL__ + JSON
+
+🧪 TEST 2 : VÉRIFIER LA PERSISTANCE
+────────────────────────────────────
+
+1. Ouvrir la console développeur
+
+2. Créer des données de test :
+
+   const testPoints = [
+     {
+       num: 1,
+       titre: "Point de test 1",
+       statut: "ok",
+       prep: "Commentaire préparateur 1",
+       rev: "Commentaire reviewer 1"
+     },
+     {
+       num: 2,
+       titre: "Point de test 2",
+       statut: "warn",
+       prep: "Commentaire préparateur 2",
+       rev: "Commentaire reviewer 2"
+     }
+   ];
+
+3. Sauvegarder dans localStorage :
+
+   localStorage.setItem('clara_revue_manager_TEST-001', JSON.stringify(testPoints));
+
+4. Vérifier la sauvegarde :
+
+   const saved = localStorage.getItem('clara_revue_manager_TEST-001');
+   console.log(JSON.parse(saved));
+
+5. Nettoyer :
+
+   localStorage.removeItem('clara_revue_manager_TEST-001');
+
+🧪 TEST 3 : TESTER LE COMPOSANT
+────────────────────────────────
+
+1. Créer une page de test HTML :
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Revue Manager</title>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="module">
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import RevueManagerAccordion from './src/components/Clara_Components/RevueManagerAccordion.tsx';
+    
+    const testPoints = [
+      {
+        num: 1,
+        titre: "Étendue de l'échantillon",
+        statut: "ok",
+        prep: "Échantillon de 20 PV couvrant l'exercice 2023",
+        rev: "Étendue validée. Aucun ajustement requis."
+      },
+      {
+        num: 2,
+        titre: "Anomalie significative",
+        statut: "ko",
+        prep: "Écart de −150 000 FCFA détecté",
+        rev: "Point critique confirmé. Ajustement requis."
+      },
+      {
+        num: 3,
+        titre: "Faiblesses CI",
+        statut: "warn",
+        prep: "Deux PV avec défauts de signature",
+        rev: "À intégrer dans la lettre de recommandations."
+      }
+    ];
+    
+    ReactDOM.render(
+      <RevueManagerAccordion
+        points={testPoints}
+        reference="TEST-001"
+        preparer="KMP"
+        reviewer="JFK"
+        onSave={(points) => console.log('Sauvegardé:', points)}
+      />,
+      document.getElementById('root')
+    );
+  </script>
+</body>
+</html>
+
+2. Actions à tester :
+   - ✓ Cliquer sur un point pour l'ouvrir/fermer
+   - ✓ Modifier le titre d'un point
+   - ✓ Changer le statut (Validé/À suivre/À ajuster)
+   - ✓ Modifier les commentaires Preparer/Reviewer
+   - ✓ Cliquer sur "Ajouter un point"
+   - ✓ Cliquer sur l'icône poubelle pour supprimer
+   - ✓ Cliquer sur "Enregistrer la revue"
+   - ✓ Recharger la page → vérifier que les données persistent
+
+🧪 TEST 4 : VÉRIFIER L'INTÉGRATION COMPLÈTE
+────────────────────────────────────────────
+
+1. Envoyer un message avec "Nature de test" dans Claraverse
+
+2. Vérifier dans la console :
+   [RevueManager] Loaded X points from localStorage for REF-XXX
+   OU
+   [RevueManager] Processing X points from raw data
+
+3. Vérifier l'affichage :
+   - Le composant apparaît après les légendes
+   - Les points sont affichés correctement
+   - Les badges de statut sont colorés
+   - Les boutons fonctionnent
+
+4. Tester la persistance :
+   - Modifier un point
+   - Cliquer sur "Enregistrer"
+   - Envoyer un nouveau message avec le même test
+   - Vérifier que les modifications sont conservées
+
+📊 STRUCTURE DES DONNÉES
+────────────────────────
+
+Entrée n8n (table 10) :
+{
+  "no": "1",
+  "Superviseur": "Commentaire superviseur",
+  "Preparer": "Commentaire préparateur"
+}
+
+Sortie transformée (RevuePoint) :
+{
+  "num": 1,
+  "titre": "Point de revue",
+  "statut": "ok",
+  "prep": "Commentaire préparateur",
+  "rev": "Commentaire superviseur"
+}
+
+Clé localStorage :
+clara_revue_manager_${reference}
+
+Exemple : clara_revue_manager_Test-Caisse-001
+
+🔍 DÉTECTION AUTOMATIQUE DU STATUT
+───────────────────────────────────
+
+Mots-clés détectés :
+
+✓ "ok" → val, ok, satisf
+⚠ "warn" → suivre, warn, attention
+✗ "ko" → ajust, ko, anomal
+
+Par défaut :
+- Si contenu présent → "ok"
+- Si vide → "warn"
+
+🎨 PALETTE DE COULEURS
+──────────────────────
+
+Bleu (principal) : #1855A3
+Vert (validé)    : #EAF3DE / #3B6D11
+Ambre (à suivre) : #FAEEDA / #854F0B
+Rouge (à ajuster): #FCEBEB / #A32D2D
+
+📝 COMMANDES UTILES
+───────────────────
+
+# Voir toutes les clés localStorage
+Object.keys(localStorage).filter(k => k.startsWith('clara_revue_manager_'))
+
+# Voir une clé spécifique
+localStorage.getItem('clara_revue_manager_TEST-001')
+
+# Supprimer une clé
+localStorage.removeItem('clara_revue_manager_TEST-001')
+
+# Supprimer toutes les clés revue manager
+Object.keys(localStorage)
+  .filter(k => k.startsWith('clara_revue_manager_'))
+  .forEach(k => localStorage.removeItem(k))
+
+✅ CHECKLIST DE VALIDATION
+───────────────────────────
+
+Service claraPapierTravailService :
+□ Détecte correctement les papiers de travail
+□ Extrait la table 10 (Revue manager)
+□ Charge depuis localStorage si disponible
+□ Transforme les données au bon format
+□ Détecte automatiquement les statuts
+
+Composant RevueManagerAccordion :
+□ Affiche la page de couverture
+□ Affiche tous les points de revue
+□ Ouvre/ferme les sections au clic
+□ Permet la modification des titres
+□ Permet le changement de statut
+□ Permet la modification des commentaires
+□ Bouton "Ajouter" fonctionne
+□ Bouton "Supprimer" fonctionne (avec confirmation)
+□ Bouton "Enregistrer" fonctionne
+□ Indicateur "non enregistré" s'affiche
+□ Persistance fonctionne après rechargement
+
+Intégration :
+□ Positionné après les légendes
+□ Reçoit les bonnes props
+□ Callback onSave fonctionne
+□ Pas d'erreurs console
+□ Performance acceptable
+
+🚀 PROCHAINES ÉTAPES
+────────────────────
+
+1. ✅ Service mis à jour
+2. ✅ Composant créé
+3. ⏳ Intégrer dans le renderer principal
+4. ⏳ Tester avec données réelles
+5. ⏳ Ajouter export PDF si nécessaire
+
+📚 DOCUMENTATION
+────────────────
+
+Voir : Doc papier de travail javascript/INTEGRATION_REVUE_MANAGER_ACCORDEON.md
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU GUIDE DE TEST
+═══════════════════════════════════════════════════════════════════════════════

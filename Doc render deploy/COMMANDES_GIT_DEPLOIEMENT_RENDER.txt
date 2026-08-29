@@ -1,0 +1,147 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║              📦 COMMANDES GIT - SAUVEGARDER LE TRAVAIL                       ║
+║                         16 avril 2026                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🎯 OBJECTIF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Sauvegarder les modifications sur GitHub avant le déploiement Render
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 FICHIERS MODIFIÉS ET CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MODIFIÉ
+✅ py_backend/main.py
+
+CRÉÉS
+✅ render.yaml
+✅ 00_DEPLOIEMENT_RENDER_INTERFACE_WEB_16_AVRIL_2026.txt
+✅ QUICK_START_DEPLOIEMENT_RENDER.txt
+✅ 00_PRET_POUR_DEPLOIEMENT_RENDER_16_AVRIL_2026.txt
+✅ 00_LIRE_MAINTENANT_DEPLOIEMENT_RENDER.txt
+✅ 00_SYNTHESE_FINALE_DEPLOIEMENT_RENDER_16_AVRIL_2026.txt
+✅ AIDE_CHOIX_PLAN_DEPLOIEMENT.txt
+✅ COMMIT_MESSAGE_DEPLOIEMENT_RENDER_16_AVRIL_2026.txt
+✅ COMMANDES_GIT_DEPLOIEMENT_RENDER.txt
+✅ LISTE_FICHIERS_RENDER_CLI_16_AVRIL_2026.md
+✅ 00_SYNTHESE_VISUELLE_RENDER_CLI_16_AVRIL_2026.txt
+✅ 00_RECAP_FINAL_RENDER_CLI_16_AVRIL_2026.txt
+✅ COMPARAISON_TARIFS_SANS_COLD_START_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/ASTUCE_EVITER_COLD_START_RENDER_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/00_INDEX_DEPLOIEMENT_RENDER_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RENDER_CLI_16_AVRIL_2026.md
+✅ Doc Koyeb deploy/Scripts/deploy-render-cli.ps1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 COMMANDES GIT (COPIER-COLLER)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. Vérifier le statut
+git status
+
+# 2. Ajouter tous les fichiers
+git add .
+
+# 3. Créer le commit
+git commit -m "feat: Configuration complète pour déploiement Render (Plan Starter)
+
+- Ajout support variable PORT dans main.py (compatible Render/Railway)
+- Création render.yaml avec configuration complète
+- Documentation complète (11 fichiers)
+- Guides de déploiement (Starter, Free+UptimeRobot, Railway)
+- Astuces pour éviter cold start gratuit
+- Comparaison détaillée des plans
+
+Date: 16 avril 2026"
+
+# 4. Pousser sur GitHub
+git push origin main
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔍 VÉRIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après le push, vérifiez sur GitHub :
+
+1. Allez sur https://github.com/votre-username/Back-end-python-V0_03_03_2026
+
+2. Vérifiez que les fichiers sont présents :
+   ✅ render.yaml (à la racine)
+   ✅ py_backend/main.py (modifié)
+   ✅ Documentation (fichiers 00_*.txt)
+
+3. Vérifiez le dernier commit :
+   ✅ Message : "feat: Configuration complète pour déploiement Render..."
+   ✅ Date : 16 avril 2026
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  EN CAS DE PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLÈME : "fatal: not a git repository"
+SOLUTION :
+cd Back-end-python-V0_03_03_2026
+git init
+git remote add origin https://github.com/votre-username/Back-end-python-V0_03_03_2026.git
+
+PROBLÈME : "error: failed to push some refs"
+SOLUTION :
+git pull origin main --rebase
+git push origin main
+
+PROBLÈME : "Permission denied (publickey)"
+SOLUTION :
+# Vérifier la clé SSH
+ssh -T git@github.com
+
+# Ou utiliser HTTPS
+git remote set-url origin https://github.com/votre-username/Back-end-python-V0_03_03_2026.git
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 APRÈS LE PUSH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ Modifications sauvegardées sur GitHub
+
+2. 🚀 Prêt pour le déploiement Render
+
+3. 📖 Ouvrez : QUICK_START_DEPLOIEMENT_RENDER.txt
+
+4. 🌐 Allez sur : https://render.com
+
+5. 🎉 Déployez en 10 minutes !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 ASTUCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Render se connecte automatiquement à votre repository GitHub.
+Chaque push sur la branche main déclenchera un redéploiement automatique !
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ git status exécuté
+□ git add . exécuté
+□ git commit créé
+□ git push réussi
+□ Fichiers vérifiés sur GitHub
+□ Prêt pour le déploiement Render
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 PRÊT POUR LE DÉPLOIEMENT !
+
+Ouvrez QUICK_START_DEPLOIEMENT_RENDER.txt maintenant ! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

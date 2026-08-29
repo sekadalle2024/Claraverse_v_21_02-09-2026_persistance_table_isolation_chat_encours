@@ -1,0 +1,157 @@
+═══════════════════════════════════════════════════════════════════════════════
+  SOLUTION FINALE - PROBLÈME FORMAT TABLEAUX MARKDOWN
+  Date: 31 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+
+Le front-end affiche du texte brut au lieu de tableaux Markdown formatés :
+
+  ❌ ACTUEL:
+  **Tableau entete**:**Etape de mission**: Programme de travail...
+
+  ✅ ATTENDU:
+  | Rubrique | Description |
+  |----------|-------------|
+  | **Etape de mission** | Programme de travail |
+
+
+🔍 CAUSE RACINE
+─────────────────────────────────────────────────────────────────────────────
+
+Le node Code dans n8n retourne :
+  [{ json: { data: {...} } }]
+
+Mais claraApiService.ts attend :
+  [{ data: {...} }]
+
+La propriété "json" supplémentaire empêche la détection du FORMAT 4 !
+
+Dans claraApiService.ts (ligne 1245), la condition est :
+  if (firstItem && typeof firstItem === "object" && "data" in firstItem)
+
+Cette condition échoue car firstItem = { json: { data: {...} } }
+donc "data" n'est PAS directement dans firstItem, mais dans firstItem.json
+
+
+🔧 SOLUTION
+─────────────────────────────────────────────────────────────────────────────
+
+MODIFIER LA DERNIÈRE LIGNE DU NODE CODE dans n8n :
+
+  ❌ ANCIEN CODE (ne fonctionne pas):
+  return [{ json: { data: finalData } }];
+
+  ✅ NOUVEAU CODE (fonctionne):
+  return [{ data: finalData }];
+
+
+📋 ÉTAPES D'APPLICATION
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir n8n : https://t22wtwxl.rpcld.app
+
+2. Ouvrir le workflow "Programme contrôle comptes"
+
+3. Cliquer sur le node "Parseur JSON + Format"
+
+4. REMPLACER TOUT LE CONTENU par le fichier :
+   n8n_node_code_SOLUTION_FINALE.js
+
+5. Sauvegarder le workflow
+
+6. Tester manuellement dans n8n
+
+7. Tester dans l'application Clara
+
+
+🧪 VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+DANS N8N :
+──────────
+Chercher dans les logs du node Code :
+  ✅ "🎯 [SOLUTION FINALE] STRUCTURE RETOURNÉE: [{ data: {...} }] SANS "json""
+  ✅ "hasJsonProperty: false"
+
+DANS LE NAVIGATEUR :
+────────────────────
+Ouvrir la console (F12) et chercher :
+  ✅ "✅ FORMAT 4 DETECTE"
+  ✅ "🔄 Début de la conversion en Markdown..."
+  ✅ "✅ Conversion terminée: X caractères générés"
+
+DANS L'APPLICATION :
+────────────────────
+Les tableaux doivent s'afficher correctement avec :
+  ✅ Tableau d'en-tête avec bordures
+  ✅ Tableau des processus avec colonnes alignées
+  ✅ Pas de texte brut
+
+
+🚨 SI LE PROBLÈME PERSISTE
+─────────────────────────────────────────────────────────────────────────────
+
+1. Exécuter le script de diagnostic :
+   .\test-webhook-programme-controle.ps1
+
+2. Vérifier la structure exacte retournée par le webhook
+
+3. Consulter : 00_DIAGNOSTIC_PROBLEME_PERSISTANT.txt
+
+
+📊 DIFFÉRENCE ENTRE LES VERSIONS
+─────────────────────────────────────────────────────────────────────────────
+
+VERSION ULTRA ROBUSTE (ne fonctionne pas):
+  return [{ json: { data: finalData } }];
+  
+  Résultat : claraApiService.ts ne détecte pas le FORMAT 4
+  car "data" n'est pas directement dans l'objet
+
+VERSION SOLUTION FINALE (fonctionne):
+  return [{ data: finalData }];
+  
+  Résultat : claraApiService.ts détecte le FORMAT 4
+  car "data" est directement dans l'objet
+
+
+🎓 EXPLICATION TECHNIQUE
+─────────────────────────────────────────────────────────────────────────────
+
+Dans claraApiService.ts, la fonction normalizeN8nResponse() vérifie :
+
+  const firstItem = result[0];
+  if (firstItem && typeof firstItem === "object" && "data" in firstItem) {
+    // FORMAT 4 détecté
+    const dataContent = firstItem.data;
+    contentToDisplay = this.convertStructuredDataToMarkdown(dataContent);
+  }
+
+Pour que cette condition soit vraie, il faut que :
+  result[0] = { data: {...} }
+
+Et PAS :
+  result[0] = { json: { data: {...} } }
+
+Car dans le second cas, "data" n'est pas directement dans result[0],
+mais dans result[0].json
+
+
+💡 POURQUOI LA PROPRIÉTÉ "json" ÉTAIT AJOUTÉE ?
+─────────────────────────────────────────────────────────────────────────────
+
+Dans n8n, la convention habituelle est de retourner :
+  return [{ json: { ... } }];
+
+Mais pour le FORMAT 4 de claraApiService.ts, il faut retourner :
+  return [{ data: { ... } }];
+
+C'est une exception à la convention n8n, mais c'est nécessaire pour que
+la détection du FORMAT 4 fonctionne correctement.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

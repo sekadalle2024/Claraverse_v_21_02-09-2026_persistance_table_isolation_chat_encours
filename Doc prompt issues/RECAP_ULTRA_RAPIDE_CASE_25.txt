@@ -1,0 +1,70 @@
+═══════════════════════════════════════════════════════════════════════════
+  RÉCAPITULATIF ULTRA-RAPIDE - CORRECTION CASE 25
+  29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLÈME
+═══════════════════════════════════════════════════════════════════════════
+
+Notification affiche Case 25 ✅
+Mais endpoint exécuté = Case 1 ❌
+
+Cause: Le message contient "Command" → Case 8 refuse → tombe dans Case 1
+
+═══════════════════════════════════════════════════════════════════════════
+✅ SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+Réorganisation du router dans claraApiService.ts:
+
+AVANT:
+Cases mélangées → Case 8 vérifie ABSENCE de "Command" → conflit
+
+APRÈS:
+1. Cases spécifiques (2-33) en PREMIER
+2. Cases par défaut (1, 8) en DERNIER
+
+Résultat: Case 25 a maintenant la priorité absolue
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TEST RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Redémarrer: .\stop-claraverse.ps1 puis .\start-claraverse.ps1
+
+2. Envoyer ce message:
+   [Command] : Frap
+   [Cycle] : RH
+   [test] : AA010
+   [reference] : test sur la validation des procedure RH
+   [Assertion] = validité
+   [Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+3. Vérifier:
+   ✅ Notification: "Case 25 : recos_controle_interne"
+   ✅ URL: .../webhook/recos_contrôle_interne_comptable
+   ✅ Réponse: Tables HTML avec en-têtes rouges
+
+═══════════════════════════════════════════════════════════════════════════
+📁 FICHIERS
+═══════════════════════════════════════════════════════════════════════════
+
+Modifié:
+- src/services/claraApiService.ts (fonction getN8nEndpointWithInfo)
+
+Documentation:
+- 00_CORRECTION_ROUTER_CASE_25_29_MARS_2026.txt (vue d'ensemble)
+- DIAGNOSTIC_TECHNIQUE_ROUTER_CASE_25.md (analyse détaillée)
+- QUICK_TEST_CORRECTION_CASE_25.txt (guide de test)
+- INDEX_CORRECTION_ROUTER_CASE_25_29_MARS_2026.md (index complet)
+
+═══════════════════════════════════════════════════════════════════════════
+✅ STATUT
+═══════════════════════════════════════════════════════════════════════════
+
+[✅] Problème identifié
+[✅] Solution implémentée
+[✅] Documentation créée
+[⏳] Test en attente
+
+═══════════════════════════════════════════════════════════════════════════

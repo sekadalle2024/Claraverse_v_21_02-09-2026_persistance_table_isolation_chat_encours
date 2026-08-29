@@ -1,0 +1,104 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 TEST RAPIDE - EXPORT TEMPLATE EXCEL (TOUTES LES TABLES)
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 09 Mai 2026
+⏱️  Durée: 2 minutes
+🎯 Objectif: Vérifier que toutes les tables sont exportées
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPES DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣  PRÉPARER LE TEST
+   ─────────────────
+   • Ouvrir Claraverse dans le navigateur
+   • Créer un message avec plusieurs tables (minimum 3 tables)
+   • Ou utiliser un message existant avec plusieurs tables
+
+2️⃣  EXÉCUTER L'EXPORT
+   ──────────────────
+   • Cliquer sur n'importe quelle table dans le message
+   • Clic droit pour ouvrir le menu contextuel
+   • Aller dans la section "Excel" (icône 📁)
+   • Cliquer sur "Exporter template Excel"
+
+3️⃣  VÉRIFIER LE RÉSULTAT
+   ─────────────────────
+   • Un fichier Excel doit être téléchargé
+   • Nom: claraverse_template_YYYY-MM-DDTHH-MM-SS.xlsx
+   • Ouvrir le fichier Excel
+
+4️⃣  VALIDER LE CONTENU
+   ───────────────────
+   ✓ Toutes les tables du message sont présentes
+   ✓ Les tables sont séparées par une ligne vide
+   ✓ Les en-têtes sont en rouge bordeaux (#380101)
+   ✓ Les données sont correctement formatées
+   ✓ Les colonnes ont une largeur adaptée
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CRITÈRES DE SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ TOUTES les tables du message sont exportées (pas seulement la table active)
+✓ Le fichier Excel contient une seule feuille "Template Export"
+✓ Les tables sont bien séparées visuellement
+✓ Le formatage est cohérent (en-têtes, bordures, couleurs)
+✓ Aucune erreur dans la console (F12)
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 VÉRIFICATION CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+Ouvrir la console (F12) et vérifier les logs:
+
+✅ Logs attendus:
+   ✅ [Export Template] Sélecteur utilisé: div.prose table
+   🔍 [Export Template] X table(s) trouvée(s)
+   📊 Export template: X tables trouvées dans le contexte
+   ✅ Export template terminé! (X tables)
+
+❌ Logs d'erreur à surveiller:
+   ⚠️ Aucune table trouvée dans le contexte actuel
+   ❌ Erreur: ...
+
+═══════════════════════════════════════════════════════════════════════════════
+  🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME: Aucune table trouvée
+SOLUTION: Vérifier que les tables ont la classe CSS "prose" dans leur div parente
+
+PROBLÈME: Seulement la table active est exportée
+SOLUTION: Vérifier que le code modifié est bien chargé (Ctrl+F5 pour rafraîchir)
+
+PROBLÈME: Erreur dans la console
+SOLUTION: Vérifier les logs et contacter le support technique
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 EXEMPLE DE MESSAGE DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Demander à l'assistant de créer un message avec plusieurs tables:
+
+"Crée 3 tables de test:
+1. Table des risques (5 lignes)
+2. Table des recommandations (3 lignes)
+3. Table du plan d'action (4 lignes)"
+
+Puis tester l'export template Excel sur ce message.
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 Fichier Excel avec:
+   • Feuille unique: "Template Export"
+   • 3 tables complètes
+   • Lignes vides entre les tables
+   • En-têtes formatés en rouge bordeaux
+   • Bordures noires sur toutes les cellules
+   • Largeurs de colonnes adaptées
+
+═══════════════════════════════════════════════════════════════════════════════

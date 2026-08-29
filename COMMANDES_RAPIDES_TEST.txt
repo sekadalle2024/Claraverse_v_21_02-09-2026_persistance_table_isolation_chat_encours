@@ -1,0 +1,227 @@
+================================================================================
+COMMANDES RAPIDES - TEST CORRECTIONS FORMAT LIASSE
+================================================================================
+Date: 23 mars 2026
+Statut: ✅ PRÊT POUR TEST
+
+================================================================================
+1. VÉRIFIER QUE LE BACKEND EST ACTIF
+================================================================================
+
+Invoke-WebRequest -Uri "http://127.0.0.1:5000/health" -UseBasicParsing
+
+Résultat attendu: StatusCode 200
+
+
+================================================================================
+2. OUVRIR L'INTERFACE WEB
+================================================================================
+
+http://localhost:5173
+
+
+================================================================================
+3. TESTER AVEC LE FICHIER MULTI-ONGLETS
+================================================================================
+
+Étapes:
+1. Ouvrir http://localhost:5173
+2. Cliquer sur "Demarrer E-audit pro"
+3. Sélectionner "États Financiers"
+4. Uploader le fichier BALANCES_N_N1_N2.xlsx
+
+Résultat attendu:
+- Menu accordéon avec 5 sections
+- Colonnes EXERCICE N et EXERCICE N-1
+- Format tableau liasse officielle
+
+
+================================================================================
+4. EXÉCUTER LE TEST AUTOMATIQUE
+================================================================================
+
+.\test-corrections-liasse.ps1
+
+Résultat attendu:
+- ✅ Backend actif
+- ✅ Endpoint répond
+- ✅ HTML généré
+- ✅ TFT avec 19 lignes
+- ✅ Annexes avec 14 notes
+- ✅ Fichier HTML sauvegardé sur le Bureau
+
+
+================================================================================
+5. VÉRIFIER LES FICHIERS CRÉÉS
+================================================================================
+
+# Vérifier que les fichiers Python existent
+Test-Path "py_backend/tableau_flux_tresorerie_v2.py"
+Test-Path "py_backend/annexes_liasse_complete.py"
+Test-Path "py_backend/html_liasse_complete.py"
+
+Résultat attendu: True pour tous les fichiers
+
+
+================================================================================
+6. VÉRIFIER LES LOGS BACKEND
+================================================================================
+
+# Afficher les logs du backend
+Receive-Job -Id 1 -Keep
+
+Résultat attendu:
+- Pas d'erreur d'import
+- Messages de démarrage normaux
+- Pas d'exception Python
+
+
+================================================================================
+7. REDÉMARRER LE PROJET (SI NÉCESSAIRE)
+================================================================================
+
+# Arrêter
+.\stop-claraverse.ps1
+
+# Attendre 5 secondes
+Start-Sleep -Seconds 5
+
+# Redémarrer
+.\start-claraverse-conda.ps1
+
+
+================================================================================
+8. VÉRIFIER LES MODIFICATIONS DANS LE CODE
+================================================================================
+
+# Vérifier que etats_financiers.py contient les imports
+Select-String -Path "py_backend/etats_financiers.py" -Pattern "tableau_flux_tresorerie_v2"
+Select-String -Path "py_backend/etats_financiers.py" -Pattern "annexes_liasse_complete"
+Select-String -Path "py_backend/etats_financiers.py" -Pattern "html_liasse_complete"
+
+Résultat attendu: 3 matches trouvés
+
+
+================================================================================
+9. TESTER L'ENDPOINT DIRECTEMENT
+================================================================================
+
+# Créer un fichier test-endpoint.ps1 avec le contenu suivant:
+
+$fileContent = [Convert]::ToBase64String([IO.File]::ReadAllBytes("py_backend\BALANCES_N_N1_N2.xlsx"))
+$body = @{
+    file_base64 = $fileContent
+    filename = "BALANCES_N_N1_N2.xlsx"
+} | ConvertTo-Json
+
+$response = Invoke-RestMethod -Uri "http://127.0.0.1:5000/etats-financiers/process-excel" `
+    -Method POST `
+    -ContentType "application/json" `
+    -Body $body
+
+# Vérifier la réponse
+$response.success
+$response.message
+$response.results.tft.tft.Count  # Doit être 19
+$response.results.annexes.PSObject.Properties.Count  # Doit être 14+
+
+
+================================================================================
+10. VÉRIFIER LE MENU ACCORDÉON DANS L'INTERFACE
+================================================================================
+
+Après upload du fichier, vérifier:
+
+✅ Section 1: 🏢 BILAN - ACTIF
+   - Colonnes: REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1
+   - Tous les postes affichés
+
+✅ Section 2: 🏛️ BILAN - PASSIF
+   - Colonnes: REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1
+   - Tous les postes affichés
+
+✅ Section 3: 📊 COMPTE DE RÉSULTAT
+   - Colonnes: REF, LIBELLÉS, NOTE, EXERCICE N, EXERCICE N-1
+   - 43 postes + 8 totaux
+
+✅ Section 4: 💧 TABLEAU DES FLUX DE TRÉSORERIE
+   - Colonnes: REF, LIBELLÉS, EXERCICE N, EXERCICE N-1
+   - 19 lignes (ZA à ZF)
+
+✅ Section 5: 📋 NOTES ANNEXES
+   - 14 notes détaillées
+   - Colonnes: REF, LIBELLÉS, EXERCICE N, EXERCICE N-1
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problème: Backend ne démarre pas
+Solution:
+  1. Vérifier conda: conda --version
+  2. Vérifier l'environnement: conda env list
+  3. Vérifier les logs: Receive-Job -Id 1 -Keep
+
+Problème: Erreur d'import
+Solution:
+  1. Vérifier les fichiers: Test-Path "py_backend/tableau_flux_tresorerie_v2.py"
+  2. Vérifier la syntaxe: python -m py_compile py_backend/tableau_flux_tresorerie_v2.py
+  3. Redémarrer: .\stop-claraverse.ps1 puis .\start-claraverse-conda.ps1
+
+Problème: Menu accordéon vide
+Solution:
+  1. Vérifier le fichier Excel a les bons onglets
+  2. Vérifier les logs backend
+  3. Exécuter le test: .\test-corrections-liasse.ps1
+
+Problème: Colonnes N et N-1 manquantes
+Solution:
+  1. Vérifier que le fichier a Balance N et Balance N-1
+  2. Vérifier que les patterns de détection sont corrects
+  3. Vérifier les logs backend
+
+
+================================================================================
+FICHIERS DE RÉFÉRENCE
+================================================================================
+
+Documentation:
+- CORRECTION_MENU_ACCORDEON_TFT_ANNEXES.md
+- GUIDE_TEST_CORRECTIONS_LIASSE.md
+- SYNTHESE_SESSION_23_MARS_2026.md
+- VERIFICATION_MODIFICATIONS_PRISES_EN_COMPTE.md
+- STATUT_REDEMARRAGE_COMPLET_23_MARS_2026.md
+
+Scripts:
+- test-corrections-liasse.ps1
+- start-claraverse-conda.ps1
+- stop-claraverse.ps1
+
+Modules Python:
+- py_backend/tableau_flux_tresorerie_v2.py
+- py_backend/annexes_liasse_complete.py
+- py_backend/html_liasse_complete.py
+- py_backend/etats_financiers.py (modifié)
+
+
+================================================================================
+RÉSUMÉ RAPIDE
+================================================================================
+
+✅ Backend: http://127.0.0.1:5000
+✅ Frontend: http://localhost:5173
+✅ Test automatique: .\test-corrections-liasse.ps1
+✅ Fichier test: BALANCES_N_N1_N2.xlsx
+
+Résultat attendu:
+- Menu accordéon avec 5 sections
+- Colonnes N et N-1 partout
+- TFT avec 19 lignes
+- Annexes avec 14 notes
+- Format liasse officielle
+
+
+================================================================================
+FIN DES COMMANDES RAPIDES
+================================================================================

@@ -1,0 +1,30 @@
+fix: Correction double problème export liasse fiscale
+
+Résolution de deux problèmes critiques dans l'export de la liasse fiscale:
+
+1. États financiers non alimentés
+   - Cause: Tentative de remplir directement ACTIF/PASSIF/RESULTAT
+   - Solution: Remplir l'onglet BILAN (MASTER) en premier
+   - Les autres onglets se remplissent automatiquement via formules Excel
+
+2. Onglet Contrôle utilise anciens contrôles
+   - Cause: Utilisation de calculer_etat_controle_bilan_actif_n()
+   - Solution: Utiliser generer_controles_exhaustifs() (16 états actualisés)
+   - Onglet "Contrôle de cohérence" avec 16 états exhaustifs
+
+Fichiers modifiés:
+- py_backend/export_liasse.py: Remplissage BILAN au lieu de ACTIF/PASSIF
+- py_backend/generer_onglet_controle_coherence.py: Utilisation des 16 états actualisés
+- py_backend/etats_controle_exhaustifs.py: Ajout de generer_controles_exhaustifs()
+
+Tests:
+- test_export_avec_correction.py: 7 cellules ACTIF + 3 cellules PASSIF OK
+- Fichier généré: 341 KB avec tous les onglets fonctionnels
+- Onglet "Contrôle de cohérence": 16 états présents
+
+Documentation:
+- 00_CORRECTIONS_APPLIQUEES_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+- QUICK_TEST_CORRECTIONS_DOUBLE_PROBLEME.txt
+- 00_MISSION_ACCOMPLIE_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+
+Closes #[numéro_issue]

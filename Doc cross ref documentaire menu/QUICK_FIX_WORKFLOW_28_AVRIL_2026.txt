@@ -1,0 +1,84 @@
+================================================================
+   QUICK FIX WORKFLOW N8N - 28 AVRIL 2026
+================================================================
+
+PROBLEME
+========
+Erreur: "Cannot read properties of undefined (reading 'execute')"
+Cause: Node Google Drive v3 mal configuré
+
+
+SOLUTION RAPIDE EN 5 ETAPES
+============================
+
+ETAPE 1: Configurer Credentials (2 min)
+----------------------------------------
+1. Ouvrir n8n: https://n8nsqlite.zeabur.app
+2. Menu "Credentials" > "Add Credential"
+3. Chercher "Google Drive OAuth2 API"
+4. Copier-coller depuis: 
+   Doc cross ref documentaire menu/COPIER_COLLER_CREDENTIALS_28_AVRIL_2026.txt
+5. Cliquer "Connect my account" > Autoriser Google
+6. Sauvegarder
+
+
+ETAPE 2: Ouvrir le Workflow (30 sec)
+-------------------------------------
+1. Menu "Workflows"
+2. Chercher "Cross Reference - Ouvrir Document"
+3. Ouvrir le workflow
+
+
+ETAPE 3: Supprimer les Nodes Problématiques (1 min)
+----------------------------------------------------
+1. Sélectionner le node "Rechercher Dossier Client1"
+2. Appuyer sur "Delete"
+3. Sélectionner le node "Rechercher Fichier" (s'il existe)
+4. Appuyer sur "Delete"
+
+
+ETAPE 4: Ajouter Nouveaux Nodes Google Drive v2 (2 min)
+--------------------------------------------------------
+1. Cliquer sur le "+" entre "Webhook POST" et "Formater Réponse"
+2. Chercher "Google Drive"
+3. Sélectionner "Google Drive" (vérifier que c'est v2, pas v3)
+4. Configurer:
+   - Operation: Search
+   - Credentials: Sélectionner "Google Drive OAuth2 - Cross Reference"
+   - Query (q): name contains '{{ $json.body.dossier }}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false
+5. Nommer: "Rechercher Dossier"
+
+6. Ajouter un autre node Google Drive après
+7. Configurer:
+   - Operation: Search
+   - Credentials: Sélectionner "Google Drive OAuth2 - Cross Reference"
+   - Query (q): name contains '{{ $json.body.index }}' and '{{ $('Rechercher Dossier').item.json.id }}' in parents and trashed = false
+8. Nommer: "Rechercher Fichier"
+
+
+ETAPE 5: Connecter et Activer (1 min)
+--------------------------------------
+1. Connecter: Webhook POST → Rechercher Dossier → Rechercher Fichier → Formater Réponse
+2. Toggle "Active" en haut à droite
+3. Sauvegarder
+
+
+TEST
+====
+Exécuter:
+.\test-workflow-xref-afriland.ps1
+
+
+ALTERNATIVE: IMPORTER LE WORKFLOW CORRIGE
+==========================================
+Si vous préférez importer directement:
+
+1. Menu "Workflows" > "Import from File"
+2. Sélectionner: workflow_n8n_ouvrir_xref_v2_corrige.json
+3. Configurer les credentials dans chaque node
+4. Activer
+5. Tester
+
+
+TEMPS TOTAL: 6-7 MINUTES
+=========================

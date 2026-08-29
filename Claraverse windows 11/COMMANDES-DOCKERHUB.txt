@@ -1,0 +1,56 @@
+═══════════════════════════════════════════════════════════════════════════
+                    COMMANDES DOCKER HUB - E-AUDIT
+                         Compte: sekadalle
+═══════════════════════════════════════════════════════════════════════════
+
+
+🔐 CONNEXION
+═══════════════════════════════════════════════════════════════════════════
+
+docker login -u sekadalle
+# Password: [VOTRE_TOKEN_DOCKER_HUB]
+
+
+📤 PUSH DES IMAGES
+═══════════════════════════════════════════════════════════════════════════
+
+# Frontend
+docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend
+docker push sekadalle/mes_images_docker:e-audit-frontend
+
+# Backend
+docker tag claraverse-vfirebase-backend sekadalle/mes_images_docker:e-audit-backend
+docker push sekadalle/mes_images_docker:e-audit-backend
+
+
+📥 PULL DES IMAGES
+═══════════════════════════════════════════════════════════════════════════
+
+# Frontend
+docker pull sekadalle/mes_images_docker:e-audit-frontend
+
+# Backend
+docker pull sekadalle/mes_images_docker:e-audit-backend
+
+
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════
+
+# Images locales
+docker images | grep claraverse
+
+# Sur Docker Hub
+https://hub.docker.com/r/sekadalle/mes_images_docker/tags
+
+
+📁 SCRIPT WINDOWS
+═══════════════════════════════════════════════════════════════════════════
+
+Double-clic sur: push-to-dockerhub.bat
+
+
+═══════════════════════════════════════════════════════════════════════════
+                        COMMANDE COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════
+
+wsl bash -c "sudo service docker start && docker login -u sekadalle && cd /mnt/d/ClaraVerse-v\ firebase && docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend && docker push sekadalle/mes_images_docker:e-audit-frontend && docker tag claraverse-vfirebase-backend sekadalle/mes_images_docker:e-audit-backend && docker push sekadalle/mes_images_docker:e-audit-backend"

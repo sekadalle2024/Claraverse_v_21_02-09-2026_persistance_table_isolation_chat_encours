@@ -1,0 +1,142 @@
+═══════════════════════════════════════════════════════════════════
+   RÉSULTAT TEST DOCUMENT [I30]-AFRILAND
+═══════════════════════════════════════════════════════════════════
+Date: 28 avril 2026
+═══════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF DU TEST
+───────────────────
+Tester le workflow n8n pour rechercher le document [I30]-AFRILAND
+dans Google Drive (dossier "Dossier CAC")
+
+═══════════════════════════════════════════════════════════════════
+📊 RÉSULTAT DU TEST
+═══════════════════════════════════════════════════════════════════
+
+❌ STATUT: ÉCHEC
+
+La requête a été envoyée avec succès au workflow n8n, mais la 
+réponse reçue est vide ("").
+
+═══════════════════════════════════════════════════════════════════
+🔍 ANALYSE
+═══════════════════════════════════════════════════════════════════
+
+✅ Points positifs:
+   • Le script PowerShell fonctionne correctement
+   • La connexion au endpoint n8n est établie
+   • Aucune erreur HTTP (pas de 404, 500, etc.)
+   • La requête est bien formatée
+
+❌ Problème identifié:
+   • La réponse du workflow est vide
+   • Cela indique un problème dans le workflow n8n lui-même
+
+═══════════════════════════════════════════════════════════════════
+🔧 CAUSES POSSIBLES
+═══════════════════════════════════════════════════════════════════
+
+1. Le workflow n8n n'est pas correctement configuré
+   → Le node "Respond to Webhook" ne renvoie pas de données
+
+2. Le fichier [I30]-AFRILAND n'existe pas dans Google Drive
+   → Le workflow ne trouve pas le fichier et ne renvoie rien
+
+3. Le dossier "Dossier CAC" n'est pas accessible
+   → Problème de permissions Google Drive
+
+4. Le workflow n8n est en erreur
+   → Vérifier les logs dans l'interface n8n
+
+5. Le node Google Drive n'est pas correctement configuré
+   → Vérifier les credentials OAuth2
+
+═══════════════════════════════════════════════════════════════════
+✅ ACTIONS À EFFECTUER
+═══════════════════════════════════════════════════════════════════
+
+1️⃣ VÉRIFIER LE WORKFLOW N8N
+   • Se connecter à l'interface n8n: https://n8nsqlite.zeabur.app
+   • Ouvrir le workflow "cross_reference"
+   • Vérifier que tous les nodes sont actifs
+   • Tester manuellement le workflow
+
+2️⃣ VÉRIFIER GOOGLE DRIVE
+   • Confirmer que le fichier [I30]-AFRILAND existe
+   • Vérifier qu'il est dans le dossier "Dossier CAC"
+   • Vérifier les permissions d'accès
+
+3️⃣ VÉRIFIER LES CREDENTIALS
+   • S'assurer que le Service Account Google est configuré
+   • Vérifier que les permissions sont correctes
+   • Tester l'accès au dossier Google Drive
+
+4️⃣ CONSULTER LES LOGS N8N
+   • Regarder les exécutions du workflow
+   • Identifier les erreurs éventuelles
+   • Vérifier les données retournées par chaque node
+
+═══════════════════════════════════════════════════════════════════
+📝 REQUÊTE ENVOYÉE
+═══════════════════════════════════════════════════════════════════
+
+Endpoint: https://n8nsqlite.zeabur.app/webhook/cross_reference
+Méthode: POST
+Content-Type: application/json
+
+Body:
+{
+  "question": "[index] = [I30]-AFRILAND",
+  "dossier": "Dossier CAC"
+}
+
+═══════════════════════════════════════════════════════════════════
+🔄 RÉPONSE REÇUE
+═══════════════════════════════════════════════════════════════════
+
+""
+
+(Chaîne vide - aucune donnée retournée)
+
+═══════════════════════════════════════════════════════════════════
+💡 RECOMMANDATIONS
+═══════════════════════════════════════════════════════════════════
+
+PRIORITÉ 1: Vérifier le workflow n8n
+   → C'est la cause la plus probable du problème
+   → Le workflow doit retourner une réponse structurée
+
+PRIORITÉ 2: Tester avec un autre document
+   → Essayer avec [I1]-Lead sheet trésorerie
+   → Cela permettra de savoir si le problème est spécifique
+     au document [I30]-AFRILAND
+
+PRIORITÉ 3: Vérifier la structure de réponse attendue
+   → Le workflow doit retourner un objet JSON avec:
+     • success: boolean
+     • file: object (si trouvé)
+     • message: string
+
+═══════════════════════════════════════════════════════════════════
+📋 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════
+
+1. Accéder à l'interface n8n
+2. Vérifier le workflow "cross_reference"
+3. Corriger la configuration du node "Respond to Webhook"
+4. Relancer le test avec: .\test-workflow-xref-afriland.ps1
+
+═══════════════════════════════════════════════════════════════════
+📚 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════
+
+✓ test-workflow-xref-afriland.ps1
+  → Script PowerShell pour tester le document [I30]-AFRILAND
+
+✓ QUICK_START_TEST_AFRILAND.txt
+  → Guide rapide d'utilisation
+
+✓ 00_RESULTAT_TEST_AFRILAND_28_AVRIL_2026.txt
+  → Ce fichier - Résultat et analyse du test
+
+═══════════════════════════════════════════════════════════════════

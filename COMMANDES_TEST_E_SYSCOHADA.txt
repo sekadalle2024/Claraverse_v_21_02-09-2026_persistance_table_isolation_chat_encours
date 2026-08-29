@@ -1,0 +1,91 @@
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDES DE TEST - E-SYSCOHADA RÉVISÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 TESTER L'AJOUT
+────────────────────────────────────────────────────────────────────────────────
+./test-e-syscohada-revise.ps1
+
+Vérifie:
+  - SYSCOHADA_MODES existe
+  - Les 2 modes (normal et avancé) sont présents
+  - E-Syscohada révisé est dans le menu
+  - Les 3 phases sont présentes
+  - Les commandes sont correctes
+  - Les intégrations sont présentes
+
+🔍 VÉRIFIER LES DIAGNOSTICS TYPESCRIPT
+────────────────────────────────────────────────────────────────────────────────
+# Via Kiro (déjà fait - aucune erreur)
+getDiagnostics(['src/components/Clara_Components/DemarrerMenu.tsx'])
+
+🔨 COMPILER LE PROJET
+────────────────────────────────────────────────────────────────────────────────
+npm run build
+
+📝 RECHERCHER DANS LE CODE
+────────────────────────────────────────────────────────────────────────────────
+# Trouver SYSCOHADA_MODES
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "SYSCOHADA_MODES"
+
+# Trouver E-Syscohada révisé
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "e-syscohada-revise"
+
+# Compter les étapes Base
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "id: 'base'" -AllMatches).Matches.Count
+
+# Compter les étapes Affectation
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "id: 'affectation-resultat'" -AllMatches).Matches.Count
+
+🔄 RÉEXÉCUTER LES SCRIPTS
+────────────────────────────────────────────────────────────────────────────────
+# Script d'ajout initial
+python "Doc menu demarrer/Scripts/add_e_syscohada_revise.py"
+
+# Script de correction de position
+python "Doc menu demarrer/Scripts/fix_e_syscohada_position.py"
+
+📊 STATISTIQUES
+────────────────────────────────────────────────────────────────────────────────
+# Compter les lignes du fichier
+(Get-Content "src/components/Clara_Components/DemarrerMenu.tsx").Count
+
+# Taille du fichier
+(Get-Item "src/components/Clara_Components/DemarrerMenu.tsx").Length / 1KB
+
+🎯 TESTS MANUELS DANS L'INTERFACE
+────────────────────────────────────────────────────────────────────────────────
+1. Démarrer l'application
+   npm run dev
+
+2. Ouvrir l'application dans le navigateur
+
+3. Cliquer sur le bouton "Démarrer"
+
+4. Vérifier que "E-Syscohada révisé" apparaît après "E-CIA exam part 1"
+
+5. Cliquer sur "E-Syscohada révisé"
+
+6. Vérifier les 3 phases:
+   - Etats financiers - Liasse normale
+   - Etats financiers - Liasse système minimal
+   - Etats financiers - Liasse association
+
+7. Pour chaque phase, vérifier les 2 étapes:
+   - Base
+   - Affectation du resultat
+
+8. Pour chaque étape, vérifier les 2 modes:
+   - Mode normal
+   - Mode avancé
+
+9. Tester une commande complète:
+   - Sélectionner "Liasse normale" > "Base" > "Mode normal"
+   - Vérifier que la commande générée est:
+     [mode normal]
+     [Command] = Etat fin
+     [Integration] = Base
+
+10. Tester toutes les combinaisons (12 au total)
+
+═══════════════════════════════════════════════════════════════════════════════

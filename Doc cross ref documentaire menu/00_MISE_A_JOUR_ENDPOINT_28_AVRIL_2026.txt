@@ -1,0 +1,171 @@
+═══════════════════════════════════════════════════════════════════
+   MISE À JOUR ENDPOINT N8N - CROSS REFERENCE
+═══════════════════════════════════════════════════════════════════
+
+📅 Date: 28 avril 2026
+🎯 Objectif: Actualiser l'URL du webhook n8n
+
+═══════════════════════════════════════════════════════════════════
+
+🔄 CHANGEMENT D'URL
+═══════════════════════════════════════════════════════════════════
+
+ANCIENNE URL (obsolète):
+------------------------
+https://hkj0631c.rpcl.app/webhook/cross_reference
+
+NOUVELLE URL (active):
+----------------------
+https://n8nsqlite.zeabur.app/webhook/cross_reference
+
+═══════════════════════════════════════════════════════════════════
+
+📝 FORMAT DE LA REQUÊTE
+═══════════════════════════════════════════════════════════════════
+
+Méthode: POST
+Content-Type: application/json
+
+Body:
+{
+  "question": "[index] = [I150]-Balances generale",
+  "dossier": "Dossier CAC"
+}
+
+EXEMPLE CURL:
+-------------
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "[index] = [I150]-Balances generale",
+    "dossier": "Dossier CAC"
+  }'
+
+═══════════════════════════════════════════════════════════════════
+
+🔧 MODIFICATION DANS LE CODE
+═══════════════════════════════════════════════════════════════════
+
+Fichier: public/menu.js
+Méthode: ouvrirXRefDocumentaire()
+
+CHANGEMENT 1: URL
+-----------------
+AVANT: 'https://hkj0631c.rpcl.app/webhook/cross_reference'
+APRÈS: 'https://n8nsqlite.zeabur.app/webhook/cross_reference'
+
+CHANGEMENT 2: Format du body
+-----------------------------
+AVANT:
+body: JSON.stringify({
+  index: fileName,
+  dossier: 'Dossier CAC'
+})
+
+APRÈS:
+body: JSON.stringify({
+  question: `[index] = ${fileName}`,
+  dossier: 'Dossier CAC'
+})
+
+═══════════════════════════════════════════════════════════════════
+
+📊 EXEMPLE COMPLET
+═══════════════════════════════════════════════════════════════════
+
+Table X-Ref:
+------------
+| Cross references | Document                          |
+|------------------|-----------------------------------|
+| [I1]             | Lead sheet trésorerie             |
+| [I20]            | Proces verbal inventaire de caisse|
+| [I150]           | Balances generale                 |
+
+Ligne sélectionnée: [I150] | Balances generale
+
+Requête générée:
+----------------
+POST https://n8nsqlite.zeabur.app/webhook/cross_reference
+
+{
+  "question": "[index] = [I150]-Balances generale",
+  "dossier": "Dossier CAC"
+}
+
+Réponse attendue:
+-----------------
+{
+  "success": true,
+  "file": {
+    "fileId": "1abc...",
+    "fileName": "[I150]-Balances generale",
+    "fileUrl": "https://drive.google.com/file/d/...",
+    "mimeType": "application/pdf"
+  }
+}
+
+═══════════════════════════════════════════════════════════════════
+
+✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════
+
+✅ URL mise à jour dans menu.js
+✅ Format de requête conforme à l'exemple curl
+✅ Paramètre "question" au lieu de "index"
+✅ Structure "[index] = {fileName}" respectée
+✅ Paramètre "dossier" conservé
+
+═══════════════════════════════════════════════════════════════════
+
+🧪 TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════
+
+1. Test manuel dans l'interface:
+   - Créer une table X-Ref
+   - Cliquer sur une ligne
+   - Menu contextuel > "Ouvrir X-Ref documentaire"
+   - Vérifier l'appel au webhook
+   - Vérifier l'affichage du document
+
+2. Test curl direct:
+   curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+     -H "Content-Type: application/json" \
+     -d '{"question": "[index] = [I150]-Balances generale"}'
+
+3. Vérifier les logs console:
+   - Ouvrir DevTools (F12)
+   - Onglet Console
+   - Rechercher "[X-Ref]"
+   - Vérifier la requête et la réponse
+
+═══════════════════════════════════════════════════════════════════
+
+📁 DOCUMENTATION MISE À JOUR
+═══════════════════════════════════════════════════════════════════
+
+Fichiers à mettre à jour (si nécessaire):
+- Doc cross ref documentaire menu/README.md
+- Doc cross ref documentaire menu/IMPLEMENTATION_OUVRIR_XREF.md
+- Doc cross ref documentaire menu/GUIDE_TEST_OUVRIR_XREF.md
+- DIFFERENCE_OUVRIR_VS_AFFICHER_XREF.md
+
+═══════════════════════════════════════════════════════════════════
+
+💡 NOTES
+═══════════════════════════════════════════════════════════════════
+
+- Le nouveau endpoint est hébergé sur Zeabur
+- L'ancien endpoint (rpcl.app) n'est plus utilisé
+- Le format de la requête a été adapté pour correspondre
+  exactement à votre exemple curl
+- La structure "[index] = {fileName}" est maintenant utilisée
+
+═══════════════════════════════════════════════════════════════════
+
+✅ MISE À JOUR TERMINÉE
+═══════════════════════════════════════════════════════════════════
+
+L'endpoint n8n a été mis à jour avec succès.
+Prêt pour les tests.
+
+═══════════════════════════════════════════════════════════════════

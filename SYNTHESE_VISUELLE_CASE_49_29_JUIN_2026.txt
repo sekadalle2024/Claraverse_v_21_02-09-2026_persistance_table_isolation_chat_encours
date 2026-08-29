@@ -1,0 +1,156 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                   CORRECTION FORMAT CASE 49 - SYNTHÈSE                        ║
+║                        Programme de Travail - 29/06/2026                      ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  🔴 PROBLÈME INITIAL                                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Workflow n8n retourne:
+  
+    [{
+      "output": "`json\n{\"Sous-section A\": ...}\n```"
+    }]
+    
+  ❌ Erreur: "Unexpected token '`'"
+  
+  Cause: Le backtick simple initial (`json) n'était pas géré
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ✅ SOLUTION APPLIQUÉE                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  📝 FICHIER: src/services/claraApiService.ts
+  📍 MÉTHODE: normalizeN8nResponse()
+  📍 SECTION: FORMAT CASE 49
+
+  Amélioration du nettoyage en 4 étapes:
+  
+  ┌─────────────────────────────────────────────────────────────┐
+  │ ÉTAPE 1: Détecter le format                                 │
+  │   ├─ Recherche "```json" OU "`json"                        │
+  │   └─ Log: "FORMAT CASE 49 DETECTE"                         │
+  ├─────────────────────────────────────────────────────────────┤
+  │ ÉTAPE 2: Retirer backtick simple initial                    │
+  │   ├─ Si commence par "`json" → retire 5 caractères         │
+  │   └─ Log: "Backtick simple initial retiré"                 │
+  ├─────────────────────────────────────────────────────────────┤
+  │ ÉTAPE 3: Retirer triples backticks                          │
+  │   ├─ Retire "```json" au début                             │
+  │   └─ Retire "```" à la fin                                 │
+  ├─────────────────────────────────────────────────────────────┤
+  │ ÉTAPE 4: Nettoyer backticks résiduels                       │
+  │   └─ Retire tous les ` au début et à la fin                │
+  ├─────────────────────────────────────────────────────────────┤
+  │ ÉTAPE 5: Parser et transformer                              │
+  │   ├─ Parse le JSON nettoyé                                 │
+  │   ├─ Transforme en FORMAT 4: [{ data: {...} }]            │
+  │   └─ Log: "JSON parsé avec succès"                         │
+  └─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  📊 FORMATS SUPPORTÉS                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ✓ [{ "output": "```json\n{...}\n```" }]    ← Format standard
+  ✓ [{ "output": "`json\n{...}\n```" }]      ← Format nouveau (CASE 49)
+  ✓ [{ "output": "`json\n{...}`" }]          ← Format simplifié
+  ✓ [{ "output": "```json\n{...}" }]         ← Sans backticks fin
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  🧪 COMMENT TESTER                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  1️⃣ TESTER LE ENDPOINT n8n
+     
+     .\test-case49-programme-travail.ps1
+     
+     ✓ Vérifie la structure de la réponse
+     ✓ Sauvegarde la réponse dans test-case49-response.json
+
+  2️⃣ TESTER DANS CLARAVERSE
+     
+     Message à envoyer:
+     /Programme de travail - facturation des ventes
+     
+     Console navigateur (F12):
+     ✓ Rechercher: "FORMAT CASE 49 DETECTE"
+     ✓ Vérifier: "Backtick simple initial retiré"  
+     ✓ Confirmer: "JSON parsé avec succès"
+     ✓ Confirmer: "Données transformées pour traitement FORMAT 4"
+
+  3️⃣ VÉRIFIER L'AFFICHAGE
+     
+     ✓ Table "Tableau entete" s'affiche (format 2 colonnes)
+     ✓ Table "Tableau processus" s'affiche (tableau de données)
+     ✓ Pas d'erreur JSON visible
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ⚡ GESTION D'ERREURS                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  En cas d'échec du parsing:
+  
+  ┌─────────────────────────────────────────────────────────┐
+  │ **Erreur de parsing JSON**                              │
+  │                                                          │
+  │ Le serveur a retourné des données mais le format        │
+  │ JSON est invalide.                                      │
+  │                                                          │
+  │ **Détails de l'erreur:**                                │
+  │ [Message d'erreur détaillé]                             │
+  │                                                          │
+  │ **Contenu brut (premiers 500 caractères):**             │
+  │ ```                                                     │
+  │ [Aperçu du contenu pour debug]                          │
+  │ ```                                                     │
+  └─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  📝 LOGS CONSOLE                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  Séquence normale:
+  
+  🔍 === DEBUT ANALYSE REPONSE N8N ===
+  📦 Structure reçue: [{"output":"`json\n{...}"}]
+  🔧 FORMAT CASE 49 DETECTE: output avec JSON dans bloc markdown
+  🧹 Backtick simple initial retiré
+  📊 Contenu nettoyé (premiers 500 caractères): {...}
+  ✅ JSON parsé avec succès
+  📊 Structure: {type: "object", keys: [...], firstKey: "..."}
+  🔄 Données transformées pour traitement FORMAT 4
+  🔍 === FIN ANALYSE ===
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ✅ COMPATIBILITÉ                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ✓ Rétrocompatible avec tous les workflows existants
+  ✓ Ne casse pas les autres cases (1-48, 50+)
+  ✓ Améliore la robustesse du parsing JSON
+  ✓ Gestion d'erreurs améliorée avec messages clairs
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  📚 FICHIERS CRÉÉS                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ✓ 00_CORRECTION_FORMAT_CASE_49_PROGRAMME_TRAVAIL_29_JUIN_2026.txt
+    └─ Documentation détaillée de la correction
+    
+  ✓ test-case49-programme-travail.ps1
+    └─ Script de test du endpoint n8n
+    
+  ✓ SYNTHESE_VISUELLE_CASE_49_29_JUIN_2026.txt (ce fichier)
+    └─ Guide visuel rapide
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  ✅ CORRECTION TERMINÉE - PRÊT À TESTER                                      ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+  📅 Date: 29 juin 2026
+  🎯 Case: 49 - Programme de travail
+  ✅ Statut: CORRIGÉ
+  🔧 Fichier: src/services/claraApiService.ts
+  

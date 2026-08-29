@@ -1,0 +1,111 @@
+🔍 DIAGNOSTIC ERREUR "FAILED TO FETCH" - WORKFLOW XREF
+========================================================
+Date: 30 avril 2026
+Document: [I30]-AFRILAND
+
+❌ ERREUR RENCONTRÉE
+--------------------
+"failed to fetch" lors de l'appel API depuis le frontend Claraverse vers le workflow n8n
+
+🎯 CAUSES POSSIBLES
+-------------------
+
+1. ❌ PROBLÈME CORS (Cross-Origin Resource Sharing)
+   - Le workflow n8n ne retourne pas les bons headers CORS
+   - Le frontend ne peut pas accéder à la réponse
+
+2. ❌ PROBLÈME DE CREDENTIALS GOOGLE DRIVE
+   - Les credentials OAuth2 ne sont pas configurés correctement dans n8n
+   - Le workflow n'a pas les permissions pour accéder à Google Drive
+
+3. ❌ PROBLÈME DE CONFIGURATION DU WORKFLOW
+   - Le node Google Drive utilise une opération "search" qui n'existe pas
+   - Les paramètres de recherche sont incorrects
+
+4. ❌ PROBLÈME DE TIMEOUT
+   - Le workflow prend trop de temps à répondre
+   - Le frontend abandonne la requête
+
+5. ❌ PROBLÈME D'ENDPOINT
+   - L'URL du webhook n8n est incorrecte ou inactive
+   - Le workflow n'est pas activé dans n8n
+
+📋 VÉRIFICATIONS À EFFECTUER
+-----------------------------
+
+✓ 1. Vérifier que le workflow est ACTIF dans n8n
+   - Aller sur https://n8nsqlite.zeabur.app
+   - Vérifier que le workflow "Cross Reference - Ouvrir Document" est activé
+
+✓ 2. Tester l'endpoint directement avec curl
+   ```powershell
+   curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" `
+     -H "Content-Type: application/json" `
+     -d '{"index":"[I30]-AFRILAND","dossier":"Dossier CAC"}'
+   ```
+
+✓ 3. Vérifier les credentials Google Drive dans n8n
+   - Credentials > Google Drive OAuth2 API
+   - Tester la connexion
+
+✓ 4. Vérifier les logs du workflow dans n8n
+   - Executions > Voir les erreurs
+
+✓ 5. Vérifier les headers CORS dans la réponse
+   - Utiliser les DevTools du navigateur (F12)
+   - Onglet Network > Voir la requête
+
+🔧 SOLUTIONS PROPOSÉES
+-----------------------
+
+SOLUTION 1: Corriger les headers CORS
+--------------------------------------
+Le workflow doit retourner ces headers dans TOUS les nodes de réponse:
+
+```json
+{
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept"
+}
+```
+
+SOLUTION 2: Utiliser HTTP Request au lieu de Google Drive node
+---------------------------------------------------------------
+Remplacer les nodes Google Drive par des nodes HTTP Request avec l'API REST de Google Drive.
+
+Avantages:
+- Plus de contrôle sur les requêtes
+- Meilleure gestion des erreurs
+- Pas de problème avec les opérations manquantes
+
+SOLUTION 3: Activer le partage public des fichiers
+---------------------------------------------------
+Configurer Google Drive pour que les fichiers soient accessibles via un lien public.
+
+SOLUTION 4: Augmenter le timeout dans le frontend
+--------------------------------------------------
+Modifier claraApiService.ts pour augmenter le timeout à 60 secondes.
+
+📝 PROCHAINES ÉTAPES
+--------------------
+
+1. Exécuter le script de test: test-workflow-afficher-xref.ps1
+2. Analyser les logs d'erreur
+3. Appliquer la solution appropriée
+4. Re-tester avec le document [I30]-AFRILAND
+
+🎯 OBJECTIF
+-----------
+Permettre au frontend Claraverse de:
+1. Rechercher un document dans Google Drive via son index
+2. Récupérer les métadonnées du document (ID, URL, etc.)
+3. Afficher le document dans une barre latérale React
+
+📞 SUPPORT
+----------
+Si le problème persiste:
+1. Vérifier les logs n8n
+2. Vérifier les logs du navigateur (Console + Network)
+3. Tester avec un autre document
+4. Vérifier que le fichier existe bien dans Google Drive

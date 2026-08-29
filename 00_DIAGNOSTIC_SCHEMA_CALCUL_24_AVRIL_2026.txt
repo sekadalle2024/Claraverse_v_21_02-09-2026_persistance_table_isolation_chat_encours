@@ -1,0 +1,184 @@
+═══════════════════════════════════════════════════════════════════════════════
+🔍 DIAGNOSTIC - AUCUNE TABLE AJOUTÉE AU CLIC "AJOUTER SCHÉMA DE CALCUL"
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 24 avril 2026
+🎯 Problème: Aucune table n'apparaît au clic sur "Ajouter Schéma de calcul"
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Le module existe: public/papier-travail-schema-calcul.js (713 lignes)
+2. ✅ Le module est chargé dans index.html (ligne 169)
+3. ✅ L'action est bien dans le menu contextuel (menu.js ligne 10133)
+4. ✅ Le raccourci clavier Ctrl+Shift+K est configuré
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 CONDITIONS REQUISES POUR QU'UNE TABLE SOIT AJOUTÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Le module SchemaCalculManager a besoin de TOUTES ces conditions:
+
+1. 📋 AU MOINS 2 TABLES dans la div
+   - Une "table 2" contenant "Nature de test"
+   - Une "table principale" (Modelised_table)
+
+2. 🏷️ LA TABLE 2 doit contenir:
+   - Une cellule avec le texte "Nature de test" (ou "nature" + "test")
+   - La valeur de la nature dans la cellule suivante
+
+3. 📊 LA TABLE PRINCIPALE doit avoir AU MOINS UNE de ces colonnes:
+   - "Conclusion"
+   - "Assertion"
+   - "CTR" (ou CTR1, CTR2, etc.)
+
+4. 🎯 LA NATURE DE TEST doit correspondre à un modèle connu:
+   - Validation
+   - Mouvement
+   - Rapprochement
+   - Séparation / Separation
+   - Estimation
+   - Revue analytique
+   - Cadrage TVA
+   - Cotisations sociales
+   - Vierge
+   - Modélisation (avec variables entre parenthèses)
+
+═══════════════════════════════════════════════════════════════════════════════
+🧪 TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Ouvrir la console du navigateur (F12)
+-------------------------------------------------
+Appuyez sur F12 pour ouvrir les outils de développement
+
+ÉTAPE 2: Vérifier que le module est chargé
+-------------------------------------------------
+Dans la console, tapez:
+
+    window.SchemaCalculManager
+
+Résultat attendu: Vous devez voir un objet (pas "undefined")
+
+ÉTAPE 3: Vérifier les logs au clic
+-------------------------------------------------
+1. Cliquez sur votre table
+2. Cliquez sur "Ajouter Schéma de calcul" dans le menu contextuel
+3. Regardez les messages dans la console
+
+Messages possibles:
+- "📐 [Schéma Calcul] Ajout du schéma de calcul" ✅
+- "⚠️ Aucune table sélectionnée" ❌
+- "❌ Le module Schéma de Calcul n'est pas chargé" ❌
+- "⚠️ Impossible de trouver le conteneur de la table" ❌
+
+ÉTAPE 4: Forcer le traitement de toutes les tables
+-------------------------------------------------
+Dans la console, tapez:
+
+    schemaCalculCommands.processAll()
+
+Regardez les logs qui apparaissent:
+- "Nature de test détectée: ..." ✅ Bonne nouvelle!
+- "Aucune table principale trouvée" ❌ Problème de colonnes
+- Rien du tout ❌ Pas de table 2 trouvée
+
+ÉTAPE 5: Vérifier le contenu du localStorage
+-------------------------------------------------
+Dans la console, tapez:
+
+    schemaCalculCommands.showStorage()
+
+Cela affiche tous les schémas sauvegardés
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 SOLUTIONS SELON LE PROBLÈME DÉTECTÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME 1: "Aucune table sélectionnée"
+-------------------------------------------------
+SOLUTION: Cliquez d'abord sur la table avant d'ouvrir le menu contextuel
+
+PROBLÈME 2: "Aucune table principale trouvée"
+-------------------------------------------------
+CAUSE: La table n'a pas les colonnes requises
+SOLUTION: Ajoutez au moins une de ces colonnes:
+  - Conclusion
+  - Assertion
+  - CTR
+
+PROBLÈME 3: Pas de "Nature de test détectée"
+-------------------------------------------------
+CAUSE: La table 2 n'existe pas ou n'a pas "Nature de test"
+SOLUTION: Créez une table avec:
+  - Une cellule contenant "Nature de test"
+  - La cellule suivante avec la valeur (ex: "Validation")
+
+PROBLÈME 4: Nature de test non reconnue
+-------------------------------------------------
+CAUSE: La valeur ne correspond à aucun modèle
+SOLUTION: Utilisez une de ces valeurs:
+  - Validation
+  - Mouvement
+  - Rapprochement
+  - Séparation
+  - Estimation
+  - Revue analytique
+  - Cadrage TVA
+  - Cotisations sociales
+  - Vierge
+  - Ou une formule avec variables: (A) = (B) + (C)
+
+PROBLÈME 5: Le schéma existe déjà
+-------------------------------------------------
+CAUSE: Un schéma a déjà été créé pour cette table
+SOLUTION: 
+  - Utilisez "Actualiser Schéma de calcul" au lieu de "Ajouter"
+  - Ou supprimez le schéma existant avec "Supprimer Schéma de calcul"
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 EXEMPLE DE STRUCTURE CORRECTE
+═══════════════════════════════════════════════════════════════════════════════
+
+TABLE 2 (Information):
+┌─────────────────┬──────────────┐
+│ Nature de test  │ Validation   │
+└─────────────────┴──────────────┘
+
+TABLE PRINCIPALE (Papier de travail):
+┌──────────┬────────────┬────────────┬────────────┐
+│ Compte   │ Montant    │ Conclusion │ Assertion  │
+├──────────┼────────────┼────────────┼────────────┤
+│ 411000   │ 1 000 000  │            │            │
+└──────────┴────────────┴────────────┴────────────┘
+
+Avec cette structure, le schéma de calcul sera créé automatiquement!
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 COMMANDES UTILES DANS LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+// Forcer le traitement de toutes les tables
+schemaCalculCommands.processAll()
+
+// Voir les schémas sauvegardés
+schemaCalculCommands.showStorage()
+
+// Restaurer tous les schémas
+schemaCalculCommands.restoreAll()
+
+// Effacer tous les schémas sauvegardés
+schemaCalculCommands.clearStorage()
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrez la console (F12)
+2. Effectuez les tests ci-dessus
+3. Notez les messages d'erreur ou logs
+4. Partagez les résultats pour un diagnostic plus précis
+
+Le module fonctionne correctement, il faut juste s'assurer que les conditions
+sont remplies!

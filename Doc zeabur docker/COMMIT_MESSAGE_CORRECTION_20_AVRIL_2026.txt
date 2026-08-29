@@ -1,0 +1,40 @@
+fix: correction nginx.conf pour déploiement Zeabur
+
+Corrections appliquées:
+- Suppression nginx.conf conflictuel (directive events)
+- Configuration nginx correcte dans Dockerfile.frontend
+- Documentation complète des erreurs et solutions
+
+Problèmes résolus:
+- Frontend: nginx [emerg] events directive is not allowed
+- Backend: Configuration service à vérifier dans Zeabur
+
+Fichiers modifiés:
+- nginx.conf (supprimé)
+- Doc zeabur docker/README.md (mis à jour)
+
+Fichiers créés:
+- Doc zeabur docker/START_HERE_20_AVRIL_2026.txt
+- Doc zeabur docker/00_LIRE_MAINTENANT_CORRECTION_20_AVRIL_2026.txt
+- Doc zeabur docker/QUICK_FIX_DEPLOIEMENT_20_AVRIL_2026.txt
+- Doc zeabur docker/00_INDEX_CORRECTION_DEPLOIEMENT_20_AVRIL_2026.md
+- Doc zeabur docker/00_CORRECTION_NGINX_CONF_20_AVRIL_2026.txt
+- Doc zeabur docker/00_ANALYSE_ERREUR_BACKEND_20_AVRIL_2026.txt
+- Doc zeabur docker/00_RECAP_SESSION_CORRECTION_20_AVRIL_2026.txt
+- Doc zeabur docker/LISTE_FICHIERS_CORRECTION_20_AVRIL_2026.md
+- Doc zeabur docker/00_SYNTHESE_VISUELLE_CORRECTION_20_AVRIL_2026.txt
+- Doc zeabur docker/COMMIT_MESSAGE_CORRECTION_20_AVRIL_2026.txt
+- Doc zeabur docker/Scripts/push-correction-nginx-zeabur.ps1
+
+Documentation:
+- Guide rapide: Doc zeabur docker/QUICK_FIX_DEPLOIEMENT_20_AVRIL_2026.txt
+- Index complet: Doc zeabur docker/00_INDEX_CORRECTION_DEPLOIEMENT_20_AVRIL_2026.md
+
+Prochaines étapes:
+1. Zeabur va détecter ce push automatiquement
+2. Rebuild du frontend (correction nginx appliquée)
+3. Reconfigurer backend dans Zeabur Dashboard (Service Name = "backend")
+4. Vérifier déploiement complet
+
+Temps estimé: 12 minutes
+Status: Prêt pour redéploiement Zeabur

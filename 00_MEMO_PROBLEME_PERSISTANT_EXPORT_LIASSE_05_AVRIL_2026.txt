@@ -1,0 +1,924 @@
+================================================================================
+MÉMO DÉTAILLÉ - PROBLÈME PERSISTANT EXPORT LIASSE
+05 AVRIL 2026 - POUR REPRISE PAR UN AGENT
+================================================================================
+
+STATUT: ❌ PROBLÈME PERSISTANT MALGRÉ CORRECTIONS APPLIQUÉES
+DATE: 05 Avril 2026
+CONTEXTE: Double problème d'export de la liasse officielle Excel
+
+================================================================================
+SECTION 1: DESCRIPTION DU PROBLÈME
+================================================================================
+
+PROBLÈME 1: ÉTATS DE CONTRÔLE - "ERREUR DE GÉNÉRATION"
+-------------------------------------------------------
+SYMPTÔME:
+- Lors de l'export de la liasse, l'onglet "Contrôle de cohérence" affiche
+  "Erreur de génération" pour tous les états de contrôle
+- Les 16 états de contrôle ne sont pas générés correctement
+
+COMPORTEMENT ATTENDU:
+- L'onglet "Contrôle de cohérence" doit contenir 16 états de contrôle
+- Chaque état doit afficher ses postes avec montants N et N-1
+- Format: Sections organisées (BILAN ACTIF, BILAN PASSIF, etc.)
+
+PROBLÈME 2: ONGLETS VIDES - AUCUNE DONNÉE REMPLIE
+--------------------------------------------------
+SYMPTÔME:
+- Les onglets ACTIF, PASSIF, RESULTAT du fichier Excel sont vides
+- Aucune valeur n'est écrite dans les cellules
+- Le template Excel reste vierge
+
+COMPORTEMENT ATTENDU:
+- Les onglets ACTIF, PASSIF, RESULTAT doivent être remplis avec les valeurs
+  calculées depuis les balances N et N-1
+- Chaque poste doit avoir ses montants N et N-1
+
+================================================================================
+SECTION 2: ARCHITECTURE DU SYSTÈME
+================================================================================
+
+FLUX DE DONNÉES - EXPORT LIASSE
+--------------------------------
+
+1. FRONTEND (React/TypeScript)
+   Fichier: public/ExportLiasseHandler.js
+   Rôle: Déclenche l'export via bouton "Exporter Liasse Officielle"
+   
+   Action:
+   - Récupère les résultats des états financiers depuis le state
+   - Envoie une requête POST à /export-liasse/generer
+   - Reçoit le fichier Excel en base64
+   - Déclenche le téléchargement
+
+2. BACKEND API (FastAPI)
+   Fichier: py_backend/export_liasse.py
+   Endpoint: POST /export-liasse/generer
+   
+   Fonction principale: remplir_liasse_officielle()
+   
+   Étapes:
+   a) Charge le template Excel (Liasse_officielle_revise.xlsx)
+   b) Détecte les onglets disponibles
+   c) Convertit les données (dict→list si nécessaire)
+   d) Remplit les onglets ACTIF, PASSIF, RESULTAT
+   e) Génère les 16 états de contrôle
+   f) Ajoute l'onglet "Contrôle de cohérence"
+   g) Retourne le fichier Excel en bytes
+
+3. MODULE ÉTATS DE CONTRÔLE
+   Fichier: py_backend/generer_onglet_controle_coherence.py
+   
+   Fonction: generer_etats_controle_pour_export(results)
+   
+   Rôle:
+   - Extrait les données du dictionnaire results
+   - Appelle les 16 fonctions de calcul individuelles
+   - Retourne une liste de 16 états de contrôle
+   
+   Fonction: ajouter_onglet_controle_coherence(wb, etats_controle)
+   
+   Rôle:
+   - Crée l'onglet "Contrôle de cohérence" dans le workbook
+   - Formate les 16 états avec styles Excel
+   - Organise par sections (BILAN ACTIF, PASSIF, etc.)
+
+4. MODULE CALCULS ÉTATS DE CONTRÔLE
+   Fichier: py_backend/etats_controle_exhaustifs.py
+   
+   Contient 16 fonctions de calcul:
+   - calculer_etat_controle_bilan_actif_n()
+   - calculer_etat_controle_bilan_actif_n1()
+   - calculer_etat_controle_bilan_actif_variation()
+   - calculer_etat_controle_bilan_passif_n()
+   - calculer_etat_controle_bilan_passif_n1()
+   - calculer_etat_controle_bilan_passif_variation()
+   - calculer_etat_controle_compte_resultat_n()
+   - calculer_etat_controle_compte_resultat_n1()
+   - calculer_etat_controle_compte_resultat_variation()
+   - calculer_etat_controle_tft_n()
+   - calculer_etat_controle_tft_n1()
+   - calculer_etat_controle_tft_variation()
+   - calculer_etat_controle_sens_comptes_n()
+   - calculer_etat_controle_sens_comptes_n1()
+   - calculer_etat_equilibre_bilan_n()
+   - calculer_etat_equilibre_bilan_n1()
+
+5. MODULE GÉNÉRATION ÉTATS FINANCIERS
+   Fichier: py_backend/etats_financiers_v2.py
+   
+   Fonction: process_balance_to_liasse_format()
+   
+   Rôle:
+   - Traite les balances N et N-1
+   - Génère les états au format liasse officielle
+   - Retourne: bilan_actif, bilan_passif, compte_resultat (listes)
+
+================================================================================
+SECTION 3: FORMAT DES DONNÉES
+================================================================================
+
+STRUCTURE DU DICTIONNAIRE "results"
+------------------------------------
+Le dictionnaire results passé à l'export contient:
+
+{
+    'bilan_actif': [
+        {
+            'ref': 'AD',
+            'libelle': 'Charges immobilisées',
+            'note': '',
+            'montant_n': 1000000,
+            'montant_n1': 950000,
+            'montant_n2': 900000
+        },
+        ...
+    ],
+    'bilan_passif': [...],
+    'compte_resultat': [...],
+    'balance_n': [
+        {
+            'numero_compte': '101000',
+            'libelle': 'Capital social',
+            'solde_debit': 0,
+            'solde_credit': 10000000,
+            'solde_net': -10000000,
+            'integre': True
+        },
+        ...
+    ],
+    'balance_n1': [...],
+    'tableau_flux_tresorerie': [...]
+}
+
+IMPORTANT:
+- bilan_actif, bilan_passif, compte_resultat sont des LISTES
+- Chaque poste a: ref, libelle, note, montant_n, montant_n1, montant_n2
+- balance_n et balance_n1 sont des LISTES de comptes
+- Chaque compte a: numero_compte, libelle, solde_debit, solde_credit, solde_net
+
+================================================================================
+SECTION 4: CORRECTIONS DÉJÀ APPLIQUÉES
+================================================================================
+
+CORRECTION 1: GÉNÉRATION DES ÉTATS DE CONTRÔLE
+-----------------------------------------------
+Fichier modifié: py_backend/generer_onglet_controle_coherence.py
+
+AVANT:
+```python
+def generer_etats_controle_pour_export(results):
+    from etats_controle_exhaustifs import generer_controles_exhaustifs
+    etats_controle = generer_controles_exhaustifs(results)  # ❌ ERREUR
+    return etats_controle
+```
+
+PROBLÈME:
+- generer_controles_exhaustifs() attend 5 paramètres séparés
+- On lui passait un seul dictionnaire results
+- Résultat: Exception et "Erreur de génération"
+
+APRÈS:
+```python
+def generer_etats_controle_pour_export(results):
+    from etats_controle_exhaustifs import (
+        calculer_etat_controle_bilan_actif_n,
+        calculer_etat_controle_bilan_actif_n1,
+        # ... 14 autres imports
+    )
+    
+    # Extraire les données
+    bilan_actif = results.get('bilan_actif', [])
+    bilan_passif = results.get('bilan_passif', [])
+    compte_resultat = results.get('compte_resultat', [])
+    balance_n = results.get('balance_n', [])
+    balance_n1 = results.get('balance_n1', [])
+    tft = results.get('tableau_flux_tresorerie', [])
+    
+    # Convertir dict→list si nécessaire
+    if isinstance(bilan_actif, dict):
+        bilan_actif = list(bilan_actif.values())
+    # ... autres conversions
+    
+    # Appeler les 16 fonctions
+    etats_controle = [
+        calculer_etat_controle_bilan_actif_n(bilan_actif),
+        calculer_etat_controle_bilan_actif_n1(bilan_actif),
+        # ... 14 autres appels
+    ]
+    
+    return etats_controle
+```
+
+STATUT: ✅ Code corrigé, mais problème persiste
+
+CORRECTION 2: REMPLISSAGE DES ONGLETS
+--------------------------------------
+Fichier modifié: py_backend/export_liasse.py
+
+SOUS-CORRECTION 2A: RECHERCHE FLEXIBLE DES ONGLETS
+
+AVANT:
+```python
+if 'ACTIF' in wb.sheetnames:
+    ws_actif = wb['ACTIF']
+```
+
+APRÈS:
+```python
+onglet_actif = None
+for name in wb.sheetnames:
+    if 'ACTIF' in name.upper():
+        onglet_actif = name
+        break
+
+if onglet_actif:
+    ws_actif = wb[onglet_actif]
+```
+
+STATUT: ✅ Code corrigé
+
+SOUS-CORRECTION 2B: CONVERSION DICT→LIST
+
+AVANT:
+```python
+# Pas de conversion, assumait format liste
+```
+
+APRÈS:
+```python
+def convert_list_to_dict(data):
+    if isinstance(data, list):
+        return {poste['ref']: poste for poste in data}
+    return data if isinstance(data, dict) else {}
+
+bilan_actif_dict = convert_list_to_dict(results.get('bilan_actif', {}))
+
+# Puis reconvertir en liste
+if isinstance(bilan_actif_dict, dict):
+    bilan_actif_list = list(bilan_actif_dict.values())
+else:
+    bilan_actif_list = bilan_actif_dict if isinstance(bilan_actif_dict, list) else []
+```
+
+STATUT: ✅ Code corrigé
+
+SOUS-CORRECTION 2C: FONCTION REMPLIR_ONGLET_DYNAMIQUE
+
+AJOUTÉ:
+```python
+def remplir_onglet_dynamique(ws, postes, col_debut, ligne_debut):
+    compteur = 0
+    ligne = ligne_debut
+    col_n1 = chr(ord(col_debut) + 1)
+    
+    for poste in postes:
+        montant_n = poste.get('montant_n', poste.get('montant', 0))
+        if write_to_cell(ws, f'{col_debut}{ligne}', montant_n):
+            compteur += 1
+        
+        montant_n1 = poste.get('montant_n1', 0)
+        if write_to_cell(ws, f'{col_n1}{ligne}', montant_n1):
+            compteur += 1
+        
+        ligne += 1
+    
+    return compteur
+```
+
+UTILISATION:
+```python
+compteur = remplir_onglet_dynamique(ws_actif, bilan_actif_list, 'C', 10)
+logger.info(f"✅ {onglet_actif}: {compteur} cellules remplies")
+```
+
+STATUT: ✅ Code corrigé
+
+SOUS-CORRECTION 2D: LOGS DE DIAGNOSTIC
+
+AJOUTÉ:
+```python
+logger.info(f"📋 Onglets disponibles: {wb.sheetnames[:10]}...")
+logger.info(f"📊 Données reçues - Clés: {list(results.keys())}")
+logger.info(f"   Type bilan_actif: {type(results.get('bilan_actif'))}")
+logger.info(f"📊 Données converties:")
+logger.info(f"   - Bilan Actif: {len(bilan_actif_dict)} postes")
+logger.info(f"📊 Données à remplir:")
+logger.info(f"   - Bilan Actif: {len(bilan_actif_list)} postes")
+```
+
+STATUT: ✅ Code corrigé
+
+================================================================================
+SECTION 5: FICHIERS IMPLIQUÉS
+================================================================================
+
+FICHIERS PRINCIPAUX
+-------------------
+
+1. py_backend/export_liasse.py
+   Rôle: Endpoint API et remplissage de la liasse
+   Fonctions clés:
+   - remplir_liasse_officielle(results, nom_entreprise, exercice)
+   - remplir_onglet_dynamique(ws, postes, col_debut, ligne_debut)
+   - convert_list_to_dict(data)
+   - write_to_cell(ws, cell_addr, value)
+   - generer_liasse() [endpoint FastAPI]
+
+2. py_backend/generer_onglet_controle_coherence.py
+   Rôle: Génération de l'onglet "Contrôle de cohérence"
+   Fonctions clés:
+   - generer_etats_controle_pour_export(results)
+   - ajouter_onglet_controle_coherence(wb, etats_controle)
+   - format_montant_excel(montant)
+
+3. py_backend/etats_controle_exhaustifs.py
+   Rôle: Calculs des 16 états de contrôle
+   Fonctions: 16 fonctions calculer_etat_controle_*()
+   Note: Contient aussi generer_controles_exhaustifs() qui n'est PAS utilisée
+
+4. py_backend/etats_financiers_v2.py
+   Rôle: Génération des états financiers au format liasse
+   Fonctions clés:
+   - process_balance_to_liasse_format()
+   - generate_section_html_liasse()
+   - format_montant_liasse()
+
+5. public/ExportLiasseHandler.js
+   Rôle: Déclenchement de l'export depuis le frontend
+   Fonction: handleExportLiasse()
+
+FICHIERS DE CONFIGURATION
+--------------------------
+
+6. py_backend/structure_liasse_complete.json
+   Rôle: Structure complète de la liasse officielle
+   Contenu: Définition de tous les postes avec références, libellés, notes
+
+7. py_backend/correspondances_syscohada.json
+   Rôle: Correspondances comptes SYSCOHADA → postes liasse
+   Contenu: Mapping des racines de comptes vers les postes
+
+FICHIERS TEMPLATE
+-----------------
+
+8. Liasse_officielle_revise.xlsx (ou LIASSE.xlsx)
+   Rôle: Template Excel vierge de la liasse officielle
+   Onglets: BILAN-ACTIF, BILAN-PASSIF, COMPTE-RESULTAT, etc.
+   Note: Le nom exact peut varier selon la version
+
+FICHIERS DE TEST
+----------------
+
+9. py_backend/test_corrections_export.py
+   Rôle: Vérification que les corrections sont appliquées
+   Tests:
+   - Import des 16 fonctions de calcul
+   - Appels à remplir_onglet_dynamique()
+   - Recherche flexible des onglets
+   - Conversion dict→list
+
+10. py_backend/test_export_double_probleme.py
+    Rôle: Test complet de l'export avec données réelles
+    Note: Nécessite FastAPI installé
+
+FICHIERS DE DOCUMENTATION
+--------------------------
+
+11. 00_CORRECTIONS_FINALES_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+    Rôle: Documentation des corrections appliquées
+    Contenu: Détails des 2 problèmes et solutions
+
+12. QUICK_TEST_CORRECTIONS_FINALES.txt
+    Rôle: Guide rapide pour tester les corrections
+    Contenu: Commandes de test et résultats attendus
+
+13. Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+    Rôle: Documentation complète du problème
+    Fichiers: README.md, 00_COMMENCER_ICI.txt
+
+================================================================================
+SECTION 6: HYPOTHÈSES SUR LA CAUSE DU PROBLÈME PERSISTANT
+================================================================================
+
+HYPOTHÈSE 1: PROBLÈME DE SIGNATURE DE FONCTION
+-----------------------------------------------
+Les fonctions calculer_etat_controle_*() attendent peut-être des paramètres
+dans un format différent de ce qu'on leur passe.
+
+À VÉRIFIER:
+- Signature exacte de chaque fonction dans etats_controle_exhaustifs.py
+- Format des données passées (liste vs dict, structure des postes)
+- Présence de tous les champs requis (ref, libelle, montant_n, montant_n1)
+
+HYPOTHÈSE 2: DONNÉES MANQUANTES OU MAL FORMATÉES
+-------------------------------------------------
+Le dictionnaire results ne contient peut-être pas toutes les données nécessaires
+ou dans le bon format.
+
+À VÉRIFIER:
+- Contenu exact de results au moment de l'appel
+- Présence de balance_n, balance_n1, tableau_flux_tresorerie
+- Format des listes (présence de tous les champs)
+- Valeurs des montants (0, None, ou valeurs réelles)
+
+HYPOTHÈSE 3: PROBLÈME DE TEMPLATE EXCEL
+----------------------------------------
+Le template Excel n'a peut-être pas la structure attendue.
+
+À VÉRIFIER:
+- Noms exacts des onglets dans le template
+- Numéros de lignes de départ (ligne 10 pour ACTIF, PASSIF, RESULTAT)
+- Colonnes utilisées (C pour N, D pour N-1 dans ACTIF)
+- Présence de cellules fusionnées qui bloquent l'écriture
+
+HYPOTHÈSE 4: EXCEPTION SILENCIEUSE
+-----------------------------------
+Une exception se produit mais est capturée par le try/except et retourne
+des états vides avec message d'erreur.
+
+À VÉRIFIER:
+- Logs du backend lors de l'export
+- Contenu exact de l'exception (si présente)
+- Stack trace complète
+
+HYPOTHÈSE 5: PROBLÈME DE CONVERSION DICT→LIST
+----------------------------------------------
+La conversion bidirectionnelle dict→list→dict peut corrompre les données.
+
+À VÉRIFIER:
+- Pourquoi faire dict→list puis list→dict?
+- Perte de données lors de la conversion?
+- Ordre des postes préservé?
+
+================================================================================
+SECTION 7: PLAN D'ACTION POUR RÉSOLUTION
+================================================================================
+
+ÉTAPE 1: DIAGNOSTIC APPROFONDI
+-------------------------------
+
+1.1. ACTIVER LES LOGS DÉTAILLÉS
+   - Ajouter des logs dans generer_etats_controle_pour_export()
+   - Logger le contenu exact de results
+   - Logger chaque étape de conversion
+   - Logger les paramètres passés à chaque fonction calculer_etat_*()
+
+1.2. CRÉER UN TEST UNITAIRE ISOLÉ
+   - Créer un fichier test_etats_controle_unitaire.py
+   - Tester chaque fonction calculer_etat_*() individuellement
+   - Utiliser des données minimales mais valides
+   - Vérifier le format de retour de chaque fonction
+
+1.3. VÉRIFIER LE TEMPLATE EXCEL
+   - Ouvrir Liasse_officielle_revise.xlsx
+   - Noter les noms EXACTS des onglets
+   - Noter les numéros de lignes et colonnes
+   - Vérifier les cellules fusionnées
+   - Créer un mapping précis: poste → cellule
+
+1.4. TRACER L'EXÉCUTION COMPLÈTE
+   - Ajouter des breakpoints dans le code
+   - Exécuter un export avec des données de test
+   - Observer le contenu de chaque variable
+   - Identifier le point exact où ça échoue
+
+ÉTAPE 2: TESTS CIBLÉS
+----------------------
+
+2.1. TEST DES ÉTATS DE CONTRÔLE
+   Créer: py_backend/test_etats_controle_isole.py
+   
+   ```python
+   from etats_controle_exhaustifs import calculer_etat_controle_bilan_actif_n
+   
+   # Données minimales
+   bilan_actif = [
+       {'ref': 'AD', 'libelle': 'Test', 'montant_n': 1000, 'montant_n1': 900}
+   ]
+   
+   # Test
+   etat = calculer_etat_controle_bilan_actif_n(bilan_actif)
+   print(f"Résultat: {etat}")
+   
+   # Vérifier la structure
+   assert 'titre' in etat
+   assert 'postes' in etat
+   assert isinstance(etat['postes'], list)
+   ```
+
+2.2. TEST DU REMPLISSAGE EXCEL
+   Créer: py_backend/test_remplissage_excel_isole.py
+   
+   ```python
+   from openpyxl import load_workbook
+   from export_liasse import remplir_onglet_dynamique
+   
+   # Charger template
+   wb = load_workbook('Liasse_officielle_revise.xlsx')
+   
+   # Données minimales
+   postes = [
+       {'ref': 'AD', 'libelle': 'Test', 'montant_n': 1000, 'montant_n1': 900}
+   ]
+   
+   # Trouver onglet ACTIF
+   onglet_actif = None
+   for name in wb.sheetnames:
+       if 'ACTIF' in name.upper():
+           onglet_actif = name
+           break
+   
+   print(f"Onglet trouvé: {onglet_actif}")
+   
+   # Tester remplissage
+   ws = wb[onglet_actif]
+   compteur = remplir_onglet_dynamique(ws, postes, 'C', 10)
+   print(f"Cellules remplies: {compteur}")
+   
+   # Sauvegarder pour vérification
+   wb.save('test_remplissage.xlsx')
+   ```
+
+2.3. TEST DE LA CHAÎNE COMPLÈTE
+   Créer: py_backend/test_chaine_complete_export.py
+   
+   ```python
+   # Simuler un appel complet avec données minimales
+   results = {
+       'bilan_actif': [
+           {'ref': 'AD', 'libelle': 'Test', 'montant_n': 1000, 'montant_n1': 900}
+       ],
+       'bilan_passif': [
+           {'ref': 'DA', 'libelle': 'Test', 'montant_n': 1000, 'montant_n1': 900}
+       ],
+       'compte_resultat': [
+           {'ref': 'TA', 'libelle': 'Test', 'montant_n': 1000, 'montant_n1': 900}
+       ],
+       'balance_n': [
+           {'numero_compte': '101000', 'libelle': 'Test', 
+            'solde_debit': 0, 'solde_credit': 1000, 'solde_net': -1000}
+       ],
+       'balance_n1': [],
+       'tableau_flux_tresorerie': []
+   }
+   
+   # Appeler la fonction
+   from export_liasse import remplir_liasse_officielle
+   
+   file_content = remplir_liasse_officielle(results, "TEST", "2024")
+   
+   # Sauvegarder
+   with open('test_export_complet.xlsx', 'wb') as f:
+       f.write(file_content)
+   
+   print("Export terminé, vérifier test_export_complet.xlsx")
+   ```
+
+ÉTAPE 3: CORRECTIONS CIBLÉES
+-----------------------------
+
+3.1. SI PROBLÈME DANS generer_etats_controle_pour_export()
+   - Vérifier que toutes les données sont extraites correctement
+   - Vérifier que les conversions dict→list fonctionnent
+   - Vérifier que les paramètres passés aux fonctions sont corrects
+   - Ajouter des valeurs par défaut pour éviter les None
+
+3.2. SI PROBLÈME DANS LES FONCTIONS calculer_etat_*()
+   - Vérifier que les fonctions gèrent les listes vides
+   - Vérifier que les fonctions gèrent les valeurs None
+   - Vérifier que les fonctions retournent le bon format
+   - Ajouter des try/except pour capturer les erreurs
+
+3.3. SI PROBLÈME DANS remplir_onglet_dynamique()
+   - Vérifier que les noms d'onglets sont trouvés
+   - Vérifier que les numéros de lignes/colonnes sont corrects
+   - Vérifier que write_to_cell() fonctionne
+   - Tester avec des cellules fusionnées
+
+3.4. SI PROBLÈME DANS LE TEMPLATE
+   - Créer un nouveau template simplifié
+   - Tester avec un template minimal
+   - Vérifier la compatibilité openpyxl
+
+ÉTAPE 4: VALIDATION
+--------------------
+
+4.1. TESTS UNITAIRES
+   - Chaque fonction testée individuellement
+   - Tous les tests passent au vert
+
+4.2. TESTS D'INTÉGRATION
+   - Export complet avec données minimales
+   - Export complet avec données réelles
+   - Vérification manuelle du fichier Excel généré
+
+4.3. TESTS EN PRODUCTION
+   - Démarrer le backend
+   - Charger une balance réelle
+   - Générer les états financiers
+   - Exporter la liasse
+   - Vérifier le fichier Excel
+
+================================================================================
+SECTION 8: COMMANDES UTILES
+================================================================================
+
+VÉRIFIER LES CORRECTIONS APPLIQUÉES
+------------------------------------
+cd py_backend
+python test_corrections_export.py
+
+DÉMARRER LE BACKEND
+-------------------
+cd py_backend
+python main.py
+
+TESTER L'EXPORT (nécessite backend démarré)
+--------------------------------------------
+# Dans l'interface web:
+1. Charger balance N et N-1
+2. Générer états financiers
+3. Cliquer "Exporter Liasse Officielle"
+4. Vérifier le fichier téléchargé
+
+CONSULTER LES LOGS
+------------------
+# Les logs s'affichent dans la console où le backend est démarré
+# Chercher les lignes avec:
+- 📊 Début du remplissage de la liasse officielle
+- 📋 Onglets disponibles
+- 📊 Données reçues
+- 📊 Données converties
+- 📊 Génération des 16 états de contrôle
+- ✅ ou ❌ pour les résultats
+
+VÉRIFIER LE TEMPLATE
+---------------------
+# Ouvrir avec Excel ou LibreOffice
+Liasse_officielle_revise.xlsx
+
+# Noter:
+- Noms des onglets
+- Première ligne de données (généralement ligne 10)
+- Colonnes pour N et N-1
+
+================================================================================
+SECTION 9: DOCUMENTS DE RÉFÉRENCE
+================================================================================
+
+DOCUMENTATION EXISTANTE
+-----------------------
+
+1. 00_CORRECTIONS_FINALES_DOUBLE_PROBLEME_05_AVRIL_2026.txt
+   Contenu: Détails des corrections appliquées
+   Sections: Problèmes, Causes, Solutions, Tests
+
+2. QUICK_TEST_CORRECTIONS_FINALES.txt
+   Contenu: Guide rapide de test
+   Sections: Vérification, Test export, Logs, Dépannage
+
+3. Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/README.md
+   Contenu: Documentation complète du problème
+   Sections: Architecture, Flux, Solutions
+
+4. Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+   Contenu: Architecture globale des états financiers
+   Sections: Modules, Flux de données, Formats
+
+5. Doc_Etat_Fin/STRUCTURE_LIASSE_OFFICIELLE.md
+   Contenu: Structure de la liasse officielle SYSCOHADA
+   Sections: Onglets, Postes, Références
+
+MÉMOS CONNEXES
+--------------
+
+6. 00_PROBLEME_PERSISTANT_LIASSE_VIDE_05_AVRIL_2026.txt
+   Problème: Liasse vide après export
+   Lien: Même problème, approche différente
+
+7. 00_DIAGNOSTIC_LIASSE_VIDE_05_AVRIL_2026.txt
+   Contenu: Diagnostic du problème de liasse vide
+   Lien: Analyse détaillée des causes
+
+8. 00_SOLUTION_LIASSE_VIDE_05_AVRIL_2026.txt
+   Contenu: Solutions tentées pour la liasse vide
+   Lien: Historique des tentatives
+
+9. 00_CORRECTION_EXPORT_LIASSE_REUSSIE_05_AVRIL_2026.txt
+   Contenu: Corrections qui ont fonctionné (partiellement)
+   Lien: Succès partiels
+
+SESSIONS PRÉCÉDENTES
+--------------------
+
+10. 00_CONFIRMATION_CORRECTIONS_APPLIQUEES_05_AVRIL_2026.txt
+    Date: 05 Avril 2026 (matin)
+    Contenu: Vérification que les corrections étaient dans le code
+    Résultat: Corrections présentes mais problème persiste
+
+11. 00_RECAP_SESSION_VERIFICATION_05_AVRIL_2026.txt
+    Date: 05 Avril 2026 (matin)
+    Contenu: Récapitulatif de la session de vérification
+    Résultat: Code correct, problème à l'exécution
+
+12. GUIDE_TEST_RAPIDE_CORRECTIONS.txt
+    Date: 05 Avril 2026
+    Contenu: Guide pour tester rapidement les corrections
+    Utilité: Vérification rapide
+
+================================================================================
+SECTION 10: POINTS D'ATTENTION CRITIQUES
+================================================================================
+
+ATTENTION 1: FORMAT DES DONNÉES
+--------------------------------
+⚠️ Les données peuvent être au format LISTE ou DICT selon le module qui les génère
+
+- etats_financiers_v2.py retourne des LISTES
+- Certains modules anciens retournent des DICTS
+- La conversion dict→list doit être robuste
+- Vérifier TOUJOURS le type avant traitement
+
+ATTENTION 2: NOMS DES ONGLETS
+------------------------------
+⚠️ Les noms d'onglets varient selon la version du template
+
+Variations possibles:
+- "ACTIF" vs "BILAN-ACTIF" vs "Bilan Actif"
+- "PASSIF" vs "BILAN-PASSIF" vs "Bilan Passif"
+- "RESULTAT" vs "COMPTE-RESULTAT" vs "Compte de Résultat"
+
+Solution: Recherche flexible avec .upper() et 'in'
+
+ATTENTION 3: CELLULES FUSIONNÉES
+---------------------------------
+⚠️ Les cellules fusionnées nécessitent un traitement spécial
+
+- write_to_cell() gère les cellules fusionnées
+- Écrire dans la cellule en haut à gauche de la fusion
+- Vérifier avec isinstance(cell, MergedCell)
+
+ATTENTION 4: NUMÉROS DE LIGNES
+-------------------------------
+⚠️ Les numéros de lignes peuvent varier selon le template
+
+Valeurs courantes:
+- Ligne 10: Première ligne de données (ACTIF, PASSIF, RESULTAT)
+- Ligne 1: Titre principal
+- Ligne 3: Nom entreprise
+- Ligne 5: Exercice
+
+Vérifier TOUJOURS dans le template avant de coder en dur
+
+ATTENTION 5: COLONNES N ET N-1
+-------------------------------
+⚠️ Les colonnes pour N et N-1 varient selon l'onglet
+
+ACTIF:
+- Colonne C: Exercice N
+- Colonne D: Exercice N-1
+
+PASSIF:
+- Colonne E: Exercice N
+- Colonne F: Exercice N-1
+
+RESULTAT:
+- Colonne C: Exercice N (Charges)
+- Colonne D: Exercice N-1 (Charges)
+- Colonne E: Exercice N (Produits)
+- Colonne F: Exercice N-1 (Produits)
+
+ATTENTION 6: GESTION DES ERREURS
+---------------------------------
+⚠️ Les exceptions doivent être loggées ET propagées
+
+Mauvais:
+```python
+try:
+    # code
+except Exception as e:
+    logger.error(f"Erreur: {e}")
+    return []  # ❌ Masque le problème
+```
+
+Bon:
+```python
+try:
+    # code
+except Exception as e:
+    logger.error(f"Erreur: {e}", exc_info=True)
+    raise  # ✅ Propage l'erreur
+```
+
+ATTENTION 7: LOGS DÉTAILLÉS
+----------------------------
+⚠️ Les logs doivent être TRÈS détaillés pour diagnostiquer
+
+Logs essentiels:
+- Contenu de results (clés et types)
+- Nombre de postes dans chaque section
+- Noms d'onglets trouvés
+- Nombre de cellules remplies
+- Toute exception avec stack trace complète
+
+ATTENTION 8: TESTS AVEC DONNÉES RÉELLES
+----------------------------------------
+⚠️ Tester avec des données RÉELLES, pas seulement des données de test
+
+Données de test:
+- Peuvent masquer des problèmes
+- Ne couvrent pas tous les cas
+- Peuvent avoir un format différent
+
+Données réelles:
+- Révèlent les vrais problèmes
+- Testent tous les cas limites
+- Format exact de production
+
+================================================================================
+SECTION 11: CHECKLIST DE RÉSOLUTION
+================================================================================
+
+☐ 1. LIRE CE MÉMO COMPLÈTEMENT
+   Comprendre le contexte, l'architecture, les corrections déjà appliquées
+
+☐ 2. VÉRIFIER LES CORRECTIONS APPLIQUÉES
+   cd py_backend
+   python test_corrections_export.py
+   Résultat attendu: Tous les tests au vert
+
+☐ 3. CRÉER DES TESTS UNITAIRES
+   Créer test_etats_controle_isole.py
+   Tester chaque fonction calculer_etat_*() individuellement
+
+☐ 4. CRÉER UN TEST DE REMPLISSAGE EXCEL
+   Créer test_remplissage_excel_isole.py
+   Tester remplir_onglet_dynamique() avec template réel
+
+☐ 5. ACTIVER LES LOGS DÉTAILLÉS
+   Ajouter des logs dans generer_etats_controle_pour_export()
+   Logger le contenu exact de results
+
+☐ 6. TESTER AVEC DONNÉES MINIMALES
+   Créer test_chaine_complete_export.py
+   Utiliser des données minimales mais valides
+
+☐ 7. ANALYSER LES LOGS
+   Démarrer le backend
+   Faire un export
+   Analyser les logs ligne par ligne
+
+☐ 8. IDENTIFIER LE POINT DE DÉFAILLANCE
+   Où exactement ça échoue?
+   Quelle fonction? Quelle ligne?
+
+☐ 9. CORRIGER LE PROBLÈME IDENTIFIÉ
+   Appliquer la correction ciblée
+   Tester immédiatement
+
+☐ 10. VALIDER AVEC DONNÉES RÉELLES
+    Charger une balance réelle
+    Générer les états financiers
+    Exporter la liasse
+    Vérifier le fichier Excel
+
+☐ 11. DOCUMENTER LA SOLUTION
+    Créer un fichier 00_SOLUTION_FINALE_*.txt
+    Expliquer la cause et la solution
+    Ajouter des exemples
+
+☐ 12. METTRE À JOUR CE MÉMO
+    Ajouter la solution trouvée
+    Marquer le problème comme résolu
+
+================================================================================
+SECTION 12: CONTACT ET SUPPORT
+================================================================================
+
+POUR QUESTIONS OU AIDE
+-----------------------
+Ce mémo est destiné à un agent qui reprendra la résolution du problème.
+
+Si vous êtes cet agent:
+1. Lisez ce mémo complètement
+2. Suivez la checklist de résolution
+3. Documentez vos découvertes
+4. Mettez à jour ce mémo avec la solution
+
+HISTORIQUE DES TENTATIVES
+--------------------------
+- 05 Avril 2026 (matin): Corrections appliquées, problème persiste
+- 05 Avril 2026 (après-midi): Création de ce mémo pour reprise
+
+================================================================================
+FIN DU MÉMO
+================================================================================
+
+DATE DE CRÉATION: 05 Avril 2026
+STATUT: PROBLÈME NON RÉSOLU - EN ATTENTE DE REPRISE
+PRIORITÉ: HAUTE
+IMPACT: BLOQUANT POUR L'EXPORT DE LA LIASSE OFFICIELLE
+
+================================================================================

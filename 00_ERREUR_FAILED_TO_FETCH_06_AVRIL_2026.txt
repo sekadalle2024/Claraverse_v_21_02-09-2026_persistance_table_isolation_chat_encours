@@ -1,0 +1,60 @@
+================================================================================
+ERREUR: FAILED TO FETCH - DIAGNOSTIC ET SOLUTION
+Date: 06 Avril 2026
+================================================================================
+
+SYMPTÔME:
+---------
+Erreur "failed to fetch" lors du traitement de la balance après les corrections
+
+CAUSE RACINE:
+-------------
+Les DataFrames pandas (balance_n_df, balance_n1_df) ajoutés à results_liasse
+ne sont PAS sérialisables en JSON pour la réponse API.
+
+Le backend FastAPI essaie de retourner results_liasse en JSON, mais échoue
+car les DataFrames ne peuvent pas être convertis automatiquement.
+
+ERREUR DANS LE CODE:
+--------------------
+Fichier: py_backend/etats_financiers.py
+Ligne: ~1557
+
+Code problématique:
+```python
+results_liasse['balance_n_df'] = balance_df  # ❌ DataFrame non sérialisable
+results_liasse['balance_n1_df'] = balance_n1_df  # ❌ DataFrame non sérialisable
+```
+
+SOLUTION:
+---------
+Nous devons stocker les balances SÉPARÉMENT et les passer uniquement lors
+de l'export, PAS dans la réponse JSON de l'API.
+
+DEUX APPROCHES POSSIBLES:
+
+APPROCHE 1: Stocker les balances en session/cache (RECOMMANDÉ)
+- Stocker les balances dans une variable globale ou cache
+- Les récupérer lors de l'export de la liasse
+- Ne pas les inclure dans results_liasse pour l'API
+
+APPROCHE 2: Convertir les DataFrames en dict
+- Convertir balance_df.to_dict('records')
+- Reconvertir en DataFrame dans export_liasse.py
+- Plus lourd mais fonctionne
+
+CORRECTION IMMÉDIATE:
+---------------------
+Retirer les balances de results_liasse et utiliser une autre méthode
+pour les transmettre à export_liasse.py
+
+================================================================================
+PROCHAINES ÉTAPES
+================================================================================
+
+1. Annuler la modification qui ajoute les DataFrames à results_liasse
+2. Implémenter une solution de cache/session pour les balances
+3. Modifier export_liasse.py pour récupérer les balances du cache
+4. Tester le workflow complet
+
+================================================================================

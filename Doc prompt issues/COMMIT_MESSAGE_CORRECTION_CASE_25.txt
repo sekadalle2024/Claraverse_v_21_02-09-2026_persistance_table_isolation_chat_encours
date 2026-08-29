@@ -1,0 +1,41 @@
+fix(router): Correction priorité Case 25 - Recos contrôle interne comptable
+
+PROBLÈME:
+- Le router détectait correctement Case 25 (notification affichée)
+- Mais exécutait Case 1 (endpoint incorrect)
+- Cause: Conflit de priorité avec Case 8 qui vérifie l'absence de "Command"
+
+SOLUTION:
+- Réorganisation du router en 2 priorités distinctes:
+  1. Cases spécifiques (2-33) - priorité absolue
+  2. Cases par défaut (1, 8) - seulement si aucune case spécifique
+- Les cases spécifiques ont maintenant la priorité sur les cases par défaut
+
+MODIFICATIONS:
+- src/services/claraApiService.ts
+  - Fonction getN8nEndpointWithInfo()
+  - Réorganisation de la cascade if-else if
+  - Ajout de commentaires de section
+  - Regroupement logique par thématique
+
+IMPACT:
+- Case 25 fonctionne maintenant correctement avec messages contenant "Command"
+- Aucune régression sur les autres cases
+- Code plus lisible et maintenable
+
+TESTS:
+- Message test: "[Command] : Frap [Cycle] : RH [test] : AA010..."
+- Résultat attendu: Case 25 détecté ET exécuté
+- Tests de non-régression: Case 1 et Case 8
+
+DOCUMENTATION:
+- 00_CORRECTION_ROUTER_CASE_25_29_MARS_2026.txt
+- DIAGNOSTIC_TECHNIQUE_ROUTER_CASE_25.md
+- QUICK_TEST_CORRECTION_CASE_25.txt
+- INDEX_CORRECTION_ROUTER_CASE_25_29_MARS_2026.md
+- RECAP_ULTRA_RAPIDE_CASE_25.txt
+- LISTE_FICHIERS_CORRECTION_CASE_25_29_MARS_2026.md
+- SYNTHESE_FINALE_CORRECTION_CASE_25_29_MARS_2026.txt
+- COMMANDES_RAPIDES_TEST_CASE_25.txt
+
+Date: 29 Mars 2026

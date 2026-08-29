@@ -1,0 +1,171 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🚨 ACTION URGENTE - DIAGNOSTIC MENU CIA                   ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+                    📋 PROBLÈMES IDENTIFIÉS
+═══════════════════════════════════════════════════════════════
+
+1. ❌ Le résultat ne s'affiche pas dans le tableau dédié
+2. ❌ Les colonnes sont confondues (problème critique)
+
+
+═══════════════════════════════════════════════════════════════
+                    🔍 DIAGNOSTIC IMMÉDIAT
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 1: OUVRIR LA PAGE
+→ http://localhost:5173/test-menu-cia.html
+
+ÉTAPE 2: OUVRIR LA CONSOLE (F12)
+
+ÉTAPE 3: OBSERVER LES LOGS AUTOMATIQUES
+Le diagnostic s'exécute automatiquement après 2 secondes.
+Vous verrez:
+  - Nombre de tables
+  - En-têtes de chaque colonne
+  - État d'affichage (visible/masqué)
+  - Contenu de la table "Résultat Final"
+
+ÉTAPE 4: COCHER DES RÉPONSES
+1. Cocher quelques réponses dans les tables
+2. Clic droit → "Résultat final"
+
+ÉTAPE 5: DIAGNOSTIC MANUEL
+Dans la console, taper:
+```
+diagnosticMenuCIA()
+```
+
+ÉTAPE 6: COPIER LES LOGS
+Copier TOUS les logs de la console et me les envoyer.
+
+
+═══════════════════════════════════════════════════════════════
+                    📊 INFORMATIONS À COLLECTER
+═══════════════════════════════════════════════════════════════
+
+Dans la console, exécuter ces commandes et copier les résultats:
+
+1. Vérifier les tables
+```javascript
+const tables = document.querySelectorAll('table');
+console.log('Nombre de tables:', tables.length);
+```
+
+2. Vérifier les en-têtes
+```javascript
+tables.forEach((table, i) => {
+  const headers = table.querySelectorAll('th');
+  console.log(`Table ${i+1}:`, Array.from(headers).map(h => h.textContent.trim()));
+});
+```
+
+3. Vérifier la table Résultat Final
+```javascript
+const resultatTable = document.querySelector('[data-resultat-table]');
+if (resultatTable) {
+  console.log('Table Résultat trouvée:', resultatTable);
+  console.log('Contenu:', resultatTable.querySelector('td')?.textContent);
+} else {
+  console.log('❌ Table Résultat NON trouvée');
+}
+```
+
+4. Vérifier les colonnes masquées
+```javascript
+tables.forEach((table, i) => {
+  const headers = table.querySelectorAll('th');
+  headers.forEach((h, j) => {
+    if (h.style.display === 'none') {
+      console.log(`Table ${i+1}, Colonne ${j+1} "${h.textContent}" est MASQUÉE`);
+    }
+  });
+});
+```
+
+
+═══════════════════════════════════════════════════════════════
+                    🎯 CE QUE JE DOIS SAVOIR
+═══════════════════════════════════════════════════════════════
+
+QUESTION 1: Combien de tables voyez-vous sur la page?
+
+QUESTION 2: Quels sont les en-têtes de colonnes visibles?
+(Exemple: REF QUESTION, Question, Option, Reponse User, etc.)
+
+QUESTION 3: Y a-t-il une table avec "Résultat Final" comme en-tête?
+
+QUESTION 4: Si oui, que contient cette table?
+(Vide? Un nombre? Autre chose?)
+
+QUESTION 5: Quand vous faites défiler horizontalement, 
+voyez-vous toutes les colonnes?
+
+QUESTION 6: Les colonnes Score et Remarques sont-elles visibles?
+
+
+═══════════════════════════════════════════════════════════════
+                    📸 CAPTURES D'ÉCRAN
+═══════════════════════════════════════════════════════════════
+
+Si possible, prendre des captures d'écran de:
+
+1. La page complète AVANT le clic droit
+2. La page complète APRÈS "Résultat final"
+3. La console avec les logs
+4. Une table en scrollant horizontalement
+
+
+═══════════════════════════════════════════════════════════════
+                    🔧 TESTS SUPPLÉMENTAIRES
+═══════════════════════════════════════════════════════════════
+
+Test 1: Vérifier le chargement des scripts
+```javascript
+console.log('menu_cia.js:', typeof window.ClaraverseCIAMenu);
+console.log('fix-v3:', typeof window.ClaraverseCIAMenu?.ensureReponseCiaHeader);
+```
+
+Test 2: Forcer l'affichage de toutes les colonnes
+```javascript
+document.querySelectorAll('th, td').forEach(cell => {
+  cell.style.display = 'table-cell';
+  cell.style.visibility = 'visible';
+});
+```
+
+Test 3: Compter les colonnes
+```javascript
+const table = document.querySelector('table');
+const headers = table.querySelectorAll('thead th, tr:first-child th');
+console.log('Nombre de colonnes:', headers.length);
+headers.forEach((h, i) => {
+  console.log(`${i+1}. ${h.textContent.trim()}`);
+});
+```
+
+
+═══════════════════════════════════════════════════════════════
+                    ⚡ ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════
+
+1. ✅ Ouvrir test-menu-cia.html
+2. ✅ Ouvrir la console (F12)
+3. ✅ Observer les logs automatiques
+4. ✅ Exécuter diagnosticMenuCIA()
+5. ✅ Copier TOUS les logs
+6. ✅ M'envoyer les logs + réponses aux questions
+
+
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   📞 AVEC CES INFORMATIONS, JE POURRAI CORRIGER            ║
+║      LE PROBLÈME IMMÉDIATEMENT                              ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+Version: DIAGNOSTIC URGENT
+Date: Décembre 2024

@@ -1,0 +1,232 @@
+================================================================================
+PROBLÈME PERSISTANT: LIASSE EXPORTÉE TOUJOURS VIDE
+================================================================================
+
+Date: 05 Avril 2026
+Statut: ⚠️ PROBLÈME PERSISTANT
+
+================================================================================
+SITUATION ACTUELLE
+================================================================================
+
+Tests effectués:
+  ✅ Fonction write_to_cell() fonctionne (test_export_avec_correction.py)
+  ✅ Cellules fusionnées gérées correctement
+  ✅ Conversion LIST → DICT implémentée
+  ❌ Fichier Excel exporté toujours vide
+
+Conclusion: Le problème ne vient PAS de la fonction write_to_cell()
+
+================================================================================
+HYPOTHÈSES RESTANTES
+================================================================================
+
+Hypothèse 1: Les mappings de cellules sont incorrects
+------------------------------------------------------
+Les constantes MAPPING_BILAN_ACTIF, MAPPING_BILAN_PASSIF, etc. pointent
+vers des cellules qui n'existent pas ou qui ne correspondent pas aux
+postes dans le template Liasse_officielle_revise.xlsx.
+
+Exemple:
+  MAPPING_BILAN_ACTIF = {
+      'AD': 'C10',  # ← Cette cellule correspond-elle vraiment au poste AD?
+      ...
+  }
+
+Hypothèse 2: Les données results sont vides ou mal formatées
+-------------------------------------------------------------
+Le dictionnaire results passé à remplir_liasse_officielle() ne contient
+pas de données, ou les clés ne correspondent pas.
+
+Hypothèse 3: Le backend ne charge pas les modifications
+--------------------------------------------------------
+Le fichier export_liasse.py modifié n'est pas rechargé par le backend.
+
+================================================================================
+SOLUTION IMMÉDIATE: VÉRIFIER LES MAPPINGS
+================================================================================
+
+Étape 1: Ouvrir le template et identifier les cellules exactes
+---------------------------------------------------------------
+1. Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+2. Aller dans l'onglet ACTIF
+3. Identifier la cellule pour le poste "Charges immobilisées" (ref: AD)
+4. Noter la cellule exacte (ex: C10, C15, E10, etc.)
+5. Répéter pour quelques autres postes
+
+Étape 2: Comparer avec les mappings actuels
+--------------------------------------------
+Ouvrir: py_backend/export_liasse.py
+Chercher: MAPPING_BILAN_ACTIF
+
+Vérifier si les cellules correspondent:
+  'AD': 'C10',  # Charges immobilisées
+  'AE': 'C11',  # Frais de recherche et développement
+  ...
+
+Étape 3: Créer un mapping de test minimal
+------------------------------------------
+Créer un fichier: py_backend/test_mapping_minimal.py
+
+```python
+# Test avec UN SEUL poste pour vérifier le mapping
+import openpyxl
+from openpyxl import load_workbook
+
+wb = load_workbook("Liasse_officielle_revise.xlsx")
+ws = wb['ACTIF']
+
+# Tester différentes cellules pour trouver la bonne
+cellules_test = ['C10', 'C11', 'C12', 'C15', 'C20', 'E10', 'E11', 'E15']
+
+print("Test des cellules dans ACTIF:")
+for cellule in cellules_test:
+    cell = ws[cellule]
+    print(f"  {cellule}: {cell.value}")
+
+# Chercher la cellule qui contient "Charges immobilisées" ou "AD"
+print("\nRecherche de 'Charges immobilisées':")
+for row in ws.iter_rows(min_row=1, max_row=50):
+    for cell in row:
+        if cell.value and 'Charges' in str(cell.value):
+            print(f"  Trouvé en {cell.coordinate}: {cell.value}")
+```
+
+================================================================================
+SOLUTION ALTERNATIVE: REDÉMARRER LE BACKEND
+================================================================================
+
+Le backend Python ne recharge pas automatiquement les modifications.
+
+Commandes:
+  1. Arrêter le backend (Ctrl+C dans le terminal)
+  2. Redémarrer: conda activate claraverse_backend
+  3. cd py_backend
+  4. uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+================================================================================
+SOLUTION DE CONTOURNEMENT: EXPORT DIRECT SANS API
+================================================================================
+
+Créer un script qui génère directement le fichier Excel sans passer
+par l'API, pour tester si le problème vient du backend ou du code.
+
+Fichier: py_backend/export_liasse_direct.py
+
+```python
+# -*- coding: utf-8 -*-
+"""
+Export direct de la liasse sans passer par l'API
+"""
+from export_liasse import remplir_liasse_officielle
+import json
+
+# Charger des données de test
+with open('test_data_export_liasse.json', 'r') as f:
+    test_data = json.load(f)
+
+# Générer la liasse
+print("Génération de la liasse...")
+file_content = remplir_liasse_officielle(
+    results=test_data,
+    nom_entreprise="TEST ENTREPRISE",
+    exercice="2024"
+)
+
+# Sauvegarder
+with open('liasse_export_direct.xlsx', 'wb') as f:
+    f.write(file_content)
+
+print("✅ Fichier généré: liasse_export_direct.xlsx")
+print("   Ouvrir ce fichier pour vérifier les données")
+```
+
+Commande:
+  cd py_backend
+  conda activate claraverse_backend
+  python export_liasse_direct.py
+
+================================================================================
+DIAGNOSTIC APPROFONDI: VÉRIFIER LES LOGS
+================================================================================
+
+Les logs ajoutés dans export_liasse.py devraient montrer:
+  - "Données converties: X postes"
+  - "ACTIF: X cellules remplies, Y erreurs"
+  - "PASSIF: X cellules remplies, Y erreurs"
+
+Si ces logs n'apparaissent pas:
+  → Le backend n'a pas rechargé le fichier modifié
+  → Solution: Redémarrer le backend
+
+Si les logs montrent "0 cellules remplies":
+  → Les données results sont vides
+  → Solution: Vérifier la génération des données
+
+Si les logs montrent "X cellules remplies" mais le fichier est vide:
+  → Les mappings pointent vers les mauvaises cellules
+  → Solution: Vérifier les mappings avec le template
+
+================================================================================
+PROCHAINES ACTIONS RECOMMANDÉES
+================================================================================
+
+Action 1: Redémarrer le backend (PRIORITÉ HAUTE)
+-------------------------------------------------
+Le backend doit recharger export_liasse.py modifié.
+
+Action 2: Tester l'export direct (PRIORITÉ HAUTE)
+--------------------------------------------------
+Utiliser export_liasse_direct.py pour contourner l'API.
+
+Action 3: Vérifier les mappings (PRIORITÉ MOYENNE)
+---------------------------------------------------
+Comparer les cellules du template avec les mappings dans le code.
+
+Action 4: Vérifier les données (PRIORITÉ BASSE)
+------------------------------------------------
+S'assurer que les données results contiennent bien des valeurs.
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Redémarrer le backend
+Ctrl+C (dans le terminal du backend)
+conda activate claraverse_backend
+cd py_backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+# Test export direct
+cd py_backend
+conda activate claraverse_backend
+python export_liasse_direct.py
+
+# Vérifier les mappings
+cd py_backend
+python test_mapping_minimal.py
+
+================================================================================
+FICHIERS À CRÉER
+================================================================================
+
+1. py_backend/export_liasse_direct.py (export sans API)
+2. py_backend/test_mapping_minimal.py (vérification mappings)
+
+================================================================================
+RÉSUMÉ
+================================================================================
+
+Problème: Liasse exportée vide malgré corrections appliquées
+
+Cause probable:
+  1. Backend n'a pas rechargé les modifications (TRÈS PROBABLE)
+  2. Mappings de cellules incorrects (PROBABLE)
+  3. Données results vides (PEU PROBABLE)
+
+Solution immédiate:
+  1. Redémarrer le backend
+  2. Tester l'export direct
+  3. Vérifier les logs
+
+================================================================================

@@ -1,0 +1,170 @@
+═══════════════════════════════════════════════════════════════════════════
+  INTÉGRATION GUIDE DES COMMANDES - 27 MARS 2026
+═══════════════════════════════════════════════════════════════════════════
+
+✅ STATUT: INTÉGRATION COMPLÈTE
+
+═══════════════════════════════════════════════════════════════════════════
+📦 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. GuideCommandesAccordionRenderer.tsx
+   📁 src/components/Clara_Components/
+   🎯 Composant React pour afficher le guide en accordéon
+
+2. INTEGRATION_GUIDE_COMMANDES_27_MARS_2026.md
+   📁 Racine du projet
+   📖 Documentation complète de l'intégration
+
+3. 00_GUIDE_COMMANDES_INTEGRATION_27_MARS_2026.txt
+   📁 Racine du projet
+   🚀 Ce fichier - Guide de démarrage rapide
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   ✅ Ajout FORMAT 7 pour Guide des Commandes
+   ✅ Détection structure data/Sous-section/Sub-items
+   ✅ Marqueur __GUIDE_COMMANDES_ACCORDION__
+
+2. src/components/Clara_Components/MessageContentRenderer.tsx
+   ✅ Import GuideCommandesAccordionRenderer
+   ✅ Détection et rendu du marqueur
+
+═══════════════════════════════════════════════════════════════════════════
+🧪 TEST RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Démarrer le backend Python:
+   cd py_backend
+   python main.py
+
+2. Démarrer n8n (si pas déjà lancé):
+   Vérifier que le workflow "guide_des_commandes" est actif
+   Endpoint: http://localhost:5678/webhook/guide_des_commandes
+
+3. Démarrer le frontend:
+   npm run dev
+
+4. Dans le chat Claraverse:
+   Taper: "Guide des commandes"
+   
+5. Vérifier:
+   ✓ Affichage de l'accordéon
+   ✓ Page de couverture visible
+   ✓ Accordéons cliquables
+   ✓ Cartes colorées par rubrique
+   ✓ Mode sombre/clair fonctionne
+
+═══════════════════════════════════════════════════════════════════════════
+🎨 FONCTIONNALITÉS
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Menu accordéon à plusieurs niveaux
+✅ Page de couverture pour chaque section
+✅ Cartes d'items avec couleurs dynamiques
+✅ Support mode sombre/clair
+✅ Animations et transitions fluides
+✅ Gestion d'erreur robuste
+✅ Compatible avec tous les workflows existants
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 STRUCTURE DE DONNÉES
+═══════════════════════════════════════════════════════════════════════════
+
+Format attendu depuis n8n:
+[
+  {
+    "data": [
+      {
+        "Sous-section": "Titre de la section",
+        "Sub-items": [
+          {
+            "Sub-item C1": "Titre du sous-item",
+            "Items": [
+              {
+                "Item C1.1": "Titre de l'item",
+                "Rubrique": "Catégorie",
+                "Contenu": "Description détaillée..."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+
+═══════════════════════════════════════════════════════════════════════════
+🔄 FLUX DE TRAITEMENT
+═══════════════════════════════════════════════════════════════════════════
+
+Message utilisateur
+    ↓
+claraApiService.ts (Router Case 29)
+    ↓
+Appel n8n: guide_des_commandes
+    ↓
+Réponse JSON avec structure data
+    ↓
+normalizeN8nResponse() → FORMAT 7
+    ↓
+Marqueur: __GUIDE_COMMANDES_ACCORDION__
+    ↓
+MessageContentRenderer détecte
+    ↓
+GuideCommandesAccordionRenderer
+    ↓
+Affichage accordéon interactif
+
+═══════════════════════════════════════════════════════════════════════════
+🎨 COULEURS PAR RUBRIQUE
+═══════════════════════════════════════════════════════════════════════════
+
+🔵 Bleu      → "départ", "point"
+🟢 Vert      → "cible", "cœur"
+🟣 Violet    → "filtre", "précision"
+🟠 Orange    → "mesure", "tableau"
+🟡 Ambre     → "temps", "maîtrise"
+🔷 Cyan      → "clarté", "document"
+🔹 Indigo    → "situation", "mise"
+⚪ Gris      → Par défaut
+
+═══════════════════════════════════════════════════════════════════════════
+✅ COMPATIBILITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Workflows n8n préservés:
+✓ CIA Cours (FORMAT 5)
+✓ CIA QCM (FORMAT 6)
+✓ Methodo Audit (FORMAT 5)
+✓ Programme de travail (FORMAT 4)
+✓ Lead Balance
+✓ États Financiers
+✓ Recos Revision
+✓ Rapport Synthèse CAC
+✓ Tous les autres endpoints
+
+═══════════════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════
+
+Voir: INTEGRATION_GUIDE_COMMANDES_27_MARS_2026.md
+
+═══════════════════════════════════════════════════════════════════════════
+🚀 PRÊT À UTILISER
+═══════════════════════════════════════════════════════════════════════════
+
+L'intégration est complète et prête à être testée!
+
+Commande test curl:
+curl -X POST "http://localhost:5678/webhook/guide_des_commandes" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "test"}'
+
+Dans le chat:
+"Guide des commandes"
+
+═══════════════════════════════════════════════════════════════════════════

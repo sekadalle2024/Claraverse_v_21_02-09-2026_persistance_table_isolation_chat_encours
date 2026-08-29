@@ -1,0 +1,94 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ TEST RAPIDE: EXHAUSTIVITÉ DES ÉTATS FINANCIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF: Vérifier que N-1, TFT et États de contrôle sont bien générés
+
+═══════════════════════════════════════════════════════════════════════════════
+  🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. REDÉMARRER LE BACKEND (si nécessaire)
+   .\start-claraverse-conda.ps1
+
+2. EXÉCUTER LE DIAGNOSTIC
+   .\Doc_Etat_Fin\Scripts\diagnostic-backend-etat-fin.ps1
+
+3. OUVRIR LE FICHIER HTML GÉNÉRÉ
+   • Fichier sur le bureau: diagnostic_etat_fin_YYYYMMDD_HHMMSS.html
+   • Vérifier visuellement les sections
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ VÉRIFICATIONS À FAIRE
+═══════════════════════════════════════════════════════════════════════════════
+
+SECTIONS PRINCIPALES (5):
+□ BILAN - ACTIF
+□ BILAN - PASSIF
+□ COMPTE DE RÉSULTAT
+□ TABLEAU DES FLUX DE TRÉSORERIE (TFT)
+□ NOTES ANNEXES
+
+ÉTATS DE CONTRÔLE (6):
+□ État de contrôle Bilan Actif
+□ État de contrôle Bilan Passif
+□ État de contrôle Compte de Résultat
+□ État de contrôle TFT
+□ État de contrôle Sens des Comptes
+□ État d'équilibre Bilan
+
+COLONNES:
+□ EXERCICE N affiché
+□ EXERCICE N-1 affiché
+□ EXERCICE N-2 NON affiché (correct)
+
+DONNÉES:
+□ Les montants de N sont différents de N-1
+□ Les accordéons sont cliquables
+□ Les tableaux sont bien formatés
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+Le script de diagnostic doit afficher:
+
+  [OK] BILAN - ACTIF
+  [OK] BILAN - PASSIF
+  [OK] COMPTE DE RÉSULTAT
+  [OK] TFT
+  [OK] NOTES ANNEXES
+  [OK] États de contrôle
+
+  Exercice N: OUI [OK]
+  Exercice N-1: OUI [OK]
+  Exercice N-2: NON [OK - correct]
+
+STATUT: [OK] TOUT EST CORRECT
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔧 SI PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VÉRIFIER LES LOGS DU BACKEND
+   • Le backend affiche les étapes de traitement
+   • Chercher les messages d'erreur
+
+2. VÉRIFIER LE FICHIER DE BALANCE
+   • Fichier: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   • Doit avoir 3 onglets: BALANCE 2018, BALANCE 2017, BALANCE 2016
+
+3. REDÉMARRER LE BACKEND
+   • Arrêter: Ctrl+C dans le terminal du backend
+   • Redémarrer: .\start-claraverse-conda.ps1
+
+4. CONSULTER LA DOCUMENTATION
+   • 00_SOLUTION_EXHAUSTIVITE_ETATS_04_AVRIL_2026.txt
+   • Doc_Etat_Fin/Documentation/00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚡ COMMANDE UNIQUE POUR TOUT TESTER:
+.\Doc_Etat_Fin\Scripts\diagnostic-backend-etat-fin.ps1
+
+═══════════════════════════════════════════════════════════════════════════════

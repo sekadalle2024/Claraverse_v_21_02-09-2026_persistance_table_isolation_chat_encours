@@ -1,0 +1,266 @@
+═══════════════════════════════════════════════════════════════════════════════
+SOLUTION : AFFICHAGE FRONTEND ÉTATS FINANCIERS N ET N-1
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 04 Avril 2026
+🎯 OBJECTIF : Résoudre le problème d'affichage des états financiers dans le frontend
+
+═══════════════════════════════════════════════════════════════════════════════
+RÉSUMÉ DU PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+Le backend calcule correctement les états financiers pour N, N-1 et N-2, et génère
+le HTML avec les accordéons, mais le frontend n'affiche pas ces données dans le chat.
+
+═══════════════════════════════════════════════════════════════════════════════
+VÉRIFICATIONS PRÉLIMINAIRES
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : TESTER LE BACKEND ISOLÉMENT
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Script : Doc_Etat_Fin/Scripts/test-backend-simple.ps1                  │
+│ Commande : .\Doc_Etat_Fin\Scripts\test-backend-simple.ps1              │
+│                                                                          │
+│ Ce script va :                                                           │
+│ 1. Vérifier que le backend est accessible                              │
+│ 2. Envoyer le fichier de balance au backend                            │
+│ 3. Sauvegarder le HTML généré sur le bureau                            │
+│ 4. Vérifier que le HTML contient les accordéons                        │
+└─────────────────────────────────────────────────────────────────────────┘
+
+RÉSULTAT ATTENDU :
+✅ Fichier HTML sur le bureau : test_etats_financiers_backend.html
+✅ Le HTML contient les accordéons avec les colonnes N et N-1
+✅ Les accordéons sont fonctionnels (clic pour ouvrir/fermer)
+
+═══════════════════════════════════════════════════════════════════════════════
+DIAGNOSTIC DU PROBLÈME FRONTEND
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIER CONCERNÉ : public/EtatFinAutoTrigger.js
+
+FONCTION PROBLÉMATIQUE : replaceTableWithResults(table, html)
+
+PROBLÈME POSSIBLE 1 : Sélecteur CSS incorrect
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Sélecteur actuel :                                                       │
+│ "div.prose.prose-base.dark\\:prose-invert.max-w-none"                  │
+│                                                                          │
+│ Ce sélecteur peut ne pas correspondre à la structure réelle du chat    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+SOLUTION 1 : Utiliser un sélecteur plus générique
+```javascript
+// Au lieu de :
+const parentDiv = table.closest(CONFIG.SELECTORS.PARENT_DIV);
+
+// Utiliser :
+const parentDiv = table.closest('div') || table.parentElement;
+```
+
+PROBLÈME POSSIBLE 2 : Les accordéons sont fermés par défaut
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Les accordéons ont la classe "section-content-ef" sans "active"        │
+│ CSS : max-height: 0 (contenu masqué)                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+SOLUTION 2 : Ouvrir le premier accordéon par défaut
+```javascript
+// Après l'insertion du HTML, ouvrir le premier accordéon
+setTimeout(() => {
+    const firstHeader = parentDiv.querySelector('.section-header-ef');
+    const firstContent = parentDiv.querySelector('.section-content-ef');
+    
+    if (firstHeader && firstContent) {
+        firstHeader.classList.add('active');
+        firstContent.classList.add('active');
+    }
+}, 100);
+```
+
+PROBLÈME POSSIBLE 3 : Le HTML est inséré mais pas visible
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Le HTML est inséré dans le DOM mais n'est pas visible à l'écran       │
+│ Causes possibles :                                                      │
+│ - Le div parent est masqué (display: none)                             │
+│ - Le div parent a une hauteur de 0                                     │
+│ - Le HTML est inséré en dehors de la zone visible                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+SOLUTION 3 : Forcer l'affichage du conteneur
+```javascript
+// Après l'insertion, forcer l'affichage
+container.style.display = 'block';
+container.style.visibility = 'visible';
+container.style.opacity = '1';
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+SOLUTION RECOMMANDÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+MODIFIER : public/EtatFinAutoTrigger.js
+
+FONCTION : replaceTableWithResults(table, html)
+
+CHANGEMENTS À APPORTER :
+
+1. AMÉLIORER LA RECHERCHE DU DIV PARENT
+```javascript
+function replaceTableWithResults(table, html) {
+    console.group("🔄 REMPLACEMENT DE LA TABLE");
+
+    // Essayer plusieurs sélecteurs
+    let parentDiv = table.closest(CONFIG.SELECTORS.PARENT_DIV);
+    
+    if (!parentDiv) {
+        console.warn("⚠️ Sélecteur principal non trouvé, essai avec sélecteur générique");
+        parentDiv = table.closest('div');
+    }
+    
+    if (!parentDiv) {
+        console.error("❌ Aucun div parent trouvé!");
+        console.groupEnd();
+        return false;
+    }
+
+    console.log("📍 Div parent trouvé:", parentDiv.className);
+    
+    // ... reste du code ...
+}
+```
+
+2. OUVRIR LE PREMIER ACCORDÉON PAR DÉFAUT
+```javascript
+// Attacher les événements des accordéons APRÈS l'insertion dans le DOM
+setTimeout(() => {
+    const headers = parentDiv.querySelectorAll('.section-header-ef');
+    console.log(`📋 États Financiers: ${headers.length} accordéons trouvés`);
+    
+    headers.forEach((header, index) => {
+        header.addEventListener('click', function() {
+            console.log('🖱️ Clic sur accordéon:', this.textContent.trim());
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            if (content) {
+                content.classList.toggle('active');
+            }
+        });
+        
+        // Ouvrir le premier accordéon par défaut
+        if (index === 0) {
+            header.classList.add('active');
+            const content = header.nextElementSibling;
+            if (content) {
+                content.classList.add('active');
+            }
+        }
+    });
+    
+    console.log('✅ Événements des accordéons attachés');
+}, 100);
+```
+
+3. AJOUTER DES LOGS DE DÉBOGAGE
+```javascript
+// Après l'insertion du HTML
+console.log("📊 HTML inséré:");
+console.log("  - Longueur:", html.length);
+console.log("  - Accordéons:", parentDiv.querySelectorAll('.section-header-ef').length);
+console.log("  - Contenus:", parentDiv.querySelectorAll('.section-content-ef').length);
+console.log("  - Tables:", parentDiv.querySelectorAll('.liasse-table').length);
+```
+
+═══════════════════════════════════════════════════════════════════════════════
+PLAN D'ACTION COMPLET
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1 : TESTER LE BACKEND
+┌─────────────────────────────────────────────────────────────────────────┐
+│ .\Doc_Etat_Fin\Scripts\test-backend-simple.ps1                         │
+│ Vérifier que le HTML est correctement généré                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 2 : MODIFIER EtatFinAutoTrigger.js
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Appliquer les 3 changements recommandés ci-dessus                      │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 3 : TESTER DANS L'APPLICATION
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. Démarrer le backend : python py_backend/main.py                     │
+│ 2. Ouvrir l'application dans le navigateur                             │
+│ 3. Ouvrir les DevTools (F12) pour voir les logs                        │
+│ 4. Taper "Etat fin" dans le chat                                       │
+│ 5. Sélectionner le fichier de balance                                  │
+│ 6. Vérifier que les accordéons s'affichent                             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+ÉTAPE 4 : VÉRIFIER LES LOGS
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Dans la console des DevTools, vérifier :                               │
+│ - "📂 Ouverture automatique du dialogue de sélection de fichier"      │
+│ - "✅ Fichier sélectionné: ..."                                        │
+│ - "📤 ENVOI VERS BACKEND"                                              │
+│ - "📥 Statut réponse: 200"                                             │
+│ - "✅ Résultat reçu: ..."                                              │
+│ - "🔄 REMPLACEMENT DE LA TABLE"                                        │
+│ - "📍 Div parent trouvé"                                               │
+│ - "✅ Table remplacée avec les résultats"                              │
+│ - "📋 États Financiers: X accordéons trouvés"                         │
+│ - "✅ Événements des accordéons attachés"                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. public/EtatFinAutoTrigger.js
+   - Amélioration de la recherche du div parent
+   - Ouverture du premier accordéon par défaut
+   - Ajout de logs de débogage
+
+═══════════════════════════════════════════════════════════════════════════════
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST 1 : Backend isolé
+✅ Le backend génère le HTML correctement
+✅ Le HTML contient les accordéons
+✅ Le HTML contient les colonnes N et N-1
+✅ Le HTML contient les données calculées
+
+TEST 2 : Frontend dans l'application
+✅ La table "Etat fin" est générée
+✅ Le dialogue de fichier s'ouvre automatiquement
+✅ Le fichier est envoyé au backend
+✅ La réponse est reçue
+✅ Le HTML est inséré dans le DOM
+✅ Les accordéons sont visibles
+✅ Les accordéons sont cliquables
+✅ Les données N et N-1 sont affichées
+
+═══════════════════════════════════════════════════════════════════════════════
+DOCUMENTATION ASSOCIÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+- 00_DIAGNOSTIC_AFFICHAGE_FRONTEND_04_AVRIL_2026.txt (ce fichier)
+- Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+- Doc_Etat_Fin/Documentation/00_AFFICHAGE_N_N1_AVEC_N2_CALCUL_04_AVRIL_2026.txt
+- Doc_Etat_Fin/Scripts/test-backend-simple.ps1
+- Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ⏳ Exécuter le script de test du backend
+2. ⏳ Vérifier que le HTML est correctement généré
+3. ⏳ Modifier EtatFinAutoTrigger.js avec les améliorations
+4. ⏳ Tester le workflow complet dans l'application
+5. ⏳ Vérifier que les accordéons s'affichent correctement
+6. ⏳ Documenter la solution finale
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

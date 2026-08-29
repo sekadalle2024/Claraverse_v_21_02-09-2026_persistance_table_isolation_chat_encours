@@ -1,0 +1,250 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              📦 GUIDE COMPLET DOCKER HUB - E-AUDIT                       ║
+║                  Compte: sekadalle                                       ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+🔐 INFORMATIONS DU COMPTE
+═══════════════════════════════════════════════════════════════════════════
+
+Username:      sekadalle
+Token:         [VOTRE_TOKEN_DOCKER_HUB]
+Expire:        31 octobre 2026
+Permissions:   Read, Write, Delete
+Repository:    sekadalle/mes_images_docker
+
+
+📤 PUSH VERS DOCKER HUB (3 MÉTHODES)
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 1: SCRIPT WINDOWS (Le plus simple)                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   Double-cliquez sur: push-to-dockerhub.bat                          │
+│                                                                       │
+│   Le script va:                                                       │
+│   1. Démarrer Docker                                                 │
+│   2. Vous connecter à Docker Hub                                     │
+│   3. Tagger les images                                               │
+│   4. Pousser vers Docker Hub                                         │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 2: DEPUIS WSL2 (Étape par étape)                             │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # 1. Ouvrir WSL2                                                   │
+│   wsl                                                                 │
+│                                                                       │
+│   # 2. Démarrer Docker                                               │
+│   sudo service docker start                                          │
+│                                                                       │
+│   # 3. Se connecter                                                  │
+│   docker login -u sekadalle                                          │
+│   # Password: [VOTRE_TOKEN_DOCKER_HUB]                  │
+│                                                                       │
+│   # 4. Aller dans le projet                                          │
+│   cd /mnt/d/ClaraVerse-v\ firebase                                   │
+│                                                                       │
+│   # 5. Tagger et pousser                                             │
+│   docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend
+│   docker push sekadalle/mes_images_docker:e-audit-frontend           │
+│                                                                       │
+│   docker tag claraverse-vfirebase-backend sekadalle/mes_images_docker:e-audit-backend
+│   docker push sekadalle/mes_images_docker:e-audit-backend            │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 3: DEPUIS WINDOWS (1 ligne)                                  │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   wsl bash -c "sudo service docker start && docker login -u sekadalle && cd /mnt/d/ClaraVerse-v\ firebase && docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend && docker push sekadalle/mes_images_docker:e-audit-frontend && docker tag claraverse-vfirebase-backend sekadalle/mes_images_docker:e-audit-backend && docker push sekadalle/mes_images_docker:e-audit-backend"
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+📥 PULL DEPUIS DOCKER HUB
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 1: SCRIPT WINDOWS                                            │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   Double-cliquez sur: pull-from-dockerhub.bat                        │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ MÉTHODE 2: COMMANDES MANUELLES                                       │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # Pull les images                                                  │
+│   docker pull sekadalle/mes_images_docker:e-audit-frontend           │
+│   docker pull sekadalle/mes_images_docker:e-audit-backend            │
+│                                                                       │
+│   # Renommer pour docker-compose (optionnel)                         │
+│   docker tag sekadalle/mes_images_docker:e-audit-frontend claraverse-vfirebase-frontend
+│   docker tag sekadalle/mes_images_docker:e-audit-backend claraverse-vfirebase-backend
+│                                                                       │
+│   # Démarrer                                                         │
+│   docker compose up -d                                                │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+📊 WORKFLOW COMPLET
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│  1️⃣  DÉVELOPPEMENT LOCAL                                               │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  • Modifier le code                                             │  │
+│  │  • Tester localement                                            │  │
+│  │  • Valider les changements                                      │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  2️⃣  BUILD DES IMAGES                                                  │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  docker compose build                                           │  │
+│  │                                                                  │  │
+│  │  ✓ claraverse-vfirebase-frontend                                │  │
+│  │  ✓ claraverse-vfirebase-backend                                 │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  3️⃣  TAG DES IMAGES                                                    │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  docker tag claraverse-vfirebase-frontend                       │  │
+│  │             sekadalle/mes_images_docker:e-audit-frontend        │  │
+│  │                                                                  │  │
+│  │  docker tag claraverse-vfirebase-backend                        │  │
+│  │             sekadalle/mes_images_docker:e-audit-backend         │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  4️⃣  PUSH VERS DOCKER HUB                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  docker push sekadalle/mes_images_docker:e-audit-frontend       │  │
+│  │  docker push sekadalle/mes_images_docker:e-audit-backend        │  │
+│  │                                                                  │  │
+│  │  ✓ Images disponibles sur Docker Hub                            │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│                              ▼                                          │
+│                                                                         │
+│  5️⃣  UTILISATION AILLEURS                                              │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  docker pull sekadalle/mes_images_docker:e-audit-frontend       │  │
+│  │  docker pull sekadalle/mes_images_docker:e-audit-backend        │  │
+│  │  docker compose up -d                                            │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+📁 SCRIPTS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════
+
+PUSH vers Docker Hub:
+  ✅ push-to-dockerhub.bat       → Pousser les images
+
+PULL depuis Docker Hub:
+  ✅ pull-from-dockerhub.bat     → Récupérer les images
+
+Documentation:
+  ✅ PUSH-DOCKER-HUB.txt         → Guide complet push
+  ✅ COMMANDES-DOCKERHUB.txt     → Commandes essentielles
+  ✅ GUIDE-DOCKERHUB-COMPLET.txt → Ce fichier
+
+
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════
+
+# Images locales
+docker images | grep claraverse
+
+# Images sur Docker Hub
+https://hub.docker.com/r/sekadalle/mes_images_docker/tags
+
+# Informations d'une image
+docker inspect sekadalle/mes_images_docker:e-audit-frontend
+
+
+💡 AVEC VERSIONS
+═══════════════════════════════════════════════════════════════════════════
+
+Pour gérer plusieurs versions:
+
+# Tag avec version
+docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend-v1.0
+docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend-latest
+
+# Push
+docker push sekadalle/mes_images_docker:e-audit-frontend-v1.0
+docker push sekadalle/mes_images_docker:e-audit-frontend-latest
+
+
+⚠️  SÉCURITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Ne partagez JAMAIS votre token
+✓ Le token expire le 31 octobre 2026
+✓ Permissions: Read, Write, Delete
+✓ Changez le token si compromis
+
+
+🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════
+
+Problème: "denied: requested access to the resource is denied"
+Solution:
+  docker login -u sekadalle
+  # Entrer le token
+
+Problème: "no such image"
+Solution:
+  docker images
+  # Vérifier le nom exact de l'image
+
+Problème: Push très lent
+Solution:
+  # Normal pour des images volumineuses
+  # Attendre patiemment (5-10 minutes)
+
+Problème: "unauthorized: authentication required"
+Solution:
+  docker logout
+  docker login -u sekadalle
+
+
+📊 TAILLE DES IMAGES
+═══════════════════════════════════════════════════════════════════════════
+
+Frontend: ~580 MB (React + Vite + Nginx)
+Backend:  ~200 MB (Python + FastAPI)
+Total:    ~780 MB
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ COMMANDES RAPIDES                                  ║
+║                                                                           ║
+║   PUSH:  Double-clic sur push-to-dockerhub.bat                           ║
+║   PULL:  Double-clic sur pull-from-dockerhub.bat                         ║
+║                                                                           ║
+║   Ou manuellement:                                                       ║
+║   docker login -u sekadalle                                              ║
+║   docker tag claraverse-vfirebase-frontend sekadalle/mes_images_docker:e-audit-frontend
+║   docker push sekadalle/mes_images_docker:e-audit-frontend              ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

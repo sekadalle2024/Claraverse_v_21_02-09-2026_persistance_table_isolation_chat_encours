@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GUIDE TEST RAPIDE - MATRICE 3x3 HEATMAP RISQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 TEST EN 3 ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Démarrer l'application
+  npm run dev
+
+ÉTAPE 2: Envoyer le message
+  "heatmap risque"
+
+ÉTAPE 3: Vérifier
+  ✓ Matrice affiche 3 colonnes (Faible, Moyen, Élevé)
+  ✓ Matrice affiche 3 lignes (Élevé, Moyen, Faible)
+  ✓ Risques détaillés dans les cellules (format: R{no}: Description)
+  ✓ Tous les risques de la cartographie sont présents
+
+═══════════════════════════════════════════════════════════════════════════════
+📊 STRUCTURE ATTENDUE
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────┬────────┬────────┬────────┐
+│ Prob/Impact │ Faible │ Moyen  │ Élevé  │
+├─────────────┼────────┼────────┼────────┤
+│ Élevé       │        │        │        │
+├─────────────┼────────┼────────┼────────┤
+│ Moyen       │        │        │        │
+├─────────────┼────────┼────────┼────────┤
+│ Faible      │        │        │        │
+└─────────────┴────────┴────────┴────────┘
+
+Total: 9 cellules (3x3)
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ POINTS DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. STRUCTURE MATRICE
+   □ 3 colonnes d'impact (pas 4)
+   □ 3 lignes de probabilité (pas 4)
+   □ En-têtes corrects
+
+2. NORMALISATION
+   □ "Elevé" = "Élevé" = "eleve" = "ELEVE"
+   □ "Modéré" = "Moyen" = "modere"
+   □ Tous les risques placés correctement
+
+3. AFFICHAGE RISQUES
+   □ Format: R{numéro}: Description
+   □ Plusieurs risques par cellule si applicable
+   □ Cellules vides affichent "0" + criticité
+
+4. INTÉGRATION COMPLÈTE
+   □ Aucun risque manquant
+   □ Tous les risques de la cartographie présents
+   □ Comptage correct dans chaque cellule
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 TESTS AVANCÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST VARIATIONS:
+  Modifier les données source avec:
+  - "Elevé" (sans accent)
+  - "élevé" (minuscule)
+  - "ELEVE" (majuscule sans accent)
+  - "Fort" (synonyme)
+  
+  Résultat: Tous doivent être dans la même cellule "Élevé"
+
+TEST COMPTAGE:
+  Compter manuellement les risques dans la cartographie
+  Comparer avec le total dans la heatmap
+  Résultat: Les nombres doivent correspondre
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 RAPPORT DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Date du test: __________________
+Testeur: ______________________
+
+Résultats:
+  □ Matrice 3x3 affichée correctement
+  □ Normalisation fonctionne
+  □ Tous les risques intégrés
+  □ Affichage détaillé correct
+  □ Aucune erreur console
+
+Commentaires:
+_____________________________________________________________________________
+_____________________________________________________________________________
+_____________________________________________________________________________
+
+Status: □ VALIDÉ  □ À CORRIGER
+
+═══════════════════════════════════════════════════════════════════════════════

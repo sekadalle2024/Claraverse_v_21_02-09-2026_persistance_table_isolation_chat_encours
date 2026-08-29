@@ -1,0 +1,107 @@
+═══════════════════════════════════════════════════════════════════════════════
+  AJOUT DES MODES DOCUMENT ET DATABASE À E-AUDIT PRO - 10 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ MISSION ACCOMPLIE !
+
+Deux nouveaux modes ont été ajoutés à TOUTES les étapes de mission d'E-audit pro :
+
+1. [Mode Document] - Envoi de documents en pièces jointes au Workflow n8n
+2. [Mode Database] - Collecte de données de la vector store du workflow n8n
+
+═══════════════════════════════════════════════════════════════════════════════
+  RÉSUMÉ DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPES MODIFIÉES (5 au total) :
+  ✓ Collecte documentaire
+  ✓ Questionnaire prise de connaissance
+  ✓ Cartographie des processus
+  ✓ Referentiel de controle interne
+  ✓ Rapport d'orientation
+
+FICHIER MODIFIÉ :
+  • src/components/Clara_Components/DemarrerMenu.tsx
+
+SCRIPT CRÉÉ :
+  • Doc menu demarrer/Scripts/add_document_database_modes_e_audit_pro.py
+
+═══════════════════════════════════════════════════════════════════════════════
+  STRUCTURE DES NOUVEAUX MODES
+═══════════════════════════════════════════════════════════════════════════════
+
+MODE DOCUMENT :
+  - Basé sur le mode avancé
+  - Ajout de : [Router] = Document
+  - Position : Avant [Nb de lignes] = X
+
+MODE DATABASE :
+  - Basé sur le mode avancé
+  - Ajout de :
+    [Router] = Database
+    [User_id] = ohada
+    [Database] = workspace_02
+  - Position : Avant [Nb de lignes] = X
+
+═══════════════════════════════════════════════════════════════════════════════
+  EXEMPLE DE COMMANDE GÉNÉRÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+MODE DOCUMENT :
+[Command] = Etape de mission
+[Processus] = rapprochements bancaires
+[Etape précédente] = Cartographie des risques
+[Etape de mission] = Collecte documentaire
+[Modele] : Processus, document, Direction, operationnel
+[Variable 1] = Contenu de [Variable 1]
+[Variable 2] = Contenu de [Variable 2]
+[Router] = Document
+[Nb de lignes] = 30
+
+MODE DATABASE :
+[Command] = Etape de mission
+[Processus] = rapprochements bancaires
+[Etape précédente] = Cartographie des risques
+[Etape de mission] = Collecte documentaire
+[Modele] : Processus, document, Direction, operationnel
+[Variable 1] = Contenu de [Variable 1]
+[Variable 2] = Contenu de [Variable 2]
+[Router] = Database
+[User_id] = ohada
+[Database] = workspace_02
+[Nb de lignes] = 30
+
+═══════════════════════════════════════════════════════════════════════════════
+  VÉRIFICATION RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Commandes PowerShell pour vérifier :
+
+# Compter les modes Document ajoutés
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Document").Count
+
+# Compter les modes Database ajoutés
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Database").Count
+
+# Vérifier la variable [Router] = Document
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Router\] = Document"
+
+# Vérifier la variable [Router] = Database
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Router\] = Database"
+
+═══════════════════════════════════════════════════════════════════════════════
+  DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Voir : Doc menu demarrer/Documentation/AJOUT_MODES_DOCUMENT_DATABASE_E_AUDIT_PRO_10_AVRIL_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+  PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Tester le menu démarrer dans l'interface
+2. Vérifier que les modes Document et Database apparaissent
+3. Tester la génération des commandes
+4. Vérifier l'intégration avec le workflow n8n
+
+═══════════════════════════════════════════════════════════════════════════════

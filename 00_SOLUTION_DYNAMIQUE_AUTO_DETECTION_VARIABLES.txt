@@ -1,0 +1,276 @@
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTION DYNAMIQUE - AUTO-DÉTECTION DES VARIABLES
+   29 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Créer un workflow N8N qui détecte AUTOMATIQUEMENT toutes les variables
+présentes dans User_message et les transmet à l'agent RAG, sans avoir à
+les spécifier manuellement.
+
+AVANTAGES :
+✓ Fonctionne pour TOUTES les étapes de mission
+✓ Pas besoin de modifier le code quand on ajoute des variables
+✓ Détection automatique du nombre de variables
+✓ Flexibilité totale
+
+✅ SOLUTION EN 3 FICHIERS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FICHIER 1 : n8n_node_extract_variables_dynamique.js
+─────────────────────────────────────────────────────────────────────────
+
+Node "Extract Variables" DYNAMIQUE qui :
+- Détecte automatiquement TOUTES les clés dans User_message
+- Convertit les clés en noms de variables valides
+  Exemples :
+  • [Command] → command
+  • [Cycle] → cycle
+  • [Nature de test] → nature_de_test
+  • [Assertion] → assertion
+- Extrait les valeurs et les stocke dans un objet
+- Fonctionne quel que soit le nombre de variables
+
+FICHIER 2 : n8n_node_alea_dynamique.js
+─────────────────────────────────────────────────────────────────────────
+
+Node "Alea Generator" DYNAMIQUE qui :
+- Génère le nombre aléatoire (alea)
+- Utilise le spread operator (...) pour copier TOUTES les variables
+- Préserve automatiquement toutes les variables reçues
+- Pas besoin de spécifier les variables manuellement
+
+Code clé :
+```javascript
+const result = {
+    alea: alea,
+    ...inputData  // Copie TOUTES les propriétés automatiquement
+};
+```
+
+FICHIER 3 : n8n_prompt_agent_rag_dynamique.txt
+─────────────────────────────────────────────────────────────────────────
+
+Prompt DYNAMIQUE qui :
+- Liste automatiquement toutes les variables disponibles
+- Génère la section [DONNÉES D'ENTRÉE] dynamiquement
+- S'adapte au nombre de variables présentes
+
+Code clé :
+```javascript
+{{ Object.keys($json).filter(k => k !== 'alea').map(key => `[${key}] = {{ $json.${key} }}`).join('\n') }}
+```
+
+🔧 ARCHITECTURE DYNAMIQUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9
+  ↓
+Code integrate7 (crée User_message avec N variables)
+  ↓
+Extract Variables DYNAMIQUE (détecte et extrait les N variables)
+  ↓
+Alea Generator DYNAMIQUE (ajoute alea + préserve les N variables)
+  ↓
+Agent RAG (reçoit alea + N variables, s'adapte automatiquement)
+  ↓
+code RAG4
+
+📊 EXEMPLE AVEC 7 VARIABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+INPUT (User_message) :
+[
+  {"[Command]": "Recos contrôle interne comptable"},
+  {"[Cycle]": "trésorerie"},
+  {"[test]": "AA010"},
+  {"[reference]": "test sur la validation du compte caisse"},
+  {"[Nature de test]": "Rapprochement"},
+  {"[Assertion]": "validité"},
+  {"[Anomalie]": "VOL de caisse de 600 0000 FCFA"}
+]
+
+OUTPUT (Extract Variables DYNAMIQUE) :
+{
+  "command": "Recos contrôle interne comptable",
+  "cycle": "trésorerie",
+  "test": "AA010",
+  "reference": "test sur la validation du compte caisse",
+  "nature_de_test": "Rapprochement",
+  "assertion": "validité",
+  "anomalie": "VOL de caisse de 600 0000 FCFA"
+}
+
+OUTPUT (Alea Generator DYNAMIQUE) :
+{
+  "alea": 3,
+  "command": "Recos contrôle interne comptable",
+  "cycle": "trésorerie",
+  "test": "AA010",
+  "reference": "test sur la validation du compte caisse",
+  "nature_de_test": "Rapprochement",
+  "assertion": "validité",
+  "anomalie": "VOL de caisse de 600 0000 FCFA"
+}
+
+📊 EXEMPLE AVEC 10 VARIABLES (autre étape de mission)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+INPUT (User_message) :
+[
+  {"[Command]": "Synthèse mission"},
+  {"[Cycle]": "ventes"},
+  {"[Client]": "ACME Corp"},
+  {"[Exercice]": "2025"},
+  {"[Montant]": "1500000"},
+  {"[Devise]": "FCFA"},
+  {"[Type contrôle]": "Substantif"},
+  {"[Seuil]": "50000"},
+  {"[Risque]": "Élevé"},
+  {"[Conclusion]": "Anomalie détectée"}
+]
+
+OUTPUT (Extract Variables DYNAMIQUE) :
+{
+  "command": "Synthèse mission",
+  "cycle": "ventes",
+  "client": "ACME Corp",
+  "exercice": "2025",
+  "montant": "1500000",
+  "devise": "FCFA",
+  "type_controle": "Substantif",
+  "seuil": "50000",
+  "risque": "Élevé",
+  "conclusion": "Anomalie détectée"
+}
+
+→ Le système s'adapte automatiquement à 10 variables !
+
+🔄 CONVERSION AUTOMATIQUE DES NOMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Extract Variables DYNAMIQUE" convertit automatiquement :
+
+[Command]           → command
+[Cycle]             → cycle
+[test]              → test
+[reference]         → reference
+[Nature de test]    → nature_de_test
+[Assertion]         → assertion
+[Anomalie]          → anomalie
+[Type contrôle]     → type_controle
+[Seuil matérialité] → seuil_materialite
+
+Règles de conversion :
+1. Enlever les crochets []
+2. Mettre en minuscules
+3. Remplacer les espaces par _
+4. Normaliser les accents (é → e, à → a)
+
+📝 INSTALLATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Remplacer le node "Extract Variables for RAG"
+─────────────────────────────────────────────────────────────────────────
+
+1. Ouvre le node "Extract Variables for RAG" dans N8N
+2. Copie TOUT le code du fichier : n8n_node_extract_variables_dynamique.js
+3. Colle-le dans le node (remplace tout le code existant)
+4. Sauvegarde
+
+ÉTAPE 2 : Remplacer le node "Alea16" (ou "Alea Generator")
+─────────────────────────────────────────────────────────────────────────
+
+OPTION A - Si tu as déjà un node Code "Alea Generator" :
+1. Ouvre le node
+2. Copie le code du fichier : n8n_node_alea_dynamique.js
+3. Colle-le dans le node (remplace tout)
+4. Sauvegarde
+
+OPTION B - Si tu as encore le node "Alea16" (Edit Fields) :
+1. Supprime le node "Alea16"
+2. Ajoute un nouveau node "Code" (JavaScript)
+3. Nomme-le "Alea Generator"
+4. Copie le code du fichier : n8n_node_alea_dynamique.js
+5. Connecte : Extract Variables → Alea Generator → Agent RAG
+6. Sauvegarde
+
+ÉTAPE 3 : Mettre à jour le prompt de l'agent RAG (OPTIONNEL)
+─────────────────────────────────────────────────────────────────────────
+
+Si tu veux un prompt qui s'adapte automatiquement :
+
+1. Ouvre le node "Agent RAG"
+2. Copie le contenu du fichier : n8n_prompt_agent_rag_dynamique.txt
+3. Colle-le dans le prompt
+4. Sauvegarde
+
+NOTE : Le prompt dynamique utilise du JavaScript pour générer la liste
+des variables. Si N8N ne supporte pas cette syntaxe, tu peux garder
+le prompt actuel (n8n_prompt_agent_rag_7_variables.txt) qui fonctionne
+déjà bien.
+
+✅ AVANTAGES DE LA SOLUTION DYNAMIQUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. FLEXIBILITÉ TOTALE
+   - Fonctionne avec 5, 7, 10, 15 variables
+   - Pas besoin de modifier le code
+
+2. MAINTENANCE FACILE
+   - Ajouter une variable dans le frontend → détectée automatiquement
+   - Pas de configuration manuelle dans N8N
+
+3. ÉVOLUTIVITÉ
+   - Supporte toutes les étapes de mission
+   - S'adapte aux futurs besoins
+
+4. ROBUSTESSE
+   - Pas d'erreur si une variable manque
+   - Logs détaillés pour debug
+
+🔍 VÉRIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après installation :
+
+1. Exécute le workflow dans N8N
+2. Vérifie l'output du node "Extract Variables DYNAMIQUE" :
+   ✓ Doit afficher : "📊 Total: X variables extraites"
+   ✓ Doit lister toutes les variables détectées
+
+3. Vérifie l'output du node "Alea Generator" :
+   ✓ Doit afficher : "📦 Variables reçues: X"
+   ✓ Doit afficher : "📤 Variables transmises: X+1" (avec alea)
+   ✓ Doit lister : "📋 Liste des variables: alea, command, cycle, ..."
+
+4. Vérifie le prompt de l'agent RAG :
+   ✓ Toutes les variables doivent s'afficher avec leurs valeurs
+
+📁 FICHIERS CRÉÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. n8n_node_extract_variables_dynamique.js
+   → Node Extract Variables avec auto-détection
+
+2. n8n_node_alea_dynamique.js
+   → Node Alea Generator avec spread operator
+
+3. n8n_prompt_agent_rag_dynamique.txt
+   → Prompt agent RAG avec génération dynamique (optionnel)
+
+4. 00_SOLUTION_DYNAMIQUE_AUTO_DETECTION_VARIABLES.txt
+   → Ce fichier (guide complet)
+
+🎯 RÉSULTAT FINAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Avec cette solution :
+- Tu peux ajouter autant de variables que tu veux dans le frontend
+- Elles seront automatiquement détectées et transmises à l'agent RAG
+- Pas besoin de toucher au code N8N
+- Le workflow s'adapte automatiquement à toutes les étapes de mission
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,100 @@
+═══════════════════════════════════════════════════════════════════════════════
+⚡ QUICK START - RÉSOUDRE "FAILED TO FETCH" - 30 SECONDES
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF: Identifier rapidement pourquoi l'import de balance échoue
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 1: VÉRIFIER LE BACKEND (5 secondes)
+═══════════════════════════════════════════════════════════════════════════════
+
+PowerShell:
+    $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+    Get-Job -Id $jobs.Backend
+
+✅ Si Status = Running → Backend OK, passer à l'étape 2
+❌ Si erreur ou Status ≠ Running → Démarrer le backend:
+    .\start-claraverse-conda.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 2: TESTER L'ENDPOINT DIRECTEMENT (10 secondes)
+═══════════════════════════════════════════════════════════════════════════════
+
+PowerShell:
+    .\test-curl-etat-fin.ps1
+
+✅ Si succès → Le backend fonctionne, problème côté frontend
+❌ Si erreur → Voir les logs backend (étape 3)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 3: VOIR LES LOGS BACKEND (10 secondes)
+═══════════════════════════════════════════════════════════════════════════════
+
+PowerShell:
+    $jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+    Receive-Job -Id $jobs.Backend -Keep | Select-Object -Last 50
+
+Chercher:
+    ❌ Erreur Python (Traceback, Exception)
+    ⚠️ Import failed
+    ❌ Module not found
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 4: AJOUTER TIMEOUT AU FRONTEND (5 secondes)
+═══════════════════════════════════════════════════════════════════════════════
+
+PowerShell:
+    .\fix-fetch-timeout.ps1
+
+Puis rafraîchir le navigateur (Ctrl+F5) et retester.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 DIAGNOSTIC RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+SYMPTÔME                                    CAUSE PROBABLE
+───────────────────────────────────────────────────────────────────────────────
+Backend Status ≠ Running                    Backend crashé ou non démarré
+test-curl-etat-fin.ps1 échoue              Erreur dans le traitement Python
+test-curl-etat-fin.ps1 réussit             Problème timeout ou CORS frontend
+Logs: "ModuleNotFoundError"                 Import Python manquant
+Logs: "Traceback"                           Exception dans le code Python
+Pas de logs du tout                         Requête n'atteint pas le backend
+
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ SOLUTIONS RAPIDES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Backend non démarré:
+   .\start-claraverse-conda.ps1
+
+2. Timeout frontend:
+   .\fix-fetch-timeout.ps1
+   Puis Ctrl+F5 dans le navigateur
+
+3. Erreur Python:
+   Voir: 00_DIAGNOSTIC_FAILED_TO_FETCH_07_AVRIL_2026.txt
+   Section "ÉTAPE 6: VÉRIFIER LES IMPORTS PYTHON"
+
+4. Module manquant:
+   cd py_backend
+   pip install -r requirements.txt
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 SI LE PROBLÈME PERSISTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Lire le diagnostic complet:
+    00_DIAGNOSTIC_FAILED_TO_FETCH_07_AVRIL_2026.txt
+
+Ou exécuter tous les tests:
+    .\test-diagnostic-complet.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════

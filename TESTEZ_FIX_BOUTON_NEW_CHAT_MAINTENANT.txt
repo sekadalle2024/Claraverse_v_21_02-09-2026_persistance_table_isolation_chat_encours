@@ -1,0 +1,85 @@
+=================================================================
+  ⚡ TESTEZ MAINTENANT - FIX BOUTON "NEW CHAT"
+=================================================================
+
+🎯 PROBLÈME RÉSOLU
+-----------------------------------------------------------------
+Le bouton "Nouvelle conversation" n'apparaissait pas après
+le redémarrage car il n'était visible que quand la sidebar
+était étendue.
+
+
+✅ SOLUTION APPLIQUÉE
+-----------------------------------------------------------------
+Ajout d'un bouton "+" en mode collapsed (sidebar rétractée)
+dans le composant React ClaraSidebar.tsx
+
+
+🧪 TESTER MAINTENANT
+-----------------------------------------------------------------
+1. npm run dev
+2. Ouvrir http://localhost:5173
+3. Regarder la sidebar gauche
+
+
+📊 RÉSULTAT ATTENDU
+-----------------------------------------------------------------
+
+Sidebar RÉTRACTÉE (64px de large):
+┌────────┐
+│ [Logo] │  ← Logo en haut
+│        │
+│        │
+│   [+]  │  ← Bouton "+" EN BAS (NOUVEAU!)
+└────────┘
+
+Sidebar ÉTENDUE (survoler):
+┌─────────────────────────────────┐
+│ [Logo] Dossier           [X]    │
+│ 🔍 Search...                    │
+│ ┌─────────────────────────────┐ │
+│ │  + New Chat                 │ │
+│ └─────────────────────────────┘ │
+│ 📝 Chat 1                       │
+└─────────────────────────────────┘
+
+
+✅ VÉRIFICATIONS
+-----------------------------------------------------------------
+1. Bouton "+" visible en bas de la sidebar rétractée
+2. Cliquer sur "+" → Nouvelle conversation créée
+3. Survoler la sidebar → Elle s'étend
+4. Bouton "New Chat" complet visible
+5. Cliquer sur "New Chat" → Nouvelle conversation créée
+
+
+🎨 DESIGN
+-----------------------------------------------------------------
+- Bouton rouge sakura (même couleur que le bouton étendu)
+- Icône "+" blanche
+- Taille: 40x40px
+- Position: En bas de la sidebar
+- Hover: Rouge sakura foncé
+
+
+📝 FICHIER MODIFIÉ
+-----------------------------------------------------------------
+src/components/Clara_Components/ClaraSidebar.tsx
+Lignes 296-308
+
+
+🔧 PAS DE SCRIPTS JAVASCRIPT
+-----------------------------------------------------------------
+Cette solution est pure React, pas de scripts supplémentaires
+dans index.html. Pas de problème de layout.
+
+
+📖 DOCUMENTATION COMPLÈTE
+-----------------------------------------------------------------
+Voir: FIX_BOUTON_NEW_CHAT_SIDEBAR_COLLAPSED.md
+
+
+=================================================================
+Testez maintenant: npm run dev
+Le bouton "+" doit être visible en bas de la sidebar !
+=================================================================

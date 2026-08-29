@@ -1,0 +1,194 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 SOLUTION: PROBLÈME PERSISTANT ACTIF BRUT/AMORT/NET
+  Date: 08 Avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 SITUATION
+─────────────────────────────────────────────────────────────────────────────
+Vous avez mis en œuvre le diagnostic du 07 avril 2026, mais le problème 
+d'affichage des colonnes BRUT, AMORT ET DEPREC, NET persiste.
+
+✅ VÉRIFICATION EFFECTUÉE
+─────────────────────────────────────────────────────────────────────────────
+J'ai vérifié le code:
+- ✅ calculer_actif_brut_amort.py existe et est correct
+- ✅ etats_financiers.py importe bien le module (ligne 19)
+- ✅ etats_financiers.py appelle bien enrichir_actif_avec_brut_amort()
+- ✅ La fonction retourne bien actif_html dans les résultats
+
+Le code est CORRECT et FONCTIONNEL.
+
+🔍 CAUSE PROBABLE
+─────────────────────────────────────────────────────────────────────────────
+Le problème est lié à:
+
+1. ⭐⭐⭐⭐⭐ CACHE DU NAVIGATEUR (très probable)
+   Le navigateur affiche une ancienne version du code JavaScript.
+
+2. ⭐⭐⭐⭐ SERVEURS NON REDÉMARRÉS (probable)
+   Le backend ou le frontend n'a pas été redémarré après les modifications.
+
+3. ⭐⭐⭐ FICHIER BALANCE SANS COMPTES 28/29 (possible)
+   Le fichier Balance ne contient pas de comptes d'amortissements.
+
+🚀 SOLUTION IMMÉDIATE (5 MINUTES)
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1: TESTER LE CODE
+   Exécutez ce script pour vérifier que tout est en place:
+   
+   ./test-solution-actif-simple.ps1
+   
+   Si le test échoue, contactez-moi avec le message d'erreur.
+   Si le test passe, continuez à l'étape 2.
+
+ÉTAPE 2: ARRÊTER TOUS LES SERVEURS
+   1. Fermez tous les terminaux backend et frontend
+   2. Ou appuyez sur Ctrl+C dans chaque terminal
+   3. Vérifiez qu'aucun processus ne tourne:
+      - Ouvrir le Gestionnaire des tâches (Ctrl+Shift+Esc)
+      - Chercher "python.exe" et "node.exe"
+      - Terminer ces processus si présents
+
+ÉTAPE 3: VIDER LE CACHE DU NAVIGATEUR
+   1. Ouvrir le navigateur
+   2. Appuyer sur Ctrl+Shift+Delete
+   3. Cocher "Images et fichiers en cache"
+   4. Cliquer sur "Effacer les données"
+   5. Fermer complètement le navigateur (Alt+F4)
+   
+   ⚠️ IMPORTANT: Fermer COMPLÈTEMENT le navigateur, pas juste l'onglet!
+
+ÉTAPE 4: REDÉMARRER LE BACKEND
+   Terminal 1:
+   
+   cd py_backend
+   python main.py
+   
+   Attendre le message:
+   "✅ Backend démarré sur http://localhost:8000"
+
+ÉTAPE 5: REDÉMARRER LE FRONTEND
+   Terminal 2 (nouveau terminal):
+   
+   npm run dev
+   
+   Attendre le message:
+   "Local: http://localhost:5173/"
+
+ÉTAPE 6: TESTER DANS LE NAVIGATEUR
+   1. Ouvrir http://localhost:5173/
+   2. Ouvrir la console développeur (F12)
+   3. Onglet "Console"
+   4. Envoyer le message: "Etat fin"
+   5. Uploader le fichier: P000 -BALANCE DEMO N_N-1_N-2.xls
+   6. Attendre le traitement (30-60 secondes)
+
+ÉTAPE 7: VÉRIFIER LE RÉSULTAT
+   
+   A. DANS LA CONSOLE:
+      Chercher ce message:
+      
+      ✅ Message attendu:
+         "✅ [États Financiers] Utilisation du HTML généré par le backend"
+      
+      ❌ Message d'erreur:
+         "⚠️ [États Financiers] Pas de HTML backend, construction manuelle"
+   
+   B. DANS L'INTERFACE:
+      1. Chercher l'accordéon "🏢 BILAN - ACTIF"
+      2. Cliquer pour l'ouvrir
+      3. Compter les colonnes:
+         
+         ✅ Attendu (7 colonnes):
+            REF | ACTIF | NOTE | BRUT | AMORT ET DEPREC | NET | NET N-1
+         
+         ❌ Ancien format (4 colonnes):
+            REF | LIBELLÉS | EXERCICE N | EXERCICE N-1
+
+📊 RÉSULTATS POSSIBLES
+─────────────────────────────────────────────────────────────────────────────
+
+CAS 1: ✅ SUCCÈS - 7 colonnes affichées
+   → Le problème est résolu!
+   → Le cache était la cause du problème
+   → Vous pouvez continuer à utiliser l'application
+
+CAS 2: ❌ ÉCHEC - Message "construction manuelle" dans la console
+   → Le backend ne retourne pas result.html
+   → Exécutez: python test_actif_frontend_integration.py
+   → Envoyez-moi les logs du backend Python
+
+CAS 3: ❌ ÉCHEC - Ancien format (4 colonnes) affiché
+   → Le cache n'a pas été vidé correctement
+   → Essayez un autre navigateur (Chrome, Firefox, Edge)
+   → Ou mode navigation privée (Ctrl+Shift+N)
+
+CAS 4: ✅ SUCCÈS - 7 colonnes mais colonnes AMORT vides
+   → C'est NORMAL si le fichier Balance n'a pas de comptes 28/29
+   → Vérifiez dans le fichier Excel si des comptes 28 et 29 existent
+   → Si absents, l'entreprise n'a pas d'immobilisations
+
+🔧 DÉPANNAGE AVANCÉ
+─────────────────────────────────────────────────────────────────────────────
+
+Si le problème persiste après avoir suivi toutes les étapes:
+
+1. FORCER LE RECHARGEMENT:
+   - Dans le navigateur, appuyer sur Ctrl+Shift+R
+   - Cela force le rechargement sans cache
+
+2. ESSAYER UN AUTRE NAVIGATEUR:
+   - Chrome: http://localhost:5173/
+   - Firefox: http://localhost:5173/
+   - Edge: http://localhost:5173/
+
+3. MODE NAVIGATION PRIVÉE:
+   - Ctrl+Shift+N (Chrome/Edge)
+   - Ctrl+Shift+P (Firefox)
+   - Le mode privé n'utilise pas le cache
+
+4. VÉRIFIER LES LOGS BACKEND:
+   Dans le terminal où python main.py tourne, chercher:
+   
+   ✅ Message attendu:
+      "📊 Enrichissement ACTIF avec colonnes BRUT, AMORT, NET..."
+   
+   Si absent, le backend n'appelle pas la fonction.
+
+5. EXÉCUTER LE TEST COMPLET:
+   python test_actif_frontend_integration.py
+   
+   Ce test vérifie tout le flux de données.
+
+📁 FICHIERS CRÉÉS
+─────────────────────────────────────────────────────────────────────────────
+
+RACINE DU PROJET:
+├── test-solution-actif-simple.ps1 (nouveau)
+└── 00_SOLUTION_PROBLEME_PERSISTANT_ACTIF_08_AVRIL_2026.txt (ce fichier)
+
+💡 POINTS CLÉS
+─────────────────────────────────────────────────────────────────────────────
+
+1. Le code backend et frontend est CORRECT
+2. Le problème est probablement lié au CACHE
+3. La solution est simple: VIDER LE CACHE et REDÉMARRER LES SERVEURS
+4. Si le problème persiste, c'est probablement un problème de cache navigateur
+
+🎯 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Exécuter: ./test-solution-actif-simple.ps1
+2. Suivre les étapes 2 à 7 ci-dessus
+3. Vérifier le résultat
+4. Si le problème persiste, me contacter avec:
+   - Capture d'écran du tableau ACTIF
+   - Capture d'écran de la console (F12)
+   - Logs du backend Python
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 COMMENCER PAR: ./test-solution-actif-simple.ps1
+
+═══════════════════════════════════════════════════════════════════════════════

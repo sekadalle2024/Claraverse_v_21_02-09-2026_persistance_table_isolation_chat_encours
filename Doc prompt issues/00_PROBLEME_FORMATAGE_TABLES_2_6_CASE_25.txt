@@ -1,0 +1,250 @@
+═══════════════════════════════════════════════════════════════════════════
+  🔍 DIAGNOSTIC - FORMATAGE TABLES 2-6 CASE 25
+  Date: 29 Mars 2026 - 21h00
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME OBSERVÉ
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Table 1: Bien formatée (tableau 2 colonnes avec en-têtes en gras)
+❌ Tables 2-6: Affichées mais sans formatage correct
+   - "Intitule", "Observation", "Constat", etc. apparaissent en texte normal
+   - Pas de mise en gras des en-têtes
+   - Le contenu s'affiche mais sans structure visuelle
+
+CAPTURE D'ÉCRAN OBSERVÉE
+───────────────────────────────────────────────────────────────────────────
+
+Table 1 (OK):
+┌──────────────────┬─────────────────────────────────────────┐
+│ Rubrique         │ Description                             │
+├──────────────────┼─────────────────────────────────────────┤
+│ Etape de mission │ Frap                                    │
+│ Norme            │ 14.3 Évaluation des constats           │
+│ Méthode          │ Méthode des risques par les tâches clés│
+│ Reference        │ Frap-001                                │
+└──────────────────┴─────────────────────────────────────────┘
+
+Tables 2-6 (PROBLÈME):
+Intitule  ← Devrait être en gras
+Absence de contrôles inopinés et dépassement récurrent...
+
+Observation  ← Devrait être en gras
+La procédure de gestion de la trésorerie...
+
+MARKDOWN GÉNÉRÉ (ATTENDU)
+═══════════════════════════════════════════════════════════════════════════
+
+Table 2:
+```markdown
+**Intitule**
+
+Absence de contrôles inopinés et dépassement récurrent du plafond d'encaisse autorisé
+```
+
+Table 3:
+```markdown
+**Observation**
+
+La procédure de gestion de la trésorerie de l'entité stipule...
+```
+
+HYPOTHÈSES
+═══════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE 1: Le Markdown est généré correctement mais pas rendu
+───────────────────────────────────────────────────────────────────────────
+Le code génère bien `**Intitule**` mais le composant de rendu Markdown
+ne convertit pas les `**` en balises `<strong>`.
+
+HYPOTHÈSE 2: Le Markdown est échappé
+───────────────────────────────────────────────────────────────────────────
+Les `**` sont échappés en `\*\*` quelque part dans la chaîne de traitement.
+
+HYPOTHÈSE 3: Problème de sauts de ligne
+───────────────────────────────────────────────────────────────────────────
+Le Markdown nécessite des sauts de ligne spécifiques pour être rendu
+correctement (double saut de ligne avant/après les `**`).
+
+SOLUTION IMPLÉMENTÉE
+═══════════════════════════════════════════════════════════════════════════
+
+MODIFICATION: Ajout de logs détaillés dans convertHeaderTableToMarkdown()
+───────────────────────────────────────────────────────────────────────────
+
+```typescript
+console.log(`🔄 convertHeaderTableToMarkdown - Table ${tableIndex + 1}:`, {
+  entriesCount: entries.length,
+  keys: entries.map(([k]) => k),
+});
+
+// Pour les tables 2+
+console.log(`✅ Table ${tableIndex + 1} générée:`, {
+  header: headerText,
+  contentLength: cellValue.length,
+  markdownLength: md.length,
+  preview: md.substring(0, 100),
+});
+```
+
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 1: REDÉMARRER LE SERVEUR
+───────────────────────────────────────────────────────────────────────────
+.\stop-claraverse.ps1
+.\start-claraverse.ps1
+
+TEST 2: ENVOYER UN MESSAGE CASE 25
+───────────────────────────────────────────────────────────────────────────
+[Command] : Recos contrôle interne comptable
+[Cycle] : trésorerie
+[test] : AA010
+[Anomalie] = Absence de contrôles inopinés de la caisse
+
+TEST 3: VÉRIFIER LES LOGS DANS LA CONSOLE (F12)
+───────────────────────────────────────────────────────────────────────────
+
+Chercher les logs:
+```
+🔄 convertHeaderTableToMarkdown - Table 1: {...}
+✅ Table 1 générée (XXX caractères)
+🔄 convertHeaderTableToMarkdown - Table 2: {...}
+✅ Table 2 générée: {header: "Intitule", ...}
+🔄 convertHeaderTableToMarkdown - Table 3: {...}
+✅ Table 3 générée: {header: "Observation", ...}
+...
+```
+
+Vérifier dans les logs:
+1. Le champ `preview` pour voir le Markdown généré
+2. Vérifier que `**Intitule**` est bien présent
+3. Vérifier les sauts de ligne (`\n\n`)
+
+TEST 4: INSPECTER LE HTML GÉNÉRÉ
+───────────────────────────────────────────────────────────────────────────
+
+Dans la console (F12):
+1. Clic droit sur "Intitule" → Inspecter
+2. Vérifier le HTML généré:
+   - Si `<strong>Intitule</strong>` → Le Markdown est rendu correctement
+   - Si `**Intitule**` → Le Markdown n'est PAS rendu
+   - Si `\*\*Intitule\*\*` → Le Markdown est échappé
+
+SOLUTIONS POSSIBLES
+═══════════════════════════════════════════════════════════════════════════
+
+SOLUTION 1: Forcer le rendu HTML au lieu de Markdown
+───────────────────────────────────────────────────────────────────────────
+
+Si le Markdown n'est pas rendu, remplacer par du HTML direct:
+
+```typescript
+// Au lieu de:
+let md = `\n**${headerText}**\n\n`;
+md += `${cellValue}\n\n`;
+
+// Utiliser:
+let md = `\n<strong>${headerText}</strong>\n\n`;
+md += `${cellValue}\n\n`;
+```
+
+SOLUTION 2: Ajouter des sauts de ligne supplémentaires
+───────────────────────────────────────────────────────────────────────────
+
+Certains parseurs Markdown nécessitent des sauts de ligne spécifiques:
+
+```typescript
+// Au lieu de:
+let md = `\n**${headerText}**\n\n`;
+
+// Utiliser:
+let md = `\n\n**${headerText}**\n\n`;
+```
+
+SOLUTION 3: Utiliser un format de titre Markdown
+───────────────────────────────────────────────────────────────────────────
+
+```typescript
+// Au lieu de:
+let md = `\n**${headerText}**\n\n`;
+
+// Utiliser:
+let md = `\n### ${headerText}\n\n`;
+```
+
+SOLUTION 4: Vérifier le composant de rendu Markdown
+───────────────────────────────────────────────────────────────────────────
+
+Le problème pourrait être dans le composant qui rend le Markdown.
+Chercher dans le code frontend le composant qui affiche le contenu.
+
+PROCHAINES ACTIONS
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✅ Redémarrer le serveur
+2. ✅ Envoyer un message Case 25
+3. ✅ Vérifier les logs dans la console (F12)
+4. ✅ Inspecter le HTML généré
+5. ⏳ Appliquer la solution appropriée selon les résultats
+
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   - Fonction convertHeaderTableToMarkdown() (ligne ~620)
+     → Ajout de logs détaillés pour déboguer
+
+LOGS ATTENDUS
+═══════════════════════════════════════════════════════════════════════════
+
+```
+🔄 convertHeaderTableToMarkdown - Table 1: {entriesCount: 4, keys: [...]}
+✅ Table 1 générée (XXX caractères)
+
+🔄 convertHeaderTableToMarkdown - Table 2: {entriesCount: 1, keys: ["Intitule"]}
+✅ Table 2 générée: {
+  header: "Intitule",
+  contentLength: 85,
+  markdownLength: 95,
+  preview: "\n**Intitule**\n\nAbsence de contrôles inopinés et dépassement récurrent..."
+}
+
+🔄 convertHeaderTableToMarkdown - Table 3: {entriesCount: 1, keys: ["Observation"]}
+✅ Table 3 générée: {
+  header: "Observation",
+  contentLength: 450,
+  markdownLength: 465,
+  preview: "\n**Observation**\n\nLa procédure de gestion de la trésorerie..."
+}
+```
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le serveur
+.\stop-claraverse.ps1; .\start-claraverse.ps1
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Voir les modifications
+git diff src/services/claraApiService.ts
+
+STATUT
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Logs ajoutés pour déboguer
+⏳ Tests à effectuer
+⏳ Solution à appliquer selon les résultats
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 21h00
+Version: 10.0 (diagnostic formatage tables 2-6)
+Priorité: HAUTE
+Statut: DIAGNOSTIC EN COURS - LOGS AJOUTÉS
+
+REDÉMARRER LE SERVEUR ET VÉRIFIER LES LOGS DANS LA CONSOLE (F12)
+
+═══════════════════════════════════════════════════════════════════════════

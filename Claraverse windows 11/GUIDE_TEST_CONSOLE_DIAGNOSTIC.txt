@@ -1,0 +1,151 @@
+═══════════════════════════════════════════════════════════════════
+🎯 GUIDE TEST CONSOLE - DIAGNOSTIC COLLECTE TABLES
+═══════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1 : OUVRIR CLARAVERSE (1 min)
+───────────────────────────────────────────────────────────────────
+1. Démarrer Claraverse :
+    npm run dev
+
+2. Ouvrir dans le navigateur :
+    http://localhost:5173
+
+3. Créer des tables de test dans le chat :
+
+    | Rubrique    | Description |
+    |-------------|-------------|
+    | Etape       | Programme   |
+    | Référence   | TEST-001    |
+
+    | Flowise |
+    |---------|
+    | CIA     |
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 2 : OUVRIR LA CONSOLE (10 secondes)
+───────────────────────────────────────────────────────────────────
+1. Appuyer sur F12 (ou Ctrl+Shift+I)
+2. Cliquer sur l'onglet "Console"
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 3 : COPIER-COLLER LE SCRIPT (30 secondes)
+───────────────────────────────────────────────────────────────────
+1. Ouvrir le fichier :
+    TEST_CONSOLE_DIAGNOSTIC_COLLECTE.js
+
+2. Sélectionner TOUT le contenu (Ctrl+A)
+
+3. Copier (Ctrl+C)
+
+4. Coller dans la console (Ctrl+V)
+
+5. Appuyer sur Entrée
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 4 : LIRE LES RÉSULTATS (1 min)
+───────────────────────────────────────────────────────────────────
+
+Le script affiche :
+
+1. 📊 RÉSUMÉ DE L'ANALYSE
+    - Divs "prose" totales
+    - Divs avec tables
+    - Divs avec en-têtes requis
+    - Divs correspondantes
+
+2. ✅ DIVS CORRESPONDANTES DÉTECTÉES
+    - Liste des divs qui correspondent
+    - Mots-clés trouvés
+    - Nombre de tables
+
+3. 🧪 TEST DE COLLECTE
+    - Tables collectées
+    - Taille du HTML
+    - Aperçu du HTML
+
+4. 🔍 DIAGNOSTIC FINAL
+    - Problème identifié (si applicable)
+    - Solution recommandée
+
+═══════════════════════════════════════════════════════════════════
+📊 INTERPRÉTATION DES RÉSULTATS
+═══════════════════════════════════════════════════════════════════
+
+CAS 1 : "Divs prose totales: 0"
+└─ ❌ Aucune div trouvée
+   Solution : Créez des messages dans le chat
+
+CAS 2 : "Divs avec tables: 0"
+└─ ❌ Aucune table trouvée
+   Solution : Créez des tables avec le format Markdown
+
+CAS 3 : "Divs avec en-têtes requis: 0"
+└─ ❌ Tables sans "Rubrique" et "Description"
+   Solution : Ajoutez ces en-têtes à vos tables
+
+CAS 4 : "Divs correspondantes: 0"
+└─ ❌ Aucune table avec mots-clés
+   Solution : Ajoutez "CIA", "Flowise", ou "Programme"
+
+CAS 5 : "Tables collectées: 0" (mais divs correspondantes > 0)
+└─ ❌ Tables détectées mais pas collectées
+   Solution : Vérifiez le mot-clé "CIA"
+
+CAS 6 : "Tables collectées: X" (X > 0)
+└─ ✅ Les tables sont collectées !
+   Si n8n ne reçoit rien, le problème est dans l'envoi
+
+═══════════════════════════════════════════════════════════════════
+🔍 INSPECTION DU HTML COLLECTÉ
+───────────────────────────────────────────────────────────────────
+
+Si des tables sont collectées, le HTML est stocké dans :
+    window.DIAGNOSTIC_COLLECTE
+
+Pour l'inspecter :
+    console.log(window.DIAGNOSTIC_COLLECTE.html)
+    console.log(window.DIAGNOSTIC_COLLECTE.tablesCount)
+    console.log(window.DIAGNOSTIC_COLLECTE.size)
+
+Pour copier le HTML :
+    copy(window.DIAGNOSTIC_COLLECTE.html)
+
+═══════════════════════════════════════════════════════════════════
+🚀 PROCHAINES ÉTAPES
+───────────────────────────────────────────────────────────────────
+
+Si "Tables collectées: 0" :
+    → Le problème est dans la collecte
+    → Suivre les solutions ci-dessus
+
+Si "Tables collectées: X" (X > 0) :
+    → La collecte fonctionne ✅
+    → Le problème est dans l'envoi à n8n
+    → Vérifier les logs de queryN8nEndpoint() :
+        1. Chercher "CONTENU HTML ENVOYÉ VERS N8N" dans la console
+        2. Vérifier que "Taille totale" > 0
+        3. Vérifier que le HTML est bien envoyé
+
+═══════════════════════════════════════════════════════════════════
+💡 ASTUCES
+───────────────────────────────────────────────────────────────────
+
+1. Relancer le script :
+    - Appuyer sur Flèche Haut dans la console
+    - Appuyer sur Entrée
+
+2. Effacer la console :
+    - Taper : clear()
+    - Ou cliquer sur l'icône 🚫
+
+3. Filtrer les logs :
+    - Utiliser la barre de recherche en haut de la console
+    - Chercher : "DIAGNOSTIC" ou "Tables collectées"
+
+═══════════════════════════════════════════════════════════════════
+
+Version: 1.0
+Date: 2025-12-06
+Fichier: TEST_CONSOLE_DIAGNOSTIC_COLLECTE.js
+
+═══════════════════════════════════════════════════════════════════

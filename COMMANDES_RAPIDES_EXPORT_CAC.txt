@@ -1,0 +1,72 @@
+=================================================================
+COMMANDES RAPIDES - Export Synthèse CAC
+=================================================================
+
+DÉMARRAGE:
+==========
+
+1. Redémarrer le backend:
+   .\start-claraverse-conda.ps1
+
+2. Rafraîchir le frontend:
+   Ctrl+F5 dans le navigateur
+
+TESTS RAPIDES:
+==============
+
+Test 1 - Vérifier le menu:
+---------------------------
+1. Clic droit sur une table
+2. Vérifier que "Rapports d'Audit" ne contient PLUS "Export Rapport Structuré"
+3. Vérifier que "Rapports CAC & Expert-Comptable" contient "Export Synthèse CAC"
+
+Test 2 - Tester la détection:
+------------------------------
+1. Ouvrir la console (F12)
+2. Générer une table "Recos contrôle interne comptable"
+3. Clic droit → Export Synthèse CAC
+4. Vérifier les logs:
+   ✅ "🔍 [Recos CI] Cellule: ... → recos:true, controle:true, interne:true, comptable:true"
+   ✅ "✅ [Recos CI] Table détectée avec 6 sous-tables"
+
+Test 3 - Export complet:
+------------------------
+1. Générer 3 tables (FRAP, Recos Révision, Recos CI)
+2. Clic droit → Export Synthèse CAC
+3. Vérifier le document Word téléchargé
+
+LOGS ATTENDUS:
+==============
+
+Backend:
+✅ Export Synthèse CAC V2 router loaded successfully
+📊 Export Synthèse CAC V2: X points au total
+
+Frontend (Console F12):
+✅ [Recos CI] Table détectée avec 6 sous-tables
+✅ Synthèse CAC exportée! (X points)
+
+DOCUMENTATION:
+==============
+
+Voir dossier: Doc export rapport/
+
+- 00_INDEX.md - Index complet
+- GUIDE_TEST_RAPIDE.md - Guide de test détaillé
+- SYNTHESE_FINALE.txt - Vue d'ensemble
+- 00_EXPORT_SYNTHESE_CAC_CORRIGE.txt - Documentation technique
+- CORRECTION_MENU_ET_DETECTION_RECOS_CI.md - Modifications détaillées
+
+PROBLÈMES COURANTS:
+===================
+
+Problème: "Export Rapport Structuré" encore visible
+Solution: Ctrl+F5 pour forcer le rafraîchissement
+
+Problème: Tables Recos CI non détectées
+Solution: Vérifier que la première cellule contient "Recos contrôle interne comptable"
+
+Problème: Champs manquants dans le Word
+Solution: Vérifier que le backend utilise bien V2 (logs)
+
+=================================================================

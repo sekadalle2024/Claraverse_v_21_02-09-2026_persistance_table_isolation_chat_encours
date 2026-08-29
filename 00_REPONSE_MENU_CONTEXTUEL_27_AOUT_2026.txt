@@ -1,0 +1,84 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║     🎯 QUEL SCRIPT ACTIVE LE MENU CONTEXTUEL ?               ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ RÉPONSE : C'EST LE FICHIER menu.js
+
+
+📂 LOCALISATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fichier :  h:\ClaraVerse\public\menu.js
+Référencé dans :  h:\ClaraVerse\index.html (ligne ~143)
+
+
+🔍 COMMENT ÇA FONCTIONNE ?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣ CHARGEMENT dans index.html :
+   <script src="/menu.js"></script>
+
+2️⃣ CLASSE PRINCIPALE :
+   class ContextualMenuManager { ... }
+
+3️⃣ ÉVÉNEMENT ÉCOUTÉ :
+   document.addEventListener("contextmenu", ...)
+   → Ligne ~393 dans menu.js
+
+4️⃣ INITIALISATION AUTOMATIQUE :
+   → 2 secondes après le chargement du DOM
+   → Lignes ~12308-12310 dans menu.js
+
+
+🎯 CODE QUI ACTIVE LE CLIC DROIT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+this.addEventListenerWithCleanup(document, "contextmenu", (e) => {
+  const table = e.target.closest("table");
+  if (table && this.isTableInChat(table)) {
+    e.preventDefault();  // ← Bloque le menu natif
+    this.showMenu(e.pageX, e.pageY, table);  // ← Affiche le menu ClaraVerse
+  }
+});
+
+
+📊 FONCTIONNALITÉS DU MENU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✏️  Édition des cellules
+📋  Gestion des lignes
+📊  Gestion des colonnes
+🔢  Opérations arithmétiques (Validation, Mouvement, etc.)
+⚠️  Évaluation des risques
+🗃️  Opérations sur les tables
+📁  Import/Export Excel et Word
+🐼  Modélisation Pandas
+📈  États Financiers SYSCOHADA
+
+
+🔑 MÉTHODES GLOBALES EXPOSÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+window.initContextualMenu()       → Initialiser le menu
+window.forceContextualMenu()      → Forcer l'initialisation
+window.cleanupContextualMenu()    → Nettoyer le menu
+
+
+✅ CONFIRMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✓ UN SEUL fichier responsable : menu.js
+✓ PAS dev.js (ce fichier n'existe pas dans public/)
+✓ Version du script : 9.3
+
+
+📝 POUR PLUS DE DÉTAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Consultez :
+→ IDENTIFICATION_SCRIPT_MENU_CONTEXTUEL.md
+
+
+Date : 27 août 2026

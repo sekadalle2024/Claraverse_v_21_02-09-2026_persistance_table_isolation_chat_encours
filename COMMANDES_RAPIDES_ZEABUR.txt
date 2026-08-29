@@ -1,0 +1,138 @@
+═══════════════════════════════════════════════════════════════════
+⚡ COMMANDES RAPIDES - DÉPLOIEMENT ZEABUR
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🔍 VÉRIFICATION LOCALE                       │
+└─────────────────────────────────────────────────────────────────┘
+
+# Vérifier que les fichiers Docker sont corrects
+.\Doc zeabur docker\Scripts\verifier-config-zeabur.ps1
+
+# Résultat attendu: ✅ TOUT EST CORRECT !
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🚀 PUSH VERS GITHUB                          │
+└─────────────────────────────────────────────────────────────────┘
+
+# Option 1: Script automatique (recommandé)
+.\Doc zeabur docker\Scripts\push-correction-nginx-zeabur.ps1
+
+# Option 2: Commandes manuelles
+git add .
+git commit -m "fix: correction nginx.conf et configuration Zeabur"
+git push origin main
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    ⚙️  CONFIGURATION ZEABUR                     │
+└─────────────────────────────────────────────────────────────────┘
+
+# 1. Ouvrir Zeabur Dashboard
+start https://zeabur.com/dashboard
+
+# 2. Sélectionner votre projet
+
+# 3. Service Backend:
+#    - Settings → Build Configuration
+#    - Service Name: backend  ← Changer si nécessaire
+#    - Port: 8080
+#    - Save → Redeploy
+
+# 4. Service Frontend:
+#    - Settings → Build Configuration
+#    - Service Name: frontend
+#    - Port: 80
+#    - Vérifier que c'est correct
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🧪 TESTS DE VÉRIFICATION                     │
+└─────────────────────────────────────────────────────────────────┘
+
+# Test Backend Health
+curl https://pybackend.zeabur.app/health
+
+# Résultat attendu:
+# {"status": "healthy"}
+
+# Test Frontend
+start https://prclaravi.zeabur.app
+
+# Résultat attendu:
+# Application Claraverse chargée
+
+# Test Communication Frontend → Backend (dans la console navigateur F12)
+fetch('https://pybackend.zeabur.app/health').then(r => r.json()).then(console.log)
+
+# Résultat attendu:
+# {status: "healthy"}
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    📊 VÉRIFIER LES LOGS                         │
+└─────────────────────────────────────────────────────────────────┘
+
+# Dans Zeabur Dashboard:
+
+# Logs Backend (corrects):
+# ✅ "pip install"
+# ✅ "Uvicorn running on http://0.0.0.0:8080"
+# ❌ PAS de "dist/assets/*.js"
+
+# Logs Frontend (corrects):
+# ✅ "npm ci"
+# ✅ "vite build"
+# ✅ "Configuration complete"
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    🔧 DÉPANNAGE                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+# Si le backend build toujours le frontend:
+# 1. Vérifier Service Name = "backend" (pas "frontend")
+# 2. Forcer un rebuild complet
+# 3. Vérifier les logs
+
+# Si erreur CORS:
+# 1. Vérifier CORS_ORIGINS dans les variables d'environnement
+# 2. Ajouter: https://prclaravi.zeabur.app
+
+# Si port incorrect:
+# Backend: Port = 8080
+# Frontend: Port = 80
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    📚 DOCUMENTATION                             │
+└─────────────────────────────────────────────────────────────────┘
+
+# Guide de démarrage rapide
+cat START_HERE_DEPLOIEMENT_ZEABUR.txt
+
+# Solution immédiate
+cat 00_SOLUTION_IMMEDIATE_ZEABUR_20_AVRIL_2026.txt
+
+# Configuration étape par étape
+cat CONFIGURATION_ZEABUR_ETAPE_PAR_ETAPE.md
+
+# Guide visuel
+cat GUIDE_VISUEL_CORRECTION_ZEABUR.md
+
+┌─────────────────────────────────────────────────────────────────┐
+│                    ✅ CHECKLIST FINALE                          │
+└─────────────────────────────────────────────────────────────────┘
+
+□ Vérification locale réussie
+□ Push vers GitHub effectué
+□ Zeabur détecte le push
+□ Backend: Service Name = "backend"
+□ Frontend: Service Name = "frontend"
+□ Build backend montre "pip install"
+□ Build frontend montre "npm ci"
+□ Backend /health retourne JSON
+□ Frontend affiche l'application
+□ Pas d'erreur CORS
+□ Fonctionnalités testées
+
+═══════════════════════════════════════════════════════════════════
+
+🎉 SUCCÈS ! Votre application est déployée sur Zeabur ! 🚀
+
+═══════════════════════════════════════════════════════════════════

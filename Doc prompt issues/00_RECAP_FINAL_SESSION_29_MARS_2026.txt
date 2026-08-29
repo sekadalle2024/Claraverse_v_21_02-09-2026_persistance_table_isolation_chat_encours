@@ -1,0 +1,195 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ RÉCAPITULATIF FINAL - SESSION 29 MARS 2026
+  Heure: 20h00
+═══════════════════════════════════════════════════════════════════════════
+
+CONTEXTE
+═══════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n Case 25 fonctionne PARFAITEMENT en mode manuel:
+✅ Les 6 tables sont générées
+✅ Le contenu est spécifique au cycle (Trésorerie, RH, etc.)
+✅ Le format JSON est correct
+
+MAIS le frontend ne sait pas extraire la réponse du format retourné par n8n.
+
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════
+
+FORMAT RETOURNÉ PAR N8N:
+{
+  "response": {
+    "body": [{
+      "data": {
+        "Etape mission - Recos contrôle interne comptable": [...]
+      }
+    }],
+    "headers": {...},
+    "statusCode": 200
+  }
+}
+
+FORMAT ATTENDU PAR LE FRONTEND:
+[{
+  "data": {
+    "Etape mission - Recos contrôle interne comptable": [...]
+  }
+}]
+
+SOLUTION IMPLÉMENTÉE
+═══════════════════════════════════════════════════════════════════════════
+
+FICHIER: src/services/claraApiService.ts
+
+MODIFICATION 1: Extraction response.body[0].data
+───────────────────────────────────────────────────────────────────────────
+Fonction: normalizeN8nResponse() (ligne ~743)
+
+Ajout d'une section AVANT tous les autres formats pour extraire
+response.body[0].data si cette structure existe.
+
+Résultat: Les données sont extraites et transformées en [{data: {...}}]
+pour être traitées par FORMAT 4.
+
+MODIFICATION 2: Logs détaillés message envoyé
+───────────────────────────────────────────────────────────────────────────
+Fonction: sendChatMessage() (ligne ~1410)
+
+Ajout de logs détaillés pour déboguer le message envoyé à n8n:
+- Endpoint
+- Request Body
+- Message brut
+
+MODIFICATION 3: Logs détaillés réponse reçue
+───────────────────────────────────────────────────────────────────────────
+Fonction: sendChatMessage() (ligne ~1470)
+
+Ajout de logs détaillés pour déboguer la réponse reçue de n8n:
+- Réponse complète
+- Type de réponse
+- Est un Array?
+- Clés principales
+
+FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Doc prompt issues/00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt
+   → Solution complète avec logs attendus
+
+2. Doc prompt issues/COMMANDES_TEST_CASE_25_FINAL.txt
+   → Commandes PowerShell pour tester
+
+3. Doc prompt issues/00_RECAP_FINAL_SESSION_29_MARS_2026.txt
+   → Ce fichier (récapitulatif ultra-rapide)
+
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   - normalizeN8nResponse() (ligne ~743)
+   - sendChatMessage() (ligne ~1410)
+   - sendChatMessage() (ligne ~1470)
+
+2. Doc prompt issues/README.md
+   - Ajout de 00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt
+     dans les points d'entrée rapides
+
+PROCHAINES ACTIONS
+═══════════════════════════════════════════════════════════════════════════
+
+1. REDÉMARRER LE SERVEUR
+   .\stop-claraverse.ps1
+   .\start-claraverse.ps1
+
+2. OUVRIR LE FRONTEND
+   start http://localhost:5173
+   F12 (console)
+
+3. ENVOYER UN MESSAGE CASE 25
+   [Command] : Recos contrôle interne comptable
+   [Cycle] : RH
+   [test] : AA010
+   [reference] : test sur la validation de procedure de recrutement
+   [Anomalie] = inexistence de procedure de recrutement du DG
+
+4. VÉRIFIER LES LOGS
+   ✅ Router détecte Case 25
+   ✅ Message envoyé visible
+   ✅ Réponse reçue visible
+   ✅ Extraction response.body[0].data réussie
+   ✅ FORMAT 4 détecté
+   ✅ Conversion Markdown réussie
+
+5. VÉRIFIER L'AFFICHAGE
+   ✅ 6 tables affichées
+   ✅ Contenu spécifique au cycle (RH)
+   ✅ Contenu mentionne l'anomalie
+
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Après redémarrage du serveur:
+✅ Case 25 détecté correctement
+✅ Message envoyé à n8n
+✅ Réponse reçue avec response.body[0].data
+✅ Données extraites correctement
+✅ 6 tables affichées avec contenu correct
+
+STATUT FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Extraction response.body[0].data: IMPLÉMENTÉE
+✅ Logs détaillés: AJOUTÉS
+✅ Documentation: CRÉÉE
+⏳ Tests: À EFFECTUER
+
+FICHIERS DE RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════
+
+1. 00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt
+   → Solution technique complète
+
+2. COMMANDES_TEST_CASE_25_FINAL.txt
+   → Guide de test étape par étape
+
+3. 00_SOLUTION_FINALE_CASE_25_29_MARS_2026.txt
+   → Vue d'ensemble de toutes les corrections
+
+4. 00_WORKFLOW_N8N_FONCTIONNE_MODE_MANUEL_29_MARS_2026.txt
+   → Diagnostic workflow n8n
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Redémarrer le serveur
+.\stop-claraverse.ps1; .\start-claraverse.ps1
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+# Voir les modifications
+git diff src/services/claraApiService.ts
+
+TEMPS ESTIMÉ POUR LES TESTS
+═══════════════════════════════════════════════════════════════════════════
+
+- Redémarrage serveur: 30 secondes
+- Test Case 25: 2 minutes
+- Vérification logs: 1 minute
+- Vérification affichage: 1 minute
+- Tests supplémentaires: 5 minutes
+
+TOTAL: ~10 minutes
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 20h00
+Version: 1.0
+Statut: SOLUTION IMPLÉMENTÉE - PRÊT POUR LES TESTS
+
+PROCHAINE ÉTAPE: Redémarrer le serveur et tester
+
+═══════════════════════════════════════════════════════════════════════════

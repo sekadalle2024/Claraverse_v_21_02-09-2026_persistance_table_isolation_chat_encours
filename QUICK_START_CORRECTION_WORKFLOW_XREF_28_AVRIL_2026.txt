@@ -1,0 +1,72 @@
+================================================================
+   CORRECTION RAPIDE WORKFLOW XREF - 28 AVRIL 2026
+================================================================
+
+PROBLEME
+========
+Le workflow n8n retourne une erreur:
+"Cannot read properties of undefined (reading 'execute')"
+
+CAUSE
+=====
+Configuration incorrecte du node Google Drive v3
+
+SOLUTION EN 3 ETAPES
+====================
+
+ETAPE 1: Ouvrir n8n
+-------------------
+1. Aller sur: https://n8nsqlite.zeabur.app
+2. Se connecter
+3. Ouvrir le workflow "Cross Reference - Ouvrir Document"
+
+
+ETAPE 2: Remplacer les nodes Google Drive
+------------------------------------------
+1. Supprimer le node "Rechercher Dossier Client1"
+2. Ajouter un nouveau node "Google Drive"
+3. Configurer:
+   - Version: v2 (pas v3!)
+   - Operation: Search
+   - Query (q): name contains '{{ $json.body.dossier }}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false
+   - Credentials: Sélectionner vos credentials Google Drive OAuth2
+
+4. Ajouter un deuxième node "Google Drive" 
+5. Configurer:
+   - Version: v2
+   - Operation: Search
+   - Query (q): name contains '{{ $json.body.index }}' and '{{ $('Rechercher Dossier').item.json.id }}' in parents and trashed = false
+   - Credentials: Même credentials
+
+
+ETAPE 3: Tester
+---------------
+1. Sauvegarder le workflow
+2. Activer le workflow
+3. Exécuter: .\test-workflow-xref-afriland.ps1
+
+
+ALTERNATIVE: IMPORTER LE WORKFLOW CORRIGE
+==========================================
+1. Dans n8n, cliquer sur "Import from File"
+2. Sélectionner: Doc cross ref documentaire menu/workflow_n8n_ouvrir_xref_v2_corrige.json
+3. Configurer les credentials Google Drive
+4. Activer et tester
+
+
+VERIFICATION
+============
+Si le workflow fonctionne, vous devriez voir:
+- success: true
+- file.id: ID du fichier Google Drive
+- file.name: [I30]-AFRILAND
+- file.webViewLink: URL pour ouvrir le fichier
+
+
+AIDE
+====
+Si problème persiste:
+1. Vérifier que les credentials Google Drive sont valides
+2. Vérifier que le dossier "Dossier CAC" existe
+3. Vérifier que le fichier "[I30]-AFRILAND" existe dans ce dossier
+4. Consulter: Doc cross ref documentaire menu/00_SOLUTION_ERREUR_GOOGLE_DRIVE_28_AVRIL_2026.txt

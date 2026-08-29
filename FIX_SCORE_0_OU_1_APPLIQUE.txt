@@ -1,0 +1,82 @@
+============================================================
+   FIX SCORE 0 OU 1 PAR TABLE - V1.3 APPLIQUÉ
+============================================================
+
+PROBLÈME CORRIGÉ:
+Le score affichait "0/0" ou "X/Y" (nombre de lignes)
+alors qu'il devait afficher "0" ou "1" par table.
+
+EXPLICATION:
+- Chaque TABLE représente UNE question
+- Chaque ligne de la table représente une OPTION de réponse
+- Le score doit être:
+  * 1 = bonne réponse cochée
+  * 0 = mauvaise réponse ou pas de réponse
+
+ALGORITHME CORRIGÉ:
+1. Parcourir les lignes de la table
+2. Trouver la ligne où la checkbox est cochée
+3. Comparer Option avec Reponse_cia
+4. Si égaux → Score = 1, sinon Score = 0
+
+============================================================
+                 MODIFICATIONS APPLIQUÉES
+============================================================
+
+Fichier: public/menu_cia.js (V1.2 → V1.3)
+
+1. calculateScores() - Nouveau algorithme:
+   - Ne compte plus les lignes
+   - Détermine si la réponse cochée est correcte
+   - Stocke tableScore = 0 ou 1
+
+2. mergeScoreColumn(table, score) - Nouvel affichage:
+   - Affiche "0" ou "1" (pas "X/Y")
+   - Couleur verte si 1, rouge si 0
+   - Police plus grande (24px)
+
+3. Résultat Final:
+   - Somme des scores (0 ou 1) de chaque table
+   - Exemple: 3/5 = 3 bonnes réponses sur 5 questions
+
+============================================================
+                    ÉTAPES DE TEST
+============================================================
+
+1. VIDER LE CACHE (Ctrl+Shift+R)
+
+2. Générer un questionnaire CIA avec plusieurs tables
+
+3. Cocher une réponse dans chaque table
+
+4. Clic droit > "📊 Résultat final"
+
+5. VÉRIFIER:
+   - Chaque table affiche "0" ou "1" dans la colonne Score
+   - Score = 1 si bonne réponse cochée
+   - Score = 0 si mauvaise réponse
+   - Résultat Final = X/Y (ex: 3/5)
+
+============================================================
+                 EXEMPLE VISUEL
+============================================================
+
+AVANT (bug):
+┌─────────┬──────────┬────────┬─────────────┬───────┐
+│ Question│ Option   │ Rep CIA│ Reponse User│ Score │
+├─────────┼──────────┼────────┼─────────────┼───────┤
+│ Q1      │ A        │ B      │ ☐           │       │
+│         │ B        │ B      │ ☑           │ 0/0   │  ← BUG
+│         │ C        │ B      │ ☐           │       │
+└─────────┴──────────┴────────┴─────────────┴───────┘
+
+APRÈS (corrigé):
+┌─────────┬──────────┬────────┬─────────────┬───────┐
+│ Question│ Option   │ Rep CIA│ Reponse User│ Score │
+├─────────┼──────────┼────────┼─────────────┼───────┤
+│ Q1      │ A        │ B      │ ☐           │       │
+│         │ B        │ B      │ ☑           │   1   │  ← CORRECT
+│         │ C        │ B      │ ☐           │       │
+└─────────┴──────────┴────────┴─────────────┴───────┘
+
+============================================================

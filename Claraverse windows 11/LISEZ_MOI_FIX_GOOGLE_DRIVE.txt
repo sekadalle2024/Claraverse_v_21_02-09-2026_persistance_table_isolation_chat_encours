@@ -1,0 +1,59 @@
+═══════════════════════════════════════════════════════════════
+✅ FIX GOOGLE DRIVE CASE 8 - APPLIQUÉ
+═══════════════════════════════════════════════════════════════
+
+❌ PROBLÈME
+───────────────────────────────────────────────────────────────
+Erreur : "docs.google.com refused to connect"
+Cause : Politique CORS de Google Drive
+
+✅ SOLUTION
+───────────────────────────────────────────────────────────────
+Remplacement fetch → iframe
+
+🔄 CHANGEMENT
+───────────────────────────────────────────────────────────────
+AVANT : fetch(exportUrl) ❌ Bloqué par CORS
+APRÈS : <iframe src="${viewUrl}"> ✅ Fonctionne
+
+📝 URL UTILISÉE
+───────────────────────────────────────────────────────────────
+/preview au lieu de /export?format=html
+
+🧪 TESTER
+───────────────────────────────────────────────────────────────
+http://localhost:5173/test-modelisation-template-v2.html
+Chercher : Test 6 ou Test 7 (n8n_doc)
+
+📊 TABLE DE TEST
+───────────────────────────────────────────────────────────────
+<table>
+  <thead>
+    <tr><th>Template</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>n8n_doc</td><td>Test</td></tr>
+  </tbody>
+</table>
+
+✅ RÉSULTAT
+───────────────────────────────────────────────────────────────
+Document Google Drive affiché dans iframe
+Aucune erreur CORS
+Boutons fonctionnels (Ouvrir, Télécharger PDF)
+
+⚠️ PRÉREQUIS
+───────────────────────────────────────────────────────────────
+Document partagé : "Anyone with the link"
+
+📚 DOCUMENTATION
+───────────────────────────────────────────────────────────────
+SUCCES_FIX_GOOGLE_DRIVE_CASE8.md (détails complets)
+TEST_GOOGLE_DRIVE_CASE8.txt (commandes de test)
+FIX_GOOGLE_DRIVE_IFRAME_CASE8.md (explication technique)
+
+═══════════════════════════════════════════════════════════════
+Date : 13 décembre 2025
+Version : 2.1.1
+Statut : ✅ CORRIGÉ
+═══════════════════════════════════════════════════════════════

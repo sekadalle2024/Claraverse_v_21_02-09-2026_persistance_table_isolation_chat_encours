@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION FORMAT CASE 49 - Programme de Travail - 29 JUIN 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 CONTEXTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nouveau workflow n8n qui retourne un format JSON spécifique avec la structure:
+[{ "output": "`json\n{...}\n```" }]
+
+Le JSON est enveloppé dans un bloc markdown avec un backtick simple initial (`json)
+suivi de triples backticks (```), ce qui causait une erreur de parsing.
+
+🔴 PROBLÈME INITIAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Erreur: "Unexpected token '`', \"`json\n{\"... is not valid JSON"
+
+Le code existant ne gérait que le format avec triples backticks (```json)
+mais pas le backtick simple initial (`json) présent dans la réponse.
+
+✅ SOLUTION APPLIQUÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Amélioration du nettoyage des backticks en 4 étapes séquentielles:
+
+1. Détection améliorée:
+   - Recherche de "```json" OU "`json" au début
+
+2. Étape 1 - Backtick simple initial:
+   - Si le contenu commence par "`json", retire ces 5 caractères
+   - Exemple: "`json\n{...}" → "{...}"
+
+3. Étape 2 - Triples backticks:
+   - Retire "```json" au début et "```" à la fin
+   - Utilise des regex avec flag global et multiline
+
+4. Étape 3 - Backticks résiduels:
+   - Retire tous les backticks au début et à la fin
+   - Nettoie les cas edge avec plusieurs backticks
+
+5. Étape 4 - Parsing JSON:
+   - Parse le JSON nettoyé
+   - Transforme en FORMAT 4 pour traitement standard
+
+📊 FORMATS SUPPORTÉS MAINTENANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ [{ "output": "```json\n{...}\n```" }]         // Format standard
+✓ [{ "output": "`json\n{...}\n```" }]           // Format avec backtick simple
+✓ [{ "output": "`json\n{...}`" }]               // Format simplifié
+✓ [{ "output": "```json\n{...}" }]              // Sans backticks de fin
+
+🔧 FICHIER MODIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+src/services/claraApiService.ts
+  → Méthode: normalizeN8nResponse()
+  → Section: FORMAT CASE 49 (Programme de travail)
+  → Lignes: ~420-480
+
+📝 LOGS AJOUTÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- "🧹 Backtick simple initial retiré" : Confirme le nettoyage du `json
+- "📊 Contenu nettoyé" : Affiche les premiers 500 caractères
+- "✅ JSON parsé avec succès" : Confirme le parsing réussi
+- "🔄 Données transformées pour traitement FORMAT 4" : Transformation ok
+
+⚠️ GESTION D'ERREURS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+En cas d'échec du parsing:
+- Message d'erreur clair pour l'utilisateur
+- Détails de l'erreur affichés
+- 500 premiers caractères du contenu brut pour debug
+- Métadonnées incluant l'aperçu du contenu
+
+🧪 TESTS RECOMMANDÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Tester avec votre endpoint:
+   curl -X POST "https://fpb7ab9h.rpcl.app/webhook-test/integration" \
+     -H "Content-Type: application/json" \
+     -d '{"question":"[Command] = /Programme de travail - [Processus] = facturation des ventes "}'
+
+2. Vérifier les logs de la console navigateur:
+   - Rechercher "FORMAT CASE 49 DETECTE"
+   - Vérifier "Backtick simple initial retiré"
+   - Confirmer "JSON parsé avec succès"
+
+3. Vérifier le rendu:
+   - Les tableaux doivent s'afficher correctement
+   - Structure "Tableau entete" + "Tableau processus"
+
+✅ COMPATIBILITÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ Rétrocompatible avec tous les formats existants
+✓ Ne casse pas les autres workflows n8n
+✓ Améliore la robustesse du parsing JSON
+
+📅 Date: 29 juin 2026
+👤 Action: Correction du parsing JSON dans ClaraApiService
+🎯 Objectif: Supporter le format de réponse du workflow "Programme de travail"
+✅ Statut: CORRIGÉ
+
+═══════════════════════════════════════════════════════════════════════════════

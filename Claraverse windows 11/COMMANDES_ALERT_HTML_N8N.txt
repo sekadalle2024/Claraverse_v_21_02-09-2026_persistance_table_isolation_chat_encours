@@ -1,0 +1,130 @@
+═══════════════════════════════════════════════════════════════════
+🔍 COMMANDES RAPIDES - Alert HTML N8N
+═══════════════════════════════════════════════════════════════════
+
+⚡ ACTIVATION RAPIDE
+═══════════════════════════════════════════════════════════════════
+
+// Ouvrir la console du navigateur (F12)
+
+// Activer l'alert
+window.ClaraverseN8nV17.enableHTMLAlert();
+
+// Créer une table "Programme de travail"
+// → Une popup s'affichera avec le HTML envoyé
+
+
+🔧 DÉSACTIVATION
+═══════════════════════════════════════════════════════════════════
+
+// Désactiver l'alert
+window.ClaraverseN8nV17.disableHTMLAlert();
+
+
+🧪 TEST MANUEL
+═══════════════════════════════════════════════════════════════════
+
+// Afficher une alert avec du HTML personnalisé
+const testHTML = '<table><tr><th>Test</th></tr><tr><td>Contenu</td></tr></table>';
+window.ClaraverseN8nV17.showHTMLAlert(testHTML, 'Test Manuel');
+
+
+📊 VÉRIFIER L'ÉTAT
+═══════════════════════════════════════════════════════════════════
+
+// Vérifier si l'alert est activée
+console.log('Alert activée?', window.ClaraverseN8nV17.CONFIG.DEBUG_ALERT_HTML);
+
+
+📋 COPIER LE HTML DEPUIS LA CONSOLE
+═══════════════════════════════════════════════════════════════════
+
+// Le HTML complet est loggé dans la console
+// Cherchez: "📋 ========== CONTENU HTML COMPLET =========="
+// Copiez tout le contenu entre les deux lignes
+
+
+🧪 TESTER LE HTML DANS N8N
+═══════════════════════════════════════════════════════════════════
+
+// 1. Copier le HTML de l'alert ou de la console
+
+// 2. Tester avec fetch:
+const htmlCopie = '<table>...</table>'; // Coller ici
+fetch('https://xomava4845.app.n8n.cloud/webhook/htlm_processor', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ question: htmlCopie })
+})
+.then(r => r.json())
+.then(d => console.log('Réponse n8n:', d));
+
+// 3. Ou tester avec curl:
+curl -X POST "https://xomava4845.app.n8n.cloud/webhook/htlm_processor" \
+  -H "Content-Type: application/json" \
+  -d '{"question":"<HTML_COPIÉ_ICI>"}'
+
+
+🔍 DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════
+
+// Si l'alert ne s'affiche pas:
+
+// 1. Vérifier que l'alert est activée
+console.log(window.ClaraverseN8nV17.CONFIG.DEBUG_ALERT_HTML);
+
+// 2. Vérifier que Flowise.js est chargé
+console.log(window.ClaraverseN8nV17.version);
+
+// 3. Forcer un scan
+window.ClaraverseN8nV17.scanAndProcess();
+
+
+📚 AUTRES COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════
+
+// Tester la connexion n8n
+await window.ClaraverseN8nV17.testN8nConnection();
+
+// Voir le cache
+window.ClaraverseN8nV17.getCacheInfo();
+
+// Effacer le cache
+window.ClaraverseN8nV17.clearAllCache();
+
+// Forcer un scan des tables
+window.ClaraverseN8nV17.scanAndProcess();
+
+
+💡 EXEMPLE COMPLET
+═══════════════════════════════════════════════════════════════════
+
+// 1. Activer l'alert
+window.ClaraverseN8nV17.enableHTMLAlert();
+
+// 2. Créer une table avec:
+//    - Colonne "Flowise"
+//    - Mot-clé "Programme de travail"
+
+// 3. L'alert s'affiche automatiquement
+
+// 4. Copier le HTML de l'alert
+
+// 5. Tester dans n8n (voir ci-dessus)
+
+// 6. Désactiver l'alert
+window.ClaraverseN8nV17.disableHTMLAlert();
+
+
+⚠️ LIMITATIONS
+═══════════════════════════════════════════════════════════════════
+
+- Alert limitée à 5000 caractères
+- Le contenu complet est toujours dans la console
+- Peut ralentir l'interface (désactiver après utilisation)
+- Certains navigateurs peuvent bloquer les popups
+
+
+═══════════════════════════════════════════════════════════════════
+Version: 17.1.0 | Date: 2025-12-03 | Statut: ✅ Disponible
+═══════════════════════════════════════════════════════════════════

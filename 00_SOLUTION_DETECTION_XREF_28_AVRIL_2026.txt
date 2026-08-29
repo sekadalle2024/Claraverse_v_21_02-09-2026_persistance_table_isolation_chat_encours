@@ -1,0 +1,217 @@
+═══════════════════════════════════════════════════════════════════════════════
+  SOLUTION - PROBLÈME DÉTECTION TABLE X-REF DOCUMENTAIRE
+  Date: 28 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ DU PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+ERREUR AFFICHÉE:
+  ⚠️ Aucune table X-Ref documentaire trouvée.
+  
+  La table doit contenir les colonnes:
+  - Cross references (ou X-Ref)
+  - Document
+
+CONTEXTE:
+  - Le workflow n8n fonctionne (test réussi avec AFRILAND)
+  - Le problème est dans la détection de la table en front-end
+  - La table existe mais n'est pas reconnue par le code JavaScript
+
+
+🔍 DIAGNOSTIC EFFECTUÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ FICHIERS CRÉÉS:
+   1. test-detection-xref-table.html  - Page de test avec table X-Ref
+   2. test-detection-xref.ps1         - Script PowerShell pour lancer le test
+   3. 00_DIAGNOSTIC_DETECTION_XREF_28_AVRIL_2026.txt - Analyse détaillée
+   4. QUICK_START_DIAGNOSTIC_XREF_28_AVRIL_2026.txt  - Guide rapide
+
+✅ TESTS DISPONIBLES:
+   - Test de structure de table
+   - Test d'index de colonnes
+   - Test d'extraction de données
+
+
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: EXÉCUTER LE TEST
+--------------------------
+Commande:
+    .\test-detection-xref.ps1
+
+Résultat attendu:
+    ✅ Colonnes détectées correctement
+    ✅ Index trouvés
+    ✅ Données extraites
+
+
+ÉTAPE 2: COMPARER AVEC CLARAVERSE
+----------------------------------
+1. Ouvrir Claraverse
+2. Afficher la table X-Ref
+3. F12 → Elements
+4. Inspecter la table
+5. Copier le HTML
+
+
+ÉTAPE 3: IDENTIFIER LA DIFFÉRENCE
+----------------------------------
+Comparer:
+  - Structure HTML (thead/tbody)
+  - Noms exacts des colonnes
+  - Ordre des colonnes
+
+
+ÉTAPE 4: CORRIGER LE CODE
+--------------------------
+Selon le problème identifié:
+  → Modifier la logique de détection
+  → Ajouter des variantes de noms
+  → Améliorer la sélection de table
+
+
+💡 HYPOTHÈSES PRINCIPALES
+═══════════════════════════════════════════════════════════════════════════════
+
+HYPOTHÈSE 1: Structure HTML différente
+---------------------------------------
+La table dans Claraverse pourrait avoir:
+  - Pas de <thead>
+  - En-têtes dans <tbody>
+  - Utilisation de <td> au lieu de <th>
+
+SOLUTION:
+  Modifier le code pour chercher aussi dans tbody:
+  
+  const headers = Array.from(table.querySelectorAll('tr:first-child th, tr:first-child td'))
+
+
+HYPOTHÈSE 2: Nom de colonne légèrement différent
+-------------------------------------------------
+La colonne pourrait s'appeler:
+  - "Cross reference" (singulier)
+  - "Xref" (sans tiret)
+  - "X Ref" (avec espace)
+
+SOLUTION:
+  Ajouter plus de variantes:
+  
+  const hasCrossRef = headers.some(h => 
+    h.includes('cross') || 
+    h.includes('xref') || 
+    h.includes('x-ref') || 
+    h.includes('x ref')
+  );
+
+
+HYPOTHÈSE 3: Problème de timing
+--------------------------------
+Le code s'exécute avant que la table soit chargée
+
+SOLUTION:
+  Ajouter un délai ou un observer:
+  
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+
+📊 CODE ACTUEL (menu.js ligne 9905)
+═══════════════════════════════════════════════════════════════════════════════
+
+const headerCells = Array.from(rows[0].querySelectorAll('th, td'));
+let crossRefIndex = -1;
+let documentIndex = -1;
+
+headerCells.forEach((cell, index) => {
+  const text = cell.textContent.trim().toLowerCase();
+  if ((text.includes('cross') && text.includes('ref')) || 
+      text.includes('x-ref') || text.includes('xref')) {
+    crossRefIndex = index;
+  }
+  if (text.includes('document') || text === 'doc') {
+    documentIndex = index;
+  }
+});
+
+
+🔧 PROPOSITION DE CORRECTION
+═══════════════════════════════════════════════════════════════════════════════
+
+VERSION AMÉLIORÉE (plus flexible):
+
+// Chercher les en-têtes dans thead OU dans la première ligne
+const headerRow = table.querySelector('thead tr') || table.querySelector('tr');
+const headerCells = Array.from(headerRow.querySelectorAll('th, td'));
+
+let crossRefIndex = -1;
+let documentIndex = -1;
+
+headerCells.forEach((cell, index) => {
+  const text = cell.textContent.trim().toLowerCase();
+  
+  // Détection plus flexible pour "Cross references"
+  if (text.includes('cross') || 
+      text.includes('xref') || 
+      text.includes('x-ref') || 
+      text.includes('x ref') ||
+      text.includes('référence')) {
+    crossRefIndex = index;
+  }
+  
+  // Détection pour "Document"
+  if (text.includes('document') || 
+      text.includes('doc')) {
+    documentIndex = index;
+  }
+});
+
+
+📞 INFORMATIONS NÉCESSAIRES
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour finaliser la correction, j'ai besoin de:
+
+1. 📊 RÉSULTATS DU TEST
+   Exécuter: .\test-detection-xref.ps1
+   Copier les résultats affichés
+
+2. 🔍 HTML DE LA TABLE CLARAVERSE
+   F12 → Elements → Copier le HTML de la table
+
+3. 📸 CAPTURES D'ÉCRAN
+   - Table X-Ref dans Claraverse
+   - Erreur affichée
+   - Console du navigateur (F12)
+
+
+🚀 COMMANDE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+    .\test-detection-xref.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FICHIERS CRÉÉS DANS CETTE SESSION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. test-detection-xref-table.html
+   → Page de test avec table X-Ref et tests automatiques
+
+2. test-detection-xref.ps1
+   → Script PowerShell pour lancer le test
+
+3. 00_DIAGNOSTIC_DETECTION_XREF_28_AVRIL_2026.txt
+   → Analyse détaillée du problème
+
+4. QUICK_START_DIAGNOSTIC_XREF_28_AVRIL_2026.txt
+   → Guide rapide pour l'utilisateur
+
+5. 00_SOLUTION_DETECTION_XREF_28_AVRIL_2026.txt (ce fichier)
+   → Synthèse et solution proposée
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN
+═══════════════════════════════════════════════════════════════════════════════

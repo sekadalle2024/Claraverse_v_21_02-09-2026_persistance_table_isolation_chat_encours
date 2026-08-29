@@ -1,0 +1,115 @@
+═══════════════════════════════════════════════════════════════════
+⚡ QUICK FIX FRONTEND ZEABUR - 20 AVRIL 2026
+═══════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════
+
+❌ Frontend bloqué à l'étape: #7 extracting
+❌ Build ne se termine pas
+✅ Backend fonctionne correctement
+
+CAUSE:
+Le heredoc (<< 'EOF') dans Dockerfile.frontend n'est pas compatible
+avec le builder Docker de Zeabur.
+
+═══════════════════════════════════════════════════════════════════
+✅ SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════
+
+MODIFICATIONS:
+1. Remplacement heredoc par commandes echo
+2. Suppression HEALTHCHECK (non supporté par Zeabur)
+3. Simplification configuration Nginx
+4. Optimisation ordre des layers Docker
+
+FICHIER MODIFIÉ:
+- Dockerfile.frontend
+
+═══════════════════════════════════════════════════════════════════
+🚀 DÉPLOIEMENT EN 2 COMMANDES
+═══════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ COMMANDE 1: PUSH AUTOMATIQUE                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+.\Doc zeabur docker\Scripts\push-correction-frontend-zeabur.ps1
+
+OU
+
+┌─────────────────────────────────────────────────────────────────┐
+│ COMMANDE 2: PUSH MANUEL                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+git add Dockerfile.frontend "Doc zeabur docker/" "*.txt"
+git commit -m "fix: correction Dockerfile.frontend pour Zeabur"
+git push origin main
+
+═══════════════════════════════════════════════════════════════════
+⏱️ TIMELINE
+═══════════════════════════════════════════════════════════════════
+
+00:00  Push vers GitHub
+00:30  Zeabur détecte le push
+01:00  Build frontend démarre
+05:00  Build terminé
+06:00  Déploiement actif
+07:00  ✅ Frontend accessible
+
+DURÉE TOTALE: ~7 minutes
+
+═══════════════════════════════════════════════════════════════════
+✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════
+
+APRÈS LE PUSH:
+
+1. Aller sur: https://zeabur.com/dashboard
+
+2. Vérifier le service Frontend:
+   Status: Building → Running
+   
+3. Vérifier les logs:
+   Chercher: "Configuration complete"
+   
+4. Tester l'URL:
+   https://prclaravi.zeabur.app
+
+═══════════════════════════════════════════════════════════════════
+🎯 STATUT FINAL ATTENDU
+═══════════════════════════════════════════════════════════════════
+
+✅ Frontend:  Running
+   URL: https://prclaravi.zeabur.app
+   Port: 80
+   
+✅ Backend:   Running
+   URL: https://pybackend.zeabur.app
+   Port: 8080
+
+✅ Communication: OK
+   CORS configuré
+   API accessible depuis frontend
+
+═══════════════════════════════════════════════════════════════════
+📞 SI PROBLÈME PERSISTE
+═══════════════════════════════════════════════════════════════════
+
+1. Vérifier les logs Zeabur
+2. Forcer un redeploy:
+   Dashboard → Frontend → Settings → Redeploy
+3. Vérifier la configuration du service:
+   - Build Method: Docker Compose
+   - Service Name: frontend
+   - Port: 80
+
+═══════════════════════════════════════════════════════════════════
+🎉 C'EST TOUT !
+═══════════════════════════════════════════════════════════════════
+
+La correction est simple et devrait résoudre le problème immédiatement.
+
+Exécutez le script de push et attendez 7 minutes.
+
+═══════════════════════════════════════════════════════════════════

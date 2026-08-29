@@ -1,0 +1,134 @@
+═══════════════════════════════════════════════════════════════════════════
+  RÉCAPITULATIF FINAL - PROBLÈME CASE 25
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+🎯 RÉSUMÉ DE LA SITUATION
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME INITIAL:
+Router détectait Case 25 mais exécutait Case 1
+
+CORRECTION APPLIQUÉE:
+✅ Router front-end réorganisé (priorités correctes)
+✅ Case 25 détecté et exécuté correctement
+✅ Endpoint correct appelé
+
+NOUVEAU PROBLÈME DÉCOUVERT:
+❌ Workflow n8n renvoie du contenu sur la CAISSE au lieu du sujet demandé (RH)
+
+═══════════════════════════════════════════════════════════════════════════
+✅ CE QUI FONCTIONNE
+═══════════════════════════════════════════════════════════════════════════
+
+FRONT-END CLARAVERSE:
+✅ Router détecte "Recos contrôle interne comptable" → Case 25
+✅ Notification affichée: "Case 25 : recos_controle_interne"
+✅ Endpoint appelé: .../webhook/recos_contrôle_interne_comptable
+✅ Message envoyé au workflow n8n
+
+═══════════════════════════════════════════════════════════════════════════
+❌ CE QUI NE FONCTIONNE PAS
+═══════════════════════════════════════════════════════════════════════════
+
+WORKFLOW N8N:
+❌ Reçoit le message: [Cycle] : RH, [Anomalie] : Recrutement DAF
+❌ Renvoie une réponse sur: Caisse / Inventaires
+❌ Ne traite pas le message utilisateur correctement
+
+CAUSE PROBABLE:
+Le workflow n8n contient un exemple hardcodé sur la "caisse" ou un prompt 
+système qui force ce sujet.
+
+═══════════════════════════════════════════════════════════════════════════
+🔧 SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+DANS N8N:
+1. Ouvrir le workflow "recos_contrôle_interne_comptable"
+2. Supprimer tout exemple hardcodé sur la "caisse"
+3. Rendre le prompt système générique
+4. S'assurer que le message utilisateur est passé au LLM
+5. Vérifier que la réponse est générée dynamiquement
+
+GUIDE DÉTAILLÉ:
+→ Voir: GUIDE_CORRECTION_WORKFLOW_N8N_CASE_25.md
+
+═══════════════════════════════════════════════════════════════════════════
+📁 DOCUMENTATION CRÉÉE
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME ROUTER (RÉSOLU):
+1. 00_CORRECTION_ROUTER_CASE_25_29_MARS_2026.txt
+2. DIAGNOSTIC_TECHNIQUE_ROUTER_CASE_25.md
+3. QUICK_TEST_CORRECTION_CASE_25.txt
+4. INDEX_CORRECTION_ROUTER_CASE_25_29_MARS_2026.md
+5. LISTE_FICHIERS_CORRECTION_CASE_25_29_MARS_2026.md
+6. SYNTHESE_FINALE_CORRECTION_CASE_25_29_MARS_2026.txt
+7. COMMANDES_RAPIDES_TEST_CASE_25.txt
+8. 00_LIRE_EN_PREMIER_CORRECTION_CASE_25.txt
+9. RECAP_ULTRA_RAPIDE_CASE_25.txt
+10. COMMIT_MESSAGE_CORRECTION_CASE_25.txt
+
+PROBLÈME WORKFLOW N8N (EN COURS):
+11. 00_PROBLEME_WORKFLOW_N8N_CASE_25_29_MARS_2026.txt
+12. GUIDE_CORRECTION_WORKFLOW_N8N_CASE_25.md
+13. RECAP_FINAL_PROBLEME_CASE_25_29_MARS_2026.txt (ce fichier)
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+1. OUVRIR N8N
+   URL: https://t22wtwxl.rpcld.app
+   Workflow: recos_contrôle_interne_comptable
+
+2. SUIVRE LE GUIDE
+   Fichier: GUIDE_CORRECTION_WORKFLOW_N8N_CASE_25.md
+
+3. CORRIGER LE WORKFLOW
+   - Supprimer exemples hardcodés
+   - Rendre le prompt générique
+   - Passer le message utilisateur au LLM
+
+4. TESTER
+   Message:
+   [Command] : Recos contrôle interne comptable
+   [Cycle] : RH
+   [test] : AA010
+   [reference] : test sur la validation des procedures DRH
+   [Nature de test] = [Rapprochement]
+   [Assertion] = validité
+   [Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+5. VÉRIFIER
+   ✅ Réponse parle de RH/Recrutement
+   ❌ Réponse ne parle PAS de caisse
+
+═══════════════════════════════════════════════════════════════════════════
+📊 STATUT GLOBAL
+═══════════════════════════════════════════════════════════════════════════
+
+FRONT-END CLARAVERSE:
+[✅] Router corrigé
+[✅] Case 25 détecté correctement
+[✅] Endpoint correct appelé
+[✅] Message envoyé au workflow
+
+WORKFLOW N8N:
+[❌] Contenu hardcodé sur la caisse
+[⏳] Correction en attente
+[⏳] Test après correction
+
+═══════════════════════════════════════════════════════════════════════════
+💡 CONCLUSION
+═══════════════════════════════════════════════════════════════════════════
+
+Le problème initial (router) est RÉSOLU.
+Le nouveau problème (workflow n8n) est IDENTIFIÉ et DOCUMENTÉ.
+
+La correction du workflow n8n est nécessaire pour que Case 25 fonctionne 
+correctement avec des messages sur différents cycles (RH, Ventes, etc.) 
+et non seulement sur la caisse.
+
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,120 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GUIDE RAPIDE - TEST NOTIFICATIONS ROUTER N8N
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+─────────────────────────────────────────────────────────────────────────────
+Tester les notifications qui affichent le case, la route et l'URL utilisés
+par le router n8n dans claraApiService.ts
+
+⚡ DÉMARRAGE RAPIDE (3 ÉTAPES)
+─────────────────────────────────────────────────────────────────────────────
+
+1️⃣ DÉMARRER L'APPLICATION
+   ─────────────────────────
+   npm run dev
+
+2️⃣ OUVRIR L'APPLICATION
+   ─────────────────────
+   http://localhost:5173
+
+3️⃣ TESTER UN MESSAGE
+   ──────────────────
+   Dans le chat, envoyer : "CIA Cours"
+   
+   ✅ Résultat attendu :
+   Une notification apparaît en haut à droite :
+   
+   ┌─────────────────────────────────────────────┐
+   │ 🔀 Router n8n - Case 11                     │
+   │                                             │
+   │ Route: cia_cours                            │
+   │ URL: http://localhost:5678/webhook/...      │
+   └─────────────────────────────────────────────┘
+
+📋 MESSAGES DE TEST PAR CASE
+─────────────────────────────────────────────────────────────────────────────
+
+Case 1  (default)           : "Bonjour"
+Case 2  (design)            : "Design"
+Case 3  (n8n_doc)           : "n8n_doc"
+Case 4  (htlm_processor)    : "Htlm_processor"
+Case 6  (algorithme)        : "Algorithme"
+Case 7  (visualisation)     : "Visualisation"
+Case 8  (notification)      : "Test" (sans Command ni /)
+Case 9  (document)          : "Document"
+Case 10 (database)          : "Database"
+Case 11 (cia_cours)         : "CIA Cours"
+Case 12 (cia_qcm)           : "CIA Qcm"
+Case 13 (cia_synthese)      : "CIA Synthèse"
+Case 21 (lead_balance)      : "Lead_balance"
+Case 24 (etat_fin)          : "Etat fin"
+Case 28 (methodo_audit)     : "Methodo audit"
+Case 29 (guide_commandes)   : "Guide des commandes"
+Case 33 (methodo_revision)  : "Methodo revision"
+
+🔍 VÉRIFICATION CONSOLE
+─────────────────────────────────────────────────────────────────────────────
+Ouvrir la console développeur (F12) et chercher :
+
+🔀 Router → Case XX : route_key
+🔔 Notification envoyée: { case: "Case XX", route: "...", url: "..." }
+
+✅ CRITÈRES DE SUCCÈS
+─────────────────────────────────────────────────────────────────────────────
+✓ La notification apparaît en haut à droite
+✓ Le titre affiche "🔀 Router n8n - Case XX"
+✓ Le message affiche la route et l'URL
+✓ La notification reste visible 8 secondes
+✓ Les logs console confirment l'envoi
+
+❌ PROBLÈMES POSSIBLES
+─────────────────────────────────────────────────────────────────────────────
+
+Problème : Notification ne s'affiche pas
+Solution : Vérifier que notificationService est bien importé
+
+Problème : URL incorrecte affichée
+Solution : Vérifier la logique de détection dans getN8nEndpointWithInfo()
+
+Problème : Case incorrect détecté
+Solution : Vérifier l'ordre des conditions if/else dans getN8nEndpointWithInfo()
+
+🎨 PERSONNALISATION
+─────────────────────────────────────────────────────────────────────────────
+Pour modifier la durée d'affichage (actuellement 8000ms = 8s) :
+
+Dans claraApiService.ts, ligne ~1250 :
+addInfoNotification(
+  `🔀 Router n8n - ${routingInfo.caseName}`,
+  `Route: ${routingInfo.routeKey}\nURL: ${resolvedEndpoint}`,
+  8000  // ← Modifier cette valeur (en millisecondes)
+);
+
+📊 EXEMPLE COMPLET DE TEST
+─────────────────────────────────────────────────────────────────────────────
+
+1. Message envoyé : "CIA Cours"
+
+2. Notification affichée :
+   ┌─────────────────────────────────────────────────────────────────┐
+   │ 🔀 Router n8n - Case 11                                         │
+   │                                                                 │
+   │ Route: cia_cours                                                │
+   │ URL: http://localhost:5678/webhook/cia_cours_gemini             │
+   └─────────────────────────────────────────────────────────────────┘
+
+3. Console logs :
+   🔀 Router → Case 11 : cia_cours
+   🔔 Notification envoyée: {
+     case: "Case 11",
+     route: "cia_cours",
+     url: "http://localhost:5678/webhook/cia_cours_gemini"
+   }
+   🚀 Envoi de la requête vers n8n endpoint: http://localhost:5678/webhook/cia_cours_gemini
+
+4. Requête HTTP envoyée vers l'endpoint n8n
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DU GUIDE
+═══════════════════════════════════════════════════════════════════════════════

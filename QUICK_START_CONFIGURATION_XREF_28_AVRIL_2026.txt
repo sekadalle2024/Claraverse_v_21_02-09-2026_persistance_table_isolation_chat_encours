@@ -1,0 +1,132 @@
+================================================================
+   QUICK START - CONFIGURATION XREF N8N - 28 AVRIL 2026
+================================================================
+
+VOUS AVEZ FOURNI VOS CREDENTIALS ✓
+===================================
+
+Vos credentials OAuth2 Google Drive sont complets et prêts à être utilisés.
+
+
+CONFIGURATION EN 3 MINUTES
+===========================
+
+ETAPE 1: Ouvrir N8N (30 sec)
+-----------------------------
+URL: https://n8nsqlite.zeabur.app
+Se connecter
+
+
+ETAPE 2: Créer Credentials (1 min 30)
+--------------------------------------
+1. Menu "Credentials" > "Add Credential"
+2. Chercher "Google Drive OAuth2 API"
+3. Copier-coller depuis:
+   Doc cross ref documentaire menu/COPIER_COLLER_CREDENTIALS_28_AVRIL_2026.txt
+4. Cliquer "Connect my account"
+5. Autoriser Google (sélectionner le bon compte)
+6. Sauvegarder
+
+
+ETAPE 3: Importer Workflow (1 min)
+-----------------------------------
+1. Menu "Workflows" > "Import from File"
+2. Sélectionner: workflow_n8n_ouvrir_xref_v2_corrige.json
+3. Dans chaque node Google Drive:
+   - Sélectionner credentials: "Google Drive OAuth2 - Cross Reference"
+4. Activer le workflow (toggle en haut à droite)
+
+
+TEST (30 sec)
+=============
+Exécuter:
+.\test-workflow-xref-afriland.ps1
+
+Ou:
+.\test-workflow-xref-nouveau-endpoint.ps1
+
+
+RESULTAT ATTENDU
+================
+{
+  "success": true,
+  "fileUrl": "https://drive.google.com/file/d/...",
+  "fileName": "[I30]-AFRILAND-Document.pdf"
+}
+
+
+FICHIERS IMPORTANTS
+===================
+
+Pour Configuration:
+-------------------
+1. COPIER_COLLER_CREDENTIALS_28_AVRIL_2026.txt
+   → Valeurs à copier directement
+
+2. 00_CREDENTIALS_AVANCES_FOURNIS_28_AVRIL_2026.txt
+   → Résumé et validation
+
+3. GUIDE_CONFIGURATION_N8N_AVEC_CREDENTIALS_28_AVRIL_2026.md
+   → Guide complet détaillé
+
+
+Pour Workflow:
+--------------
+1. workflow_n8n_ouvrir_xref_v2_corrige.json
+   → Workflow corrigé à importer
+
+2. QUICK_FIX_WORKFLOW_28_AVRIL_2026.txt
+   → Solution rapide si problème
+
+
+Pour Tests:
+-----------
+1. test-workflow-xref-afriland.ps1
+   → Test avec données Afriland
+
+2. test-workflow-xref-nouveau-endpoint.ps1
+   → Test avec nouvel endpoint
+
+
+VERIFICATION RAPIDE
+===================
+
+✓ Credentials configurés?
+  → Menu Credentials > Voir "Google Drive OAuth2 - Cross Reference"
+
+✓ Workflow importé?
+  → Menu Workflows > Voir "Cross Reference - Ouvrir Document"
+
+✓ Workflow actif?
+  → Toggle "Active" en vert
+
+✓ Test réussi?
+  → Exécuter test-workflow-xref-afriland.ps1
+
+
+TROUBLESHOOTING EXPRESS
+=======================
+
+Erreur "Unauthorized":
+→ Reconnecter credentials dans n8n
+
+Erreur "Cannot read properties":
+→ Utiliser Google Drive v2 (pas v3)
+
+Erreur "File not found":
+→ Vérifier structure Google Drive:
+  Dossier CAC/AFRILAND/[I30]-AFRILAND-...
+
+
+PROCHAINES ETAPES
+=================
+1. ✓ Configurer credentials
+2. ✓ Importer workflow
+3. ✓ Tester
+4. → Intégrer dans menu Clara
+5. → Déployer
+
+
+TEMPS TOTAL: 3 MINUTES
+=======================
+

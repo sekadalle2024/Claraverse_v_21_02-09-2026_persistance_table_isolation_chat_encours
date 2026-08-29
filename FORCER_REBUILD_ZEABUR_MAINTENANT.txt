@@ -1,0 +1,179 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🚀 FORCER LE REBUILD SUR ZEABUR - GUIDE VISUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+Le fichier endpoint_editeur.py est sur GitHub mais Zeabur ne l'a pas encore
+déployé. Voici comment forcer un rebuild manuel.
+
+═══════════════════════════════════════════════════════════════════════════════
+  📋 ÉTAPES À SUIVRE
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: OUVRIR ZEABUR
+─────────────────────────────────────────────────────────────────────────────
+1. Aller sur: https://zeabur.com
+2. Se connecter si nécessaire
+3. Ouvrir le projet "pybackend" (ou le nom de votre projet backend)
+
+ÉTAPE 2: ACCÉDER AU SERVICE
+─────────────────────────────────────────────────────────────────────────────
+1. Cliquer sur le service backend
+2. Vous devriez voir:
+   • L'URL du service (pybackend.zeabur.app)
+   • Le statut (Running / Building / Error)
+   • La date du dernier déploiement
+
+ÉTAPE 3: FORCER LE REBUILD
+─────────────────────────────────────────────────────────────────────────────
+Chercher un bouton parmi:
+• "Redeploy"
+• "Rebuild"
+• "Restart"
+• Menu "..." ou "⋮" avec option "Redeploy"
+
+Cliquer dessus.
+
+ÉTAPE 4: OPTIONS DE REBUILD (si disponibles)
+─────────────────────────────────────────────────────────────────────────────
+Si Zeabur propose des options:
+☑ Clear cache (IMPORTANT - cocher cette option)
+☑ Force rebuild
+☐ Restart only (NE PAS choisir cette option)
+
+Puis cliquer sur "Confirm" ou "Rebuild"
+
+ÉTAPE 5: ATTENDRE LE BUILD
+─────────────────────────────────────────────────────────────────────────────
+1. Le statut devrait passer à "Building"
+2. Vous pouvez voir les logs en temps réel
+3. Attendre 2-5 minutes
+
+ÉTAPE 6: VÉRIFIER LES LOGS
+─────────────────────────────────────────────────────────────────────────────
+Pendant le build, chercher dans les logs:
+
+✅ Messages de succès:
+   "✅ Endpoint Editeur router loaded successfully"
+   "Application startup complete"
+   "Uvicorn running on..."
+
+❌ Messages d'erreur:
+   "ImportError: cannot import name 'router'"
+   "ModuleNotFoundError: No module named 'endpoint_editeur'"
+   "SyntaxError"
+
+ÉTAPE 7: TESTER L'ENDPOINT
+─────────────────────────────────────────────────────────────────────────────
+Une fois le build terminé (statut "Running"):
+
+Exécuter:
+  .\test-endpoint-editeur-zeabur.ps1
+
+Ou tester manuellement:
+  curl https://pybackend.zeabur.app/editeur/health
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 QUE FAIRE SI LE BUILD ÉCHOUE
+═══════════════════════════════════════════════════════════════════════════════
+
+ERREUR: "ImportError: cannot import name 'router'"
+─────────────────────────────────────────────────────────────────────────────
+Cause: Le fichier endpoint_editeur.py n'est pas dans le bon dossier
+Solution: Vérifier que le fichier est à la racine du repo (même niveau que main.py)
+
+ERREUR: "ModuleNotFoundError: No module named 'endpoint_editeur'"
+─────────────────────────────────────────────────────────────────────────────
+Cause: Le fichier n'a pas été déployé
+Solution: Vérifier que le fichier est bien sur GitHub et visible
+
+ERREUR: "SyntaxError"
+─────────────────────────────────────────────────────────────────────────────
+Cause: Erreur de syntaxe dans endpoint_editeur.py
+Solution: Vérifier le contenu du fichier sur GitHub
+
+BUILD RÉUSSI MAIS TOUJOURS 404
+─────────────────────────────────────────────────────────────────────────────
+Cause possible:
+• Le router n'est pas enregistré dans main.py
+• L'import est incorrect
+• Le fichier n'a pas été inclus dans le build
+
+Solution:
+• Vérifier les logs pour "✅ Endpoint Editeur router loaded successfully"
+• Si absent, le router n'est pas chargé
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 VÉRIFICATIONS APRÈS LE REBUILD
+═══════════════════════════════════════════════════════════════════════════════
+
+1. VÉRIFIER LE STATUT
+   ─────────────────────────────────────────────────────────────────────────
+   • Statut: Running (vert)
+   • Pas d'erreurs dans les logs
+   • Date de déploiement: maintenant
+
+2. VÉRIFIER LES LOGS
+   ─────────────────────────────────────────────────────────────────────────
+   Chercher:
+   ✅ "✅ Endpoint Editeur router loaded successfully"
+   ✅ "Application startup complete"
+
+3. TESTER L'ENDPOINT
+   ─────────────────────────────────────────────────────────────────────────
+   curl https://pybackend.zeabur.app/editeur/health
+   
+   Résultat attendu:
+   {
+     "status": "healthy",
+     "endpoint": "editeur",
+     "version": "1.0.0"
+   }
+
+4. TESTER SUR LE FRONTEND
+   ─────────────────────────────────────────────────────────────────────────
+   • Aller sur https://prclaravi.netlify.app
+   • Envoyer un message contenant "editeur"
+   • Vérifier que la table s'affiche
+
+═══════════════════════════════════════════════════════════════════════════════
+  ⏰ COMBIEN DE TEMPS ÇA PREND?
+═══════════════════════════════════════════════════════════════════════════════
+
+Build normal:        2-3 minutes
+Build avec cache:    1-2 minutes
+Build sans cache:    3-5 minutes
+
+Si le build prend plus de 10 minutes:
+• Vérifier les logs pour des erreurs
+• Le build peut être bloqué
+• Essayer d'annuler et relancer
+
+═══════════════════════════════════════════════════════════════════════════════
+  💡 ASTUCES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Toujours cocher "Clear cache" pour un rebuild complet
+2. Surveiller les logs en temps réel pendant le build
+3. Noter l'heure du rebuild pour comparer avec les tests
+4. Si le build échoue, lire TOUS les logs d'erreur
+5. Un rebuild manuel est plus rapide que d'attendre la détection auto
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔗 LIENS RAPIDES
+═══════════════════════════════════════════════════════════════════════════════
+
+• Zeabur Dashboard: https://zeabur.com
+• Backend: https://pybackend.zeabur.app
+• Test Health: https://pybackend.zeabur.app/editeur/health
+• Swagger: https://pybackend.zeabur.app/docs
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 ACTION IMMÉDIATE:
+   1. Aller sur https://zeabur.com
+   2. Ouvrir le projet backend
+   3. Cliquer sur "Redeploy" avec "Clear cache"
+   4. Attendre 2-5 minutes
+   5. Tester: .\test-endpoint-editeur-zeabur.ps1
+
+═══════════════════════════════════════════════════════════════════════════════

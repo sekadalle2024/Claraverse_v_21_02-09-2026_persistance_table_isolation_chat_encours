@@ -1,0 +1,83 @@
+═══════════════════════════════════════════════════════════════
+  QUICK START - Correction Workflow N8N Recos Revision
+═══════════════════════════════════════════════════════════════
+
+📋 PROBLÈME
+-----------
+Erreur : "Bad escaped character in JSON at position 845"
+Le workflow n8n ne retourne pas le bon format pour claraApiService.ts
+
+✅ SOLUTION
+-----------
+Modifier 2 nodes dans le workflow n8n pour utiliser FORMAT 4
+
+🔧 ÉTAPES D'IMPLÉMENTATION (5 minutes)
+---------------------------------------
+
+1. OUVRIR N8N
+   → Aller sur http://localhost:5678 (ou votre instance n8n)
+   → Ouvrir le workflow "recos_revision"
+
+2. MODIFIER NODE "node clean"
+   → Cliquer sur le node "node clean"
+   → Copier le contenu de : n8n_node_clean_corrected.js
+   → Coller dans l'éditeur de code
+   → Sauvegarder
+
+3. MODIFIER NODE "Markdown Generator"
+   → Cliquer sur le node "Markdown Generator1 corrige11"
+   → Copier le contenu de : n8n_markdown_generator_simplified.js
+   → Coller dans l'éditeur de code
+   → Sauvegarder
+
+4. ACTIVER LE WORKFLOW
+   → Cliquer sur "Active" en haut à droite
+   → Vérifier que le statut est "Active"
+
+5. TESTER
+   → Dans Claraverse, envoyer :
+     "Recos_revision [test AA040 caisse]"
+   → Vérifier l'affichage des 6 tables Markdown
+
+📊 FORMAT ATTENDU
+-----------------
+[
+  {
+    "data": {
+      "Etape mission - Recos revision des comptes": [
+        { "table 1": {...} },
+        { "table 2": {...} },
+        ...
+      ]
+    }
+  }
+]
+
+🎯 RÉSULTAT ATTENDU
+-------------------
+✅ Pas d'erreur JSON
+✅ Affichage de 6 tables formatées
+✅ Conversion Markdown automatique par le frontend
+
+📁 FICHIERS CRÉÉS
+-----------------
+1. n8n_node_clean_corrected.js          → Code pour "node clean"
+2. n8n_markdown_generator_simplified.js → Code pour "Markdown Generator"
+3. CORRECTION_WORKFLOW_N8N_RECOS_REVISION.md → Documentation complète
+4. exemple_reponse_n8n_format4.json     → Exemple de réponse attendue
+
+🆘 EN CAS DE PROBLÈME
+---------------------
+1. Vérifier les logs n8n (onglet "Executions")
+2. Vérifier la console du navigateur (F12)
+3. Consulter : CORRECTION_WORKFLOW_N8N_RECOS_REVISION.md
+
+💡 ASTUCE
+---------
+Le frontend (claraApiService.ts) gère maintenant la conversion Markdown.
+Le workflow n8n doit juste retourner du JSON propre au FORMAT 4.
+
+═══════════════════════════════════════════════════════════════
+Date : 24 Mars 2026
+Statut : ✅ Prêt pour implémentation
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,93 @@
+═══════════════════════════════════════════════════════════════
+   ✅ EXPORT SYNTHÈSE CAC - CORRECTION FINALE APPLIQUÉE
+═══════════════════════════════════════════════════════════════
+
+📅 DATE: 26 Mars 2026
+🎯 STATUT: Correction terminée - Prêt pour test
+
+═══════════════════════════════════════════════════════════════
+   🔧 CORRECTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME RÉSOLU:
+  ❌ Avant: "1 sous-table" détectée → 0 points collectés
+  ✅ Après: "6 sous-tables" détectées → Points collectés correctement
+
+FICHIER MODIFIÉ:
+  📄 public/menu.js
+     - collectFrapPoints() ✅
+     - collectRecosRevisionPoints() ✅
+     - collectRecosControleInternePoints() ✅
+
+LOGIQUE CORRIGÉE:
+  Au lieu de chercher dans une div parente (qui ne contient qu'1 table),
+  on collecte maintenant 6 tables CONSÉCUTIVES pour chaque point d'audit.
+
+═══════════════════════════════════════════════════════════════
+   🧪 TESTER MAINTENANT
+═══════════════════════════════════════════════════════════════
+
+1. RAFRAÎCHIR LE NAVIGATEUR
+   → Ctrl + F5 (pour vider le cache)
+
+2. OUVRIR LA CONSOLE
+   → F12 → Onglet Console
+
+3. TESTER L'EXPORT
+   → Clic droit → "Export Synthèse CAC"
+
+4. VÉRIFIER LES LOGS
+   ✅ "6 sous-tables" pour chaque groupe
+   ✅ "Points collectés: FRAP: X, Recos Révision: Y, Recos CI: Z"
+   ✅ Fichier Word téléchargé
+
+═══════════════════════════════════════════════════════════════
+   📊 LOGS ATTENDUS
+═══════════════════════════════════════════════════════════════
+
+✅ [Export CAC] 24 table(s) trouvée(s)
+✅ [FRAP] Table FRAP détectée avec 6 sous-tables
+✅ [Recos Révision] Table détectée avec 6 sous-tables
+✅ [Recos CI] Table détectée avec 6 sous-tables
+
+📊 [Export CAC] Points collectés:
+   - FRAP: 2
+   - Recos Révision: 2
+   - Recos Contrôle Interne: 1
+
+✅ [Export CAC] Envoi au backend...
+
+═══════════════════════════════════════════════════════════════
+   📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+📖 Doc export rapport/SOLUTION_FINALE_EXPORT_CAC_26_MARS_2026.md
+   → Explication technique complète de la correction
+
+📖 Doc export rapport/00_INDEX.md
+   → Index de toute la documentation
+
+📖 Doc export rapport/GUIDE_EXPORT_SYNTHESE_CAC.md
+   → Guide utilisateur mis à jour
+
+═══════════════════════════════════════════════════════════════
+   ⚠️ SI LE BACKEND N'EST PAS DÉMARRÉ
+═══════════════════════════════════════════════════════════════
+
+.\stop-claraverse.ps1
+.\start-claraverse-conda.ps1
+
+═══════════════════════════════════════════════════════════════
+   ✅ DÉPENDANCES PYTHON VÉRIFIÉES
+═══════════════════════════════════════════════════════════════
+
+Toutes les dépendances sont installées:
+  ✅ fastapi
+  ✅ python-multipart
+  ✅ python-docx
+  ✅ python-dotenv
+  ✅ beautifulsoup4
+
+═══════════════════════════════════════════════════════════════
+
+🎯 PROCHAINE ÉTAPE: Tester l'export et vérifier le fichier Word généré

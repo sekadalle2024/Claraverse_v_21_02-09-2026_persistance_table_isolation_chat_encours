@@ -1,0 +1,151 @@
+═══════════════════════════════════════════════════════════════════════════
+  🔴 PROBLÈME - Seule la Table 1 s'affiche (Tables 2-5 manquantes)
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+SYMPTÔME
+═══════════════════════════════════════════════════════════════════════════
+
+Affichage actuel:
+✅ Table 1 (En-tête): Etape de mission, Norme, Méthode, Reference
+❌ Table 2 (Intitule): MANQUANTE
+❌ Table 3 (Observation): MANQUANTE
+❌ Table 4 (Constat): MANQUANTE
+❌ Table 5 (Risque): MANQUANTE
+❌ Table 6 (Recommendation): MANQUANTE
+
+DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════
+
+Le problème vient de la fonction `convertHeaderTableToMarkdown` dans 
+`claraApiService.ts` qui traite les tables 2+ différemment de la table 1.
+
+Table 1 (index 0):
+→ Format 2 colonnes (Rubrique | Description)
+→ ✅ S'affiche correctement
+
+Tables 2+ (index > 0):
+→ Format HTML avec <table> et <tr>
+→ ❌ Le HTML n'est pas rendu correctement dans le Markdown
+
+CAUSE
+═══════════════════════════════════════════════════════════════════════════
+
+Le code dans `claraApiService.ts` ligne ~600:
+
+```typescript
+// Tables 2+ (index > 0) : Format 1 colonne avec en-tête rouge
+if (entries.length === 1) {
+  const [key, value] = entries[0];
+  
+  // Créer le tableau avec en-tête rouge (utiliser HTML pour le style)
+  let md = `<table style="width: 100%; border-collapse: collapse;">\n`;
+  md += `<tr style="background-color: #8B0000; color: white;">\n`;
+  md += `<th style="padding: 8px; text-align: left; border: 1px solid #8B0000;">${headerText}</th>\n`;
+  md += `</tr>\n`;
+  md += `<tr>\n`;
+  md += `<td style="padding: 8px; border: 1px solid #ddd;">${cellValue}</td>\n`;
+  md += `</tr>\n`;
+  md += `</table>\n\n`;
+  
+  return md;
+}
+```
+
+→ Ce HTML n'est pas rendu correctement par le composant Markdown du frontend
+
+SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+Utiliser le format Markdown standard pour TOUTES les tables (1-6):
+
+```typescript
+// Format Markdown standard pour toutes les tables
+if (entries.length === 1) {
+  const [key, value] = entries[0];
+  const headerText = key.charAt(0).toUpperCase() + key.slice(1);
+  let cellValue = String(value)
+    .replace(/\\n/g, '\n')
+    .replace(/\n/g, '<br>')
+    .trim();
+  
+  // Format Markdown avec en-tête en gras
+  let md = `\n**${headerText}**\n\n`;
+  md += `${cellValue}\n\n`;
+  
+  return md;
+}
+```
+
+FICHIER À MODIFIER
+═══════════════════════════════════════════════════════════════════════════
+
+Fichier: src/services/claraApiService.ts
+Fonction: convertHeaderTableToMarkdown
+Lignes: ~600-630
+
+MODIFICATION À APPLIQUER
+═══════════════════════════════════════════════════════════════════════════
+
+Remplacer le bloc HTML par du Markdown simple:
+
+AVANT (HTML):
+```typescript
+let md = `<table style="width: 100%; border-collapse: collapse;">\n`;
+md += `<tr style="background-color: #8B0000; color: white;">\n`;
+md += `<th style="padding: 8px; text-align: left; border: 1px solid #8B0000;">${headerText}</th>\n`;
+md += `</tr>\n`;
+md += `<tr>\n`;
+md += `<td style="padding: 8px; border: 1px solid #ddd;">${cellValue}</td>\n`;
+md += `</tr>\n`;
+md += `</table>\n\n`;
+```
+
+APRÈS (Markdown):
+```typescript
+let md = `\n**${headerText}**\n\n`;
+md += `${cellValue}\n\n`;
+```
+
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════
+
+Après modification:
+
+✅ Table 1: Etape de mission, Norme, Méthode, Reference
+✅ Table 2: **Intitule** + contenu
+✅ Table 3: **Observation** + contenu
+✅ Table 4: **Constat** + contenu
+✅ Table 5: **Risque** + contenu
+✅ Table 6: **Recommendation** + contenu
+
+ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir: src/services/claraApiService.ts
+2. Chercher: "Tables 2+ (index > 0)"
+3. Remplacer le bloc HTML par le Markdown simple
+4. Sauvegarder
+5. Redémarrer le serveur
+6. Tester
+
+COMMANDES
+═══════════════════════════════════════════════════════════════════════════
+
+# Ouvrir le fichier
+code src/services/claraApiService.ts
+
+# Redémarrer le serveur
+.\stop-claraverse.ps1
+.\start-claraverse.ps1
+
+ALTERNATIVE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+Si vous voulez garder le format HTML mais le rendre correctement,
+il faut activer le rendu HTML dans le composant Markdown du frontend.
+
+Mais la solution Markdown est plus simple et plus robuste.
+
+═══════════════════════════════════════════════════════════════════════════
+

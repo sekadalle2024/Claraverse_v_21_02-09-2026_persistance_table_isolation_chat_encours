@@ -1,0 +1,178 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              CORRECTION WORKFLOW N8N - UPLOAD DOCUMENTS ✅                  ║
+║                              12 avril 2026                                   ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📅 Date : 12 avril 2026
+🎯 Objectif : Corriger l'erreur "Cannot read properties of undefined (reading 'execute')"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ PROBLÈME IDENTIFIÉ
+
+Erreur : "Cannot read properties of undefined (reading 'execute')"
+
+Cause : Les nodes Google Drive n'avaient pas le paramètre "resource" spécifié.
+Dans n8n v3 du node Google Drive, il faut TOUJOURS spécifier :
+  • resource: "file" pour les opérations sur fichiers
+  • resource: "folder" pour les opérations sur dossiers
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CORRECTIONS APPLIQUÉES
+
+1. Tous les nodes de recherche de dossiers :
+   AVANT :
+   {
+     "parameters": {
+       "operation": "search",
+       ...
+     }
+   }
+   
+   APRÈS :
+   {
+     "parameters": {
+       "resource": "folder",
+       "operation": "search",
+       ...
+     }
+   }
+
+2. Tous les nodes de création de dossiers :
+   AVANT :
+   {
+     "parameters": {
+       "operation": "create",
+       ...
+     }
+   }
+   
+   APRÈS :
+   {
+     "parameters": {
+       "resource": "folder",
+       "operation": "create",
+       ...
+     }
+   }
+
+3. Node d'upload de fichier :
+   AVANT :
+   {
+     "parameters": {
+       "operation": "upload",
+       "binaryData": true,
+       ...
+     }
+   }
+   
+   APRÈS :
+   {
+     "parameters": {
+       "resource": "file",
+       "operation": "upload",
+       "binaryData": true,
+       "binaryPropertyName": "data",
+       ...
+     }
+   }
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 LISTE DES NODES CORRIGÉS
+
+✓ Rechercher Dossier CAC (resource: "folder")
+✓ Créer Dossier CAC (resource: "folder")
+✓ Rechercher Dossier Client (resource: "folder")
+✓ Créer Dossier Client (resource: "folder")
+✓ Créer Cycle 1 à 10 (resource: "folder" x10)
+✓ Rechercher Cycle (resource: "folder")
+✓ Upload Fichier (resource: "file" + binaryPropertyName: "data")
+
+Total : 16 nodes corrigés
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIERS
+
+Fichier original : WORKFLOW_N8N_XREF.json
+Fichier corrigé : WORKFLOW_N8N_XREF_CORRIGE.json
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 PROCHAINES ÉTAPES
+
+1. Ouvrir n8n : https://hkj0631c.rpcl.app
+
+2. Supprimer l'ancien workflow (si existant)
+
+3. Importer le nouveau workflow :
+   • Cliquer sur "Import from File"
+   • Sélectionner : WORKFLOW_N8N_XREF_CORRIGE.json
+   • Confirmer l'import
+
+4. Configurer les credentials Google Drive :
+   • Ouvrir chaque node Google Drive
+   • Sélectionner ou créer les credentials
+   • Autoriser l'accès à Google Drive
+
+5. Activer le workflow
+
+6. Tester l'upload :
+   • Ouvrir l'URL du formulaire
+   • Remplir les champs
+   • Uploader un fichier
+   • Vérifier dans Google Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 DÉTAILS TECHNIQUES
+
+Le node Google Drive v3 de n8n nécessite :
+
+Pour les dossiers :
+  resource: "folder"
+  operation: "create" | "search" | "delete" | "update"
+
+Pour les fichiers :
+  resource: "file"
+  operation: "upload" | "download" | "delete" | "update"
+  binaryPropertyName: "data" (pour upload)
+
+Sans le paramètre "resource", le router du node ne peut pas déterminer
+quelle méthode execute() appeler, d'où l'erreur.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ VÉRIFICATION
+
+Après import du workflow corrigé, vérifier que :
+
+□ Tous les nodes Google Drive ont une icône verte (credentials OK)
+□ Le workflow peut être activé sans erreur
+□ Le formulaire est accessible via l'URL webhook
+□ L'upload d'un fichier fonctionne
+□ Le fichier apparaît dans Google Drive avec la bonne nomenclature
+□ La structure de dossiers est créée correctement
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 NOTES
+
+• Le paramètre "resource" est OBLIGATOIRE dans Google Drive v3
+• Le paramètre "binaryPropertyName" doit être "data" pour les uploads
+• Les credentials Google Drive doivent avoir les permissions :
+  - drive.file (pour créer/modifier des fichiers)
+  - drive.folder (pour créer/modifier des dossiers)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CORRECTION APPLIQUÉE !
+
+Le workflow corrigé est prêt à être importé dans n8n.
+
+═══════════════════════════════════════════════════════════════════════════════
+

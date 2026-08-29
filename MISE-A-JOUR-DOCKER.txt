@@ -1,0 +1,182 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║              🔄 MISE À JOUR DES IMAGES DOCKER                            ║
+║                  Après modification du code                              ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+📋 QUAND METTRE À JOUR?
+═══════════════════════════════════════════════════════════════════════════
+
+Vous devez mettre à jour les images Docker quand vous modifiez:
+
+✓ Code du frontend (React, TypeScript, CSS)
+✓ Code du backend (Python, fichiers .py)
+✓ Dépendances (package.json, requirements.txt)
+✓ Configuration (nginx.conf, Dockerfile)
+
+
+🚀 MÉTHODE 1: MISE À JOUR COMPLÈTE (Recommandé)
+═══════════════════════════════════════════════════════════════════════════
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ DEPUIS WSL2                                                           │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   # 1. Arrêter les conteneurs                                        │
+│   docker compose down                                                 │
+│                                                                       │
+│   # 2. Rebuild les images                                            │
+│   docker compose build                                                │
+│                                                                       │
+│   # 3. Redémarrer                                                    │
+│   docker compose up -d                                                │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────┐
+│ DEPUIS WINDOWS (1 LIGNE)                                              │
+├───────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│   wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose down && docker compose build && docker compose up -d"
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+🔧 MÉTHODE 2: MISE À JOUR SÉLECTIVE
+═══════════════════════════════════════════════════════════════════════════
+
+Si vous avez modifié UNIQUEMENT le frontend:
+
+  docker compose down
+  docker compose build frontend
+  docker compose up -d
+
+Si vous avez modifié UNIQUEMENT le backend:
+
+  docker compose down
+  docker compose build backend
+  docker compose up -d
+
+
+⚡ MÉTHODE 3: REBUILD SANS CACHE (Si problème)
+═══════════════════════════════════════════════════════════════════════════
+
+Si le rebuild normal ne fonctionne pas:
+
+  # Rebuild complet sans cache
+  docker compose down
+  docker compose build --no-cache
+  docker compose up -d
+
+
+🗑️ MÉTHODE 4: NETTOYAGE COMPLET (Si gros problème)
+═══════════════════════════════════════════════════════════════════════════
+
+Si vous avez des problèmes persistants:
+
+  # 1. Arrêter et supprimer tout
+  docker compose down -v
+
+  # 2. Supprimer les anciennes images
+  docker rmi claraverse-vfirebase-frontend claraverse-vfirebase-backend
+
+  # 3. Rebuild complet
+  docker compose build --no-cache
+
+  # 4. Redémarrer
+  docker compose up -d
+
+⚠️  ATTENTION: -v supprime aussi les volumes (perte de données backend)
+
+
+📝 WORKFLOW COMPLET DE MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════
+
+1️⃣  Modifier votre code (frontend ou backend)
+
+2️⃣  Arrêter les conteneurs
+    docker compose down
+
+3️⃣  Rebuild les images
+    docker compose build
+
+4️⃣  Redémarrer
+    docker compose up -d
+
+5️⃣  Vérifier
+    docker compose ps
+    docker compose logs -f
+
+
+🔍 VÉRIFIER LA MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════
+
+# Voir les images
+docker images | grep claraverse
+
+# Voir l'état des conteneurs
+docker compose ps
+
+# Voir les logs
+docker compose logs -f
+
+# Tester l'application
+Frontend: http://localhost:8080
+Backend:  http://localhost:5000/health
+
+
+💡 CONSEILS
+═══════════════════════════════════════════════════════════════════════════
+
+1. Toujours arrêter les conteneurs avant de rebuild
+2. Utilisez --no-cache si les changements ne sont pas pris en compte
+3. Vérifiez les logs après le redémarrage
+4. Sauvegardez vos données importantes avant un nettoyage complet
+
+
+🐛 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════
+
+Problème: Les modifications ne sont pas visibles
+Solution: Rebuild sans cache
+  docker compose build --no-cache
+
+Problème: Erreur de build
+Solution: Voir les logs détaillés
+  docker compose build --progress=plain
+
+Problème: Conteneur ne démarre pas
+Solution: Voir les logs
+  docker compose logs backend
+  docker compose logs frontend
+
+Problème: Espace disque insuffisant
+Solution: Nettoyer Docker
+  docker system prune -a
+
+
+📊 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════
+
+# Voir la taille des images
+docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
+
+# Voir l'historique d'une image
+docker history claraverse-vfirebase-frontend
+
+# Supprimer les images non utilisées
+docker image prune -a
+
+# Voir l'espace utilisé par Docker
+docker system df
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ✅ COMMANDE RAPIDE                                    ║
+║                                                                           ║
+║              docker compose down && docker compose build && docker compose up -d
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

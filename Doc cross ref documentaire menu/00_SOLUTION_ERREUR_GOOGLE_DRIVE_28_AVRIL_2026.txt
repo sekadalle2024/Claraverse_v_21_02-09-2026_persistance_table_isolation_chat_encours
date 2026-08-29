@@ -1,0 +1,83 @@
+================================================================
+   SOLUTION ERREUR GOOGLE DRIVE N8N - 28 AVRIL 2026
+================================================================
+
+PROBLEME IDENTIFIE
+==================
+Erreur: "Cannot read properties of undefined (reading 'execute')"
+Location: GoogleDrive node v2 router.ts:29:60
+
+CAUSE RACINE
+============
+Le node Google Drive v3 dans n8n a une configuration incorrecte pour l'opération "search".
+La propriété "operation" n'est pas correctement reconnue par le router du node.
+
+SOLUTION IMMEDIATE
+==================
+
+Option 1: Utiliser Google Drive v2 (RECOMMANDE)
+------------------------------------------------
+Dans n8n, remplacer les nodes Google Drive v3 par v2:
+
+1. Supprimer les nodes "Rechercher Dossier" et "Rechercher Fichier"
+2. Ajouter de nouveaux nodes Google Drive v2
+3. Configurer l'opération "search" avec les paramètres suivants:
+
+Node "Rechercher Dossier":
+- Operation: Search
+- Query String: name contains '{{ $json.body.dossier }}' and mimeType = 'application/vnd.google-apps.folder' and trashed = false
+
+Node "Rechercher Fichier":
+- Operation: Search  
+- Query String: name contains '{{ $json.body.index }}' and '{{ $('Rechercher Dossier').item.json.id }}' in parents and trashed = false
+
+
+Option 2: Corriger la configuration v3
+---------------------------------------
+Si vous devez utiliser v3, modifier les paramètres:
+
+1. Operation: "list" au lieu de "search"
+2. Utiliser les filtres natifs au lieu de queryString
+3. Ajouter un node Code pour filtrer les résultats
+
+
+Option 3: Utiliser HTTP Request (ALTERNATIVE)
+----------------------------------------------
+Utiliser directement l'API Google Drive via HTTP Request:
+
+Endpoint: https://www.googleapis.com/drive/v3/files
+Method: GET
+Query Parameters:
+  - q: name contains '{{ $json.body.index }}'
+  - fields: files(id,name,mimeType,webViewLink)
+  - key: YOUR_API_KEY
+
+Authentication: OAuth2
+
+
+WORKFLOW CORRIGE (v2)
+=====================
+Voir fichier: workflow_n8n_ouvrir_xref_v2_corrige.json
+
+
+VERIFICATION
+============
+1. Importer le workflow corrigé dans n8n
+2. Configurer les credentials Google Drive
+3. Activer le workflow
+4. Tester avec: .\test-workflow-xref-afriland.ps1
+
+
+NOTES IMPORTANTES
+=================
+- Google Drive v2 est plus stable pour l'opération search
+- Vérifier que les credentials OAuth2 sont bien configurés
+- Le dossier "Dossier CAC" doit exister dans Google Drive
+- Le fichier doit être nommé exactement "[I30]-AFRILAND"
+
+
+PROCHAINES ETAPES
+=================
+1. Créer le workflow corrigé avec Google Drive v2
+2. Tester le workflow
+3. Mettre à jour la documentation

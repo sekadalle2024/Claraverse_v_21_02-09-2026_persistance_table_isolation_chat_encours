@@ -1,0 +1,115 @@
+🚨 PROBLÈME IDENTIFIÉ - CACHE DU NAVIGATEUR
+═══════════════════════════════════════════════════════════════
+
+❌ PROBLÈME
+
+Les logs montrent:
+├─ Endpoint: http://localhost:5678/webhook/htlm_processor
+
+Mais le fichier Flowise.js contient:
+├─ Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+
+→ Le navigateur utilise une version en CACHE!
+
+═══════════════════════════════════════════════════════════════
+
+✅ SOLUTION IMMÉDIATE
+
+1. VIDER LE CACHE COMPLÈTEMENT
+
+   Option A - Chrome/Edge:
+   ────────────────────────
+   1. Ctrl+Shift+Delete
+   2. Cocher "Images et fichiers en cache"
+   3. Période: "Toutes les périodes"
+   4. Cliquer "Effacer les données"
+
+   Option B - Firefox:
+   ───────────────────
+   1. Ctrl+Shift+Delete
+   2. Cocher "Cache"
+   3. Période: "Tout"
+   4. Cliquer "OK"
+
+2. RECHARGER AVEC CACHE VIDÉ
+
+   Windows: Ctrl+Shift+R ou Ctrl+F5
+   Mac: Cmd+Shift+R
+
+3. VÉRIFIER DANS LA CONSOLE
+
+   Vous devriez voir:
+   ├─ Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+
+═══════════════════════════════════════════════════════════════
+
+💡 ALTERNATIVE RAPIDE
+
+Si le problème persiste:
+
+1. Ouvrir le mode navigation privée/incognito
+2. Tester l'application
+3. Le cache ne sera pas utilisé
+
+═══════════════════════════════════════════════════════════════
+
+🔍 VÉRIFICATION
+
+Après avoir vidé le cache, dans la console:
+
+window.ClaraverseN8nV17.CONFIG.N8N_ENDPOINT_URL
+
+Résultat attendu:
+"https://barow52161.app.n8n.cloud/webhook/htlm_processor"
+
+Si vous voyez encore "localhost", le cache n'est pas vidé.
+
+═══════════════════════════════════════════════════════════════
+
+📋 ÉTAPES COMPLÈTES
+
+1. ✅ Vider le cache (Ctrl+Shift+Delete)
+2. ✅ Fermer tous les onglets de l'application
+3. ✅ Rouvrir l'application
+4. ✅ Recharger avec Ctrl+Shift+R
+5. ✅ Ouvrir la console (F12)
+6. ✅ Vérifier les logs d'initialisation
+
+Vous devriez voir:
+═══════════════════════════════════════════════════════
+🚀 INITIALISATION FLOWISE.JS V18.0
+═══════════════════════════════════════════════════════
+├─ Timestamp: 2025-12-09T...
+├─ Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+├─ Version: V18.0 (Logs détaillés + n8n Cloud)
+└─ Status: ✅ Script chargé avec succès
+═══════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ SI LE PROBLÈME PERSISTE
+
+Le fichier Flowise.js est correct.
+Le problème est 100% lié au cache du navigateur.
+
+Solutions radicales:
+1. Redémarrer le navigateur complètement
+2. Utiliser un autre navigateur pour tester
+3. Mode navigation privée/incognito
+
+═══════════════════════════════════════════════════════════════
+
+✅ CONFIRMATION
+
+Une fois le cache vidé, créez une table Flowise.
+Les logs montreront:
+
+📋 ÉTAPE 5: APPEL À L'ENDPOINT N8N
+├─ Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+├─ Taille des données: XXX caractères
+└─ Envoi en cours...
+
+📡 Envoi des données vers n8n...
+🔗 Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+
+═══════════════════════════════════════════════════════════════

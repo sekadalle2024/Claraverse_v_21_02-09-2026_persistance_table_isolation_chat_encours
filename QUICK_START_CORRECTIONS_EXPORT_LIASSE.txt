@@ -1,0 +1,140 @@
+================================================================================
+QUICK START - CORRECTIONS EXPORT LIASSE
+================================================================================
+
+🎯 OBJECTIF: Tester les corrections des problèmes 1 et 2 de l'export liasse
+
+📋 CORRECTIONS APPLIQUÉES:
+   ✅ Problème 1: Ajout des balances à results_liasse (colonnes BRUT/AMORT)
+   ✅ Problème 2: Totalisations calculées avec brut/amort
+   ⚠️  Problème 3: Menu accordéon frontend (à faire)
+
+================================================================================
+ÉTAPES DE TEST
+================================================================================
+
+1️⃣  DÉMARRER LE BACKEND
+   
+   Commande:
+   .\start-claraverse.ps1
+   
+   Attendre le message: "✅ Backend démarré sur http://localhost:8000"
+
+2️⃣  IMPORTER LA BALANCE DE TEST
+   
+   Fichier: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   
+   Dans l'interface:
+   - Cliquer sur "Importer Balance"
+   - Sélectionner le fichier
+   - Attendre la confirmation
+
+3️⃣  GÉNÉRER LES ÉTATS FINANCIERS
+   
+   Dans l'interface:
+   - Cliquer sur "Générer États Financiers"
+   - Attendre la génération (quelques secondes)
+   - Vérifier que les états s'affichent
+
+4️⃣  EXPORTER LA LIASSE OFFICIELLE
+   
+   Dans l'interface:
+   - Cliquer sur "Exporter Liasse Officielle"
+   - Le fichier Excel se télécharge automatiquement
+   - Nom: Liasse_Officielle_[Entreprise]_[Année].xlsx
+
+5️⃣  VÉRIFIER LE FICHIER EXCEL
+   
+   Ouvrir le fichier téléchargé et vérifier:
+   
+   📊 ONGLET ACTIF:
+   ✓ Colonne F (BRUT) remplie pour AD, AE, AF, AG, AH, AI, AJ, AK, AL, AM, AN, AP, AQ
+   ✓ Colonne G (AMORTISSEMENT) remplie
+   ✓ Colonne H (NET N) remplie
+   ✓ Colonne I (NET N-1) remplie
+   ✓ Cohérence: H ≈ F - G (à ±1 près)
+   
+   📊 TOTALISATIONS:
+   ✓ Ligne AZ (TOTAL ACTIF IMMOBILISÉ) avec F, G, H, I
+   ✓ Ligne BQ (TOTAL ACTIF CIRCULANT) avec H, I
+   ✓ Ligne BZ (TOTAL TRÉSORERIE-ACTIF) avec H, I
+   ✓ Ligne CZ (TOTAL ÉCARTS DE CONVERSION-ACTIF) avec H, I
+   ✓ Ligne DZ (TOTAL GÉNÉRAL ACTIF) avec F, G, H, I
+   
+   📊 ONGLET TFT:
+   ✓ Colonne I (N) remplie
+   ✓ Colonne K (N-1) remplie
+
+================================================================================
+RÉSULTATS ATTENDUS
+================================================================================
+
+✅ SI TOUT FONCTIONNE:
+   - Les colonnes BRUT et AMORTISSEMENT sont remplies
+   - Les totalisations sont complètes
+   - Le TFT est rempli
+   
+   → Problèmes 1 et 2 RÉSOLUS ✅
+   → Passer au problème 3 (frontend)
+
+❌ SI PROBLÈME PERSISTE:
+   - Vérifier les logs du backend
+   - Chercher les messages:
+     "✅ Balances ajoutées: N=XXX lignes"
+     "✅ Enrichissement ACTIF avec BRUT et AMORTISSEMENT..."
+     "✅ ACTIF avec BRUT/AMORT: XXX cellules remplies"
+   
+   - Si ces messages n'apparaissent pas:
+     → Redémarrer le backend
+     → Réimporter la balance
+     → Réessayer
+
+================================================================================
+PROBLÈME 3 (FRONTEND) - À FAIRE
+================================================================================
+
+Le menu accordéon frontend doit afficher les colonnes BRUT et AMORT.
+
+Fichier à modifier: src/components/Clara_Components/[Composant Menu Accordéon]
+
+Colonnes à ajouter:
+- brut_n (Valeur brute exercice N)
+- amort_n (Amortissement exercice N)
+
+Actuellement affiché:
+- NOTE
+- EXERCICE N (net)
+- EXERCICE N-1 (net)
+
+Cible:
+- NOTE
+- BRUT N
+- AMORT N
+- NET N
+- NET N-1
+
+================================================================================
+DOCUMENTATION COMPLÈTE
+================================================================================
+
+Pour plus de détails, consulter:
+
+📄 00_CORRECTIONS_APPLIQUEES_PROBLEMES_PERSISTANTS_06_AVRIL_2026.txt
+   → Résumé des corrections appliquées
+
+📄 Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/03_CORRECTIONS_FINALES_06_AVRIL_2026.md
+   → Analyse détaillée et technique
+
+📄 test-corrections-export-liasse.ps1
+   → Script de test guidé
+
+================================================================================
+SUPPORT
+================================================================================
+
+En cas de problème:
+1. Vérifier les logs du backend
+2. Consulter la documentation détaillée
+3. Vérifier que la balance contient bien les comptes 2xxx et 28xx
+
+================================================================================

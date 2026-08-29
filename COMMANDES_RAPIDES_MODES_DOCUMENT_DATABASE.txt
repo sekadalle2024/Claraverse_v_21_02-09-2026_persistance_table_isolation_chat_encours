@@ -1,0 +1,121 @@
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDES RAPIDES - MODES DOCUMENT ET DATABASE
+  10 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+
+VÉRIFICATION RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Exécuter le test complet
+./test-modes-simple-final.ps1
+
+# Compter les modes manuellement
+$filepath = "src/components/Clara_Components/DemarrerMenu.tsx"
+$doc = (Select-String -Path $filepath -Pattern "label: 'Mode Document'").Count
+$db = (Select-String -Path $filepath -Pattern "label: 'Mode Database'").Count
+Write-Host "Modes Document: $doc"
+Write-Host "Modes Database: $db"
+
+# Vérifier uniquement dans E-audit pro
+$content = Get-Content $filepath -Raw
+$eauditStart = $content.IndexOf("id: 'e-audit-pro'")
+$eauditEnd = $content.IndexOf("id: 'e-revision'", $eauditStart)
+$eauditSection = $content.Substring($eauditStart, $eauditEnd - $eauditStart)
+$doc = ([regex]::Matches($eauditSection, "label: 'Mode Document'")).Count
+$db = ([regex]::Matches($eauditSection, "label: 'Mode Database'")).Count
+Write-Host "E-audit pro - Modes Document: $doc"
+Write-Host "E-audit pro - Modes Database: $db"
+
+
+RÉEXÉCUTER LES SCRIPTS (SI NÉCESSAIRE)
+═══════════════════════════════════════════════════════════════════════════════
+
+# Ajouter les modes aux étapes de la phase de conclusion
+python "Doc menu demarrer/Scripts/add_modes_conclusion_robust.py"
+
+# Supprimer les doublons
+python "Doc menu demarrer/Scripts/remove_duplicate_modes.py"
+
+
+LIRE LA DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+# Ouvrir le fichier de synthèse visuelle
+notepad "00_SYNTHESE_VISUELLE_MODES_10_AVRIL_2026.txt"
+
+# Ouvrir l'index complet
+notepad "00_INDEX_MODES_DOCUMENT_DATABASE_10_AVRIL_2026.md"
+
+# Ouvrir le guide de démarrage rapide
+notepad "00_LIRE_EN_PREMIER_MODES_10_AVRIL_2026.txt"
+
+
+VÉRIFIER LE FICHIER PRINCIPAL
+═══════════════════════════════════════════════════════════════════════════════
+
+# Ouvrir le fichier dans VS Code
+code "src/components/Clara_Components/DemarrerMenu.tsx"
+
+# Rechercher les modes Document
+code --goto "src/components/Clara_Components/DemarrerMenu.tsx:156"
+
+# Rechercher les modes Database
+code --goto "src/components/Clara_Components/DemarrerMenu.tsx:169"
+
+
+RECHERCHER DANS LE FICHIER
+═══════════════════════════════════════════════════════════════════════════════
+
+# Rechercher "Mode Document"
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Document"
+
+# Rechercher "Mode Database"
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Database"
+
+# Rechercher les variables Router
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Router\] = Database"
+
+
+STATISTIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+# Compter toutes les occurrences
+$filepath = "src/components/Clara_Components/DemarrerMenu.tsx"
+Write-Host "Statistiques du fichier:"
+Write-Host "  Modes Document: $((Select-String -Path $filepath -Pattern "label: 'Mode Document'").Count)"
+Write-Host "  Modes Database: $((Select-String -Path $filepath -Pattern "label: 'Mode Database'").Count)"
+Write-Host "  [Router] = Document: $((Select-String -Path $filepath -Pattern "\[Router\] = Document").Count)"
+Write-Host "  [Router] = Database: $((Select-String -Path $filepath -Pattern "\[Router\] = Database").Count)"
+Write-Host "  [User_id] = ohada: $((Select-String -Path $filepath -Pattern "\[User_id\] = ohada").Count)"
+Write-Host "  [Database] = workspace_02: $((Select-String -Path $filepath -Pattern "\[Database\] = workspace_02").Count)"
+
+
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+E-audit pro uniquement:
+  ✓ Modes Document: 12
+  ✓ Modes Database: 12
+  ✓ [Router] = Database: 12
+  ✓ [User_id] = ohada: 12
+  ✓ [Database] = workspace_02: 12
+
+
+FICHIERS IMPORTANTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Documentation:
+  • 00_LIRE_EN_PREMIER_MODES_10_AVRIL_2026.txt
+  • 00_SYNTHESE_VISUELLE_MODES_10_AVRIL_2026.txt
+  • 00_INDEX_MODES_DOCUMENT_DATABASE_10_AVRIL_2026.md
+
+Scripts:
+  • Doc menu demarrer/Scripts/add_modes_conclusion_robust.py
+  • Doc menu demarrer/Scripts/remove_duplicate_modes.py
+
+Test:
+  • test-modes-simple-final.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,121 @@
+═══════════════════════════════════════════════════════════════════════════════
+  DIAGNOSTIC ERREUR - METHODO AUDIT - 27 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ ERREUR RENCONTRÉE
+────────────────────
+
+[{"error": "Champ \"output\" absent dans les données entrantes","raw": null}]
+
+🔍 ANALYSE DU PROBLÈME
+──────────────────────
+
+Le workflow n8n "methodo_audit" attend un champ "output" dans le body de la requête,
+mais ClaraVerse envoie un champ "question".
+
+ENVOI ACTUEL (ClaraVerse) :
+{
+  "question": "Methodo audit - Comment identifier..."
+}
+
+ATTENDU (n8n workflow) :
+{
+  "output": "Methodo audit - Comment identifier..."
+}
+
+📊 LOCALISATION DU PROBLÈME
+───────────────────────────
+
+Fichier : src/services/claraApiService.ts
+Ligne : ~1250-1260
+Fonction : sendMessage()
+
+Code actuel :
+```typescript
+if (attachments && attachments.length > 0) {
+  const structuredData = claraAttachmentService.formatDataForN8nStructured(message, attachments);
+  requestBody = { data: structuredData };
+} else {
+  requestBody = { question: message };  // ← PROBLÈME ICI
+}
+```
+
+✅ SOLUTIONS POSSIBLES
+──────────────────────
+
+SOLUTION 1 : Modifier ClaraVerse (RECOMMANDÉ)
+──────────────────────────────────────────────
+
+Ajouter une logique spécifique pour l'endpoint methodo_audit qui envoie "output"
+au lieu de "question".
+
+SOLUTION 2 : Modifier le workflow n8n
+──────────────────────────────────────
+
+Modifier le webhook n8n pour accepter "question" au lieu de "output".
+
+🔧 SOLUTION 1 - MODIFICATION CLARAAPISERVICE.TS
+────────────────────────────────────────────────
+
+Modifier la section d'envoi de la requête pour détecter l'endpoint methodo_audit
+et adapter le format du body.
+
+AVANT (ligne ~1250) :
+```typescript
+if (attachments && attachments.length > 0) {
+  const structuredData = claraAttachmentService.formatDataForN8nStructured(message, attachments);
+  requestBody = { data: structuredData };
+} else {
+  requestBody = { question: message };
+}
+```
+
+APRÈS :
+```typescript
+if (attachments && attachments.length > 0) {
+  const structuredData = claraAttachmentService.formatDataForN8nStructured(message, attachments);
+  requestBody = { data: structuredData };
+} else {
+  // Adapter le nom du champ selon l'endpoint
+  if (resolvedEndpoint.includes("methodo_audit")) {
+    requestBody = { output: message };
+  } else {
+    requestBody = { question: message };
+  }
+}
+```
+
+🔧 SOLUTION 2 - MODIFICATION WORKFLOW N8N
+──────────────────────────────────────────
+
+Dans n8n, modifier le webhook "methodo_audit" :
+
+1. Ouvrir le workflow "methodo_audit"
+2. Cliquer sur le nœud Webhook
+3. Dans la configuration, modifier le champ attendu de "output" à "question"
+4. OU ajouter un nœud "Set" pour renommer "question" en "output"
+
+Exemple de nœud Set :
+```json
+{
+  "output": "={{ $json.question }}"
+}
+```
+
+📝 RECOMMANDATION
+─────────────────
+
+Je recommande la SOLUTION 1 car :
+- Plus flexible (permet d'adapter par endpoint)
+- Ne modifie pas le workflow n8n existant
+- Centralisé dans ClaraVerse
+- Facile à maintenir
+
+🚀 PROCHAINES ÉTAPES
+────────────────────
+
+1. Appliquer la SOLUTION 1 (modification de claraApiService.ts)
+2. Tester avec une question methodo_audit
+3. Vérifier que la réponse s'affiche correctement en accordéon
+
+═══════════════════════════════════════════════════════════════════════════════

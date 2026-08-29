@@ -1,0 +1,320 @@
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDES RAPIDES - REVUE MANAGER ACCORDÉON
+  26 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 DÉMARRAGE RAPIDE
+───────────────────
+
+# 1. Lire la documentation complète
+code "Doc papier de travail javascript/INTEGRATION_REVUE_MANAGER_ACCORDEON.md"
+
+# 2. Lire le guide de test
+code "QUICK_TEST_REVUE_MANAGER_26_AVRIL_2026.txt"
+
+# 3. Lire le récapitulatif
+code "00_MISSION_ACCOMPLIE_REVUE_MANAGER_26_AVRIL_2026.txt"
+
+# 4. Voir l'index
+code "00_INDEX_REVUE_MANAGER_26_AVRIL_2026.md"
+
+🔍 INSPECTION DU CODE
+─────────────────────
+
+# Service principal
+code "src/services/claraPapierTravailService.ts"
+
+# Composant React
+code "src/components/Clara_Components/RevueManagerAccordion.tsx"
+
+# Version de référence
+code "Doc cross references claraApiService.tsx/RevueManagerAccordion.jsx"
+
+🧪 TESTS CONSOLE (F12)
+──────────────────────
+
+# Test 1 : Détection papier de travail
+const service = new ClaraPapierTravailService();
+const testData = {
+  "Etape mission - Feuille couverture": [
+    { "table 1": [{ "Nature de test": "Rapprochement" }] }
+  ]
+};
+console.log(service.detectPapierTravail(testData));
+
+# Test 2 : Voir toutes les clés localStorage
+Object.keys(localStorage).filter(k => k.startsWith('clara_revue_manager_'))
+
+# Test 3 : Voir une clé spécifique
+localStorage.getItem('clara_revue_manager_Test-Caisse-001')
+
+# Test 4 : Créer des données de test
+const testPoints = [
+  {
+    num: 1,
+    titre: "Point de test 1",
+    statut: "ok",
+    prep: "Commentaire préparateur 1",
+    rev: "Commentaire reviewer 1"
+  },
+  {
+    num: 2,
+    titre: "Point de test 2",
+    statut: "warn",
+    prep: "Commentaire préparateur 2",
+    rev: "Commentaire reviewer 2"
+  }
+];
+
+# Test 5 : Sauvegarder dans localStorage
+localStorage.setItem('clara_revue_manager_TEST-001', JSON.stringify(testPoints));
+
+# Test 6 : Charger depuis localStorage
+const saved = localStorage.getItem('clara_revue_manager_TEST-001');
+console.log(JSON.parse(saved));
+
+# Test 7 : Supprimer une clé
+localStorage.removeItem('clara_revue_manager_TEST-001');
+
+# Test 8 : Supprimer toutes les clés revue manager
+Object.keys(localStorage)
+  .filter(k => k.startsWith('clara_revue_manager_'))
+  .forEach(k => localStorage.removeItem(k));
+
+💾 GESTION LOCALSTORAGE
+───────────────────────
+
+# Lister toutes les clés
+Object.keys(localStorage)
+
+# Filtrer les clés revue manager
+Object.keys(localStorage).filter(k => k.startsWith('clara_revue_manager_'))
+
+# Compter les clés
+Object.keys(localStorage).filter(k => k.startsWith('clara_revue_manager_')).length
+
+# Voir la taille totale
+let total = 0;
+Object.keys(localStorage)
+  .filter(k => k.startsWith('clara_revue_manager_'))
+  .forEach(k => total += localStorage.getItem(k).length);
+console.log(`Total: ${total} caractères`);
+
+# Exporter toutes les données
+const exportData = {};
+Object.keys(localStorage)
+  .filter(k => k.startsWith('clara_revue_manager_'))
+  .forEach(k => exportData[k] = JSON.parse(localStorage.getItem(k)));
+console.log(JSON.stringify(exportData, null, 2));
+
+# Importer des données
+const importData = { /* ... */ };
+Object.keys(importData).forEach(k => {
+  localStorage.setItem(k, JSON.stringify(importData[k]));
+});
+
+🔧 DÉVELOPPEMENT
+────────────────
+
+# Démarrer le serveur de développement
+npm run dev
+
+# Compiler TypeScript
+npm run build
+
+# Lancer les tests
+npm test
+
+# Vérifier les erreurs TypeScript
+npx tsc --noEmit
+
+📊 STRUCTURE DES DONNÉES
+────────────────────────
+
+# Format RevuePoint
+{
+  "num": 1,
+  "titre": "Point de revue",
+  "statut": "ok",  // "ok" | "warn" | "ko"
+  "prep": "Commentaire préparateur",
+  "rev": "Commentaire superviseur"
+}
+
+# Clé localStorage
+clara_revue_manager_${reference}
+
+# Exemples de clés
+clara_revue_manager_Test-Caisse-001
+clara_revue_manager_REF-AUDIT-2023
+clara_revue_manager_PV-C-23-009
+
+🎨 STATUTS DISPONIBLES
+──────────────────────
+
+ok   → Validé    (vert)   #EAF3DE / #3B6D11
+warn → À suivre  (ambre)  #FAEEDA / #854F0B
+ko   → À ajuster (rouge)  #FCEBEB / #A32D2D
+
+🔍 DÉTECTION AUTOMATIQUE
+────────────────────────
+
+# Mots-clés pour "ok"
+val, ok, satisf
+
+# Mots-clés pour "warn"
+suivre, warn, attention
+
+# Mots-clés pour "ko"
+ajust, ko, anomal
+
+# Fallback
+Contenu présent → "ok"
+Pas de contenu → "warn"
+
+📝 EXEMPLE D'UTILISATION
+────────────────────────
+
+import RevueManagerAccordion from './Clara_Components/RevueManagerAccordion';
+
+<RevueManagerAccordion
+  points={papierData.managerReview}
+  reference={papierData.reference}
+  preparer={papierData.preparer}
+  reviewer={papierData.reviewer}
+  onSave={(updatedPoints) => {
+    console.log('Revue sauvegardée:', updatedPoints);
+  }}
+/>
+
+🧹 NETTOYAGE
+────────────
+
+# Supprimer toutes les données de test
+Object.keys(localStorage)
+  .filter(k => k.startsWith('clara_revue_manager_TEST'))
+  .forEach(k => localStorage.removeItem(k));
+
+# Supprimer toutes les données revue manager
+if (confirm('Supprimer toutes les données Revue Manager ?')) {
+  Object.keys(localStorage)
+    .filter(k => k.startsWith('clara_revue_manager_'))
+    .forEach(k => localStorage.removeItem(k));
+  console.log('Toutes les données ont été supprimées');
+}
+
+# Vider complètement localStorage (ATTENTION !)
+if (confirm('ATTENTION : Vider TOUT le localStorage ?')) {
+  localStorage.clear();
+  console.log('localStorage vidé');
+}
+
+🐛 DÉBOGAGE
+───────────
+
+# Activer les logs détaillés
+localStorage.setItem('debug_revue_manager', 'true');
+
+# Désactiver les logs
+localStorage.removeItem('debug_revue_manager');
+
+# Voir les logs dans le service
+// Dans claraPapierTravailService.ts
+console.log('[RevueManager] Loaded X points from localStorage for REF-XXX');
+
+# Voir les logs dans le composant
+// Dans RevueManagerAccordion.tsx
+console.log('RevueManager mounted with', points.length, 'points');
+
+📦 EXPORT/IMPORT
+────────────────
+
+# Exporter vers JSON
+const exportToJson = () => {
+  const data = {};
+  Object.keys(localStorage)
+    .filter(k => k.startsWith('clara_revue_manager_'))
+    .forEach(k => data[k] = JSON.parse(localStorage.getItem(k)));
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'revue_manager_export.json';
+  a.click();
+};
+
+# Importer depuis JSON
+const importFromJson = (jsonString) => {
+  const data = JSON.parse(jsonString);
+  Object.keys(data).forEach(k => {
+    localStorage.setItem(k, JSON.stringify(data[k]));
+  });
+  console.log('Import terminé:', Object.keys(data).length, 'clés');
+};
+
+✅ CHECKLIST RAPIDE
+───────────────────
+
+Service :
+□ Détecte papiers de travail
+□ Extrait table 10
+□ Charge localStorage
+□ Transforme données
+□ Détecte statuts
+
+Composant :
+□ Affiche accordéon
+□ Modifie titres
+□ Change statuts
+□ Modifie commentaires
+□ Ajoute points
+□ Supprime points
+□ Sauvegarde
+
+Intégration :
+□ Positionné après légendes
+□ Props correctes
+□ Callback fonctionne
+□ Pas d'erreurs
+
+🚨 DÉPANNAGE
+────────────
+
+# Problème : Données non sauvegardées
+→ Vérifier que le bouton "Enregistrer" a été cliqué
+→ Vérifier la console pour les erreurs
+→ Vérifier que localStorage n'est pas désactivé
+
+# Problème : Données non chargées
+→ Vérifier la clé localStorage
+→ Vérifier que la référence est correcte
+→ Vérifier le format JSON
+
+# Problème : Statut incorrect
+→ Vérifier les mots-clés dans les données
+→ Vérifier la méthode detectStatut()
+→ Forcer un statut manuellement
+
+# Problème : Composant ne s'affiche pas
+→ Vérifier que managerReview n'est pas vide
+→ Vérifier les props
+→ Vérifier la console pour les erreurs
+
+📞 SUPPORT
+──────────
+
+Documentation :
+  Doc papier de travail javascript/INTEGRATION_REVUE_MANAGER_ACCORDEON.md
+
+Tests :
+  QUICK_TEST_REVUE_MANAGER_26_AVRIL_2026.txt
+
+Récapitulatif :
+  00_MISSION_ACCOMPLIE_REVUE_MANAGER_26_AVRIL_2026.txt
+
+Index :
+  00_INDEX_REVUE_MANAGER_26_AVRIL_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DES COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,92 @@
+═══════════════════════════════════════════════════════════════
+  ✅ TESTEZ V5.1 - FUSION AVEC PREMIÈRE VALEUR
+═══════════════════════════════════════════════════════════════
+
+🎯 CHANGEMENT
+───────────────────────────────────────────────────────────────
+La fusion utilise maintenant TOUJOURS la valeur de la première
+cellule, même si les autres valeurs sont différentes.
+
+
+⚡ TEST IMMÉDIAT (30 secondes)
+───────────────────────────────────────────────────────────────
+
+1. Recharger votre page avec la table
+   Ctrl + F5 (force le rechargement)
+
+2. Vérifier visuellement
+   Les colonnes Question, Ref_question et Remarques doivent être
+   fusionnées et centrées
+
+3. Vérifier dans la console (F12)
+   Vous devriez voir :
+   
+   🔗 Fusion forcée avec la première valeur: "..."
+   ✅ 4 cellules fusionnées pour question (1 visible + 3 masquées)
+
+
+✅ VALIDATION RAPIDE
+───────────────────────────────────────────────────────────────
+
+Copier-coller dans la console (F12) :
+
+┌─────────────────────────────────────────────────────────────┐
+│ console.log('Cellules avec rowspan:', document.querySelectorAll('[rowspan]').length); │
+│ console.log('Cellules fusionnées:', document.querySelectorAll('[data-merged="true"]').length); │
+└─────────────────────────────────────────────────────────────┘
+
+Résultat attendu :
+  Cellules avec rowspan: > 0
+  Cellules fusionnées: > 0
+
+
+📊 RÉSULTAT VISUEL ATTENDU
+───────────────────────────────────────────────────────────────
+
+AVANT:
+┌──────────┬─────────────────────────────────────────┐
+│ Question │ Lequel des éléments suivants...         │
+│ Question │ Lequel des éléments suivants...         │
+│ Question │ Lequel des éléments suivants...         │
+│ Question │ Lequel des éléments suivants...         │
+└──────────┴─────────────────────────────────────────┘
+
+APRÈS:
+┌──────────┬─────────────────────────────────────────┐
+│          │                                          │
+│ Question │ Lequel des éléments suivants...         │
+│          │         (centré, rowspan=4)              │
+│          │                                          │
+└──────────┴─────────────────────────────────────────┘
+
+
+🔍 SI ÇA NE FONCTIONNE PAS
+───────────────────────────────────────────────────────────────
+
+1. Vérifier que conso.js V5.1 est chargé
+   
+   console.log(document.querySelector('script[src*="conso"]'));
+
+2. Vider le cache complètement
+   
+   localStorage.clear();
+   sessionStorage.clear();
+   location.reload();
+
+3. Vérifier les erreurs dans la console
+   
+   Regardez s'il y a du texte rouge
+
+
+📚 DOCUMENTATION
+───────────────────────────────────────────────────────────────
+
+FIX_FUSION_PREMIERE_VALEUR.md  → Explication complète
+URGENCE_FUSION_QUESTION.md     → Dépannage
+
+
+═══════════════════════════════════════════════════════════════
+Date : 8 décembre 2024
+Version : V5.1
+Temps de test : 30 secondes
+═══════════════════════════════════════════════════════════════

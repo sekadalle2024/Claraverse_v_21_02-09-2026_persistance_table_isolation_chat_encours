@@ -1,0 +1,138 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║              SAUVEGARDE CLARAVERSE V13 SUR GITHUB - 20 AVRIL 2026             ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+  INFORMATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+Projet:         ClaraVerse V13
+Date:           20 Avril 2026
+Repository:     https://github.com/sekadalle2024/Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+Branche:        master
+Statut:         Docker Zeabur OK + Switch Editeur
+
+═══════════════════════════════════════════════════════════════════════════════
+  MÉTHODE 1: SCRIPT AUTOMATIQUE (RECOMMANDÉ)
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour un push simple et rapide:
+
+    .\push-claraverse-v13-20-avril-2026.ps1
+
+✓ Tout est automatisé
+✓ Configuration Git optimale
+✓ 3 tentatives automatiques
+✓ Temps: 5-15 minutes
+
+═══════════════════════════════════════════════════════════════════════════════
+  MÉTHODE 2: COMMITS MULTIPLES (SI PROJET > 100 MB)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si le projet est très volumineux ou si la Méthode 1 échoue:
+
+    .\push-commits-multiples-v13.ps1
+
+✓ Divise le projet en 6 parties
+✓ Évite les timeouts HTTP
+✓ Retry automatique pour chaque partie
+✓ Temps: 10-20 minutes
+
+═══════════════════════════════════════════════════════════════════════════════
+  MÉTHODE 3: COMMANDES MANUELLES (COPIER-COLLER)
+═══════════════════════════════════════════════════════════════════════════════
+
+Si vous préférez le contrôle manuel:
+
+# 1. Configuration Git
+git config core.compression 0
+git config http.postBuffer 2147483647
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+git config http.maxRequestBuffer 536870912
+
+# 2. Ajouter et Commiter
+git add .
+git commit -m "Sauvegarde ClaraVerse V13 - 20-04-2026 - Docker Zeabur OK + Switch Editeur"
+
+# 3. Changer le Repository
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+
+# 4. Vérifier
+git remote -v
+git branch
+
+# 5. Push
+git push -u origin master
+
+# 6. Vérification finale
+git status
+
+═══════════════════════════════════════════════════════════════════════════════
+  VÉRIFICATION APRÈS PUSH
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vérifier localement:
+   git status                    → Doit afficher "nothing to commit"
+   git log -1 --oneline          → Doit afficher le dernier commit
+
+2. Vérifier sur GitHub:
+   https://github.com/sekadalle2024/Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur
+
+═══════════════════════════════════════════════════════════════════════════════
+  EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+Erreur: "HTTP 408 Timeout"
+→ Utiliser la Méthode 2 (commits multiples)
+→ Ou utiliser GitHub Desktop
+
+Erreur: "Connection reset"
+→ Vérifier la connexion Internet
+→ Attendre quelques minutes
+→ Réessayer
+
+Erreur: "cannot lock ref"
+→ git fetch origin master
+→ git merge origin/master --allow-unrelated-histories
+→ git push -u origin master
+
+Projet trop volumineux (> 100 MB)
+→ Utiliser la Méthode 2 (commits multiples)
+→ Lire: Doc_Github_Issue/SOLUTION_PROJET_140MB_16_AVRIL_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+  FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ push-claraverse-v13-20-avril-2026.ps1      → Script push simple
+✓ push-commits-multiples-v13.ps1             → Script commits multiples
+✓ 00_COMMENCER_ICI_SAUVEGARDE_V13.txt        → Ce fichier (guide)
+
+═══════════════════════════════════════════════════════════════════════════════
+  RECOMMANDATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Commencer par la Méthode 1 (script simple)
+2. Si échec après 3 tentatives → Méthode 2 (commits multiples)
+3. Si échec persistant → GitHub Desktop
+
+═══════════════════════════════════════════════════════════════════════════════
+  DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails:
+→ Doc_Github_Issue/SOLUTION_PROJET_140MB_16_AVRIL_2026.md
+→ Doc_Github_Issue/SOLUTION_PROJET_2.2GB_20_AVRIL_2026.md
+→ Doc_Github_Issue/README.md
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Date:       20 Avril 2026
+Projet:     ClaraVerse V13
+Repository: Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur
+Statut:     ✅ Prêt pour sauvegarde
+
+═══════════════════════════════════════════════════════════════════════════════

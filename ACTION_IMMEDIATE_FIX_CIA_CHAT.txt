@@ -1,0 +1,88 @@
+═══════════════════════════════════════════════════════════════
+  🔧 FIX APPLIQUÉ - Persistance CIA Changement de Chat
+═══════════════════════════════════════════════════════════════
+
+✅ MODIFICATIONS APPLIQUÉES
+
+1. public/auto-restore-chat-change.js
+   → Version améliorée avec détection spécifique des tables CIA
+   → Meilleure détection des nouvelles tables
+   → Logs plus détaillés
+
+2. public/conso.js (ligne ~1507)
+   → Délai de restauration augmenté : 1s → 2s
+   → Meilleur timing pour la stabilisation du DOM
+
+═══════════════════════════════════════════════════════════════
+  🧪 TESTEZ MAINTENANT
+═══════════════════════════════════════════════════════════════
+
+1. Rechargez la page (Ctrl+F5)
+
+2. Ouvrez la console (F12)
+
+3. Vérifiez que les systèmes sont chargés:
+   
+   console.log('conso.js:', window.claraverseProcessor ? '✅' : '❌');
+   console.log('auto-restore:', window.restoreCurrentSession ? '✅' : '❌');
+   console.log('Tables CIA:', window.countCIATables());
+
+4. Cochez quelques checkboxes
+
+5. Changez de chat
+
+6. Revenez au chat initial après 8 secondes
+
+7. Vérifiez que les checkboxes sont restaurées ✅
+
+═══════════════════════════════════════════════════════════════
+  📊 RÉSULTATS ATTENDUS
+═══════════════════════════════════════════════════════════════
+
+Timing total : ~8 secondes
+- Changement de chat : 0s
+- Détection : 0.5s
+- Attente : 5s
+- Restauration : 2s
+- Finalisation : 0.5s
+
+Logs dans la console :
+✅ "🔄 Nouvelles tables CIA détectées"
+✅ "⏰ Restauration planifiée dans 5 secondes"
+✅ "🎯 === RESTAURATION VIA ÉVÉNEMENT (CIA) ==="
+✅ "📊 Tables CIA détectées: X"
+✅ "🔄 Événement de restauration reçu"
+✅ "✅ X table(s) restaurée(s)"
+
+═══════════════════════════════════════════════════════════════
+  🔍 EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════
+
+Diagnostic rapide :
+
+// Charger l'outil de diagnostic
+const script = document.createElement('script');
+script.src = '/diagnostic-cia-chat-change.js';
+document.head.appendChild(script);
+
+Forcer la restauration :
+
+claraverseProcessor.restoreAllTablesData();
+
+═══════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+Détails complets :
+→ FIX_PERSISTANCE_CIA_CHANGEMENT_CHAT.md
+
+Guide de test :
+→ TESTEZ_FIX_CIA_CHANGEMENT_CHAT.md
+
+Outil de diagnostic :
+→ public/diagnostic-cia-chat-change.js
+
+═══════════════════════════════════════════════════════════════
+
+Date : 26 novembre 2025
+Statut : ✅ Fix appliqué et prêt à tester

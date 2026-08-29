@@ -1,0 +1,150 @@
+═══════════════════════════════════════════════════════════════════
+  COMMANDES RAPIDES - SECTION TEMPLATE
+═══════════════════════════════════════════════════════════════════
+
+📋 VÉRIFICATION
+───────────────
+
+# Vérifier que la section Template existe
+grep -n "id: 'template'" src/components/Clara_Components/DemarrerMenu.tsx
+
+# Compter le nombre de templates ajoutés
+grep -c "Template_table_" src/components/Clara_Components/DemarrerMenu.tsx
+
+# Voir la structure complète de la section Template
+sed -n '5384,5520p' src/components/Clara_Components/DemarrerMenu.tsx
+
+
+🔄 EXÉCUTION
+────────────
+
+# Exécuter le script d'ajout (avec sauvegarde automatique)
+.\test-ajout-template-bibliotheque.ps1
+
+# Exécuter directement avec Python
+python "Doc menu demarrer/Scripts/add_template_bibliotheque.py"
+
+
+💾 SAUVEGARDE
+─────────────
+
+# Créer une sauvegarde manuelle
+Copy-Item "src/components/Clara_Components/DemarrerMenu.tsx" `
+          "src/components/Clara_Components/DemarrerMenu_backup_manual.tsx"
+
+# Restaurer depuis une sauvegarde
+Copy-Item "src/components/Clara_Components/DemarrerMenu_backup_template_*.tsx" `
+          "src/components/Clara_Components/DemarrerMenu.tsx" -Force
+
+
+🔍 RECHERCHE
+────────────
+
+# Chercher tous les templates
+grep "Template_table_" src/components/Clara_Components/DemarrerMenu.tsx
+
+# Chercher une commande spécifique
+grep "Template_table_frap" src/components/Clara_Components/DemarrerMenu.tsx
+
+# Voir la section Bibliothèque complète
+grep -A 200 "id: 'bibliotheque'" src/components/Clara_Components/DemarrerMenu.tsx
+
+
+📊 STATISTIQUES
+───────────────
+
+# Nombre de lignes du fichier
+wc -l src/components/Clara_Components/DemarrerMenu.tsx
+
+# Nombre de templates
+grep -c "id: 'template-" src/components/Clara_Components/DemarrerMenu.tsx
+
+# Taille du fichier
+ls -lh src/components/Clara_Components/DemarrerMenu.tsx
+
+
+🧪 TESTS
+────────
+
+# Vérifier la syntaxe TypeScript (si tsc est installé)
+npx tsc --noEmit src/components/Clara_Components/DemarrerMenu.tsx
+
+# Lancer l'application en mode développement
+npm run dev
+
+
+📝 DOCUMENTATION
+────────────────
+
+# Ouvrir la documentation complète
+code "Doc menu demarrer/Documentation/AJOUT_SECTION_TEMPLATE_BIBLIOTHEQUE_10_AVRIL_2026.md"
+
+# Voir le guide rapide
+cat 00_AJOUT_SECTION_TEMPLATE_BIBLIOTHEQUE_10_AVRIL_2026.txt
+
+# Voir la synthèse visuelle
+cat SYNTHESE_VISUELLE_TEMPLATE_10_AVRIL_2026.txt
+
+# Voir l'index
+cat 00_INDEX_AJOUT_TEMPLATE_10_AVRIL_2026.md
+
+
+🔧 MODIFICATION
+───────────────
+
+# Éditer le fichier DemarrerMenu.tsx
+code src/components/Clara_Components/DemarrerMenu.tsx
+
+# Éditer le script Python
+code "Doc menu demarrer/Scripts/add_template_bibliotheque.py"
+
+
+📦 GIT
+──────
+
+# Voir les modifications
+git diff src/components/Clara_Components/DemarrerMenu.tsx
+
+# Ajouter les modifications
+git add src/components/Clara_Components/DemarrerMenu.tsx
+git add "Doc menu demarrer/Scripts/add_template_bibliotheque.py"
+git add "Doc menu demarrer/Documentation/AJOUT_SECTION_TEMPLATE_BIBLIOTHEQUE_10_AVRIL_2026.md"
+git add test-ajout-template-bibliotheque.ps1
+git add 00_*.txt
+git add QUICK_START_TEMPLATE_BIBLIOTHEQUE.txt
+git add SYNTHESE_VISUELLE_TEMPLATE_10_AVRIL_2026.txt
+git add 00_INDEX_AJOUT_TEMPLATE_10_AVRIL_2026.md
+git add COMMANDES_RAPIDES_TEMPLATE.txt
+
+# Créer un commit
+git commit -m "Ajout section Template dans Bibliothèque E-audit pro avec 9 templates de tables vierges"
+
+# Pousser vers GitHub
+git push origin main
+
+
+🎯 TEMPLATES DISPONIBLES
+─────────────────────────
+
+1. Template_table_unicolonne
+2. Template_table_simple
+3. Template_table_etape_de_mission
+4. Template_table_feuille_couverture_test_audit
+5. Template_table_frap
+6. Template_table_synthèses_frap
+7. Template_table_rapport_provisoire
+8. Template_table_rapport_final
+9. Template_table_suivi_recos
+
+
+📍 NAVIGATION RAPIDE
+────────────────────
+
+# Aller à la ligne de la section Template
+code --goto src/components/Clara_Components/DemarrerMenu.tsx:5384
+
+# Voir le contexte autour de la section
+sed -n '5380,5525p' src/components/Clara_Components/DemarrerMenu.tsx
+
+
+═══════════════════════════════════════════════════════════════════

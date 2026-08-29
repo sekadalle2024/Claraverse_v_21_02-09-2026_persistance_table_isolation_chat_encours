@@ -1,0 +1,61 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║       ⚡ GUIDE RAPIDE — RÉACTIVATION NOTIFICATIONS                    ║
+║          Copier-coller ces commandes                                  ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+
+🔔 SYSTÈME 1 — ROUTER N8N (Notifications cases 1-45)
+═══════════════════════════════════════════════════════════════════════
+
+📁 Fichier : src/components/NotificationContainer.css
+
+✂️  SUPPRIMER CES LIGNES AU DÉBUT DU FICHIER :
+────────────────────────────────────────────────────────────────────
+/* DÉSACTIVATION TEMPORAIRE - 09/07/2026 */
+.notification-container {
+  display: none !important;
+}
+────────────────────────────────────────────────────────────────────
+
+✅ Sauvegarder → Effet immédiat (pas de redémarrage)
+
+
+🔔 SYSTÈME 2 — EXTRACTION JSON (Fichiers Excel/Word/PDF)
+═══════════════════════════════════════════════════════════════════════
+
+📁 Fichier : src/components/Clara_Components/clara_assistant_input.tsx
+📍 Ligne : ~3055-3065
+
+✂️  DÉCOMMENTER CE BLOC (supprimer /* et */) :
+────────────────────────────────────────────────────────────────────
+    const hasDocuments = processedAttachments.some(att => 
+      (att.type === 'excel' || att.type === 'word' || att.type === 'document') 
+      && att.processed && att.processingResult?.success
+    );
+    
+    if (hasDocuments) {
+      claraAttachmentService.showExtractionAlert(processedAttachments);
+    }
+────────────────────────────────────────────────────────────────────
+
+⚠️  Remplacer le marqueur par :
+────────────────────────────────────────────────────────────────────
+    // ✅ NOTIFICATIONS RÉACTIVÉES ([DATE])
+    // Pour désactiver, commenter le bloc ci-dessous avec /* */
+────────────────────────────────────────────────────────────────────
+
+✅ Sauvegarder + Redémarrer : npm run dev
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════
+
+📁 Doc notification app/MEMO_REACTIVATION_NOTIFICATIONS_23_JUIN_2026.md
+📁 00_DESACTIVATION_NOTIFICATIONS_09_JUILLET_2026.txt
+
+
+═══════════════════════════════════════════════════════════════════════
+Dernière mise à jour : 09 Juillet 2026
+═══════════════════════════════════════════════════════════════════════

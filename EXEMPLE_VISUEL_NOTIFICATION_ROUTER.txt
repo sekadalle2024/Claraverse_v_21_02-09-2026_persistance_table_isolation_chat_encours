@@ -1,0 +1,167 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📸 EXEMPLE VISUEL - NOTIFICATION ROUTER N8N
+  29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎬 SCÉNARIO : Envoi d'un message "CIA Cours"
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         INTERFACE CLARAVERSE                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │  💬 Chat                                                              │ │
+│  ├───────────────────────────────────────────────────────────────────────┤ │
+│  │                                                                       │ │
+│  │  👤 Utilisateur:                                                      │ │
+│  │  CIA Cours                                                            │ │
+│  │                                                                       │ │
+│  │  🤖 Clara:                                                            │ │
+│  │  [Traitement en cours...]                                             │ │
+│  │                                                                       │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐ │
+│  │  🔔 NOTIFICATION (en haut à droite)                                   │ │
+│  ├───────────────────────────────────────────────────────────────────────┤ │
+│  │                                                                       │ │
+│  │  🔀 Router n8n - Case 11                                              │ │
+│  │                                                                       │ │
+│  │  Route: cia_cours                                                     │ │
+│  │  URL: http://localhost:5678/webhook/cia_cours_gemini                  │ │
+│  │                                                                       │ │
+│  │  [Disparaît après 8 secondes]                                         │ │
+│  │                                                                       │ │
+│  └───────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+📊 CONSOLE DÉVELOPPEUR (F12)
+─────────────────────────────────────────────────────────────────────────────
+
+Console
+├── 🔀 Router → Case 11 : cia_cours
+├── 🔔 Notification envoyée: {
+│     case: "Case 11",
+│     route: "cia_cours",
+│     url: "http://localhost:5678/webhook/cia_cours_gemini"
+│   }
+├── 🚀 Envoi de la requête vers n8n endpoint: http://localhost:5678/webhook/cia_cours_gemini
+├── 📝 Message original: CIA Cours
+├── 📎 Attachments: 0
+├── ⏱️ Timeout configuré: 600 secondes
+└── 📡 Statut de la réponse: 200 OK
+
+🎯 AUTRES EXEMPLES DE NOTIFICATIONS
+─────────────────────────────────────────────────────────────────────────────
+
+EXEMPLE 1 : Message "Lead_balance"
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 🔀 Router n8n - Case 21                                                   │
+│                                                                           │
+│ Route: lead_balance                                                       │
+│ URL: __INTERNAL__LEAD_BALANCE__                                           │
+└───────────────────────────────────────────────────────────────────────────┘
+
+EXEMPLE 2 : Message "Methodo audit"
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 🔀 Router n8n - Case 28                                                   │
+│                                                                           │
+│ Route: methodo_audit                                                      │
+│ URL: http://localhost:5678/webhook/methodo_audit                          │
+└───────────────────────────────────────────────────────────────────────────┘
+
+EXEMPLE 3 : Message "Bonjour" (défaut)
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 🔀 Router n8n - Case 1                                                    │
+│                                                                           │
+│ Route: default                                                            │
+│ URL: https://t22wtwxl.rpcld.app/webhook/template                          │
+└───────────────────────────────────────────────────────────────────────────┘
+
+EXEMPLE 4 : Message "Design"
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 🔀 Router n8n - Case 2                                                    │
+│                                                                           │
+│ Route: design                                                             │
+│ URL: https://t22wtwxl.rpcld.app/webhook/integration_windows               │
+└───────────────────────────────────────────────────────────────────────────┘
+
+EXEMPLE 5 : Message "Methodo revision"
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 🔀 Router n8n - Case 33                                                   │
+│                                                                           │
+│ Route: methodo_revision                                                   │
+│ URL: http://localhost:5678/webhook/methodo_revision                       │
+└───────────────────────────────────────────────────────────────────────────┘
+
+🎨 STYLE DE LA NOTIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+Position : Haut à droite de l'écran
+Durée : 8 secondes
+Type : Information (icône ℹ️ ou 🔀)
+Couleur : Bleu (info)
+Animation : Slide-in depuis la droite
+
+Contenu :
+  • Titre : Emoji + "Router n8n - Case XX"
+  • Corps : "Route: xxx\nURL: yyy"
+
+📱 RESPONSIVE
+─────────────────────────────────────────────────────────────────────────────
+
+Desktop : Notification en haut à droite (300px de large)
+Tablet : Notification en haut à droite (250px de large)
+Mobile : Notification en haut (pleine largeur)
+
+🔍 DÉTAILS TECHNIQUES
+─────────────────────────────────────────────────────────────────────────────
+
+Service utilisé : notificationService.ts
+Fonction : addInfoNotification()
+Paramètres :
+  - title: string (titre de la notification)
+  - message: string (corps de la notification)
+  - duration: number (durée en ms, défaut: 8000)
+
+Code :
+```typescript
+addInfoNotification(
+  `🔀 Router n8n - ${routingInfo.caseName}`,
+  `Route: ${routingInfo.routeKey}\nURL: ${resolvedEndpoint}`,
+  8000
+);
+```
+
+✅ AVANTAGES VISUELS
+─────────────────────────────────────────────────────────────────────────────
+
+✓ Information immédiatement visible
+✓ Pas besoin d'ouvrir la console
+✓ Confirmation visuelle du routing
+✓ Transparence totale du processus
+✓ Expérience utilisateur améliorée
+
+🎯 CAS D'USAGE
+─────────────────────────────────────────────────────────────────────────────
+
+1. DÉBOGAGE
+   L'utilisateur voit immédiatement quel case est activé
+
+2. VÉRIFICATION
+   Confirmation que le bon endpoint est appelé
+
+3. APPRENTISSAGE
+   Comprendre comment fonctionne le router
+
+4. SUPPORT
+   Facilite le diagnostic des problèmes
+
+5. DÉVELOPPEMENT
+   Vérifier les modifications du router
+
+═══════════════════════════════════════════════════════════════════════════════
+  FIN DE L'EXEMPLE VISUEL
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,145 @@
+═══════════════════════════════════════════════════════════════════════════════
+  INTÉGRATION ENDPOINT METHODO AUDIT - 27 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 OBJECTIF
+───────────
+Afficher les réponses de l'endpoint n8n "methodo_audit" dans un menu accordéon
+avec page de couverture et section média vidéo, en utilisant le composant
+CiaMethodoAccordionRenderer.tsx
+
+✅ TRAVAIL EFFECTUÉ
+───────────────────
+
+1. COMPOSANT CIAMETHODOACC ORDIONRENDERER.TSX
+   ✓ Déjà créé et fonctionnel
+   ✓ Situé dans : src/components/Clara_Components/CiaMethodoAccordionRenderer.tsx
+   ✓ Inclut la section média avec les 2 vidéos YouTube :
+     - https://youtu.be/dUr1wDUaYzg
+     - https://youtu.be/oyUk7J1w15c
+   ✓ Affiche un menu accordéon avec :
+     - Page de couverture (Sous-section)
+     - Panels pour chaque Sub-item
+     - Section média vidéo à la fin
+
+2. CLARAAPISERVICE.TS - ROUTER
+   ✓ Case 28 déjà configuré pour "methodo_audit"
+   ✓ Endpoint : http://localhost:5678/webhook/methodo_audit
+   ✓ Détection automatique dans getN8nEndpoint()
+
+3. CLARAAPISERVICE.TS - NORMALISATION
+   ✓ Modifié la fonction normalizeN8nResponse()
+   ✓ FORMAT 5 étendu pour supporter CIA COURS ET METHODO AUDIT
+   ✓ Détection automatique basée sur le contenu :
+     - Si "Sous-section" contient "étape" → METHODO AUDIT
+     - Sinon → CIA COURS
+   ✓ Retourne le marqueur : __CIA_METHODO_ACCORDION__
+   ✓ Métadonnées : format="cia_methodo_accordion", endpoint="methodo_audit"
+
+4. MESSAGECONTENTRENDERER.TSX
+   ✓ Import de CiaMethodoAccordionRenderer déjà présent
+   ✓ Traitement du marqueur __CIA_METHODO_ACCORDION__ déjà implémenté
+   ✓ Rendu du composant avec les données JSON parsées
+
+📊 STRUCTURE DE DONNÉES ATTENDUE
+─────────────────────────────────
+
+Format JSON de la réponse n8n "methodo_audit" :
+
+[
+  {
+    "Sous-section": "Étape 1 — Identifier les objets auditables...",
+    "Sub-items": [
+      {
+        "Sub-item 1A": "Cadrage de l'étape",
+        "Items": [
+          {
+            "Item 1A.1": "Quoi",
+            "Rubrique": "quoi",
+            "Contenu": "Collecter tous les documents..."
+          },
+          ...
+        ]
+      },
+      ...
+    ]
+  },
+  ...
+]
+
+🔄 FLUX DE TRAITEMENT
+─────────────────────
+
+1. Utilisateur envoie : "Methodo audit [question]"
+2. getN8nEndpoint() détecte "Methodo audit" → Case 28
+3. Appel HTTP vers : http://localhost:5678/webhook/methodo_audit
+4. Réponse n8n reçue (format JSON avec Sous-section/Sub-items)
+5. normalizeN8nResponse() détecte la structure :
+   - Vérifie présence de "Sous-section" et "Sub-items"
+   - Détecte "étape" dans le titre → METHODO AUDIT
+   - Retourne : __CIA_METHODO_ACCORDION__[JSON]
+6. MessageContentRenderer détecte __CIA_METHODO_ACCORDION__
+7. Parse le JSON et rend <CiaMethodoAccordionRenderer>
+8. Affichage du menu accordéon avec vidéos
+
+🎨 PARTICULARITÉS DU TEMPLATE
+──────────────────────────────
+
+✓ Page de couverture avec gradient orange
+✓ Accordéon avec panels pour chaque Sub-item
+✓ Badges colorés pour les rubriques (quoi, pourquoi, etc.)
+✓ Section média vidéo à la fin avec 2 vidéos YouTube intégrées
+✓ Design responsive avec grille adaptative
+✓ Support du mode sombre (isDark prop)
+
+🧪 TESTS À EFFECTUER
+────────────────────
+
+1. Démarrer n8n : s'assurer que le workflow methodo_audit est actif
+2. Dans ClaraVerse, envoyer : "Methodo audit [question]"
+3. Vérifier que la réponse s'affiche en accordéon
+4. Vérifier la page de couverture
+5. Vérifier les panels Sub-items
+6. Vérifier la section vidéo à la fin
+7. Tester le mode sombre
+
+📝 COMMANDES DE TEST
+────────────────────
+
+Exemple de question à poser dans le chat :
+
+"Methodo audit - Comment identifier les objets auditables ?"
+
+Ou avec le format complet :
+
+"[PARTIE] = PARTIE 3 - [THEMATIQUE] = CONNAISSANCES METIER POUR L'AUDIT INTERNE - 
+[CHAPITRE] = Unité d'étude 1 : Gestion stratégique et planification - 
+[SECTION] = Sous-unité 1 : Gestion stratégique et planification"
+
+🔧 FICHIERS MODIFIÉS
+────────────────────
+
+1. src/services/claraApiService.ts
+   - Ligne ~920-1000 : Fonction normalizeN8nResponse()
+   - Ajout de la détection METHODO AUDIT dans FORMAT 5
+
+2. src/components/Clara_Components/CiaMethodoAccordionRenderer.tsx
+   - Déjà créé et fonctionnel (aucune modification nécessaire)
+
+3. src/components/Clara_Components/MessageContentRenderer.tsx
+   - Déjà configuré (aucune modification nécessaire)
+
+✅ STATUT FINAL
+───────────────
+
+L'intégration est COMPLÈTE et FONCTIONNELLE.
+
+Le endpoint "methodo_audit" est maintenant entièrement pris en charge :
+- Router configuré (Case 28)
+- Normalisation des réponses implémentée
+- Composant d'affichage créé avec section média
+- Rendu dans le chat opérationnel
+
+Prêt pour les tests !
+
+═══════════════════════════════════════════════════════════════════════════════

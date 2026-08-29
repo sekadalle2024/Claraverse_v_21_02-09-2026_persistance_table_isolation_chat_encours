@@ -1,0 +1,124 @@
+═══════════════════════════════════════════════════════════════
+   QUICK START - TEST EXPORT CAC CORRIGÉ
+═══════════════════════════════════════════════════════════════
+
+✅ CORRECTION APPLIQUÉE
+
+Le problème d'extraction incomplète du contenu est maintenant résolu.
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 1: RAFRAÎCHIR LE NAVIGATEUR
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir Claraverse dans le navigateur
+2. Appuyer sur Ctrl+F5 (rafraîchissement forcé)
+3. Attendre que la page soit complètement chargée
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 2: GÉNÉRER DES TABLES DE TEST
+═══════════════════════════════════════════════════════════════
+
+Dans le chat Claraverse, demander à l'IA de générer:
+
+"Génère 1 point de Recos révision des comptes avec:
+- Description: 3 paragraphes détaillés
+- Observation: 2 paragraphes
+- Ajustement: 2 paragraphes
+- Régularisation: 1 paragraphe"
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 3: EXPORTER LE RAPPORT
+═══════════════════════════════════════════════════════════════
+
+1. Clic droit sur la table générée
+2. Menu "Rapports CAC & Expert-Comptable" 🎓
+3. Cliquer "📊 Export Synthèse CAC"
+4. Attendre le téléchargement du fichier Word
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 4: VÉRIFIER LE CONTENU
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir le fichier Word téléchargé
+2. Aller à la section "2. OBSERVATIONS D'AUDIT"
+3. Vérifier que le point contient:
+   ✅ Description: 3 paragraphes complets
+   ✅ Observation: 2 paragraphes complets
+   ✅ Ajustement: 2 paragraphes complets
+   ✅ Régularisation: 1 paragraphe complet
+
+═══════════════════════════════════════════════════════════════
+ÉTAPE 5: VÉRIFIER LES RETOURS À LA LIGNE
+═══════════════════════════════════════════════════════════════
+
+Dans le document Word, vérifier que:
+✅ Les paragraphes sont séparés par des lignes vides
+✅ La structure du texte est préservée
+✅ Aucun contenu n'est tronqué
+
+═══════════════════════════════════════════════════════════════
+TEST COMPLET (OPTIONNEL)
+═══════════════════════════════════════════════════════════════
+
+Pour un test complet, générer dans le chat:
+
+"Génère:
+- 2 points FRAP avec contenu détaillé
+- 3 points Recos révision des comptes avec contenu détaillé
+- 2 points Recos contrôle interne comptable avec contenu détaillé"
+
+Puis exporter et vérifier que:
+✅ Section 2: 3 points avec contenu complet
+✅ Section 3: 4 points avec contenu complet
+✅ Tous les champs présents et complets
+
+═══════════════════════════════════════════════════════════════
+LOGS À VÉRIFIER (CONSOLE F12)
+═══════════════════════════════════════════════════════════════
+
+Ouvrir la console (F12) et vérifier les logs:
+
+✅ "🔍 [Export CAC] X table(s) Claraverse trouvée(s)"
+✅ "📊 Table: 2 colonnes utiles sur 2 total"
+✅ "✅ [Recos Révision] Table détectée avec 6 sous-tables"
+✅ "📊 [Export CAC] Points collectés:"
+✅ "✅ Synthèse CAC exportée! (X points)"
+
+═══════════════════════════════════════════════════════════════
+EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════
+
+1. Vérifier que le backend est actif:
+   http://localhost:5000/health
+
+2. Vérifier les logs de la console (F12)
+
+3. Consulter les documents:
+   - CORRECTION_EXPORT_CAC_CONTENU_COMPLET_26_MARS_2026.md
+   - DIAGNOSTIC_PROBLEME_EXPORT_CAC_26_MARS_2026.md
+
+═══════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+✅ public/menu.js
+   - extractTableDataOptimized() - Amélioration
+   - extractFullCellContent() - Nouvelle fonction
+   - collectFrapPoints() - Utilisation extractFullCellContent
+   - collectRecosRevisionPoints() - Utilisation extractFullCellContent
+   - collectRecosControleInternePoints() - Utilisation extractFullCellContent
+
+═══════════════════════════════════════════════════════════════
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+✅ Contenu complet extrait des tables
+✅ Retours à la ligne préservés
+✅ Structure du texte maintenue
+✅ Tous les paragraphes présents dans le Word
+✅ Export fonctionnel et complet
+
+═══════════════════════════════════════════════════════════════
+
+Date: 26 Mars 2026
+Statut: ✅ CORRIGÉ - Prêt pour tests

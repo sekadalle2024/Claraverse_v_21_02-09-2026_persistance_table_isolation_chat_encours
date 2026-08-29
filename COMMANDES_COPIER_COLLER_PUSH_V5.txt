@@ -1,0 +1,195 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║   📋 COMMANDES A COPIER-COLLER - PUSH CLARAVERSE V5                      ║
+║                                                                           ║
+║   Date: 30 Avril 2026                                                    ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ COMMANDE PRINCIPALE (RECOMMANDEE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Exécuter le script automatique
+.\push-claraverse-v5-30-avril-2026.ps1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 VERIFICATION AVANT PUSH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier l'état Git
+git status
+
+# Vérifier le repository distant
+git remote -v
+
+# Vérifier la branche actuelle
+git branch
+
+# Vérifier que .env.google-oauth.local n'est pas tracké
+git ls-files | Select-String "env.google-oauth.local"
+# Résultat attendu: aucune ligne (fichier ignoré)
+
+# Vérifier la connexion Internet
+Test-Connection github.com -Count 4
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ VERIFICATION APRES PUSH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier le statut final
+git status
+# Résultat attendu: "nothing to commit, working tree clean"
+
+# Vérifier les derniers commits
+git log --oneline -6
+
+# Vérifier que le push est à jour
+git status
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛠️ COMMANDES MANUELLES (SI NECESSAIRE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Configuration Git optimale
+git config core.compression 0
+git config http.postBuffer 1048576000
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+
+# Vérifier le remote
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_14_30-04-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+# Ajouter tous les fichiers
+git add .
+
+# Retirer .env.google-oauth.local
+git reset .env.google-oauth.local
+
+# Créer le commit
+git commit -m "Sauvegarde ClaraVerse V5 - 30 Avril 2026"
+
+# Pousser vers GitHub
+git push origin master
+
+⚠️ ATTENTION: Cette méthode peut échouer pour les gros projets (> 100 MB)
+   Utilisez plutôt le script automatique: .\push-claraverse-v5-30-avril-2026.ps1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔐 GESTION DES CREDENTIALS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier que .env.google-oauth.local n'est pas tracké
+git ls-files | Select-String "env.google-oauth.local"
+
+# Retirer .env.google-oauth.local du tracking (si nécessaire)
+git rm --cached .env.google-oauth.local
+
+# Vérifier le contenu de .gitignore
+Get-Content .gitignore | Select-String "env.google-oauth.local"
+
+# Vérifier les fichiers qui seront poussés
+git diff --cached --name-only
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🆘 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Si le push échoue avec "secret-scanning"
+# 1. Ouvrir le lien dans le message d'erreur
+# 2. Cliquer sur "Allow secret"
+# 3. Relancer le script
+
+# Si le push échoue avec "HTTP 408 Timeout"
+# Le script retry automatiquement (3 fois)
+# Vérifier la connexion Internet:
+Test-Connection github.com -Count 4
+
+# Si le push échoue avec "Connection reset"
+# Attendre quelques minutes et réessayer
+# Vérifier le repository distant:
+git remote -v
+
+# Annuler le dernier commit (si nécessaire)
+git reset --soft HEAD~1
+
+# Voir les logs d'erreur Git
+git log --oneline -10
+
+# Forcer le push (ATTENTION: à utiliser avec précaution)
+git push -f origin master
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 COMMANDES DE DIAGNOSTIC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir la taille du projet
+Get-ChildItem -Recurse | Measure-Object -Property Length -Sum | Select-Object @{Name="Size (MB)"; Expression={[math]::Round($_.Sum / 1MB, 2)}}
+
+# Compter les fichiers modifiés
+git status --short | Measure-Object -Line
+
+# Voir les fichiers les plus gros
+Get-ChildItem -Recurse -File | Sort-Object Length -Descending | Select-Object -First 10 Name, @{Name="Size (MB)"; Expression={[math]::Round($_.Length / 1MB, 2)}}
+
+# Voir l'historique des commits
+git log --oneline --graph --all -10
+
+# Voir les branches
+git branch -a
+
+# Voir les remotes
+git remote -v
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔗 LIENS UTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Ouvrir le repository sur GitHub
+start https://github.com/sekadalle2024/Claverse_windows__v_14_30-04-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+# Ouvrir la documentation locale
+start 00_COMMENCER_ICI_PUSH_V5_30_AVRIL_2026.txt
+
+# Ouvrir la synthèse visuelle
+start SYNTHESE_VISUELLE_PUSH_V5_30_AVRIL_2026.txt
+
+# Ouvrir l'index complet
+start 00_INDEX_PUSH_GITHUB_V5_30_AVRIL_2026.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir la documentation complète
+Get-Content Doc_Github_Issue\SOLUTION_PROJET_140MB_16_AVRIL_2026.md
+
+# Voir la gestion des credentials
+Get-Content 00_PROBLEME_SECRET_GITHUB_29_AVRIL_2026.txt
+
+# Voir le guide de sécurisation
+Get-Content "Doc cross ref documentaire menu\00_GESTION_CREDENTIALS_SECURISEE_29_AVRIL_2026.txt"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ CHECKLIST RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. [ ] Vérifier que .env.google-oauth.local existe localement
+2. [ ] Vérifier que .env.google-oauth contient des placeholders
+3. [ ] Vérifier que .gitignore exclut .env.google-oauth.local
+4. [ ] Vérifier la connexion Internet
+5. [ ] Ouvrir PowerShell dans le dossier du projet
+6. [ ] Exécuter: .\push-claraverse-v5-30-avril-2026.ps1
+7. [ ] Attendre la fin du push (10-15 minutes)
+8. [ ] Vérifier le statut final: git status
+9. [ ] Vérifier sur GitHub que les fichiers sont présents
+10. [ ] Vérifier que .env.google-oauth.local n'est pas visible sur GitHub
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Date: 30 Avril 2026
+Version: ClaraVerse V5
+Statut: ✓ PRET POUR LE PUSH
+
+COMMANDE PRINCIPALE:
+.\push-claraverse-v5-30-avril-2026.ps1

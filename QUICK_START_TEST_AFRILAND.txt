@@ -1,0 +1,90 @@
+═══════════════════════════════════════════════════════════════════
+   QUICK START - TEST DOCUMENT [I30]-AFRILAND
+═══════════════════════════════════════════════════════════════════
+Date: 28 avril 2026
+═══════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+───────────
+Tester le workflow n8n pour rechercher le document [I30]-AFRILAND
+dans Google Drive (dossier "Dossier CAC")
+
+═══════════════════════════════════════════════════════════════════
+📋 MÉTHODE 1 : POWERSHELL (RECOMMANDÉ)
+═══════════════════════════════════════════════════════════════════
+
+1️⃣ Ouvrir PowerShell dans le dossier du projet
+
+2️⃣ Exécuter le script de test:
+
+   .\test-workflow-xref-afriland.ps1
+
+3️⃣ Observer les résultats affichés
+
+═══════════════════════════════════════════════════════════════════
+📋 MÉTHODE 2 : CURL (ALTERNATIVE)
+═══════════════════════════════════════════════════════════════════
+
+Copier-coller cette commande dans le terminal:
+
+curl -X POST "https://n8nsqlite.zeabur.app/webhook/cross_reference" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "[index] = [I30]-AFRILAND", "dossier": "Dossier CAC"}'
+
+═══════════════════════════════════════════════════════════════════
+✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════
+
+Si le workflow fonctionne correctement, vous devriez recevoir:
+
+{
+  "success": true,
+  "file": {
+    "fileId": "ID_DU_FICHIER_GOOGLE_DRIVE",
+    "fileName": "[I30]-AFRILAND",
+    "fileUrl": "https://drive.google.com/file/d/...",
+    "mimeType": "application/pdf" (ou autre)
+  },
+  "message": "Fichier trouvé avec succès"
+}
+
+═══════════════════════════════════════════════════════════════════
+❌ EN CAS D'ERREUR
+═══════════════════════════════════════════════════════════════════
+
+Si le fichier n'est pas trouvé:
+{
+  "success": false,
+  "message": "Fichier non trouvé dans le dossier Dossier CAC"
+}
+
+Vérifier:
+✓ Le fichier existe bien dans Google Drive
+✓ Le nom du fichier est exactement: [I30]-AFRILAND
+✓ Le fichier est dans le dossier "Dossier CAC"
+✓ Le workflow n8n est actif sur zeabur
+
+═══════════════════════════════════════════════════════════════════
+🔍 INFORMATIONS TECHNIQUES
+═══════════════════════════════════════════════════════════════════
+
+Endpoint:    https://n8nsqlite.zeabur.app/webhook/cross_reference
+Méthode:     POST
+Content-Type: application/json
+
+Body:
+{
+  "question": "[index] = [I30]-AFRILAND",
+  "dossier": "Dossier CAC"
+}
+
+═══════════════════════════════════════════════════════════════════
+📝 NOTES
+═══════════════════════════════════════════════════════════════════
+
+• Le format de l'index doit être: [IXX]-NOM_DOCUMENT
+• Le tiret entre le code et le nom est obligatoire
+• Le dossier par défaut est "Dossier CAC"
+• Le workflow recherche dans Google Drive via l'API
+
+═══════════════════════════════════════════════════════════════════

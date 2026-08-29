@@ -1,0 +1,329 @@
+═══════════════════════════════════════════════════════════════════════════════
+✅ INTÉGRATION SCHÉMA DE CALCUL DANS MENU CONTEXTUEL - 24 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 RÉSUMÉ DE L'INTÉGRATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Le schéma de calcul du papier de travail a été intégré avec succès dans le menu
+contextuel (menu.js) dans la section "Papier de travail".
+
+🎯 OBJECTIF ATTEINT
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Intégration des fonctionnalités de schéma de calcul dans menu.js
+✅ Utilisation de la logique existante de papier-travail-schema-calcul.js
+✅ Sauvegarde persistante avec localStorage (comme conso.js)
+✅ Pas d'utilisation de claraPapierTravailService.ts (comme demandé)
+
+📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. public/menu.js
+   - Ajout de 3 nouvelles options dans la section "Papier de travail"
+   - Ajout de 3 nouvelles méthodes pour gérer le schéma de calcul
+   - Ajout du raccourci clavier Ctrl+Shift+K
+
+2. index.html
+   - Ajout du chargement de papier-travail-schema-calcul.js
+
+3. public/papier-travail-schema-calcul.js
+   - Fichier existant (aucune modification nécessaire)
+   - Contient toute la logique de détection et génération des schémas
+
+🎨 NOUVELLES FONCTIONNALITÉS DU MENU
+═══════════════════════════════════════════════════════════════════════════════
+
+Section: "Papier de travail" (📁)
+
+1. 📐 Ajouter Schéma de calcul (Ctrl+Shift+K)
+   - Déclenche la création automatique du schéma de calcul
+   - Détecte la "Nature de test" dans la table 2
+   - Génère le schéma approprié selon le modèle
+   - Positionne le schéma au-dessus de la table principale
+
+2. 🔄 Actualiser Schéma de calcul
+   - Supprime le schéma existant
+   - Retraite la table pour générer un nouveau schéma
+   - Utile après modification de la "Nature de test"
+
+3. 🗑️ Supprimer Schéma de calcul
+   - Supprime le schéma du DOM
+   - Supprime les données du localStorage
+   - Demande confirmation avant suppression
+
+📐 MODÈLES DE SCHÉMA SUPPORTÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+Le système détecte automatiquement la "Nature de test" et applique le modèle:
+
+✓ Validation
+  Colonnes: (A) | (B) | (C) = (A) + (B) | (D) | (E) = (C) - (D)
+
+✓ Mouvement
+  Colonnes: (A) | (B) | (C) | (D) = (A) + (B) - (C) | (E) | (F) = (D) - (E)
+
+✓ Rapprochement
+  Colonnes: (A) | (B) | (C) = (A) - (B)
+
+✓ Séparation
+  Colonnes: (A) | (B) | (C) = (A) - (B)
+
+✓ Estimation
+  Colonnes: (A) | (B) | (C) = (A) * (B) | (D) | (E) = (C) - (D)
+
+✓ Revue analytique
+  Colonnes: (A) | (B) | (C) = (A) - (B)
+
+✓ Cadrage TVA
+  Colonnes: (A) | (B) = (A) * 18% | (C) | (D) | (E) | (F) = (B) - (C) - (D) - (E)
+
+✓ Cotisations sociales
+  Colonnes: (A) | (B) | (C) | (D)
+
+✓ Vierge
+  Aucune colonne (schéma vide)
+
+✓ Modélisation (auto-détection)
+  Détecte automatiquement les variables (X), (Y), (Z) dans la formule
+
+💾 SAUVEGARDE PERSISTANTE
+═══════════════════════════════════════════════════════════════════════════════
+
+Le système utilise localStorage pour sauvegarder:
+- Les valeurs des cellules du schéma de calcul
+- L'association entre schéma et table principale
+- Restauration automatique après actualisation de la page
+
+Clé de stockage: "claraverse_schema_calcul_data"
+
+🔧 ARCHITECTURE TECHNIQUE
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           MENU CONTEXTUEL                                │
+│                            (menu.js)                                     │
+│                                                                          │
+│  Section "Papier de travail"                                            │
+│  ├─ Ajouter Schéma de calcul                                           │
+│  ├─ Actualiser Schéma de calcul                                        │
+│  └─ Supprimer Schéma de calcul                                         │
+│                                                                          │
+│  Méthodes:                                                              │
+│  ├─ ajouterSchemaCalcul()                                              │
+│  ├─ actualiserSchemaCalcul()                                           │
+│  └─ supprimerSchemaCalcul()                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ Appelle
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    SCHÉMA CALCUL MANAGER                                 │
+│              (papier-travail-schema-calcul.js)                          │
+│                                                                          │
+│  Classe: SchemaCalculManager                                            │
+│  ├─ Détection automatique des tables                                   │
+│  ├─ Extraction "Nature de test" (table 2)                              │
+│  ├─ Génération du schéma selon le modèle                               │
+│  ├─ Positionnement au-dessus de la table principale                    │
+│  ├─ Édition des cellules du schéma                                     │
+│  └─ Sauvegarde persistante (localStorage)                              │
+│                                                                          │
+│  Méthodes publiques:                                                    │
+│  ├─ processDivTables(div)                                              │
+│  ├─ loadAllData()                                                       │
+│  └─ saveAllData(data)                                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ Stocke dans
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          LOCALSTORAGE                                    │
+│                                                                          │
+│  Clé: "claraverse_schema_calcul_data"                                  │
+│  Structure:                                                             │
+│  {                                                                      │
+│    "schema_table_abc123_1234567890": {                                 │
+│      "timestamp": 1714000000000,                                       │
+│      "forTable": "table_abc123",                                       │
+│      "cells": [                                                        │
+│        { "row": 0, "col": 0, "value": "(A)" },                        │
+│        { "row": 0, "col": 1, "value": "(B)" },                        │
+│        ...                                                             │
+│      ]                                                                 │
+│    }                                                                   │
+│  }                                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+🚀 UTILISATION
+═══════════════════════════════════════════════════════════════════════════
+
+1. MÉTHODE AUTOMATIQUE (recommandée)
+   - Le système détecte automatiquement les tables avec "Nature de test"
+   - Génère le schéma au chargement de la page
+   - Aucune action manuelle nécessaire
+
+2. MÉTHODE MANUELLE (via menu contextuel)
+   a) Cliquer sur une table principale (Modelised_table)
+   b) Ouvrir le menu contextuel (clic droit ou survol)
+   c) Section "Papier de travail" > "Ajouter Schéma de calcul"
+   d) Ou utiliser le raccourci: Ctrl+Shift+K
+
+3. ACTUALISATION
+   - Si la "Nature de test" change
+   - Menu > "Actualiser Schéma de calcul"
+   - Le schéma sera régénéré avec le nouveau modèle
+
+4. SUPPRESSION
+   - Menu > "Supprimer Schéma de calcul"
+   - Confirmer la suppression
+   - Le schéma et ses données seront effacés
+
+📊 EXEMPLE DE STRUCTURE HTML
+═══════════════════════════════════════════════════════════════════════════
+
+<div class="prose">
+  
+  <!-- Table 2: Contient la "Nature de test" -->
+  <table>
+    <tr>
+      <td>Nature de test</td>
+      <td>Rapprochement</td>
+    </tr>
+  </table>
+
+  <!-- Schéma de calcul (généré automatiquement) -->
+  <table class="claraverse-schema-calcul" 
+         data-schema-id="schema_table_abc123_1234567890"
+         data-for-table="table_abc123">
+    <caption>📐 Schéma de calcul: Rapprochement</caption>
+    <tbody>
+      <tr>
+        <td contenteditable="true">(A)</td>
+        <td contenteditable="true">(B)</td>
+        <td contenteditable="true">(C) = (A) - (B)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Table principale (Modelised_table) -->
+  <table data-table-id="table_abc123">
+    <thead>
+      <tr>
+        <th>Compte</th>
+        <th>Montant</th>
+        <th>Écart</th>
+        <th>Conclusion</th>
+        <th>Assertion</th>
+        <th>CTR</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Données de la table -->
+    </tbody>
+  </table>
+
+</div>
+
+🔍 DÉTECTION DE LA "NATURE DE TEST"
+═══════════════════════════════════════════════════════════════════════════
+
+Le système recherche dans la table 2:
+- Une cellule contenant "Nature de test" (ou variations)
+- La valeur dans la cellule suivante
+- Applique le modèle correspondant
+
+Exemples de valeurs détectées:
+✓ "Rapprochement" → Modèle Rapprochement
+✓ "Validation" → Modèle Validation
+✓ "Mouvement" → Modèle Mouvement
+✓ "Estimation" → Modèle Estimation
+✓ "(X) = (Y) - (Z)" → Modèle Modélisation (auto-détecté)
+
+🎯 AVANTAGES DE CETTE APPROCHE
+═══════════════════════════════════════════════════════════════════════════
+
+✅ Réutilisation du code existant (papier-travail-schema-calcul.js)
+✅ Pas de duplication de logique
+✅ Sauvegarde persistante déjà implémentée
+✅ Détection automatique des modèles
+✅ Édition des cellules du schéma
+✅ Intégration propre dans le menu contextuel
+✅ Raccourci clavier pour accès rapide
+✅ Pas d'utilisation de claraPapierTravailService.ts
+
+🐛 DÉBOGAGE
+═══════════════════════════════════════════════════════════════════════════
+
+Commandes disponibles dans la console:
+
+// Afficher le contenu du localStorage
+schemaCalculCommands.showStorage()
+
+// Forcer le traitement de toutes les tables
+schemaCalculCommands.processAll()
+
+// Restaurer tous les schémas depuis localStorage
+schemaCalculCommands.restoreAll()
+
+// Effacer tous les schémas sauvegardés
+schemaCalculCommands.clearStorage()
+
+// Accéder au manager
+window.SchemaCalculManager
+
+📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Le fichier papier-travail-schema-calcul.js doit être chargé AVANT menu.js
+   (actuellement chargé après conso.js dans index.html)
+
+2. Le système fonctionne de manière autonome:
+   - Détection automatique au chargement
+   - Surveillance continue des nouvelles tables
+   - Sauvegarde automatique des modifications
+
+3. Le menu contextuel permet un contrôle manuel:
+   - Forcer la création d'un schéma
+   - Actualiser un schéma existant
+   - Supprimer un schéma
+
+4. La sauvegarde est persistante:
+   - Les données survivent aux actualisations de page
+   - Restauration automatique au chargement
+   - Gestion du quota localStorage
+
+✅ TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════
+
+1. ✓ Vérifier le chargement de papier-travail-schema-calcul.js
+2. ✓ Tester l'ajout manuel via menu contextuel
+3. ✓ Tester le raccourci Ctrl+Shift+K
+4. ✓ Vérifier la détection automatique
+5. ✓ Tester l'actualisation du schéma
+6. ✓ Tester la suppression du schéma
+7. ✓ Vérifier la sauvegarde dans localStorage
+8. ✓ Vérifier la restauration après actualisation
+9. ✓ Tester avec différentes natures de test
+10. ✓ Vérifier l'édition des cellules du schéma
+
+🎉 CONCLUSION
+═══════════════════════════════════════════════════════════════════════════
+
+L'intégration du schéma de calcul dans le menu contextuel est terminée.
+Le système est opérationnel et prêt à être testé.
+
+Toutes les fonctionnalités demandées ont été implémentées:
+✅ Intégration dans menu.js (section Papier de travail)
+✅ Utilisation de la logique existante (papier-travail-schema-calcul.js)
+✅ Sauvegarde persistante avec localStorage
+✅ Pas d'utilisation de claraPapierTravailService.ts
+✅ Détection automatique des modèles selon la nature de test
+✅ Édition des cellules du schéma
+✅ Positionnement au-dessus de la table principale
+
+═══════════════════════════════════════════════════════════════════════════
+Date: 24 avril 2026
+Version: 1.0
+Statut: ✅ TERMINÉ
+═══════════════════════════════════════════════════════════════════════════

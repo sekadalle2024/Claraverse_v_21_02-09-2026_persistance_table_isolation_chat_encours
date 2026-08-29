@@ -1,0 +1,230 @@
+========================================
+GUIDE DE DEPANNAGE - ACCORDEONS
+========================================
+Date: 05 Avril 2026
+
+ETAPE 1: TEST STANDALONE
+=========================
+
+1. Ouvrir le fichier: test-accordeons-standalone.html
+2. Cliquer sur les 3 sections
+3. Verifier qu'elles s'ouvrent et se ferment
+
+SI CA FONCTIONNE:
+→ Le code JavaScript est correct
+→ Le probleme vient de l'integration dans l'application
+
+SI CA NE FONCTIONNE PAS:
+→ Probleme avec le navigateur ou les styles CSS
+→ Essayer un autre navigateur
+
+
+ETAPE 2: VERIFIER LA CONSOLE
+=============================
+
+1. Ouvrir l'application: npm run dev
+2. Ouvrir la console (F12)
+3. Generer les etats: "Etat fin" + upload balance
+4. Chercher ces logs:
+
+LOGS ATTENDUS:
+✅ "🔧 EtatsControleAccordeonHandler: Initialisation..."
+✅ "📊 Nombre de sections trouvées: 16"
+✅ "✅ Listener ajouté sur section 1"
+✅ "🎉 Tous les accordéons sont initialisés!"
+
+SI "Nombre de sections trouvées: 0":
+→ Les sections ne sont pas encore dans le DOM
+→ Executer: window.reinitializeEtatsControleAccordeons();
+
+
+ETAPE 3: VERIFIER LA STRUCTURE HTML
+====================================
+
+Dans la console (F12), executer:
+
+// Test 1: Compter les sections
+document.querySelectorAll('.section').length
+// Attendu: 16
+
+// Test 2: Compter les headers
+document.querySelectorAll('.section-header').length
+// Attendu: 16
+
+// Test 3: Verifier une section
+const section = document.querySelector('.section');
+console.log(section);
+// Attendu: Element HTML avec classe "section"
+
+SI AUCUNE SECTION TROUVEE:
+→ Le HTML n'est pas genere correctement
+→ Verifier py_backend/etats_controle_exhaustifs_html.py
+
+
+ETAPE 4: TESTER MANUELLEMENT
+=============================
+
+Dans la console (F12), executer:
+
+// Test 1: Tester toggleSection
+const header = document.querySelector('.section-header');
+window.toggleSection(header);
+// Attendu: La section s'ouvre
+
+// Test 2: Verifier la classe active
+const section = document.querySelector('.section');
+console.log(section.classList.contains('active'));
+// Attendu: true (si ouverte)
+
+// Test 3: Verifier le max-height
+const content = document.querySelector('.section-content');
+console.log(window.getComputedStyle(content).maxHeight);
+// Attendu: "2000px" (si ouverte) ou "0px" (si fermee)
+
+SI toggleSection NE FONCTIONNE PAS:
+→ Probleme avec la fonction
+→ Verifier public/EtatsControleAccordeonHandler.js
+
+
+ETAPE 5: VERIFIER LES STYLES CSS
+=================================
+
+Dans la console (F12), executer:
+
+// Verifier les styles de base
+const content = document.querySelector('.section-content');
+const styles = window.getComputedStyle(content);
+console.log({
+    maxHeight: styles.maxHeight,
+    overflow: styles.overflow,
+    transition: styles.transition
+});
+
+// Ajouter la classe active manuellement
+const section = document.querySelector('.section');
+section.classList.add('active');
+
+// Verifier le nouveau max-height
+console.log(window.getComputedStyle(content).maxHeight);
+// Attendu: "2000px"
+
+SI LE MAX-HEIGHT NE CHANGE PAS:
+→ Probleme avec les styles CSS
+→ Verifier py_backend/etats_financiers.py (lignes 1596-1750)
+
+
+ETAPE 6: FORCER LA REINITIALISATION
+====================================
+
+Dans la console (F12), executer:
+
+// Reinitialiser les accordeons
+window.reinitializeEtatsControleAccordeons();
+
+// Verifier les logs
+// Attendu: "🔄 Réinitialisation des accordéons..."
+
+// Tester a nouveau
+const header = document.querySelector('.section-header');
+header.click();
+
+
+ETAPE 7: SOLUTION MANUELLE
+===========================
+
+Si rien ne fonctionne, executer ce code dans la console:
+
+// Solution de secours
+document.querySelectorAll('.section-header').forEach((header, index) => {
+    // Supprimer onclick
+    header.removeAttribute('onclick');
+    
+    // Ajouter listener
+    header.addEventListener('click', function() {
+        const section = this.parentElement;
+        section.classList.toggle('active');
+        console.log(`Section ${index + 1} toggled:`, section.classList.contains('active'));
+    });
+    
+    console.log(`Listener manuel ajouté sur section ${index + 1}`);
+});
+
+console.log('✅ Listeners manuels ajoutés!');
+
+
+PROBLEMES FREQUENTS
+===================
+
+PROBLEME 1: "Nombre de sections trouvées: 0"
+CAUSE: Les sections ne sont pas encore dans le DOM
+SOLUTION: Attendre ou reinitialiser
+COMMANDE: window.reinitializeEtatsControleAccordeons();
+
+PROBLEME 2: Clic ne fait rien
+CAUSE: Event listeners non attaches
+SOLUTION: Verifier les logs "✅ Listener ajouté"
+COMMANDE: Voir ETAPE 7 (Solution manuelle)
+
+PROBLEME 3: Section ne s'ouvre pas visuellement
+CAUSE: Styles CSS manquants
+SOLUTION: Verifier max-height dans les styles
+FICHIER: py_backend/etats_financiers.py
+
+PROBLEME 4: Erreur "toggleSection is not defined"
+CAUSE: Script non charge ou fonction non exposee
+SOLUTION: Verifier index.html ligne 151
+FICHIER: index.html
+
+PROBLEME 5: Conflits avec attributs onclick
+CAUSE: Attributs onclick du HTML backend
+SOLUTION: Les attributs sont maintenant supprimes automatiquement
+VERIFICATION: Logs "🔧 Attribut onclick supprimé"
+
+
+FICHIERS A VERIFIER
+===================
+
+1. public/EtatsControleAccordeonHandler.js
+   Ligne 28: window.toggleSection = toggleSection;
+   Ligne 42-60: initializeAccordeons()
+
+2. index.html
+   Ligne 151: <script src="/EtatsControleAccordeonHandler.js"></script>
+
+3. py_backend/etats_financiers.py
+   Lignes 1596-1750: Styles CSS des accordeons
+
+4. py_backend/etats_controle_exhaustifs_html.py
+   Structure HTML avec classes .section, .section-header, .section-content
+
+
+COMMANDES UTILES
+================
+
+// Recharger la page
+Ctrl + R (ou Cmd + R sur Mac)
+
+// Vider le cache et recharger
+Ctrl + Shift + R (ou Cmd + Shift + R sur Mac)
+
+// Ouvrir la console
+F12
+
+// Reinitialiser les accordeons
+window.reinitializeEtatsControleAccordeons();
+
+// Tester une section
+window.toggleSection(document.querySelector('.section-header'));
+
+
+PROCHAINES ETAPES
+=================
+
+1. Suivre les etapes 1 a 7 ci-dessus
+2. Noter les resultats de chaque test
+3. Identifier le probleme specifique
+4. Appliquer la solution appropriee
+
+Si le probleme persiste:
+→ Consulter: 00_DIAGNOSTIC_ACCORDEONS_PROBLEME_PERSISTANT.txt
+→ Tester: test-accordeons-standalone.html

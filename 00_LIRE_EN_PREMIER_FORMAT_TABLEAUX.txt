@@ -1,0 +1,71 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ LIRE EN PREMIER - CORRECTION FORMAT TABLEAUX
+  Date: 31 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME
+─────────────────────────────────────────────────────────────────────────────
+Vous voyez du texte brut au lieu de tableaux Markdown :
+
+  **Tableau entete**:**Etape de mission**: Programme de travail...
+
+
+🔧 SOLUTION EN 3 ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+
+1. Ouvrir le fichier : n8n_node_code_SOLUTION_FINALE.js
+
+2. Copier TOUT le contenu et le coller dans le node "Parseur JSON + Format" 
+   dans n8n (https://t22wtwxl.rpcld.app)
+
+3. Sauvegarder et tester
+
+
+✅ VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+
+Dans n8n :
+  → Chercher dans les logs : "hasJsonProperty: false"
+
+Dans l'application :
+  → Les tableaux doivent s'afficher correctement
+
+
+📚 DOCUMENTATION COMPLÈTE
+─────────────────────────────────────────────────────────────────────────────
+
+Pour comprendre le problème en détail :
+  → 00_INDEX_CORRECTION_FORMAT_TABLEAUX.md
+
+Pour un guide visuel :
+  → COMPARAISON_VISUELLE_FORMAT_AVANT_APRES.md
+
+Pour un diagnostic complet :
+  → 00_DIAGNOSTIC_PROBLEME_PERSISTANT.txt
+
+
+🚨 SI ÇA NE FONCTIONNE PAS
+─────────────────────────────────────────────────────────────────────────────
+
+Exécuter :
+  .\test-webhook-programme-controle.ps1
+
+Puis consulter :
+  00_DIAGNOSTIC_PROBLEME_PERSISTANT.txt
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 EXPLICATION RAPIDE
+─────────────────────────────────────────────────────────────────────────────
+
+Le node Code retournait :
+  [{ json: { data: {...} } }]  ❌
+
+Il doit retourner :
+  [{ data: {...} }]  ✅
+
+La propriété "json" supplémentaire empêchait la détection du FORMAT 4.
+
+
+═══════════════════════════════════════════════════════════════════════════════

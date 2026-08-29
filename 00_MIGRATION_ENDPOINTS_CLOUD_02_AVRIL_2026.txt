@@ -1,0 +1,77 @@
+═══════════════════════════════════════════════════════════════════════════
+  MIGRATION DES ENDPOINTS N8N VERS LE CLOUD - 2 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════
+
+✅ TÂCHE TERMINÉE AVEC SUCCÈS
+
+📋 RÉSUMÉ DE LA MIGRATION
+─────────────────────────────────────────────────────────────────────────
+
+Fichier modifié : src/services/claraApiService.ts
+
+Ancienne URL de base : http://localhost:5678
+Nouvelle URL de base : https://t22wtwxl.rpcld.app
+
+📊 ENDPOINTS MIGRÉS (9 au total)
+─────────────────────────────────────────────────────────────────────────
+
+1. CIA Cours (Case 11)
+   Avant : http://localhost:5678/webhook/cia_cours_gemini
+   Après : https://t22wtwxl.rpcld.app/webhook/cia_cours_gemini
+
+2. CIA QCM (Case 12)
+   Avant : http://localhost:5678/webhook/qcm_cia_gemini
+   Après : https://t22wtwxl.rpcld.app/webhook/qcm_cia_gemini
+
+3. CIA Synthèse (Case 13)
+   Avant : http://localhost:5678/webhook/synthese_cia_gemini
+   Après : https://t22wtwxl.rpcld.app/webhook/synthese_cia_gemini
+
+4. Méthodologie Audit (Case 28)
+   Avant : http://localhost:5678/webhook/methodo_audit
+   Après : https://t22wtwxl.rpcld.app/webhook/methodo_audit
+
+5. Guide des Commandes (Case 29)
+   Avant : http://localhost:5678/webhook/guide_des_commandes
+   Après : https://t22wtwxl.rpcld.app/webhook/guide_des_commandes
+
+6. Guide Intelligent (Case 30)
+   Avant : http://localhost:5678/webhook/guide_intelligent
+   Après : https://t22wtwxl.rpcld.app/webhook/guide_intelligent
+
+7. Guide Menu Contextuel (Case 31)
+   Avant : http://localhost:5678/webhook/guide_menu_contextuel
+   Après : https://t22wtwxl.rpcld.app/webhook/guide_menu_contextuel
+
+8. Guide Produit (Case 32)
+   Avant : http://localhost:5678/webhook/guide_produit
+   Après : https://t22wtwxl.rpcld.app/webhook/guide_produit
+
+9. Méthodologie Révision (Case 33)
+   Avant : http://localhost:5678/webhook/methodo_revision
+   Après : https://t22wtwxl.rpcld.app/webhook/methodo_revision
+
+✅ VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────
+
+✓ Aucune URL localhost:5678 restante dans le code
+✓ Toutes les URLs cloud sont correctement configurées
+✓ Le fichier claraApiService.ts a été mis à jour avec succès
+
+📝 NOTES IMPORTANTES
+─────────────────────────────────────────────────────────────────────────
+
+• Les endpoints cloud utilisent HTTPS (sécurisé)
+• L'URL de base cloud : https://t22wtwxl.rpcld.app
+• Les chemins des webhooks restent identiques
+• Les cases 1-33 du router sont maintenant tous sur le cloud
+
+🔄 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────
+
+1. Tester les endpoints migrés dans l'application
+2. Vérifier que les workflows n8n cloud sont bien déployés
+3. Valider le bon fonctionnement de chaque case
+4. Commit et push des modifications vers GitHub
+
+═══════════════════════════════════════════════════════════════════════════

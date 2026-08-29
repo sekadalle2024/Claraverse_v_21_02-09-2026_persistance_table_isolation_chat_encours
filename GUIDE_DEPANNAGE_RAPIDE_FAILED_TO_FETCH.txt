@@ -1,0 +1,177 @@
+================================================================================
+GUIDE DE DÉPANNAGE RAPIDE - "FAILED TO FETCH"
+================================================================================
+
+🎯 OBJECTIF: Résoudre l'erreur "failed to fetch" rapidement
+
+================================================================================
+ÉTAPE 1: REDÉMARRER LE BACKEND (OBLIGATOIRE)
+================================================================================
+
+⚠️  C'EST LA CAUSE LA PLUS FRÉQUENTE!
+
+1. Aller dans la console où le backend tourne
+2. Appuyer sur Ctrl+C pour arrêter
+3. Attendre que le processus se termine
+4. Exécuter: .\start-claraverse.ps1
+5. Attendre le message: "✅ Backend démarré sur http://localhost:8000"
+
+✅ SI ÇA FONCTIONNE: Réessayer l'import de la balance
+❌ SI ÇA NE FONCTIONNE PAS: Passer à l'étape 2
+
+================================================================================
+ÉTAPE 2: TESTER L'IMPORT DU MODULE
+================================================================================
+
+Commande:
+```powershell
+cd py_backend
+python test_import_etats_financiers.py
+```
+
+Résultat attendu:
+```
+✅ Module etats_financiers importé avec succès
+✅ Cache global disponible: True
+✅ Router disponible
+```
+
+❌ SI ERREUR:
+  - Lire le message d'erreur Python
+  - Il y a une erreur de syntaxe dans etats_financiers.py
+  - Corriger l'erreur
+  - Redémarrer le backend
+  - Réessayer
+
+✅ SI OK: Passer à l'étape 3
+
+================================================================================
+ÉTAPE 3: VÉRIFIER L'ACCESSIBILITÉ DU BACKEND
+================================================================================
+
+Commande:
+```powershell
+.\test-backend-direct.ps1
+```
+
+Résultat attendu:
+```
+✅ Backend accessible (Status: 200)
+✅ Endpoint accessible
+```
+
+❌ SI ERREUR:
+  - Le backend n'est pas démarré
+  - Retourner à l'étape 1
+  - Vérifier qu'il n'y a pas d'erreur au démarrage
+
+✅ SI OK: Passer à l'étape 4
+
+================================================================================
+ÉTAPE 4: OBSERVER LES LOGS DU BACKEND
+================================================================================
+
+1. Ouvrir la console où le backend tourne
+2. Importer une balance depuis le frontend
+3. Observer les logs EN TEMPS RÉEL
+
+Messages à chercher:
+
+✅ SUCCÈS:
+```
+📊 Stockage des balances dans le cache global pour l'export...
+✅ Balances stockées dans le cache: N=XXX lignes
+```
+
+❌ ERREUR:
+```
+ERROR: ...
+Exception: ...
+Traceback: ...
+```
+
+SI ERREUR DANS LES LOGS:
+  - Copier le message d'erreur complet
+  - Identifier la ligne qui cause l'erreur
+  - Corriger l'erreur
+  - Redémarrer le backend
+  - Réessayer
+
+SI PAS DE LOGS:
+  - Le backend n'a pas reçu la requête
+  - Problème de communication frontend/backend
+  - Vérifier que le frontend pointe vers localhost:8000
+
+================================================================================
+ÉTAPE 5: VÉRIFIER LE FRONTEND
+================================================================================
+
+1. Ouvrir la console du navigateur (F12)
+2. Aller dans l'onglet "Network" ou "Réseau"
+3. Importer une balance
+4. Observer les requêtes HTTP
+
+Chercher la requête vers /etats-financiers/process
+
+✅ SI STATUS 200:
+  - La requête a réussi
+  - L'erreur vient d'ailleurs
+
+❌ SI STATUS 500:
+  - Erreur serveur
+  - Voir les logs du backend (étape 4)
+
+❌ SI STATUS 0 ou "failed":
+  - Le backend n'est pas accessible
+  - Retourner à l'étape 1
+
+================================================================================
+CHECKLIST RAPIDE
+================================================================================
+
+Avant de demander de l'aide, vérifier:
+
+□ Le backend a été redémarré APRÈS les modifications
+□ python test_import_etats_financiers.py fonctionne
+□ .\test-backend-direct.ps1 fonctionne
+□ Les logs du backend s'affichent lors de l'import
+□ La console du navigateur montre les requêtes HTTP
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Redémarrer le backend
+Ctrl+C (dans la console du backend)
+.\start-claraverse.ps1
+
+# Tester l'import
+cd py_backend
+python test_import_etats_financiers.py
+
+# Tester l'accessibilité
+.\test-backend-direct.ps1
+
+# Voir les processus Python
+Get-Process -Name "python"
+
+================================================================================
+SI RIEN NE FONCTIONNE
+================================================================================
+
+Fournir les informations suivantes:
+
+1. Résultat de: python py_backend/test_import_etats_financiers.py
+2. Résultat de: .\test-backend-direct.ps1
+3. Logs du backend lors de l'import (copier/coller)
+4. Message d'erreur exact dans le frontend
+5. Console du navigateur (onglet Network)
+
+================================================================================
+DOCUMENTATION COMPLÈTE
+================================================================================
+
+Pour plus de détails:
+  cat 00_DIAGNOSTIC_ERREUR_PERSISTANTE_06_AVRIL_2026.txt
+
+================================================================================

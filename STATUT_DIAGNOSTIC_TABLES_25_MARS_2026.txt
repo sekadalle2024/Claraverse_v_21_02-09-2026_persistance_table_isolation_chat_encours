@@ -1,0 +1,218 @@
+═══════════════════════════════════════════════════════════════
+  STATUT FINAL - DIAGNOSTIC DÉTECTION TABLES
+═══════════════════════════════════════════════════════════════
+
+📅 Date: 25 Mars 2026
+🎯 Objectif: Résoudre le problème de détection des tables pour
+            l'export du rapport consolidé CAC
+
+═══════════════════════════════════════════════════════════════
+  ✅ TRAVAIL ACCOMPLI
+═══════════════════════════════════════════════════════════════
+
+1. ✅ Script d'alerte automatique ajouté dans index.html
+   
+   Fonctionnalité:
+   - Déclenchement automatique 3 secondes après le chargement
+   - Alerte 1: Nombre de tables + classes CSS des 3 premières
+   - Alerte 2: Test de 5 sélecteurs CSS différents
+   - Logs dans la console pour traçabilité
+
+2. ✅ Documentation complète créée
+   
+   Fichiers créés:
+   - Doc export rapport/DIAGNOSTIC_DETECTION_TABLES.md
+   - 00_DIAGNOSTIC_TABLES_RAPPORT.txt
+   
+   Fichiers mis à jour:
+   - Doc export rapport/00_INDEX.md
+
+═══════════════════════════════════════════════════════════════
+  📋 PROCHAINES ÉTAPES POUR L'UTILISATEUR
+═══════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Rafraîchir la page
+─────────────────────────────
+Commande: Ctrl+F5 (rafraîchissement forcé)
+
+ÉTAPE 2: Attendre 1 minute après le chargement
+─────────────────────────────
+Deux alertes vont s'afficher automatiquement
+
+ÉTAPE 3: Lire les alertes
+─────────────────────────────
+📊 Alerte 1: Informations générales
+   - Nombre total de tables
+   - Classes CSS des 3 premières tables
+   - Balises parentes
+
+🔍 Alerte 2: Test des sélecteurs
+   - Résultats pour 5 sélecteurs CSS
+   - Nombre d'éléments trouvés
+
+ÉTAPE 4: Communiquer les résultats
+─────────────────────────────
+Options:
+- Capture d'écran des alertes
+- Copier-coller le texte des alertes
+
+═══════════════════════════════════════════════════════════════
+  🔍 SÉLECTEURS CSS TESTÉS
+═══════════════════════════════════════════════════════════════
+
+1. table
+   → Toutes les balises <table>
+
+2. .claraverse-table
+   → Tables avec classe "claraverse-table"
+
+3. [data-claraverse-table]
+   → Tables avec attribut data-claraverse-table
+
+4. div[class*="table"] table
+   → Tables dans un div contenant "table"
+
+5. div[class*="chat"] table
+   → Tables dans un div contenant "chat"
+
+═══════════════════════════════════════════════════════════════
+  📊 ANALYSE ATTENDUE
+═══════════════════════════════════════════════════════════════
+
+Scénario A: Aucune table détectée
+──────────────────────────────────
+Résultat: "Nombre total de tables: 0"
+Cause: Tables non chargées ou dans un iframe
+Action: Attendre le chargement ou chercher dans iframe
+
+Scénario B: Tables sans classes CSS
+──────────────────────────────────
+Résultat: "Classes: (aucune classe)"
+Cause: Tables génériques sans classes spécifiques
+Action: Utiliser sélecteur basé sur le parent
+
+Scénario C: Tables avec classes CSS
+──────────────────────────────────
+Résultat: "Classes: claraverse-table audit-table"
+Cause: Sélecteur actuel n'utilise pas les classes
+Action: Utiliser .claraverse-table ou .audit-table
+
+═══════════════════════════════════════════════════════════════
+  🔧 CORRECTION À APPORTER
+═══════════════════════════════════════════════════════════════
+
+Fichier: public/menu.js
+Fonction: collectFrapPoints()
+
+AVANT (ligne ~3500):
+────────────────────
+const allTables = document.querySelectorAll('table');
+
+APRÈS (à déterminer selon diagnostic):
+──────────────────────────────────────
+Exemple 1: const allTables = document.querySelectorAll('.claraverse-table');
+Exemple 2: const allTables = document.querySelectorAll('div[class*="chat"] table');
+Exemple 3: const allTables = document.querySelectorAll('.message-content table');
+
+Le bon sélecteur sera déterminé après analyse des alertes.
+
+═══════════════════════════════════════════════════════════════
+  📁 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+✅ index.html
+   Ligne: ~70 (après diagnostic-tables.js)
+   Modification: Ajout script d'alerte automatique
+   Taille: ~70 lignes de code JavaScript
+
+✅ Doc export rapport/DIAGNOSTIC_DETECTION_TABLES.md
+   Statut: Nouveau fichier
+   Contenu: Documentation complète du diagnostic
+
+✅ 00_DIAGNOSTIC_TABLES_RAPPORT.txt
+   Statut: Nouveau fichier
+   Contenu: Instructions rapides pour l'utilisateur
+
+✅ Doc export rapport/00_INDEX.md
+   Modification: Ajout section diagnostic
+   Lignes modifiées: 2 sections
+
+═══════════════════════════════════════════════════════════════
+  📖 DOCUMENTATION DISPONIBLE
+═══════════════════════════════════════════════════════════════
+
+🚀 Démarrage Rapide:
+   → 00_DIAGNOSTIC_TABLES_RAPPORT.txt
+
+📚 Documentation Complète:
+   → Doc export rapport/DIAGNOSTIC_DETECTION_TABLES.md
+
+📋 Index Documentation:
+   → Doc export rapport/00_INDEX.md
+
+🔍 Guide Export CAC:
+   → Doc export rapport/GUIDE_EXPORT_SYNTHESE_CAC.md
+
+═══════════════════════════════════════════════════════════════
+  🎯 OBJECTIF FINAL
+═══════════════════════════════════════════════════════════════
+
+Une fois le bon sélecteur identifié:
+
+1. Corriger collectFrapPoints() dans menu.js
+2. Corriger collectRecosRevisionPoints() dans menu.js
+3. Corriger collectRecosControleInternePoints() dans menu.js
+4. Tester l'export du rapport consolidé
+5. Valider que toutes les tables sont détectées
+
+═══════════════════════════════════════════════════════════════
+  ⏭️ SUITE DU PROCESSUS
+═══════════════════════════════════════════════════════════════
+
+EN ATTENTE:
+───────────
+→ Utilisateur rafraîchit la page (Ctrl+F5)
+→ Utilisateur lit les 2 alertes
+→ Utilisateur communique les résultats
+
+APRÈS RÉCEPTION DES RÉSULTATS:
+───────────────────────────────
+→ Analyse des informations
+→ Identification du bon sélecteur CSS
+→ Correction du code dans menu.js
+→ Test de l'export
+→ Validation finale
+
+═══════════════════════════════════════════════════════════════
+  📞 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════
+
+# Rafraîchir la page
+Ctrl+F5
+
+# Ouvrir la console (pour voir les logs)
+F12
+
+# Tester l'export après correction
+Clic droit sur table → Rapports CAC → Export Synthèse CAC
+
+# Vérifier le backend
+Invoke-RestMethod -Uri "http://localhost:5000/health" -Method Get
+
+═══════════════════════════════════════════════════════════════
+  ✅ STATUT ACTUEL
+═══════════════════════════════════════════════════════════════
+
+Script d'alerte:     ✅ AJOUTÉ
+Documentation:       ✅ CRÉÉE
+Index mis à jour:    ✅ FAIT
+Tests:               ⏳ EN ATTENTE (utilisateur)
+Correction code:     ⏳ EN ATTENTE (résultats diagnostic)
+
+═══════════════════════════════════════════════════════════════
+
+🚀 PRÊT POUR LE DIAGNOSTIC !
+
+   Instructions: Voir 00_DIAGNOSTIC_TABLES_RAPPORT.txt
+
+═══════════════════════════════════════════════════════════════

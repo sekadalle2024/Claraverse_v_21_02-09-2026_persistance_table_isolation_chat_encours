@@ -1,0 +1,188 @@
+═══════════════════════════════════════════════════════════════════════════════
+  INTÉGRATION DES FONCTIONNALITÉS D'ÉVALUATION DES RISQUES DANS MENU.JS
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 2 Avril 2026
+🎯 Objectif: Ajouter les conversions de matrices de criticité dans le menu contextuel
+📁 Fichiers concernés:
+   - public/menu.js (fichier principal à modifier)
+   - public/menu_risk_evaluation_extension.js (nouvelles méthodes créées)
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 1: MISE À JOUR DE LA SECTION "Évaluation des risques" DANS getMenuSections()
+═══════════════════════════════════════════════════════════════════════════════
+
+Localiser la section "risques" dans la méthode getMenuSections() (ligne ~85) et REMPLACER par:
+
+{
+  id: "risques", title: "Évaluation des risques", icon: "⚠️",
+  items: [
+    { text: "Calculer criticité (matrice)", action: () => this.executeRiskEvaluation(), shortcut: "Ctrl+R" },
+    { text: "Appliquer couleurs risques", action: () => this.applyRiskColors() },
+    { text: "Ajouter colonnes risques", action: () => this.addRiskColumns() },
+    { text: "─────────────────────", action: null },  // Séparateur visuel
+    { text: "📊 Matrice Alpha 3 niveaux", action: () => this.convertToMatrixAlpha3() },
+    { text: "📊 Matrice Alpha 5 niveaux", action: () => this.convertToMatrixAlpha5() },
+    { text: "📊 Matrice Alpha 4 niveaux", action: () => this.convertToMatrixAlpha4() },
+    { text: "─────────────────────", action: null },  // Séparateur visuel
+    { text: "🔢 Matrice Num 3 niveaux", action: () => this.convertToMatrixNum3() },
+    { text: "🔢 Matrice Num 4 niveaux", action: () => this.convertToMatrixNum4() },
+    { text: "🔢 Matrice Num 5 niveaux", action: () => this.convertToMatrixNum5() }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 2: COPIER LES NOUVELLES MÉTHODES DANS menu.js
+═══════════════════════════════════════════════════════════════════════════════
+
+Ouvrir le fichier: public/menu_risk_evaluation_extension.js
+
+Copier TOUTES les méthodes de ce fichier et les coller dans menu.js après la méthode
+addRiskColumns() (rechercher "addRiskColumns" dans menu.js).
+
+Les méthodes à copier sont:
+
+
+1. getMatrixAlpha3()
+2. getMatrixAlpha5()
+3. getMatrixAlpha4()
+4. getMatrixNum3()
+5. getMatrixNum4()
+6. getMatrixNum5()
+7. normalizeToAlpha3()
+8. normalizeToAlpha5()
+9. normalizeToAlpha4()
+10. normalizeToNum3()
+11. normalizeToNum4()
+12. normalizeToNum5()
+13. getColorsAlpha3()
+14. getColorsAlpha5()
+15. getColorsAlpha4()
+16. getColorsNumeric()
+17. convertToMatrixAlpha3()
+18. convertToMatrixAlpha5()
+19. convertToMatrixAlpha4()
+20. convertToMatrixNum3()
+21. convertToMatrixNum4()
+22. convertToMatrixNum5()
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 3: GESTION DES SÉPARATEURS DANS createMenuItem()
+═══════════════════════════════════════════════════════════════════════════════
+
+Localiser la méthode createMenuItem() dans menu.js (ligne ~200) et MODIFIER pour gérer
+les séparateurs visuels:
+
+createMenuItem(item) {
+  // Gérer les séparateurs
+  if (!item.action && item.text.includes('─')) {
+    const separator = document.createElement("div");
+    separator.className = "accordion-separator";
+    separator.style.cssText = `
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(56, 1, 1, 0.2), transparent);
+      margin: 8px 18px;
+    `;
+    return separator;
+  }
+
+  const menuItem = document.createElement("div");
+  menuItem.className = "accordion-item";
+  menuItem.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px 18px 10px 44px; cursor: pointer; transition: all 0.2s ease; color: #666; font-size: 13px;`;
+  menuItem.innerHTML = `<span>${item.text}</span>${item.shortcut ? `<span style="font-size: 11px; color: #888; background: rgba(56, 1, 1, 0.1); padding: 2px 6px; border-radius: 4px;">${item.shortcut}</span>` : ''}`;
+
+  menuItem.addEventListener("mouseenter", () => { menuItem.style.background = "rgba(56, 1, 1, 0.15)"; menuItem.style.color = "#1A0000"; });
+  menuItem.addEventListener("mouseleave", () => { menuItem.style.background = "transparent"; menuItem.style.color = "#666"; });
+  menuItem.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (item.action) { try { item.action(); } catch (err) { this.showAlert(`❌ Erreur: ${err.message}`); } }
+    this.hideMenu();
+  });
+  return menuItem;
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 4: MISE À JOUR DE LA MÉTHODE applyRiskStyle()
+═══════════════════════════════════════════════════════════════════════════════
+
+La méthode applyRiskStyle() existante doit être compatible avec tous les formats.
+Vérifier qu'elle utilise bien normalizeRiskValue() qui détecte automatiquement le format.
+
+Si nécessaire, mettre à jour pour supporter les nouveaux formats:
+
+applyRiskStyle(cell, riskLevel) {
+  if (!cell) return;
+
+  // Essayer d'abord les couleurs Alpha 3
+  let colors = this.getColorsAlpha3();
+  let normalizedLevel = this.normalizeToAlpha3(riskLevel);
+  
+  // Si pas trouvé, essayer Alpha 5
+  if (!normalizedLevel) {
+    colors = this.getColorsAlpha5();
+    normalizedLevel = this.normalizeToAlpha5(riskLevel);
+  }
+  
+  // Si pas trouvé, essayer Alpha 4
+  if (!normalizedLevel) {
+    colors = this.getColorsAlpha4();
+    normalizedLevel = this.normalizeToAlpha4(riskLevel);
+  }
+  
+  // Si pas trouvé, essayer numérique
+  if (!normalizedLevel) {
+    const numValue = parseFloat(riskLevel);
+    if (!isNaN(numValue)) {
+      if (numValue <= 9) colors = this.getColorsNumeric(9);
+      else if (numValue <= 16) colors = this.getColorsNumeric(16);
+      else if (numValue <= 25) colors = this.getColorsNumeric(25);
+      normalizedLevel = numValue;
+    }
+  }
+
+  if (normalizedLevel && colors[normalizedLevel]) {
+    cell.style.setProperty('background-color', colors[normalizedLevel].bg, 'important');
+    cell.style.setProperty('color', colors[normalizedLevel].text, 'important');
+    cell.style.setProperty('font-weight', '600', 'important');
+    cell.style.setProperty('text-align', 'center', 'important');
+    cell.style.setProperty('padding', '8px 12px', 'important');
+  }
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTAPE 5: VÉRIFICATION ET TESTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Après intégration, tester les fonctionnalités:
+
+1. Créer une table avec colonnes: Probabilité, Impact, Criticité
+2. Remplir avec des valeurs (F/M/E ou Faible/Moyen/Elevé)
+3. Tester chaque conversion de matrice via le menu contextuel
+4. Vérifier que les couleurs s'appliquent correctement
+5. Vérifier que les valeurs sont converties correctement
+
+═══════════════════════════════════════════════════════════════════════════════
+RÉSUMÉ DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Section "Évaluation des risques" mise à jour avec 6 nouvelles options
+✅ 22 nouvelles méthodes ajoutées pour gérer les conversions de matrices
+✅ Support de 6 types de matrices différentes:
+   - Matrice Alphabétique 3 niveaux (F/M/E)
+   - Matrice Alphabétique 5 niveaux (Très faible à Très élevé)
+   - Matrice Alphabétique 4 niveaux (Mineur/Significatif/Majeur/Critique)
+   - Matrice Numérique 3 niveaux (1-3, criticité 1-9)
+   - Matrice Numérique 4 niveaux (1-4, criticité 1-16)
+   - Matrice Numérique 5 niveaux (1-5, criticité 1-25)
+✅ Conversion automatique entre formats
+✅ Application automatique des couleurs selon le niveau de risque
+✅ Séparateurs visuels dans le menu pour meilleure lisibilité
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+📄 public/menu_risk_evaluation_extension.js - Nouvelles méthodes à intégrer
+📄 00_INTEGRATION_EVALUATION_RISQUES_MENU.txt - Ce guide d'intégration
+
+═══════════════════════════════════════════════════════════════════════════════

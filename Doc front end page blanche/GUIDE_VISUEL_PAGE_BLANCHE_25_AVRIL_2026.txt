@@ -1,0 +1,182 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║   🔍 GUIDE VISUEL - DIAGNOSTIC PAGE BLANCHE                                 ║
+║   📅 25 avril 2026                                                          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: REDÉMARRER LE SERVEUR VITE                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   Dans votre terminal:
+   
+   ┌─────────────────────────────────────┐
+   │ $ npm run dev                       │
+   │ > vite                              │
+   │                                     │
+   │ VITE v5.0.0  ready in 500 ms       │
+   │                                     │
+   │ ➜  Local:   http://localhost:5173/ │
+   │ ➜  Network: use --host to expose   │
+   └─────────────────────────────────────┘
+   
+   1. Appuyez sur Ctrl+C pour arrêter
+   2. Tapez: npm run dev
+   3. Attendez le message "Local: http://localhost:5173/"
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: OUVRIR LA CONSOLE DU NAVIGATEUR                                    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   Sur http://localhost:5173/
+   
+   ┌─────────────────────────────────────────────────────────────────┐
+   │ 🌐 http://localhost:5173/                                       │
+   ├─────────────────────────────────────────────────────────────────┤
+   │                                                                 │
+   │  [Page blanche]                                                 │
+   │                                                                 │
+   │                                                                 │
+   └─────────────────────────────────────────────────────────────────┘
+   
+   Appuyez sur F12 pour ouvrir les DevTools:
+   
+   ┌─────────────────────────────────────────────────────────────────┐
+   │ Elements  Console  Sources  Network  Performance  Memory       │
+   ├─────────────────────────────────────────────────────────────────┤
+   │ ⚠️ Failed to load module /src/db/index.ts                      │
+   │ ❌ Uncaught SyntaxError: Unexpected token '<'                  │
+   │ ❌ Uncaught ReferenceError: db is not defined                  │
+   │                                                                 │
+   │ ← COPIEZ TOUS CES MESSAGES!                                    │
+   └─────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: VÉRIFIER L'ONGLET NETWORK                                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   Cliquez sur l'onglet "Network" puis actualisez (F5):
+   
+   ┌─────────────────────────────────────────────────────────────────┐
+   │ Elements  Console  Sources  Network  Performance  Memory       │
+   ├─────────────────────────────────────────────────────────────────┤
+   │ Name                    Status    Type        Size              │
+   │ ─────────────────────────────────────────────────────────────  │
+   │ localhost:5173/         200       document    2.1 KB           │
+   │ @vite/client            200       script      15.2 KB          │
+   │ src/main.tsx            200       script      8.5 KB           │
+   │ src/App.tsx             200       script      12.3 KB          │
+   │ src/db/index.ts         404 ❌    script      -                │
+   │                                                                 │
+   │ ← Notez les fichiers en rouge (404 ou 500)                     │
+   └─────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 4: TESTER AVEC test-app-simple.html                                   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   1. Ouvrez le fichier test-app-simple.html dans votre navigateur
+   2. Cliquez sur "Tester l'import de db"
+   3. Regardez le résultat:
+   
+   ┌─────────────────────────────────────────────────────────────────┐
+   │ Test 1: Import du module db                                    │
+   │ [Tester l'import de db]                                        │
+   │                                                                 │
+   │ ✅ Import réussi!                                              │
+   │ Objet db: object                                               │
+   │ Méthodes disponibles: createChat, getChat, updateChat...      │
+   │                                                                 │
+   │ OU                                                              │
+   │                                                                 │
+   │ ❌ Erreur d'import!                                            │
+   │ Failed to fetch dynamically imported module                   │
+   │                                                                 │
+   │ ← Copiez le résultat!                                          │
+   └─────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ CE QUE JE DOIS VOUS ENVOYER                                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   ✅ 1. Confirmation: "J'ai redémarré le serveur Vite"
+   
+   ✅ 2. Messages de la console (copier-coller):
+      ❌ Failed to load module /src/db/index.ts
+      ❌ Uncaught SyntaxError: ...
+      [etc.]
+   
+   ✅ 3. Fichiers en erreur dans Network:
+      - src/db/index.ts (404)
+      - [autres fichiers]
+   
+   ✅ 4. Résultat de test-app-simple.html:
+      ✅ Import réussi OU ❌ Erreur d'import
+   
+   ✅ 5. Screenshot de la console (optionnel mais utile)
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ POURQUOI C'EST IMPORTANT                                                     │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   Sans ces informations, je ne peux que deviner le problème.
+   
+   Avec ces informations, je peux:
+   ✓ Identifier l'erreur exacte
+   ✓ Voir quel fichier pose problème
+   ✓ Corriger le problème rapidement
+   ✓ Vous faire gagner du temps
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ EXEMPLE DE BONNE RÉPONSE                                                     │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   "J'ai redémarré le serveur Vite et fait un Hard Refresh.
+   
+   Voici les erreurs dans la console:
+   ❌ Failed to load module /src/db/index.ts
+   ❌ Uncaught SyntaxError: Unexpected token '<' at main.tsx:19
+   
+   Dans Network, ces fichiers sont en erreur:
+   - src/db/index.ts (404)
+   
+   Test avec test-app-simple.html:
+   ❌ Erreur d'import: Failed to fetch dynamically imported module"
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ EXEMPLE DE MAUVAISE RÉPONSE                                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+   "Le problème persiste, la page est toujours blanche."
+   
+   ❌ Pas d'information sur le redémarrage du serveur
+   ❌ Pas de messages d'erreur de la console
+   ❌ Pas de vérification du Network
+   ❌ Pas de test avec test-app-simple.html
+   
+   → Je ne peux pas vous aider sans ces informations!
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║   🎯 OBJECTIF: Obtenir les informations nécessaires pour diagnostiquer      ║
+║                                                                              ║
+║   ⏱️  TEMPS ESTIMÉ: 5 minutes                                               ║
+║                                                                              ║
+║   📝 CHECKLIST:                                                             ║
+║      ☐ Redémarrer Vite                                                      ║
+║      ☐ Hard Refresh (Ctrl+Shift+R)                                          ║
+║      ☐ Copier erreurs console                                               ║
+║      ☐ Vérifier Network                                                     ║
+║      ☐ Tester test-app-simple.html                                          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝

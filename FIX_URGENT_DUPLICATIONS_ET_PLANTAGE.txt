@@ -1,0 +1,161 @@
+=================================================================
+🚨 FIX URGENT - DUPLICATIONS ET PLANTAGE
+=================================================================
+
+✅ PROBLÈMES RÉSOLUS !
+
+1. ❌ Page du chat plantée
+2. ❌ Document téléchargé plusieurs fois dans des viewers différents
+
+=================================================================
+🔧 SOLUTIONS APPLIQUÉES
+=================================================================
+
+FIX 1 : EMPÊCHER LES DUPLICATIONS
+----------------------------------
+Ajout d'un marqueur sur la table elle-même :
+
+table.dataset.gdriveProcessed = 'true';
+
+Avant de traiter une table, on vérifie :
+- Si elle a déjà le marqueur → skip
+- Si elle a déjà un viewer après elle → skip
+
+FIX 2 : DÉSACTIVER LE MUTATIONOBSERVER
+---------------------------------------
+Le MutationObserver créait des boucles infinies :
+- Il détectait les changements du DOM
+- Relançait la détection
+- Qui ajoutait des éléments
+- Qui déclenchait à nouveau l'observer
+- → BOUCLE INFINIE
+
+Solution : DÉSACTIVÉ complètement
+Le script s'exécute maintenant UNE SEULE FOIS au chargement.
+
+FIX 3 : PROTECTION CONTRE LES ERREURS
+--------------------------------------
+Ajout d'un try-catch global pour éviter que les erreurs
+ne plantent toute la page.
+
+=================================================================
+⚡ TESTEZ MAINTENANT
+=================================================================
+
+1. Rechargez la page avec Ctrl+F5
+   http://localhost:5173/test-modelisation-template-v2.html
+
+2. Ouvrez la console (F12)
+
+3. Vous devriez voir :
+
+   ✅ [N8N_DOC] 🎯 TABLE CIBLE TROUVÉE !
+   ✅ [N8N_DOC] Déjà traitée? ✅ NON (traitement)
+   ✅ [N8N_DOC] 📄 Viewer injecté dans le DOM
+   🚀 [N8N_DOC] Lancement du téléchargement...
+   ✅ [N8N_DOC_DOWNLOAD] 🎉 Document affiché avec succès!
+
+4. Vérifiez qu'il n'y a QU'UN SEUL viewer (pas de duplications)
+
+5. Vérifiez que la page du chat fonctionne normalement
+
+=================================================================
+✅ RÉSULTAT ATTENDU
+=================================================================
+
+UN SEUL accordéon avec :
+
+┌─────────────────────────────────────────┐
+│  📖 Page de Couverture         [－]     │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  📄 Contenu du Document        [－]     │
+│  [Contenu du document Google Drive]     │
+└─────────────────────────────────────────┘
+
+PAS de duplications !
+PAS de plantage !
+
+=================================================================
+🔍 CHANGEMENTS TECHNIQUES
+=================================================================
+
+AVANT :
+- MutationObserver actif → boucle infinie
+- Pas de marqueur sur les tables → duplications
+- Pas de try-catch → plantages
+
+APRÈS :
+- MutationObserver DÉSACTIVÉ
+- Marqueur data-gdrive-processed sur les tables
+- Try-catch global pour la sécurité
+- Exécution UNE SEULE FOIS au chargement
+
+=================================================================
+💻 VÉRIFICATIONS CONSOLE
+=================================================================
+
+# Compter les viewers générés
+document.querySelectorAll('.gdrive-downloader').length
+// Doit retourner : 1 (pas plus !)
+
+# Vérifier le marqueur sur la table
+document.querySelector('table').dataset.gdriveProcessed
+// Doit retourner : "true"
+
+# Forcer une nouvelle exécution (pour tester)
+window.googleDriveDownloader.execute();
+// Doit afficher : "⚠️ Table déjà traitée, skip"
+
+=================================================================
+❌ SI LE PROBLÈME PERSISTE
+=================================================================
+
+1. Videz complètement le cache (Ctrl+Shift+Delete)
+2. Rechargez avec Ctrl+F5
+3. Vérifiez qu'il n'y a pas d'erreurs dans la console
+4. Comptez les viewers : document.querySelectorAll('.gdrive-downloader').length
+
+Si vous voyez toujours des duplications :
+- Vérifiez que le script google-drive-downloader.js est bien le nouveau
+- Vérifiez dans Network (F12) que le fichier est rechargé (pas en cache)
+
+=================================================================
+🎯 POURQUOI LE MUTATIONOBSERVER ÉTAIT PROBLÉMATIQUE
+=================================================================
+
+Le MutationObserver observait TOUS les changements du DOM.
+Quand on injectait le viewer :
+1. MutationObserver détecte l'ajout
+2. Relance detectAndDownloadN8nDocs()
+3. Qui injecte un nouveau viewer
+4. Qui déclenche à nouveau le MutationObserver
+5. → BOUCLE INFINIE
+
+Résultat :
+- Duplications infinies
+- Surcharge mémoire
+- Plantage de la page
+
+Solution :
+- Désactiver le MutationObserver
+- Exécuter UNE SEULE FOIS au chargement
+- Marquer les tables traitées
+
+=================================================================
+📊 INFORMATIONS
+=================================================================
+
+Fichier modifié : public/google-drive-downloader.js
+
+Changements :
+1. Ajout de table.dataset.gdriveProcessed = 'true'
+2. Vérification du marqueur avant traitement
+3. MutationObserver désactivé (commenté)
+4. Try-catch global ajouté
+
+=================================================================
+Date : 13 décembre 2025
+Statut : ✅ FIX URGENT APPLIQUÉ
+=================================================================

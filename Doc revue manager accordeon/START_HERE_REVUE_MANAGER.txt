@@ -1,0 +1,95 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ START HERE - REVUE MANAGER ACCORDÉON
+  L'essentiel en 2 minutes
+  26 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 QU'EST-CE QUE C'EST ?
+────────────────────────
+
+Un menu accordéon interactif pour gérer la "Revue Manager" (table 10) des
+papiers de travail d'audit, avec sauvegarde automatique des modifications.
+
+✅ CE QUI A ÉTÉ FAIT
+────────────────────
+
+1. Service claraPapierTravailService.ts mis à jour
+   - Persistance via localStorage
+   - Détection automatique du statut
+
+2. Composant RevueManagerAccordion.tsx créé
+   - Interface professionnelle
+   - Ajout/suppression de points
+   - Modifications persistantes
+
+3. Documentation complète
+   - 8 fichiers de documentation
+   - Guides de test
+   - Commandes rapides
+
+📚 LIRE DANS CET ORDRE
+──────────────────────
+
+1. 00_LIRE_EN_PREMIER_REVUE_MANAGER_26_AVRIL_2026.txt (5 min)
+2. 00_INDEX_REVUE_MANAGER_26_AVRIL_2026.md (5 min)
+3. 00_MISSION_ACCOMPLIE_REVUE_MANAGER_26_AVRIL_2026.txt (10 min)
+
+🧪 TEST RAPIDE (30 SECONDES)
+────────────────────────────
+
+Ouvrir la console (F12) et copier-coller :
+
+// Créer des données de test
+const testPoints = [{
+  num: 1,
+  titre: "Point de test",
+  statut: "ok",
+  prep: "Commentaire préparateur",
+  rev: "Commentaire reviewer"
+}];
+
+// Sauvegarder
+localStorage.setItem('clara_revue_manager_TEST-001', JSON.stringify(testPoints));
+
+// Vérifier
+console.log(JSON.parse(localStorage.getItem('clara_revue_manager_TEST-001')));
+
+// Nettoyer
+localStorage.removeItem('clara_revue_manager_TEST-001');
+
+💾 CLÉ LOCALSTORAGE
+───────────────────
+
+clara_revue_manager_${reference}
+
+Exemples :
+- clara_revue_manager_Test-Caisse-001
+- clara_revue_manager_REF-AUDIT-2023
+
+🎨 STATUTS
+──────────
+
+✓ ok   → Validé    (vert)
+⚠ warn → À suivre  (ambre)
+✗ ko   → À ajuster (rouge)
+
+📍 POSITIONNEMENT
+─────────────────
+
+Après le tableau des Légendes (table 9)
+
+🚀 PROCHAINE ÉTAPE
+──────────────────
+
+Intégrer dans le renderer principal
+
+📞 DOCUMENTATION
+────────────────
+
+Complète : Doc papier de travail javascript/INTEGRATION_REVUE_MANAGER_ACCORDEON.md
+Tests    : QUICK_TEST_REVUE_MANAGER_26_AVRIL_2026.txt
+Commandes: COMMANDES_RAPIDES_REVUE_MANAGER_26_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════════
+  👉 LIRE MAINTENANT : 00_LIRE_EN_PREMIER_REVUE_MANAGER_26_AVRIL_2026.txt
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,181 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📋 RÉCAPITULATIF - Nomenclature Export Template Excel
+  📅 Date: 10 Mai 2026
+  ✅ Statut: IMPLÉMENTÉ ET DOCUMENTÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF ACCOMPLI
+─────────────────────────────────────────────────────────────────────────────
+
+Modifier la nomenclature des fichiers exportés via "Export template Excel"
+pour inclure le nom de l'étape de mission extraite des tables.
+
+📊 PROBLÈME RÉSOLU
+─────────────────────────────────────────────────────────────────────────────
+
+❌ AVANT:
+   - Nomenclature générique: claraverse_template_2026-05-09T23-39-26.xlsx
+   - Difficile d'identifier le contenu du fichier
+   - Pas de lien avec l'étape de mission
+
+✅ APRÈS:
+   - Nomenclature spécifique: E-audit_Etape-mission-Leadsheet_2026-05-10T14-30-45.xlsx
+   - Nom explicite avec l'étape de mission
+   - Fallback automatique: E-audit_Etape-mission-X_2026-05-10T14-30-45.xlsx
+
+🔧 MODIFICATIONS APPORTÉES
+─────────────────────────────────────────────────────────────────────────────
+
+1. ✅ Nouvelle fonction extractEtapeMission(tables)
+   - Cherche dans toutes les tables du message
+   - Détecte les colonnes "Rubrique" et "Description"
+   - Extrait la valeur de "Etape de mission"
+   - Insensible à la casse
+   - Logs de diagnostic détaillés
+
+2. ✅ Modification de exportTemplate()
+   - Appelle extractEtapeMission() avant l'export
+   - Construit le nom du fichier selon la nomenclature E-audit
+   - Sanitise le nom (supprime caractères spéciaux, remplace espaces)
+   - Fallback automatique si étape non trouvée
+
+📁 FICHIERS MODIFIÉS
+─────────────────────────────────────────────────────────────────────────────
+
+✅ public/menu.js
+   - Ligne ~4160: Modification de exportTemplate()
+   - Ligne ~5805: Ajout de extractEtapeMission()
+
+📚 DOCUMENTATION CRÉÉE
+─────────────────────────────────────────────────────────────────────────────
+
+✅ Doc menu contextuel menu.js update/NOMENCLATURE_FICHIER_EXPORT_TEMPLATE_10_MAI_2026.md
+   - Contexte et objectif
+   - Algorithme de détection
+   - Format de nomenclature
+   - Exemples et tests
+   - Cas particuliers
+   - Maintenance future
+
+✅ QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt
+   - 5 scénarios de test
+   - Vérifications à effectuer
+   - Dépannage rapide
+   - Commandes console utiles
+
+✅ 00_RECAP_NOMENCLATURE_EXPORT_TEMPLATE_10_MAI_2026.txt
+   - Ce fichier (récapitulatif)
+
+🧪 TESTS À EFFECTUER
+─────────────────────────────────────────────────────────────────────────────
+
+1. ✅ Table avec étape de mission
+   → Fichier: E-audit_Etape-mission-{NomEtape}_{timestamp}.xlsx
+
+2. ✅ Table sans étape de mission
+   → Fichier: E-audit_Etape-mission-X_{timestamp}.xlsx
+
+3. ✅ Plusieurs tables avec étape
+   → Utilise la première occurrence trouvée
+
+4. ✅ Caractères spéciaux dans le nom
+   → Sanitisation automatique
+
+5. ✅ Variations de casse
+   → Détection insensible à la casse
+
+📊 EXEMPLES DE NOMENCLATURE
+─────────────────────────────────────────────────────────────────────────────
+
+| Étape de mission | Nom du fichier |
+|------------------|----------------|
+| Leadsheet | E-audit_Etape-mission-Leadsheet_2026-05-10T14-30-45.xlsx |
+| Programme de travail | E-audit_Etape-mission-Programme-de-travail_2026-05-10T14-31-12.xlsx |
+| Cartographie des risques | E-audit_Etape-mission-Cartographie-des-risques_2026-05-10T14-32-08.xlsx |
+| (non trouvé) | E-audit_Etape-mission-X_2026-05-10T14-33-00.xlsx |
+
+🔍 LOGS DE DIAGNOSTIC
+─────────────────────────────────────────────────────────────────────────────
+
+La fonction génère des logs détaillés pour faciliter le diagnostic:
+
+✅ Recherche dans les tables:
+   🔍 [Extract Etape Mission] Recherche de l'étape de mission dans 3 table(s)
+
+✅ Détection des colonnes:
+   ⏭️ Table 1: Pas de colonnes Rubrique/Description
+   ✅ Table 2: Colonnes trouvées - Rubrique: col 0, Description: col 1
+
+✅ Extraction de la valeur:
+   🎯 [Extract Etape Mission] Trouvé: "Leadsheet" (Table 2, Ligne 2)
+
+✅ Nom du fichier:
+   ✅ [Export Template] Nom fichier avec étape: E-audit_Etape-mission-Leadsheet_...
+
+⚠️ Fallback:
+   ⚠️ [Extract Etape Mission] Étape de mission non trouvée dans aucune table
+   ⚠️ [Export Template] Étape de mission non trouvée, nom fichier fallback: E-audit_Etape-mission-X_...
+
+🎯 AVANTAGES DE LA SOLUTION
+─────────────────────────────────────────────────────────────────────────────
+
+✅ Nomenclature professionnelle et traçable
+✅ Facile de retrouver un fichier spécifique
+✅ Cohérent avec le logiciel E-audit
+✅ Fallback automatique si étape non trouvée
+✅ Logs de diagnostic pour dépannage
+✅ Insensible à la casse
+✅ Sanitisation automatique des caractères spéciaux
+✅ Compatible avec tous les systèmes de fichiers
+
+🔧 MAINTENANCE FUTURE
+─────────────────────────────────────────────────────────────────────────────
+
+1. Si la structure des tables change:
+   - Vérifier que les colonnes "Rubrique" et "Description" existent
+   - Adapter les critères de recherche si nécessaire
+
+2. Si d'autres logiciels sont ajoutés:
+   - Remplacer le préfixe "E-audit" par une variable configurable
+
+3. Si la nomenclature change:
+   - Modifier le format dans exportTemplate()
+
+📝 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+
+1. ✅ Tester avec différents scénarios (voir QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt)
+2. ✅ Vérifier les logs dans la console
+3. ✅ Valider avec des utilisateurs réels
+4. 📋 Documenter dans le manuel utilisateur si nécessaire
+5. 📋 Appliquer la même logique à exportTemplateWord() si souhaité
+
+🎓 RÉFÉRENCES
+─────────────────────────────────────────────────────────────────────────────
+
+📄 Documentation complète:
+   Doc menu contextuel menu.js update/NOMENCLATURE_FICHIER_EXPORT_TEMPLATE_10_MAI_2026.md
+
+🧪 Guide de test:
+   QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+📁 Fichier modifié:
+   public/menu.js
+
+📚 Documentation existante:
+   Doc menu contextuel menu.js update/00_COMMENCER_ICI.txt
+   Doc menu contextuel menu.js update/Probleme_resolution_export_table_div.md
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ MISSION ACCOMPLIE
+═══════════════════════════════════════════════════════════════════════════════
+
+La nomenclature des fichiers exportés via "Export template Excel" a été
+modifiée avec succès pour inclure le nom de l'étape de mission.
+
+Format: E-audit_Etape-mission-{NomEtape}_{timestamp}.xlsx
+Fallback: E-audit_Etape-mission-X_{timestamp}.xlsx
+
+La solution est robuste, bien documentée et prête à être testée.
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,92 @@
+=================================================================
+  🧹 NETTOYAGE - FIX BOUTON "NOUVELLE CONVERSATION"
+=================================================================
+
+📋 SITUATION
+-----------------------------------------------------------------
+Le fix pour le bouton "Nouvelle conversation" a été annulé car
+il causait un problème de layout (chats hors de la zone habituelle).
+
+Le bouton fonctionne maintenant sans le fix, donc les fichiers
+créés pour ce fix ne sont plus nécessaires.
+
+
+🗑️ FICHIERS À SUPPRIMER (OPTIONNEL)
+-----------------------------------------------------------------
+Ces fichiers peuvent être supprimés car ils ne sont plus utilisés:
+
+Documentation:
+- FIX_BOUTON_NOUVELLE_CONVERSATION.md
+- TESTEZ_BOUTON_NOUVELLE_CONVERSATION.md
+- RESUME_FIX_BOUTON_NOUVELLE_CONVERSATION.md
+- COMMANDES_TEST_BOUTON_NOUVELLE_CONVERSATION.txt
+- INDEX_FIX_BOUTON_NOUVELLE_CONVERSATION.md
+- SOLUTION_VISUELLE_BOUTON_NOUVELLE_CONVERSATION.md
+- LISEZ_MOI_EN_PREMIER_BOUTON_NOUVELLE_CONVERSATION.txt
+- COMMIT_MESSAGE_FIX_BOUTON_NOUVELLE_CONVERSATION.txt
+- GITHUB_DESKTOP_FIX_BOUTON_NOUVELLE_CONVERSATION.txt
+
+Code:
+- public/fix-new-chat-button.js
+- public/test-new-chat-button.html
+
+
+✅ FICHIERS À GARDER
+-----------------------------------------------------------------
+Ces fichiers sont toujours utiles:
+
+- public/design_chat.js (modifié avec exception pour "New Chat")
+- index.html (script fix-new-chat-button.js retiré)
+
+
+🔧 MODIFICATIONS CONSERVÉES
+-----------------------------------------------------------------
+Dans public/design_chat.js, l'exception pour le bouton "New Chat"
+est conservée (lignes 24-27):
+
+```javascript
+// Ne jamais masquer le bouton "New Chat"
+if (text.includes('new chat') || text.includes('nouvelle conversation')) {
+    console.log('🔓 [MASQUAGE] Bouton "New Chat" préservé');
+    return;
+}
+```
+
+Cette modification est bénéfique et ne cause pas de problème.
+
+
+📦 COMMANDES DE NETTOYAGE (OPTIONNEL)
+-----------------------------------------------------------------
+Pour supprimer les fichiers inutiles:
+
+# Windows PowerShell
+Remove-Item FIX_BOUTON_NOUVELLE_CONVERSATION.md
+Remove-Item TESTEZ_BOUTON_NOUVELLE_CONVERSATION.md
+Remove-Item RESUME_FIX_BOUTON_NOUVELLE_CONVERSATION.md
+Remove-Item COMMANDES_TEST_BOUTON_NOUVELLE_CONVERSATION.txt
+Remove-Item INDEX_FIX_BOUTON_NOUVELLE_CONVERSATION.md
+Remove-Item SOLUTION_VISUELLE_BOUTON_NOUVELLE_CONVERSATION.md
+Remove-Item LISEZ_MOI_EN_PREMIER_BOUTON_NOUVELLE_CONVERSATION.txt
+Remove-Item COMMIT_MESSAGE_FIX_BOUTON_NOUVELLE_CONVERSATION.txt
+Remove-Item GITHUB_DESKTOP_FIX_BOUTON_NOUVELLE_CONVERSATION.txt
+Remove-Item public/fix-new-chat-button.js
+Remove-Item public/test-new-chat-button.html
+
+
+🎯 PROCHAINES ÉTAPES
+-----------------------------------------------------------------
+1. Utiliser le diagnostic layout pour identifier le vrai problème
+2. Voir: ACTION_IMMEDIATE_DIAGNOSTIC_LAYOUT.txt
+3. Voir: DIAGNOSTIC_LAYOUT_CHAT_GUIDE.md
+
+
+📝 NOTE
+-----------------------------------------------------------------
+Le nettoyage est OPTIONNEL. Ces fichiers peuvent être conservés
+pour référence historique ou supprimés pour garder le projet propre.
+
+
+=================================================================
+Le bouton "Nouvelle conversation" fonctionne maintenant.
+Utilisez le diagnostic layout pour résoudre le problème de positionnement.
+=================================================================

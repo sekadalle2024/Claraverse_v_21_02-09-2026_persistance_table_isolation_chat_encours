@@ -1,0 +1,163 @@
+═══════════════════════════════════════════════════════════════
+  SOLUTIONS DE DÉPLOIEMENT SANS CARTE DE CRÉDIT
+  16 Avril 2026
+═══════════════════════════════════════════════════════════════
+
+PROBLÈME IDENTIFIÉ:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Railway refuse les cartes prépayées pour les abonnements.
+Message: "Prepaid cards can't be used for subscriptions"
+
+SOLUTIONS ALTERNATIVES (PAR ORDRE DE RECOMMANDATION):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────┐
+│ SOLUTION 1: RENDER.COM (RECOMMANDÉ) ✅                      │
+└─────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+  • Plan gratuit VRAIMENT gratuit (pas de carte requise)
+  • 750 heures/mois gratuites
+  • Déploiement automatique depuis GitHub
+  • Support Docker natif
+  • Pas de cold start si utilisé régulièrement
+  • Interface simple et claire
+
+❌ LIMITATIONS:
+  • Service s'endort après 15 min d'inactivité (cold start ~30s)
+  • 512 MB RAM sur le plan gratuit
+  • Bande passante limitée à 100 GB/mois
+
+📋 ÉTAPES:
+  1. Créer un compte sur https://render.com
+  2. Connecter votre compte GitHub
+  3. Créer un "New Web Service"
+  4. Sélectionner le repo: Back-end-python-V0_03_03_2026
+  5. Render détecte automatiquement le Dockerfile
+  6. Déployer (gratuit, aucune carte requise)
+
+💰 COÛT: 0€ (vraiment gratuit)
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ SOLUTION 2: FLY.IO ✅                                        │
+└─────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+  • Plan gratuit généreux
+  • 3 machines partagées gratuites
+  • 160 GB de bande passante/mois
+  • Pas de cold start
+  • Excellente performance
+  • Support Docker natif
+
+❌ LIMITATIONS:
+  • Nécessite une carte (mais pas facturée si sous les limites)
+  • Interface CLI un peu complexe
+
+📋 ÉTAPES:
+  1. Installer Fly CLI: https://fly.io/docs/hands-on/install-flyctl/
+  2. Se connecter: fly auth login
+  3. Dans py_backend: fly launch
+  4. Suivre les instructions
+
+💰 COÛT: 0€ si sous les limites gratuites
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ SOLUTION 3: VERCEL (AVEC ADAPTATIONS) ⚠️                    │
+└─────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+  • Totalement gratuit
+  • Pas de carte requise
+  • Déploiement ultra-rapide
+  • Excellent pour les APIs
+
+❌ LIMITATIONS:
+  • Nécessite d'adapter le code pour les serverless functions
+  • Timeout de 10 secondes sur le plan gratuit
+  • Pas idéal pour FastAPI complet
+
+📋 ÉTAPES:
+  Nécessite une refonte en serverless functions
+  (Non recommandé pour votre cas)
+
+💰 COÛT: 0€
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ SOLUTION 4: PYTHONANYWHERE 🐍                                │
+└─────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+  • Spécialisé Python
+  • Plan gratuit sans carte
+  • Facile à configurer
+  • Pas de cold start
+
+❌ LIMITATIONS:
+  • Interface un peu datée
+  • Limitations réseau strictes
+  • Pas de support Docker
+  • Configuration manuelle requise
+
+📋 ÉTAPES:
+  1. Créer un compte sur https://www.pythonanywhere.com
+  2. Créer une Web App
+  3. Configurer manuellement FastAPI
+  4. Uploader les fichiers
+
+💰 COÛT: 0€
+
+
+┌─────────────────────────────────────────────────────────────┐
+│ SOLUTION 5: DETA SPACE (NOUVEAU) 🚀                          │
+└─────────────────────────────────────────────────────────────┘
+
+✅ AVANTAGES:
+  • Totalement gratuit
+  • Pas de carte requise
+  • Support Python natif
+  • Pas de cold start
+  • Très simple
+
+❌ LIMITATIONS:
+  • Plateforme récente (moins mature)
+  • Documentation limitée
+  • Communauté plus petite
+
+📋 ÉTAPES:
+  1. Créer un compte sur https://deta.space
+  2. Installer Deta CLI
+  3. Déployer avec: deta deploy
+
+💰 COÛT: 0€
+
+
+═══════════════════════════════════════════════════════════════
+  RECOMMANDATION FINALE
+═══════════════════════════════════════════════════════════════
+
+🏆 MEILLEUR CHOIX: RENDER.COM
+
+POURQUOI?
+  ✅ Vraiment gratuit (pas de carte)
+  ✅ Support Docker natif (votre Dockerfile fonctionne tel quel)
+  ✅ Déploiement automatique depuis GitHub
+  ✅ Interface simple
+  ✅ Fiable et mature
+  ⚠️  Seul inconvénient: cold start après 15 min d'inactivité
+
+ALTERNATIVE SI VOUS AVEZ UNE CARTE:
+  🥈 FLY.IO (meilleure performance, pas de cold start)
+
+
+═══════════════════════════════════════════════════════════════
+  PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════
+
+Je vais créer un guide de déploiement pour Render.com.
+Voulez-vous que je procède?
+
+Répondez simplement: "oui" ou "render" pour continuer.

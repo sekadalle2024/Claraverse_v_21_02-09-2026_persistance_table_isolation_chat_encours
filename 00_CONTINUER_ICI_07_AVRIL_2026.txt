@@ -1,0 +1,87 @@
+================================================================================
+🚀 CONTINUER ICI - 07 AVRIL 2026
+================================================================================
+
+SITUATION:
+----------
+✅ Backend redémarré et accessible (http://localhost:5000)
+✅ Corrections appliquées (cache global implémenté)
+❌ Erreur "failed to fetch" persiste
+⏳ Besoin de collecter les logs d'erreur
+
+================================================================================
+🎯 ACTION IMMÉDIATE - 3 ÉTAPES SIMPLES
+================================================================================
+
+ÉTAPE 1: OUVRIR UNE NOUVELLE FENÊTRE POWERSHELL
+------------------------------------------------
+Ouvrir une DEUXIÈME fenêtre PowerShell (en plus de celle du backend)
+
+ÉTAPE 2: VOIR LES LOGS DU BACKEND
+----------------------------------
+Dans la nouvelle fenêtre, exécuter:
+
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep | Select-Object -Last 100
+
+ÉTAPE 3: IMPORTER LA BALANCE ET OBSERVER
+-----------------------------------------
+1. Dans le navigateur (http://localhost:5173):
+   - Aller dans "États Financiers"
+   - Importer: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   
+2. IMMÉDIATEMENT après l'import, dans la fenêtre PowerShell:
+   - Exécuter à nouveau la commande de l'ÉTAPE 2
+   - Copier TOUT le message d'erreur qui apparaît
+
+================================================================================
+🔍 CE QU'ON CHERCHE
+================================================================================
+
+✅ SI SUCCÈS (ce qu'on veut voir):
+```
+📊 Stockage des balances dans le cache global pour l'export...
+✅ Balances stockées dans le cache: N=XXX lignes
+```
+
+❌ SI ERREUR (ce qu'on cherche):
+```
+ERROR: ...
+Exception: ...
+Traceback (most recent call last):
+  File "...", line XXX, in ...
+    ...
+TypeError: ... (ou autre type d'erreur)
+```
+
+================================================================================
+📞 INFORMATIONS À FOURNIR
+================================================================================
+
+Une fois l'erreur collectée, fournir:
+
+1. Le message d'erreur Python COMPLET (avec Traceback)
+2. La ligne exacte qui cause l'erreur
+3. Le message d'erreur dans le navigateur
+
+================================================================================
+🚀 ALTERNATIVE: SCRIPT AUTOMATIQUE
+================================================================================
+
+Si vous préférez un script automatique:
+
+.\test-import-balance-simple.ps1
+
+Ce script affiche les logs avant/après l'import automatiquement.
+
+================================================================================
+📚 FICHIERS DE RÉFÉRENCE
+================================================================================
+
+- ACTION_IMMEDIATE_DIAGNOSTIC.txt (guide ultra-rapide)
+- 00_SITUATION_ACTUELLE_FINALE_06_AVRIL_2026.txt (détails complets)
+- 00_ETAPE_SUIVANTE_DIAGNOSTIC_06_AVRIL_2026.txt (méthodes alternatives)
+
+================================================================================
+FIN - PRÊT POUR LE DIAGNOSTIC
+================================================================================

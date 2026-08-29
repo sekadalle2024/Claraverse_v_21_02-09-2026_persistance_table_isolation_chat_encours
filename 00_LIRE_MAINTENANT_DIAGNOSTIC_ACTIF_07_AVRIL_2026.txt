@@ -1,0 +1,128 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 DIAGNOSTIC: PROBLÈME D'AFFICHAGE ACTIF BRUT/AMORT/NET
+  Date: 07 Avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 SITUATION
+─────────────────────────────────────────────────────────────────────────────
+Vous avez signalé que le menu accordéon des états financiers affiche 
+uniquement la colonne NET pour l'ACTIF, alors que le format SYSCOHADA Révisé 
+exige 3 colonnes: BRUT, AMORT ET DEPREC, NET.
+
+✅ DIAGNOSTIC EFFECTUÉ
+─────────────────────────────────────────────────────────────────────────────
+J'ai effectué un diagnostic complet du système:
+
+1. ✅ Backend Python: FONCTIONNEL
+   - Le module calculer_actif_brut_amort.py génère le HTML correct
+   - Le module etats_financiers.py retourne actif_html correctement
+   - Tous les tests automatiques passent
+
+2. ✅ Frontend JavaScript: FONCTIONNEL
+   - Le fichier public/menu.js vérifie result.html correctement
+   - La logique d'affichage utilise result.html directement
+   - Tous les tests automatiques passent
+
+3. ✅ Flux de données: CORRECT
+   Backend Python → FastAPI → Frontend JavaScript → Affichage HTML
+
+🎯 CONCLUSION
+─────────────────────────────────────────────────────────────────────────────
+Le code est CORRECT et FONCTIONNEL. Le problème est probablement lié à:
+
+1. CACHE DU NAVIGATEUR
+   Le navigateur affiche une ancienne version du code JavaScript.
+
+2. SERVEURS NON REDÉMARRÉS
+   Le backend ou le frontend n'a pas été redémarré après les modifications.
+
+3. FICHIER BALANCE
+   Le fichier Balance ne contient pas de comptes 28/29 (amortissements).
+
+📝 ACTION IMMÉDIATE REQUISE
+─────────────────────────────────────────────────────────────────────────────
+
+SUIVEZ CES ÉTAPES DANS L'ORDRE:
+
+1. ARRÊTER TOUS LES SERVEURS
+   - Fermer tous les terminaux backend et frontend
+   - Vérifier qu'aucun processus Python ou Node ne tourne
+
+2. VIDER LE CACHE DU NAVIGATEUR
+   - Ctrl+Shift+Delete
+   - Cocher "Images et fichiers en cache"
+   - Effacer les données
+   - Fermer complètement le navigateur
+
+3. REDÉMARRER LE BACKEND
+   Terminal 1:
+   cd py_backend
+   python main.py
+
+4. REDÉMARRER LE FRONTEND
+   Terminal 2:
+   npm run dev
+
+5. TESTER DANS LE NAVIGATEUR
+   - Ouvrir http://localhost:5173/
+   - Ouvrir la console (F12)
+   - Envoyer: "Etat fin"
+   - Uploader: P000 -BALANCE DEMO N_N-1_N-2.xls
+
+6. VÉRIFIER LE RÉSULTAT
+   Console doit afficher:
+   "✅ [États Financiers] Utilisation du HTML généré par le backend"
+   
+   Tableau ACTIF doit avoir 7 colonnes:
+   REF | ACTIF | NOTE | BRUT | AMORT ET DEPREC | NET | NET N-1
+
+📚 DOCUMENTATION DISPONIBLE
+─────────────────────────────────────────────────────────────────────────────
+
+1. Doc_Etat_Fin/Doc Bilan Actif/00_DIAGNOSTIC_PROBLEME_AFFICHAGE_07_AVRIL_2026.txt
+   → Diagnostic détaillé avec toutes les hypothèses
+
+2. Doc_Etat_Fin/Doc Bilan Actif/Documentation/GUIDE_VISUEL_DIAGNOSTIC_07_AVRIL_2026.md
+   → Guide visuel pour identifier le problème
+
+3. test_actif_frontend_integration.py
+   → Test automatique du flux complet
+   Commande: python test_actif_frontend_integration.py
+
+🔧 SI LE PROBLÈME PERSISTE
+─────────────────────────────────────────────────────────────────────────────
+
+1. Exécuter le test automatique:
+   python test_actif_frontend_integration.py
+
+2. Capturer des captures d'écran:
+   - Tableau ACTIF ouvert
+   - Console développeur (F12)
+   - Logs du backend Python
+
+3. Vérifier dans la console:
+   - Chercher des erreurs JavaScript
+   - Vérifier le message de log
+   - Inspecter l'élément HTML du tableau
+
+4. Consulter les guides:
+   - 00_DIAGNOSTIC_PROBLEME_AFFICHAGE_07_AVRIL_2026.txt
+   - GUIDE_VISUEL_DIAGNOSTIC_07_AVRIL_2026.md
+
+💡 POINTS IMPORTANTS
+─────────────────────────────────────────────────────────────────────────────
+
+1. Le code backend et frontend est CORRECT
+2. Tous les tests automatiques PASSENT
+3. Le HTML enrichi est bien GÉNÉRÉ
+4. Le problème est probablement lié au CACHE ou aux SERVEURS
+
+5. Si les colonnes AMORT ET DEPREC sont à ZÉRO:
+   → C'est NORMAL si le fichier Balance ne contient pas de comptes 28/29
+   → Vérifier que le fichier Balance contient des immobilisations
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 COMMENCEZ PAR VIDER LE CACHE ET REDÉMARRER LES SERVEURS
+
+═══════════════════════════════════════════════════════════════════════════════

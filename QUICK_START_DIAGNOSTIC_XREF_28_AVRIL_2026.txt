@@ -1,0 +1,104 @@
+═══════════════════════════════════════════════════════════════════════════════
+  QUICK START - DIAGNOSTIC DÉTECTION TABLE X-REF
+  Date: 28 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 ÉTAPE 1: LANCER LE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Copier-coller cette commande dans PowerShell:
+
+    .\test-detection-xref.ps1
+
+
+📊 ÉTAPE 2: ANALYSER LES RÉSULTATS
+═══════════════════════════════════════════════════════════════════════════════
+
+Le test affiche automatiquement:
+
+✅ Structure de la table
+   - Nombre de lignes
+   - Présence de <thead> et <tbody>
+
+✅ En-têtes trouvés
+   - Liste des colonnes
+   - Versions en minuscules
+
+✅ Détection des colonnes
+   - "Cross references" détectée: Oui/Non
+   - "Document" détectée: Oui/Non
+
+
+🔍 ÉTAPE 3: COMPARER AVEC CLARAVERSE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir Claraverse dans le navigateur
+2. Afficher la table X-Ref documentaire
+3. Appuyer sur F12 (ouvrir la console)
+4. Onglet "Elements" ou "Inspecteur"
+5. Cliquer sur l'icône de sélection (flèche en haut à gauche)
+6. Cliquer sur la table X-Ref
+7. Copier le HTML de la table
+
+
+📋 ÉTAPE 4: IDENTIFIER LA DIFFÉRENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+Comparer:
+
+TEST (fonctionne)          vs          CLARAVERSE (ne fonctionne pas)
+─────────────────────────────────────────────────────────────────────────────
+<thead>                                <thead> ou pas de <thead> ?
+  <tr>                                   <tr>
+    <th>Cross references</th>              <th>??? </th>
+    <th>Document</th>                      <th>??? </th>
+  </tr>                                  </tr>
+</thead>                               </thead>
+
+
+💡 SOLUTIONS SELON LE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME 1: Pas de <thead>
+---------------------------
+→ La table dans Claraverse n'a pas de <thead>
+→ Les en-têtes sont dans le <tbody>
+→ SOLUTION: Modifier le code pour chercher aussi dans tbody
+
+PROBLÈME 2: Nom de colonne différent
+-------------------------------------
+→ "Cross reference" au lieu de "Cross references"
+→ "Xref" au lieu de "X-Ref"
+→ SOLUTION: Ajouter les variantes dans le code
+
+PROBLÈME 3: Mauvaise table sélectionnée
+----------------------------------------
+→ Plusieurs tables dans la page
+→ La table X-Ref n'est pas celle qui est active
+→ SOLUTION: Améliorer la sélection de table
+
+
+🎯 ACTIONS IMMÉDIATES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Exécuter: .\test-detection-xref.ps1
+
+2. 📸 Faire une capture d'écran de:
+   - Les résultats du test
+   - La table X-Ref dans Claraverse
+   - L'erreur affichée
+
+3. 🔍 Copier le HTML de la table dans Claraverse:
+   - F12 → Elements → Clic droit sur <table> → Copy → Copy outerHTML
+
+4. 📋 Me fournir ces informations pour que je corrige le code
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDE RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+    .\test-detection-xref.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════

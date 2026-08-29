@@ -1,0 +1,102 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║                    ⚡ QUICK START - SAUVEGARDE V5                        ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+🎯 OBJECTIF
+───────────
+Sauvegarder ClaraVerse vers:
+https://github.com/sekadalle2024/Claraverse_windows_s_11_v0_21-03-2026_V5-Public-Public-Public
+
+
+⚡ MÉTHODE 1: AUTOMATIQUE (30 secondes)
+────────────────────────────────────────
+
+1. Ouvrir PowerShell dans le dossier du projet
+
+2. Exécuter:
+   .\push-to-github-v5.ps1
+
+3. Attendre la fin
+
+4. Vérifier sur GitHub ✅
+
+
+📝 MÉTHODE 2: MANUELLE (2 minutes)
+──────────────────────────────────
+
+git add .
+git commit -m "Sauvegarde ClaraVerse V5 - 21-03-2026"
+git remote set-url origin https://github.com/sekadalle2024/Claraverse_windows_s_11_v0_21-03-2026_V5-Public-Public-Public.git
+git push -u origin main
+
+⚠️ Remplacez "main" par "master" si nécessaire
+
+
+🔍 MÉTHODE 3: AVEC VÉRIFICATION (3 minutes)
+────────────────────────────────────────────
+
+1. Vérifier d'abord:
+   .\verifier-avant-sauvegarde.ps1
+
+2. Tester la connexion:
+   .\test-connexion-github.ps1
+
+3. Sauvegarder:
+   .\push-to-github-v5.ps1
+
+
+❌ EN CAS DE PROBLÈME
+─────────────────────
+
+Problème                          → Solution
+─────────────────────────────────────────────────────────────────────
+Script ne s'exécute pas           → Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+Authentication failed             → Utilisez un Personal Access Token
+Repository not found              → Vérifiez l'URL et vos droits
+Updates rejected                  → git pull origin main --rebase
+Branche incorrecte                → git branch (vérifiez le nom)
+
+
+📚 DOCUMENTATION COMPLÈTE
+─────────────────────────
+
+Fichier                                  → Contenu
+─────────────────────────────────────────────────────────────────────
+00_COMMENCER_ICI_SAUVEGARDE_V5.txt      → Instructions détaillées
+GUIDE_SAUVEGARDE_GITHUB_V5.md           → Guide complet
+TROUBLESHOOTING_AVANCE_V5.md            → Résolution de problèmes
+COMMANDES_SAUVEGARDE_V5.txt             → Référence des commandes
+
+
+🔄 SAUVEGARDES FUTURES
+──────────────────────
+
+Après la première sauvegarde, utilisez simplement:
+
+git add .
+git commit -m "Description"
+git push
+
+
+✅ VÉRIFICATION
+───────────────
+
+Après sauvegarde, visitez:
+https://github.com/sekadalle2024/Claraverse_windows_s_11_v0_21-03-2026_V5-Public-Public-Public
+
+Vérifiez que vos fichiers sont présents.
+
+
+💡 ASTUCE
+─────────
+
+Pour voir l'état à tout moment:
+git status
+
+
+╔═══════════════════════════════════════════════════════════════════════════╗
+║  PRÊT À COMMENCER ? → .\push-to-github-v5.ps1                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝

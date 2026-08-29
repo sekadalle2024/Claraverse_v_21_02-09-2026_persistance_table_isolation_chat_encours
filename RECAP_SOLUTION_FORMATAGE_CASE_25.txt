@@ -1,0 +1,155 @@
+═══════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION IMPLÉMENTÉE - FORMATAGE TABLES 2-6 CASE 25
+  Date: 29 Mars 2026 - 21h30
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME RÉSOLU
+───────────────────────────────────────────────────────────────────────────
+Les tables 2-6 s'affichaient mais les en-têtes n'étaient PAS en gras:
+- "Intitule", "Observation", "Constat", etc. en texte normal
+- Pas de distinction visuelle
+
+SOLUTION APPLIQUÉE
+───────────────────────────────────────────────────────────────────────────
+Utiliser un TABLEAU MARKDOWN 1 COLONNE avec des TIRETS SIMPLES pour le séparateur.
+
+Cette approche garantit:
+✅ En-têtes en gras (Markdown `**...**`)
+✅ Séparateur correct (tirets simples `-` au lieu de `─`)
+✅ Cohérence visuelle avec la table 1
+✅ Compatible avec ReactMarkdown
+✅ Pas besoin de modifier le workflow n8n
+
+CORRECTION CRITIQUE
+───────────────────────────────────────────────────────────────────────────
+Le premier essai utilisait des caractères Unicode `─` pour le séparateur,
+ce qui cassait la structure du tableau. Corrigé en utilisant des tirets
+simples `-` comme requis par la spécification Markdown.
+
+FICHIER MODIFIÉ
+───────────────────────────────────────────────────────────────────────────
+src/services/claraApiService.ts
+→ Fonction convertHeaderTableToMarkdown() (ligne ~650)
+
+CHANGEMENT EFFECTUÉ
+───────────────────────────────────────────────────────────────────────────
+
+AVANT (HTML avec styles inline):
+```typescript
+let md = `\n<h3 style="font-weight: bold;">Intitule</h3>\n\n`;
+md += `${cellValue}\n\n`;
+```
+
+APRÈS (Tableau Markdown 1 colonne):
+```typescript
+let md = `\n| **${headerText}** |\n`;
+md += `|${'-'.repeat(headerText.length + 6)}|\n`;  // ✅ Tirets simples
+md += `| ${cellValue.replace(/\n\n/g, '<br><br>')} |\n\n`;
+```
+
+IMPORTANT: Utiliser des TIRETS SIMPLES `-` pour le séparateur, pas des
+caractères Unicode `─` qui cassent la structure du tableau Markdown.
+
+RÉSULTAT VISUEL
+───────────────────────────────────────────────────────────────────────────
+
+Table 2 (AVANT):
+Intitule  ← Texte normal
+Absence de contrôles inopinés...
+
+Table 2 (APRÈS):
+┌──────────────────────────────────────────────────────────┐
+│ Intitule (EN GRAS)                                       │
+├──────────────────────────────────────────────────────────┤
+│ Absence de contrôles inopinés et dépassement récurrent  │
+└──────────────────────────────────────────────────────────┘
+
+TESTS À EFFECTUER
+───────────────────────────────────────────────────────────────────────────
+
+OPTION 1: TEST AUTOMATIQUE (RECOMMANDÉ)
+───────────────────────────────────────────────────────────────────────────
+.\test-formatage-tables-case25.ps1
+
+OPTION 2: TEST MANUEL
+───────────────────────────────────────────────────────────────────────────
+1. Redémarrer le serveur:
+   .\stop-claraverse.ps1
+   .\start-claraverse.ps1
+
+2. Ouvrir le frontend:
+   http://localhost:5173
+
+3. Envoyer le message:
+   [Command] : Recos contrôle interne comptable
+   [Cycle] : trésorerie
+   [test] : AA010
+   [Anomalie] = Absence de contrôles inopinés de la caisse
+
+4. Vérifier l'affichage:
+   ✅ Table 1: Format 2 colonnes (inchangé)
+   ✅ Table 2: "Intitule" EN GRAS
+   ✅ Table 3: "Observation" EN GRAS
+   ✅ Table 4: "Constat" EN GRAS
+   ✅ Table 5: "Risque" EN GRAS
+   ✅ Table 6: "Recommendation" EN GRAS
+
+5. Vérifier les logs (F12):
+   ✅ Table 1 générée (XXX caractères)
+   ✅ Table 2 générée (Tableau Markdown)
+   ✅ Table 3 générée (Tableau Markdown)
+   ✅ Table 4 générée (Tableau Markdown)
+   ✅ Table 5 générée (Tableau Markdown)
+   ✅ Table 6 générée (Tableau Markdown)
+
+DOCUMENTATION COMPLÈTE
+───────────────────────────────────────────────────────────────────────────
+Doc prompt issues/00_INDEX_CASE_25_COMPLET.md
+→ Index complet de toute la documentation Case 25
+
+Doc prompt issues/00_SOLUTION_FINALE_FORMATAGE_TABLES_29_MARS_2026.txt
+→ Solution détaillée avec explications complètes
+
+Doc prompt issues/COMPARAISON_AVANT_APRES_FORMATAGE.md
+→ Comparaison visuelle avant/après
+
+STATUT
+───────────────────────────────────────────────────────────────────────────
+✅ Solution implémentée dans claraApiService.ts
+✅ Aucune erreur TypeScript
+✅ Script de test créé
+⏳ Tests à effectuer par l'utilisateur
+
+PROCHAINES ACTIONS
+───────────────────────────────────────────────────────────────────────────
+1. Exécuter le script de test: .\test-formatage-tables-case25.ps1
+2. Vérifier que les en-têtes sont EN GRAS
+3. Si OK → Commit et push sur GitHub
+4. Si problème → Consulter la documentation complète
+
+COMMIT SUGGÉRÉ
+───────────────────────────────────────────────────────────────────────────
+git add src/services/claraApiService.ts
+git add "Doc prompt issues/"
+git add test-formatage-tables-case25.ps1
+git add 00_SOLUTION_FORMATAGE_TABLES_CASE_25.txt
+git add RECAP_SOLUTION_FORMATAGE_CASE_25.txt
+git commit -m "fix(case25): Utiliser tableau Markdown 1 colonne pour tables 2-6
+
+- Remplace HTML avec styles inline par tableau Markdown
+- Garantit en-têtes en gras pour tables 2-6
+- Cohérence visuelle avec table 1
+- Compatible ReactMarkdown
+- Ajoute documentation complète et script de test"
+git push origin main
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 21h30
+Version: 11.0 (solution finale formatage tables 2-6)
+Priorité: HAUTE
+Statut: SOLUTION IMPLÉMENTÉE - PRÊT POUR LES TESTS
+
+EXÉCUTER MAINTENANT: .\test-formatage-tables-case25.ps1
+
+═══════════════════════════════════════════════════════════════════════════

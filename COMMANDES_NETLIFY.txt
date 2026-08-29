@@ -1,0 +1,115 @@
+═══════════════════════════════════════════════════════════════
+  COMMANDES À COPIER-COLLER POUR DÉPLOIEMENT NETLIFY
+═══════════════════════════════════════════════════════════════
+
+📦 ÉTAPE 1 : INSTALLER NETLIFY CLI
+───────────────────────────────────────────────────────────────
+
+npm install -g netlify-cli
+
+
+🔐 ÉTAPE 2 : SE CONNECTER
+───────────────────────────────────────────────────────────────
+
+netlify login
+
+
+🔍 ÉTAPE 3 : VÉRIFIER LES FICHIERS (OPTIONNEL)
+───────────────────────────────────────────────────────────────
+
+node check-deploy-size.js
+
+
+🏗️  ÉTAPE 4 : TESTER LE BUILD LOCALEMENT
+───────────────────────────────────────────────────────────────
+
+npm run build
+
+
+👀 ÉTAPE 5 : PRÉVISUALISER LOCALEMENT (OPTIONNEL)
+───────────────────────────────────────────────────────────────
+
+npm run preview
+
+
+🚀 ÉTAPE 6A : DÉPLOIEMENT AUTOMATIQUE (RECOMMANDÉ)
+───────────────────────────────────────────────────────────────
+
+netlify init
+
+# Répondre aux questions :
+# - Create & configure a new site
+# - Choisir votre équipe
+# - Nom du site : claraverse-app (ou votre choix)
+# - Build command : npm run build
+# - Publish directory : dist
+
+
+🚀 ÉTAPE 6B : DÉPLOIEMENT MANUEL (ALTERNATIVE)
+───────────────────────────────────────────────────────────────
+
+# Déploiement de test d'abord
+netlify deploy --dir=dist
+
+# Si tout est OK, déployer en production
+netlify deploy --prod --dir=dist
+
+
+📊 COMMANDES DE VÉRIFICATION
+───────────────────────────────────────────────────────────────
+
+# Voir le statut du site
+netlify status
+
+# Ouvrir le dashboard Netlify dans le navigateur
+netlify open
+
+# Voir les logs de déploiement
+netlify logs
+
+# Lister tous vos sites
+netlify sites:list
+
+
+🔧 COMMANDES DE MAINTENANCE
+───────────────────────────────────────────────────────────────
+
+# Redéployer après modifications
+npm run build
+netlify deploy --prod --dir=dist
+
+# Configurer une variable d'environnement
+netlify env:set NOM_VARIABLE "valeur"
+
+# Lister les variables d'environnement
+netlify env:list
+
+
+🐛 DÉPANNAGE
+───────────────────────────────────────────────────────────────
+
+# Nettoyer et réinstaller les dépendances
+rm -rf node_modules package-lock.json
+npm install
+
+# Réinstaller Netlify CLI
+npm install -g netlify-cli --force
+
+# Vérifier la version de Netlify CLI
+netlify --version
+
+# Vérifier la version de Node.js (doit être >= 18)
+node --version
+
+
+═══════════════════════════════════════════════════════════════
+  RÉSUMÉ ULTRA-RAPIDE (3 COMMANDES)
+═══════════════════════════════════════════════════════════════
+
+npm install -g netlify-cli
+netlify login
+netlify init
+
+# Puis suivre les instructions à l'écran
+
+═══════════════════════════════════════════════════════════════

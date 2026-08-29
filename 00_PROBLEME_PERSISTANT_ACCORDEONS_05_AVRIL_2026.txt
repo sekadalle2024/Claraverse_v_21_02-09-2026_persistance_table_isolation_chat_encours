@@ -1,0 +1,185 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              ⚠️  PROBLEME PERSISTANT - ACCORDEONS NON CLIQUABLES             ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+STATUT
+======
+Le probleme des accordeons non cliquables persiste malgre les corrections.
+
+CORRECTIONS APPLIQUEES
+=======================
+✅ Exposition de window.toggleSection
+✅ Suppression automatique des attributs onclick
+✅ Prevention des doublons avec data-listenerAttached
+✅ Amelioration du MutationObserver
+✅ Logs detailles pour le debugging
+
+FICHIERS MODIFIES
+=================
+✏️  public/EtatsControleAccordeonHandler.js
+    - Suppression des attributs onclick (ligne 42)
+    - Prevention des doublons (ligne 47-50)
+    - Logs de clic (ligne 55)
+    - MutationObserver ameliore (ligne 78-103)
+
+FICHIERS CREES
+==============
+📄 00_DIAGNOSTIC_ACCORDEONS_PROBLEME_PERSISTANT.txt
+   Guide de diagnostic complet avec tests
+
+📄 test-accordeons-standalone.html
+   Fichier HTML standalone pour tester le mecanisme
+
+📄 GUIDE_DEPANNAGE_ACCORDEONS_05_AVRIL_2026.txt
+   Guide de depannage etape par etape
+
+📄 00_PROBLEME_PERSISTANT_ACCORDEONS_05_AVRIL_2026.txt
+   Ce fichier
+
+
+PROCHAINES ETAPES
+=================
+
+ETAPE 1: TEST STANDALONE
+-------------------------
+1. Ouvrir: test-accordeons-standalone.html
+2. Cliquer sur les sections
+3. Verifier qu'elles s'ouvrent
+
+→ Si ca fonctionne: Le code est correct, probleme d'integration
+→ Si ca ne fonctionne pas: Probleme de navigateur ou CSS
+
+
+ETAPE 2: DIAGNOSTIC DANS L'APPLICATION
+---------------------------------------
+1. Demarrer: npm run dev
+2. Ouvrir console (F12)
+3. Generer: "Etat fin" + upload balance
+4. Chercher les logs:
+   - "🔧 EtatsControleAccordeonHandler: Initialisation..."
+   - "📊 Nombre de sections trouvées: X"
+   - "✅ Listener ajouté sur section X"
+
+→ Si "Nombre de sections trouvées: 0":
+   Executer: window.reinitializeEtatsControleAccordeons();
+
+
+ETAPE 3: TESTS MANUELS
+-----------------------
+Dans la console (F12):
+
+// Test 1: Compter les sections
+document.querySelectorAll('.section-header').length
+
+// Test 2: Tester toggleSection
+window.toggleSection(document.querySelector('.section-header'));
+
+// Test 3: Verifier les styles
+const content = document.querySelector('.section-content');
+console.log(window.getComputedStyle(content).maxHeight);
+
+
+ETAPE 4: SOLUTION DE SECOURS
+-----------------------------
+Si rien ne fonctionne, executer dans la console:
+
+document.querySelectorAll('.section-header').forEach((header, i) => {
+    header.removeAttribute('onclick');
+    header.addEventListener('click', function() {
+        this.parentElement.classList.toggle('active');
+        console.log(`Section ${i + 1} toggled`);
+    });
+});
+
+
+DOCUMENTATION
+=============
+
+📖 Guide de depannage complet:
+   GUIDE_DEPANNAGE_ACCORDEONS_05_AVRIL_2026.txt
+
+📖 Diagnostic detaille:
+   00_DIAGNOSTIC_ACCORDEONS_PROBLEME_PERSISTANT.txt
+
+📖 Test standalone:
+   test-accordeons-standalone.html
+
+📖 Documentation technique:
+   00_CORRECTION_ACCORDEONS_CLIQUABLES_05_AVRIL_2026.txt
+
+
+INFORMATIONS NECESSAIRES
+=========================
+
+Pour continuer le diagnostic, fournir:
+
+1. Logs de la console (F12)
+   - Copier tous les logs apres generation des etats
+
+2. Resultats des tests manuels
+   - document.querySelectorAll('.section-header').length
+   - typeof window.toggleSection
+   - window.getComputedStyle(document.querySelector('.section-content')).maxHeight
+
+3. Capture d'ecran
+   - Onglet Elements (F12) montrant la structure HTML
+   - Onglet Console (F12) montrant les logs
+
+4. Informations navigateur
+   - Nom et version du navigateur
+   - Systeme d'exploitation
+
+
+HYPOTHESES
+==========
+
+HYPOTHESE 1: Les sections ne sont pas dans le DOM
+→ Test: document.querySelectorAll('.section-header').length
+→ Si 0: Reinitialiser avec window.reinitializeEtatsControleAccordeons();
+
+HYPOTHESE 2: Les styles CSS ne sont pas charges
+→ Test: window.getComputedStyle(document.querySelector('.section-content')).maxHeight
+→ Si undefined: Verifier py_backend/etats_financiers.py
+
+HYPOTHESE 3: Conflit avec d'autres scripts
+→ Test: Chercher erreurs JavaScript dans la console
+→ Si erreurs: Verifier l'ordre de chargement dans index.html
+
+HYPOTHESE 4: Le HTML est genere apres l'initialisation
+→ Test: Chercher logs "🆕 Nouvelles sections détectées"
+→ Si absent: Le MutationObserver ne detecte pas les changements
+
+HYPOTHESE 5: Les event listeners ne sont pas attaches
+→ Test: document.querySelector('.section-header').dataset.listenerAttached
+→ Si undefined: Les listeners ne sont pas attaches
+
+
+ACTIONS IMMEDIATES
+==================
+
+1. ✅ Ouvrir: test-accordeons-standalone.html
+   → Verifier que le mecanisme fonctionne
+
+2. ✅ Ouvrir: GUIDE_DEPANNAGE_ACCORDEONS_05_AVRIL_2026.txt
+   → Suivre les etapes de depannage
+
+3. ✅ Executer les tests dans la console
+   → Noter les resultats
+
+4. ✅ Fournir les informations demandees
+   → Logs, tests, captures d'ecran
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    📖 COMMENCER PAR LE GUIDE DE DEPANNAGE                    ║
+║                                                                              ║
+║              Fichier: GUIDE_DEPANNAGE_ACCORDEONS_05_AVRIL_2026.txt          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+Date: 05 Avril 2026 - 17h30
+Statut: En attente de diagnostic utilisateur

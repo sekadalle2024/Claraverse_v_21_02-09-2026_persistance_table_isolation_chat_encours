@@ -1,0 +1,69 @@
+╔═══════════════════════════════════════════════════════════════╗
+║  🧪 TESTEZ LE FIX V17.3 - COLONNE FLOWISE - MAINTENANT !    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+⚠️ IMPORTANT: Le sélecteur a été corrigé!
+   Ancien: div[data-message-author-role="assistant"] ❌
+   Nouveau: div.prose.prose-base.dark:prose-invert.max-w-none ✅
+
+📋 ÉTAPES RAPIDES:
+
+1️⃣ OUVRIR CLARAVERSE
+   → http://localhost:3000 (ou votre URL)
+   → Assurez-vous d'avoir des tables visibles dans le chat
+
+2️⃣ OUVRIR LA CONSOLE
+   → Appuyez sur F12
+   → Onglet "Console"
+
+3️⃣ TESTER LE FIX
+   → Ouvrez le fichier: TEST_FIX_V17.3_CONSOLE.js
+   → Copiez TOUT le contenu
+   → Collez dans la console
+   → Appuyez sur Entrée
+
+4️⃣ VÉRIFIER LES RÉSULTATS
+   Vous devriez voir:
+   
+   ✅ Index colonne Flowise: [numéro]
+   ✅ Cellules dans colonne Flowise: [...]
+   ✅ Mot-clé "CIA" trouvé: ✅
+   ✅ COLLECTE: 11 table(s)
+      📋 Table 1: [Rubrique, Description]
+      📋 Table 2: [REF QUESTION, Question, Option, ...]
+      📋 Table 3: [REF QUESTION, Question, Option, ...]
+      ... etc
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CE QUI A CHANGÉ:
+
+AVANT V17.3:
+❌ Cherchait le mot-clé dans TOUTES les cellules
+❌ Ne collectait que 2 tables sur 11
+
+APRÈS V17.3:
+✅ Cherche le mot-clé UNIQUEMENT dans la colonne "Flowise"
+✅ Collecte TOUTES les tables de la div (11 tables)
+
+═══════════════════════════════════════════════════════════════
+
+📝 FICHIERS MODIFIÉS:
+
+✅ public/Flowise.js (lignes ~367-395)
+   → Logique de recherche dans colonne Flowise
+
+═══════════════════════════════════════════════════════════════
+
+💡 BESOIN D'AIDE?
+
+Si le test échoue:
+1. Vérifiez que la première table a bien une colonne "Flowise"
+2. Vérifiez que cette colonne contient le mot-clé (ex: "CIA")
+3. Regardez les logs détaillés dans la console
+
+═══════════════════════════════════════════════════════════════
+
+Version: V17.3
+Date: 2025-12-08
+Statut: ✅ PRÊT À TESTER

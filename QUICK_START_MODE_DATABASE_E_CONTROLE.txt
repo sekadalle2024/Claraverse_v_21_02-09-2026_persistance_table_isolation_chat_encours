@@ -1,0 +1,80 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    QUICK START - MODE DATABASE E-CONTROLE                 ║
+║                              10 Avril 2026                                ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+🚀 EXÉCUTION EN 3 ÉTAPES
+═════════════════════════
+
+1️⃣  EXÉCUTER LE SCRIPT DE TEST
+   .\test-database-mode-e-controle.ps1
+
+2️⃣  VÉRIFIER LES MODIFICATIONS
+   git diff src/components/Clara_Components/DemarrerMenu.tsx
+
+3️⃣  COMMIT SI OK
+   git add .
+   git commit -m "Ajout Mode Database à E-controle"
+
+───────────────────────────────────────────────────────────────────────────
+
+📋 CE QUI EST AJOUTÉ
+═════════════════════
+
+Pour chaque étape de mission d'E-controle, un nouveau mode :
+
+{
+  id: 'database',
+  label: 'Mode Database',
+  command: `[Variables existantes...]
+[Router] = Database
+[User_id] = ohada
+[Database] = workspace_02
+[Nb de lignes] = X`
+}
+
+───────────────────────────────────────────────────────────────────────────
+
+✅ VÉRIFICATIONS AUTOMATIQUES
+══════════════════════════════
+
+Le script de test vérifie :
+✓ Fichier DemarrerMenu.tsx existe
+✓ Sauvegarde créée
+✓ Script Python exécuté
+✓ Modes Database ajoutés
+✓ Syntaxe TypeScript correcte
+✓ Accolades équilibrées
+
+───────────────────────────────────────────────────────────────────────────
+
+🔧 COMMANDES ALTERNATIVES
+═════════════════════════
+
+# Exécuter uniquement le script Python
+python "Doc menu demarrer/Scripts/add_database_mode_e_controle.py"
+
+# Compter les modes ajoutés
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "label: 'Mode Database'"
+
+# Restaurer si problème
+git checkout src/components/Clara_Components/DemarrerMenu.tsx
+
+───────────────────────────────────────────────────────────────────────────
+
+📚 DOCUMENTATION COMPLÈTE
+═════════════════════════
+
+Voir : 00_AJOUT_MODE_DATABASE_E_CONTROLE_10_AVRIL_2026.txt
+Voir : Doc menu demarrer/Documentation/AJOUT_MODE_DATABASE_E_CONTROLE_10_AVRIL_2026.md
+
+───────────────────────────────────────────────────────────────────────────
+
+💡 ASTUCE
+═════════
+
+Le script crée automatiquement une sauvegarde avec timestamp.
+En cas de problème, restaurez avec :
+Copy-Item [fichier_backup] src/components/Clara_Components/DemarrerMenu.tsx -Force
+
+╚═══════════════════════════════════════════════════════════════════════════╝

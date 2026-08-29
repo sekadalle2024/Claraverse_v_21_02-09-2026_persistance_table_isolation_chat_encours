@@ -1,0 +1,91 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 NOTIFICATIONS ROUTER N8N - LIRE EN PREMIER
+  29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ TRAVAIL TERMINÉ
+─────────────────────────────────────────────────────────────────────────────
+Les notifications front-end sont maintenant implémentées dans claraApiService.ts
+
+Chaque message envoyé affiche une notification avec :
+  • Le numéro du case détecté (Case 1 à Case 33)
+  • La route validée (ex: cia_cours, lead_balance, etc.)
+  • L'URL de l'endpoint n8n utilisé
+
+⚡ TEST RAPIDE (30 SECONDES)
+─────────────────────────────────────────────────────────────────────────────
+1. Démarrer : npm run dev
+2. Ouvrir : http://localhost:5173
+3. Envoyer : "CIA Cours"
+4. Voir la notification en haut à droite :
+   
+   ┌─────────────────────────────────────────────┐
+   │ 🔀 Router n8n - Case 11                     │
+   │                                             │
+   │ Route: cia_cours                            │
+   │ URL: http://localhost:5678/webhook/...      │
+   └─────────────────────────────────────────────┘
+
+📚 DOCUMENTATION DISPONIBLE
+─────────────────────────────────────────────────────────────────────────────
+1. INDEX_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+   → Vue d'ensemble et navigation
+
+2. QUICK_START_TEST_NOTIFICATIONS_ROUTER.txt
+   → Guide de test rapide (3 étapes)
+
+3. 00_NOTIFICATION_ROUTER_N8N_29_MARS_2026.txt
+   → Documentation technique complète
+
+4. RECAP_SESSION_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+   → Récapitulatif détaillé de la session
+
+5. LISTE_FICHIERS_NOTIFICATIONS_ROUTER_29_MARS_2026.md
+   → Liste de tous les fichiers modifiés/créés
+
+📝 FICHIER MODIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+src/services/claraApiService.ts
+  • Ajout de getN8nEndpointWithInfo() - Nouvelle méthode principale
+  • Ajout de resolveEndpointFromRouteKey() - Méthode helper
+  • Refactoring de getN8nEndpoint() - Version legacy
+  • Ajout de notification dans sendChatMessage()
+
+🎯 BÉNÉFICES
+─────────────────────────────────────────────────────────────────────────────
+✓ Transparence totale du routing
+✓ Débogage facilité
+✓ Vérification immédiate du case activé
+✓ Confirmation de l'URL appelée
+✓ Traçabilité des requêtes n8n
+
+📊 CASES SUPPORTÉS
+─────────────────────────────────────────────────────────────────────────────
+33 cases au total (Case 1 à Case 33)
+
+Exemples :
+  • Case 1  : default (template)
+  • Case 11 : cia_cours (CIA Cours Gemini)
+  • Case 21 : lead_balance (traitement local)
+  • Case 28 : methodo_audit (Méthodologie Audit)
+  • Case 33 : methodo_revision (Méthodologie Révision)
+
+🔍 VÉRIFICATION
+─────────────────────────────────────────────────────────────────────────────
+Console (F12) :
+  🔀 Router → Case 11 : cia_cours
+  🔔 Notification envoyée: { case: "Case 11", route: "cia_cours", url: "..." }
+
+Notification front-end :
+  Visible en haut à droite pendant 8 secondes
+
+✅ STATUT
+─────────────────────────────────────────────────────────────────────────────
+TERMINÉ - Prêt à utiliser
+
+Le router n8n affiche maintenant en temps réel le case, la route et l'URL
+utilisés pour chaque message envoyé.
+
+═══════════════════════════════════════════════════════════════════════════════
+  PROCHAINE ÉTAPE : Tester avec différents messages
+═══════════════════════════════════════════════════════════════════════════════

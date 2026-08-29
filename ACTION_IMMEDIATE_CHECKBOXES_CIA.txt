@@ -1,0 +1,70 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🔧 FIX APPLIQUÉ : Checkboxes CIA N'Apparaissent Pas       ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+📋 PROBLÈME
+-----------
+Les checkboxes ne s'affichent pas dans les tables CIA.
+
+✅ CORRECTION APPLIQUÉE
+-----------------------
+1. Chemin corrigé dans test-persistance-checkboxes-cia.html
+2. Logique ajoutée dans conso.js pour traiter les tables CIA
+
+🚀 TESTEZ MAINTENANT
+--------------------
+Option 1 - Console du Navigateur (F12) :
+
+  const script = document.createElement('script');
+  script.src = 'public/test-checkboxes-cia-rapide.js';
+  document.head.appendChild(script);
+
+Option 2 - Test Ultra-Rapide :
+
+  const tables = document.querySelectorAll('table');
+  let found = 0;
+  tables.forEach(t => {
+    const headers = Array.from(t.querySelectorAll('th, td'))
+      .map(h => h.textContent.toLowerCase());
+    if (headers.some(h => /reponse[_\s]?user/i.test(h))) {
+      found++;
+      const cb = t.querySelectorAll('input[type="checkbox"]').length;
+      console.log(`Table CIA ${found}: ${cb} checkbox(es)`);
+    }
+  });
+
+Option 3 - Forcer le Traitement :
+
+  window.claraverseProcessor.processAllTables();
+
+🔍 SI ÇA NE MARCHE PAS
+----------------------
+1. Rechargez la page avec Ctrl+F5 (hard refresh)
+2. Attendez 3 secondes
+3. Consultez : DEPANNAGE_CHECKBOXES_CIA.md
+
+📖 DOCUMENTATION
+----------------
+• FIX_CHECKBOXES_N_APPARAISSENT_PAS.md
+  → Explication du problème et de la solution
+
+• DEPANNAGE_CHECKBOXES_CIA.md
+  → Guide de dépannage complet
+
+• public/test-checkboxes-cia-rapide.js
+  → Script de test automatique
+
+✅ RÉSULTAT ATTENDU
+-------------------
+Après le fix, les checkboxes doivent :
+✅ Apparaître dans les cellules "Reponse_user"
+✅ Être cliquables
+✅ Avoir un fond vert quand cochées
+✅ Persister après rechargement (F5)
+
+═══════════════════════════════════════════════════════════════
+Date : 26 novembre 2025
+Statut : ✅ Fix appliqué - Testez maintenant
+═══════════════════════════════════════════════════════════════

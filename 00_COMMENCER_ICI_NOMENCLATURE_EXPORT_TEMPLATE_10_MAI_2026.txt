@@ -1,0 +1,210 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🎯 COMMENCER ICI - Nomenclature Export Template Excel
+  📅 Date: 10 Mai 2026
+  ✅ Statut: IMPLÉMENTÉ ET PRÊT À TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+─────────────────────────────────────────────────────────────────────────────
+
+Modifier la nomenclature des fichiers exportés via "Export template Excel"
+pour inclure le nom de l'étape de mission extraite des tables.
+
+📊 RÉSULTAT
+─────────────────────────────────────────────────────────────────────────────
+
+❌ AVANT:
+   claraverse_template_2026-05-09T23-39-26.xlsx
+
+✅ APRÈS:
+   E-audit_Etape-mission-Leadsheet_2026-05-10T14-30-45.xlsx
+   E-audit_Etape-mission-Programme-de-travail_2026-05-10T14-31-12.xlsx
+   E-audit_Etape-mission-X_2026-05-10T14-33-00.xlsx (si étape non trouvée)
+
+🚀 DÉMARRAGE RAPIDE (3 ÉTAPES)
+─────────────────────────────────────────────────────────────────────────────
+
+1️⃣ VÉRIFIER LES MODIFICATIONS
+   ✅ Fichier public/menu.js modifié
+   ✅ Fonction extractEtapeMission() ajoutée
+   ✅ Fonction exportTemplate() mise à jour
+
+2️⃣ RECHARGER LA PAGE
+   ⌨️ Appuyer sur Ctrl+F5 (Windows) ou Cmd+Shift+R (Mac)
+   ⌨️ Ouvrir la console (F12)
+
+3️⃣ TESTER L'EXPORT
+   🖱️ Clic droit sur une table → "Export template Excel"
+   👀 Vérifier le nom du fichier téléchargé
+   📊 Vérifier les logs dans la console
+
+📚 DOCUMENTATION (LIRE DANS CET ORDRE)
+─────────────────────────────────────────────────────────────────────────────
+
+🔴 LIRE EN PREMIER:
+
+1. 📄 00_RECAP_NOMENCLATURE_EXPORT_TEMPLATE_10_MAI_2026.txt
+   └─ Récapitulatif de la session
+   └─ Modifications apportées
+   └─ Fichiers créés
+
+2. 🧪 QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt
+   └─ 5 scénarios de test
+   └─ Vérifications à effectuer
+   └─ Dépannage rapide
+
+3. ⚡ COMMANDES_RAPIDES_NOMENCLATURE_EXPORT_TEMPLATE.txt
+   └─ Commandes console pour tester
+   └─ Filtres console
+   └─ Dépannage
+
+📖 DOCUMENTATION TECHNIQUE:
+
+4. 📋 Doc menu contextuel menu.js update/NOMENCLATURE_FICHIER_EXPORT_TEMPLATE_10_MAI_2026.md
+   └─ Documentation complète
+   └─ Algorithme de détection
+   └─ Format de nomenclature
+   └─ Exemples et tests
+   └─ Cas particuliers
+
+5. 📊 SYNTHESE_VISUELLE_NOMENCLATURE_EXPORT_TEMPLATE.txt
+   └─ Schémas visuels
+   └─ Flux de traitement
+   └─ Exemples de nomenclature
+
+6. 📑 00_INDEX_NOMENCLATURE_EXPORT_TEMPLATE_10_MAI_2026.md
+   └─ Index de toute la documentation
+
+🧪 TEST RAPIDE (2 MINUTES)
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. Générer un message avec une table contenant:                        │
+│                                                                         │
+│    | Rubrique | Description |                                          │
+│    |----------|-------------|                                          │
+│    | Client | FILTRACI |                                               │
+│    | Etape de mission | Leadsheet |                                    │
+│                                                                         │
+│ 2. Ouvrir la console (F12)                                             │
+│                                                                         │
+│ 3. Clic droit sur la table → "Export template Excel"                   │
+│                                                                         │
+│ 4. ✅ VÉRIFIER:                                                         │
+│    • Fichier: E-audit_Etape-mission-Leadsheet_YYYY-MM-DDTHH-MM-SS.xlsx │
+│    • Logs console:                                                     │
+│      ✅ 🎯 [Extract Etape Mission] Trouvé: "Leadsheet"                 │
+│      ✅ ✅ [Export Template] Nom fichier avec étape: ...               │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+🔍 VÉRIFICATION RAPIDE
+─────────────────────────────────────────────────────────────────────────────
+
+Copier-coller dans la console (F12):
+
+// Vérifier que la fonction existe
+console.log(typeof window.contextualMenuManager?.extractEtapeMission);
+// Devrait afficher: "function"
+
+// Tester l'extraction
+const tables = document.querySelectorAll('table');
+const etape = window.contextualMenuManager?.extractEtapeMission(Array.from(tables));
+console.log("Étape trouvée:", etape || "❌ Non trouvée");
+
+📊 LOGS ATTENDUS
+─────────────────────────────────────────────────────────────────────────────
+
+Lors de l'export, vous devriez voir dans la console:
+
+✅ Étape trouvée:
+   🔍 [Extract Etape Mission] Recherche de l'étape de mission dans X table(s)
+   ✅ Table X: Colonnes trouvées - Rubrique: col 0, Description: col 1
+   🎯 [Extract Etape Mission] Trouvé: "Leadsheet" (Table X, Ligne X)
+   ✅ [Export Template] Nom fichier avec étape: E-audit_Etape-mission-Leadsheet_...
+
+⚠️ Étape non trouvée:
+   🔍 [Extract Etape Mission] Recherche de l'étape de mission dans X table(s)
+   ⏭️ Table X: Pas de colonnes Rubrique/Description
+   ⚠️ [Extract Etape Mission] Étape de mission non trouvée dans aucune table
+   ⚠️ [Export Template] Étape de mission non trouvée, nom fichier fallback: E-audit_Etape-mission-X_...
+
+❌ PROBLÈMES COURANTS
+─────────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème 1: Fichier toujours nommé "claraverse_template_..."           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Solution:                                                               │
+│ • Recharger la page avec cache vidé (Ctrl+F5)                          │
+│ • Vérifier que menu.js a été modifié                                   │
+│ • Vérifier les logs console                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème 2: Erreur JavaScript dans la console                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Solution:                                                               │
+│ • Vérifier la syntaxe de extractEtapeMission()                         │
+│ • Vérifier que la fonction est dans la classe                          │
+│ • Consulter COMMANDES_RAPIDES_NOMENCLATURE_EXPORT_TEMPLATE.txt         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Problème 3: Étape non détectée alors qu'elle existe                    │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Solution:                                                               │
+│ • Vérifier les logs: colonnes Rubrique/Description trouvées?           │
+│ • Vérifier l'orthographe: "Etape de mission"                           │
+│ • Vérifier que la valeur dans Description n'est pas vide               │
+│ • Consulter QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+✅ CRITÈRES DE SUCCÈS
+─────────────────────────────────────────────────────────────────────────────
+
+✅ Fichiers exportés avec la nouvelle nomenclature
+✅ Logs de diagnostic visibles dans la console
+✅ Fallback automatique si étape non trouvée
+✅ Caractères spéciaux correctement gérés
+✅ Détection insensible à la casse
+
+📝 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+
+1. ✅ Tester avec différents scénarios
+2. ✅ Vérifier les logs dans la console
+3. ✅ Valider avec des utilisateurs réels
+4. 📋 Documenter dans le manuel utilisateur si nécessaire
+5. 📋 Appliquer la même logique à exportTemplateWord() si souhaité
+
+🎓 AIDE ET SUPPORT
+─────────────────────────────────────────────────────────────────────────────
+
+📄 Documentation complète:
+   Doc menu contextuel menu.js update/NOMENCLATURE_FICHIER_EXPORT_TEMPLATE_10_MAI_2026.md
+
+🧪 Guide de test:
+   QUICK_TEST_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+⚡ Commandes rapides:
+   COMMANDES_RAPIDES_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+📊 Synthèse visuelle:
+   SYNTHESE_VISUELLE_NOMENCLATURE_EXPORT_TEMPLATE.txt
+
+📑 Index:
+   00_INDEX_NOMENCLATURE_EXPORT_TEMPLATE_10_MAI_2026.md
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ PRÊT À TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+La solution est implémentée, documentée et prête à être testée.
+
+1. Recharger la page (Ctrl+F5)
+2. Ouvrir la console (F12)
+3. Exporter une table
+4. Vérifier le nom du fichier
+
+═══════════════════════════════════════════════════════════════════════════════

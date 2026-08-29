@@ -1,0 +1,175 @@
+═══════════════════════════════════════════════════════════════════════
+CORRECTION MENU CONTEXTUEL - LEAD BALANCE & ETAT FIN
+═══════════════════════════════════════════════════════════════════════
+Date: 03 Avril 2026
+Statut: ✅ CORRECTIONS APPLIQUÉES
+
+═══════════════════════════════════════════════════════════════════════
+PROBLÈMES RÉSOLUS
+═══════════════════════════════════════════════════════════════════════
+
+1️⃣ LEAD BALANCE - Menu contextuel ne s'ouvre pas automatiquement
+   ❌ Avant: La table était seulement marquée comme "detected"
+   ✅ Après: Le menu contextuel s'ouvre automatiquement
+
+2️⃣ LEAD BALANCE - Clic sur cellule ne fonctionne pas
+   ❌ Avant: Aucun gestionnaire de clic
+   ✅ Après: Clic sur cellule rouvre le menu contextuel
+
+3️⃣ ETAT FIN - Clic sur cellule ne fonctionne pas
+   ❌ Avant: Aucun gestionnaire de clic
+   ✅ Après: Clic sur cellule rouvre le menu contextuel
+
+═══════════════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════
+
+1. public/LeadBalanceAutoTrigger.js
+   - Ajout de la fonction addCellClickHandler()
+   - Modification de scanAndProcess() pour déclencher automatiquement
+   - Ajout du gestionnaire de clic sur la cellule
+
+2. public/EtatFinAutoTrigger.js
+   - Ajout de la fonction addCellClickHandler()
+   - Modification de scanAndProcess() pour ajouter le gestionnaire de clic
+   - Amélioration de la cohérence avec Lead Balance
+
+═══════════════════════════════════════════════════════════════════════
+NOUVEAUX FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════
+
+1. Doc_Lead_Balance/DIAGNOSTIC_MENU_CONTEXTUEL_03_AVRIL_2026.md
+   - Diagnostic complet du problème
+   - Analyse comparative Lead Balance vs Etat Fin
+   - Solutions détaillées
+
+2. test-menu-contextuel-lead-etat.ps1
+   - Script de test interactif
+   - Instructions pas à pas
+   - Vérification des résultats
+
+═══════════════════════════════════════════════════════════════════════
+FONCTIONNALITÉS AJOUTÉES
+═══════════════════════════════════════════════════════════════════════
+
+✅ Déclenchement automatique du menu contextuel
+   - Lead Balance: Automatique dès l'apparition de la table
+   - Etat Fin: Automatique dès l'apparition de la table
+
+✅ Clic sur cellule pour rouvrir le menu
+   - Lead Balance: Clic sur cellule rouvre le menu
+   - Etat Fin: Clic sur cellule rouvre le menu
+
+✅ Indicateurs visuels
+   - Curseur pointer sur les cellules cliquables
+   - Tooltip "Cliquer pour sélectionner un fichier"
+
+✅ Protection contre les clics multiples
+   - Vérification du statut (processing/completed)
+   - Évite les traitements en double
+
+═══════════════════════════════════════════════════════════════════════
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════
+
+Exécuter le script de test:
+   .\test-menu-contextuel-lead-etat.ps1
+
+Ou suivre les étapes manuellement:
+
+1️⃣ TEST LEAD BALANCE
+   a. Envoyer "Lead_balance" dans le chat
+   b. Vérifier que le menu contextuel s'ouvre automatiquement
+   c. Fermer le menu (Annuler)
+   d. Cliquer dans la cellule
+   e. Vérifier que le menu se rouvre
+
+2️⃣ TEST ETAT FIN
+   a. Envoyer "Etat fin" dans le chat
+   b. Vérifier que le menu contextuel s'ouvre automatiquement
+   c. Fermer le menu (Annuler)
+   d. Cliquer dans la cellule
+   e. Vérifier que le menu se rouvre
+
+═══════════════════════════════════════════════════════════════════════
+MESSAGES CONSOLE ATTENDUS
+═══════════════════════════════════════════════════════════════════════
+
+Lead Balance:
+   🎯 Table Lead_balance détectée - Déclenchement automatique
+   ✅ Gestionnaire de clic ajouté sur la cellule
+   📂 Ouverture automatique du dialogue de sélection de fichier
+
+Etat Fin:
+   🎯 Table Etat_fin détectée - Déclenchement automatique
+   ✅ Gestionnaire de clic ajouté sur la cellule
+   📂 Ouverture automatique du dialogue de sélection de fichier
+
+Clic sur cellule:
+   🖱️ Clic sur cellule Lead_balance détecté
+   🖱️ Clic sur cellule Etat_fin détecté
+
+═══════════════════════════════════════════════════════════════════════
+ARCHITECTURE TECHNIQUE
+═══════════════════════════════════════════════════════════════════════
+
+Fonction addCellClickHandler():
+   - Ajoute un event listener sur la cellule
+   - Change le curseur en pointer
+   - Ajoute un tooltip explicatif
+   - Vérifie le statut avant de déclencher
+   - Réinitialise l'attribut processed
+
+Fonction scanAndProcess():
+   - Détecte les tables Lead_balance ou Etat_fin
+   - Ajoute le gestionnaire de clic
+   - Déclenche automatiquement le traitement
+
+═══════════════════════════════════════════════════════════════════════
+DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════
+
+📄 Diagnostic complet:
+   Doc_Lead_Balance/DIAGNOSTIC_MENU_CONTEXTUEL_03_AVRIL_2026.md
+
+📄 Architecture Lead Balance:
+   Doc_Lead_Balance/00_INDEX.md
+   Doc_Lead_Balance/README_ARCHITECTURE_FINALE.md
+
+📄 Architecture Etat Fin:
+   Doc_Etat_Fin/00_INDEX_COMPLET.md
+   Doc_Etat_Fin/README.md
+
+═══════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════
+
+1. ✅ Tester les corrections
+2. ✅ Vérifier les logs console
+3. ✅ Valider le comportement utilisateur
+4. 📝 Documenter les résultats
+5. 🚀 Commit et push vers GitHub
+
+═══════════════════════════════════════════════════════════════════════
+COMMANDES GIT
+═══════════════════════════════════════════════════════════════════════
+
+git add public/LeadBalanceAutoTrigger.js
+git add public/EtatFinAutoTrigger.js
+git add Doc_Lead_Balance/DIAGNOSTIC_MENU_CONTEXTUEL_03_AVRIL_2026.md
+git add test-menu-contextuel-lead-etat.ps1
+git add 00_CORRECTION_MENU_CONTEXTUEL_LEAD_ETAT_03_AVRIL_2026.txt
+
+git commit -m "fix: Correction menu contextuel Lead Balance et Etat Fin
+
+- Ajout déclenchement automatique pour Lead Balance
+- Ajout gestionnaire de clic sur cellule pour Lead Balance et Etat Fin
+- Amélioration UX avec curseur pointer et tooltip
+- Protection contre clics multiples
+- Documentation complète du diagnostic et des solutions"
+
+git push origin main
+
+═══════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════

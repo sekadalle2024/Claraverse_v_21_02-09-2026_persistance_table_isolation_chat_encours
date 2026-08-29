@@ -1,0 +1,67 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION EXPORT TEMPLATE - MESSAGE ACTIF UNIQUEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE: 09 Mai 2026
+🎯 OBJECTIF: Exporter uniquement les tables du message contenant la table active
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 RÉSUMÉ ULTRA-RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ PROBLÈME RÉSOLU:
+   - Avant: Exportait TOUTES les tables de TOUS les messages du chat
+   - Maintenant: Exporte UNIQUEMENT les tables du message actif
+
+✅ FONCTIONS CORRIGÉES:
+   1. exportTemplate() (Excel) - Ligne ~4029
+   2. exportTemplateWord() (Word) - Ligne ~4140
+
+✅ LOGIQUE APPLIQUÉE:
+   1. Détection du conteneur: this.targetTable.closest('div.prose')
+   2. Export des tables du message: messageContainer.querySelectorAll('table')
+   3. Fallback global si aucune table trouvée
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 DÉTAILS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 SÉLECTEUR UTILISÉ:
+   - Principal: div.prose.prose-base.dark\:prose-invert.max-w-none
+   - Fallback: div.prose
+   - Recherche: closest() depuis la table active
+
+📌 LOGS DE DIAGNOSTIC:
+   ✅ [Export Template] X table(s) trouvée(s) dans le message actif
+   ✅ [Export Word] X table(s) trouvée(s) dans le message actif
+   🔍 Affichage des détails de chaque table (rows, cols)
+
+📌 FALLBACK:
+   - Si aucune table dans le message actif
+   - Utilise: document.querySelectorAll('div.prose table')
+   - Log: "fallback global"
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ STATUT FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Correction appliquée aux 2 fonctions
+✅ Cohérence entre exportTemplate() et exportTemplateWord()
+✅ Logs de diagnostic ajoutés
+✅ Fallback global maintenu pour sécurité
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 COMMENT TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir Claraverse
+2. Créer plusieurs messages avec des tables
+3. Survoler/cliquer une table dans un message spécifique
+4. Clic droit > Excel > "Exporter template Excel"
+5. Vérifier: Seules les tables du message actif sont exportées
+
+RÉSULTAT ATTENDU:
+✅ Export uniquement des tables du message contenant la table active
+✅ Pas d'export des tables des autres messages
+
+═══════════════════════════════════════════════════════════════════════════════

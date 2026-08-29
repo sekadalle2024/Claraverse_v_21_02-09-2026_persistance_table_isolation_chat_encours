@@ -1,0 +1,196 @@
+========================================
+DIAGNOSTIC - ACCORDEONS NON CLIQUABLES
+========================================
+Date: 05 Avril 2026
+Statut: PROBLEME PERSISTANT
+
+SYMPTOME
+========
+Les 16 sections accordeon des etats de controle s'affichent
+mais ne s'ouvrent toujours pas au clic.
+
+CORRECTIONS APPLIQUEES
+=======================
+1. Exposition de window.toggleSection = toggleSection
+2. Suppression des attributs onclick pour eviter les conflits
+3. Ajout de data-listenerAttached pour eviter les doublons
+4. Amelioration du MutationObserver avec delai de 500ms
+5. Logs detailles pour le debugging
+
+TESTS A EFFECTUER
+=================
+
+1. VERIFIER LA CONSOLE DU NAVIGATEUR
+   Ouvrir F12 et chercher:
+   - "🔧 EtatsControleAccordeonHandler: Initialisation..."
+   - "📊 Nombre de sections trouvées: X"
+   - "✅ Listener ajouté sur section X"
+   
+   Si "Nombre de sections trouvées: 0":
+   → Les sections ne sont pas encore dans le DOM
+   → Attendre la generation complete des etats
+
+2. VERIFIER LA STRUCTURE HTML
+   Dans la console (F12), executer:
+   
+   // Compter les sections
+   document.querySelectorAll('.section').length
+   
+   // Compter les headers
+   document.querySelectorAll('.section-header').length
+   
+   // Verifier les classes CSS
+   const section = document.querySelector('.section');
+   console.log(section);
+   console.log(section.classList);
+
+3. TESTER MANUELLEMENT
+   Dans la console (F12), executer:
+   
+   // Tester toggleSection
+   const header = document.querySelector('.section-header');
+   window.toggleSection(header);
+   
+   // Verifier si la classe active est ajoutee
+   const section = document.querySelector('.section');
+   console.log(section.classList.contains('active'));
+
+4. VERIFIER LES STYLES CSS
+   Dans la console (F12), executer:
+   
+   // Verifier le max-height
+   const content = document.querySelector('.section-content');
+   console.log(window.getComputedStyle(content).maxHeight);
+   
+   // Apres avoir ajoute la classe active
+   const section = document.querySelector('.section');
+   section.classList.add('active');
+   console.log(window.getComputedStyle(content).maxHeight);
+
+5. VERIFIER LES EVENT LISTENERS
+   Dans la console (F12), executer:
+   
+   // Verifier si les listeners sont attaches
+   const header = document.querySelector('.section-header');
+   console.log(header.dataset.listenerAttached);
+   
+   // Verifier les attributs onclick
+   console.log(header.getAttribute('onclick'));
+
+PROBLEMES POSSIBLES
+===================
+
+A. LES SECTIONS NE SONT PAS DANS LE DOM
+   Symptome: "Nombre de sections trouvées: 0"
+   Solution: Attendre la generation complete ou reinitialiser
+   Commande: window.reinitializeEtatsControleAccordeons();
+
+B. LES STYLES CSS NE SONT PAS CHARGES
+   Symptome: max-height ne change pas
+   Solution: Verifier que etats_financiers.py contient les styles
+   Fichier: py_backend/etats_financiers.py (lignes 1596-1750)
+
+C. CONFLIT AVEC D'AUTRES SCRIPTS
+   Symptome: Erreurs JavaScript dans la console
+   Solution: Verifier l'ordre de chargement des scripts
+   Fichier: index.html (ligne 151)
+
+D. LE HTML EST GENERE APRES L'INITIALISATION
+   Symptome: Logs d'initialisation avant les sections
+   Solution: Le MutationObserver devrait detecter et reinitialiser
+   Verifier: Logs "🆕 Nouvelles sections détectées"
+
+E. LES ATTRIBUTS ONCLICK BLOQUENT LES LISTENERS
+   Symptome: Clic ne fait rien
+   Solution: Les attributs onclick sont maintenant supprimes
+   Verifier: Logs "🔧 Attribut onclick supprimé"
+
+COMMANDES DE DEBUG AVANCEES
+============================
+
+// 1. Forcer la reinitialisation
+window.reinitializeEtatsControleAccordeons();
+
+// 2. Verifier tous les headers
+document.querySelectorAll('.section-header').forEach((h, i) => {
+    console.log(`Header ${i}:`, {
+        hasOnclick: h.hasAttribute('onclick'),
+        hasListener: h.dataset.listenerAttached,
+        classes: h.className
+    });
+});
+
+// 3. Tester le toggle manuellement
+const section = document.querySelector('.section');
+section.classList.toggle('active');
+console.log('Active:', section.classList.contains('active'));
+
+// 4. Verifier le CSS
+const content = document.querySelector('.section-content');
+const styles = window.getComputedStyle(content);
+console.log('Max-height:', styles.maxHeight);
+console.log('Overflow:', styles.overflow);
+console.log('Transition:', styles.transition);
+
+// 5. Ajouter un listener de test
+const header = document.querySelector('.section-header');
+header.addEventListener('click', function() {
+    console.log('🎯 CLIC DETECTE SUR HEADER!');
+    console.log('Parent:', this.parentElement);
+    console.log('Classes parent:', this.parentElement.classList);
+});
+
+SOLUTION TEMPORAIRE
+===================
+
+Si rien ne fonctionne, ajouter ce code dans la console:
+
+// Solution manuelle
+document.querySelectorAll('.section-header').forEach(header => {
+    header.style.cursor = 'pointer';
+    header.addEventListener('click', function() {
+        const section = this.parentElement;
+        section.classList.toggle('active');
+        console.log('Section toggled:', section.classList.contains('active'));
+    });
+});
+
+PROCHAINES ETAPES
+=================
+
+1. Executer les tests ci-dessus
+2. Noter les resultats dans la console
+3. Identifier le probleme specifique
+4. Appliquer la correction appropriee
+
+FICHIERS A VERIFIER
+====================
+
+1. public/EtatsControleAccordeonHandler.js
+   - Fonction toggleSection
+   - Exposition globale
+   - Event listeners
+   - MutationObserver
+
+2. index.html
+   - Ligne 151: Script charge
+   - Ordre de chargement
+
+3. py_backend/etats_financiers.py
+   - Lignes 1596-1750: Styles CSS
+   - Lignes 2090-2120: Script JavaScript backend
+
+4. py_backend/etats_controle_exhaustifs_html.py
+   - Structure HTML generee
+   - Attributs onclick
+
+CONTACT
+=======
+
+Si le probleme persiste apres tous ces tests,
+fournir les informations suivantes:
+
+1. Logs de la console (F12)
+2. Resultats des commandes de debug
+3. Capture d'ecran de la structure HTML (Elements tab)
+4. Version du navigateur utilisee

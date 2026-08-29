@@ -1,0 +1,70 @@
+============================================
+IMPORT DU WORKFLOW GOOGLE DRIVE SCANNER
+============================================
+
+FICHIER A IMPORTER:
+workflows/GOOGLE-DRIVE-SCANNER-COMPLET.json
+
+============================================
+ETAPES DANS N8N CLOUD:
+============================================
+
+1. Ouvrir n8n Cloud
+
+2. Cliquer sur "+ Create Workflow" ou ouvrir un workflow existant
+
+3. Cliquer sur les 3 points (...) en haut à droite
+
+4. Sélectionner "Import from File..."
+
+5. Choisir le fichier: GOOGLE-DRIVE-SCANNER-COMPLET.json
+
+6. IMPORTANT: Cliquer sur le node "Liste Google Drive"
+   → Dans "Credential to connect with"
+   → Sélectionner votre credential "Google Cloud novembre"
+
+7. Activer le workflow (toggle en haut à droite)
+
+8. Copier l'URL du webhook affichée dans le node "Webhook"
+
+============================================
+TEST DU WEBHOOK:
+============================================
+
+URL: https://votre-instance.app.n8n.cloud/webhook/google-drive-scan
+
+Méthode: GET
+
+Test navigateur: Coller l'URL directement dans le navigateur
+
+Test cURL:
+curl https://votre-instance.app.n8n.cloud/webhook/google-drive-scan
+
+============================================
+FORMAT DE REPONSE JSON:
+============================================
+
+{
+  "success": true,
+  "timestamp": "2024-12-24T...",
+  "statistiques": {
+    "totalDossiers": 15,
+    "totalFichiers": 42,
+    "dossiersRacine": 3,
+    "fichiersRacine": 5
+  },
+  "arborescence": {
+    "dossiers": [
+      {
+        "id": "1ABC...",
+        "nom": "Mon Dossier",
+        "type": "dossier",
+        "sousDossiers": [...],
+        "fichiers": [...]
+      }
+    ],
+    "fichiers": [...]
+  }
+}
+
+============================================

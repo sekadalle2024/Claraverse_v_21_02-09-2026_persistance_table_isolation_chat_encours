@@ -1,0 +1,159 @@
+================================================================================
+CORRECTIONS FINALES - PROBLEMES PERSISTANTS (06 AVRIL 2026)
+================================================================================
+
+STATUT: CORRECTIONS PARTIELLES APPLIQUEES - TESTS REQUIS
+
+================================================================================
+CORRECTIONS APPLIQUEES
+================================================================================
+
+1. COLONNES BRUT/AMORT CORRIGEES dans export_liasse.py
+   - Changement de E, F, G, H vers F, G, H, I
+   - Fonction remplir_onglet_actif_avec_brut_amort() mise à jour
+   - Commentaires corrigés
+
+2. BALANCES AJOUTEES AUX RESULTS dans etats_financiers_v2.py
+   - Ajout de 'balance_n_df' et 'balance_n1_df' au return
+
+================================================================================
+PROBLEMES IDENTIFIES
+================================================================================
+
+1. FICHIER UTILISE: etats_financiers.py vs etats_financiers_v2.py
+   - Le TFT est calculé dans etats_financiers.py (ligne 1566)
+   - Les balances ont été ajoutées dans etats_financiers_v2.py
+   - QUESTION: Quel fichier est utilisé par l'application?
+
+2. COLONNES EXACTES DU TEMPLATE
+   - Les colonnes F, G, H, I sont supposées mais non vérifiées
+   - Le template Excel a des problèmes de chargement (timeout)
+   - BESOIN: Vérification manuelle du template
+
+3. TOTALISATIONS
+   - Le code calcule les totalisations (AZ, BQ, BZ, CZ, DZ)
+   - Les totalisations incluent brut et amortissement
+   - MAIS: Elles doivent être ajoutées au dict AVANT le remplissage
+
+4. TFT
+   - Le TFT est calculé dans etats_financiers.py
+   - Le mapping TFT est complet dans export_liasse.py
+   - MAIS: Le TFT doit être dans results pour être exporté
+
+================================================================================
+PROCHAINES ACTIONS IMMEDIATES
+================================================================================
+
+ACTION 1: Vérifier quel fichier est utilisé
+   - Chercher dans main.py l'endpoint qui génère les états
+   - Identifier si c'est etats_financiers.py ou etats_financiers_v2.py
+   - Appliquer les corrections au bon fichier
+
+ACTION 2: Vérifier les colonnes du template manuellement
+   - Ouvrir py_backend/Liasse_officielle_revise.xlsx
+   - Noter les colonnes exactes:
+     * BRUT N: Colonne ?
+     * AMORT N: Colonne ?
+     * NET N: Colonne ?
+     * NET N-1: Colonne ?
+   - Ajuster le code si nécessaire
+
+ACTION 3: Tester l'export complet
+   - Redémarrer le backend
+   - Importer la balance
+   - Générer les états
+   - Exporter la liasse
+   - Vérifier:
+     * Colonnes BRUT/AMORT remplies
+     * Totalisations présentes
+     * TFT rempli
+
+ACTION 4: Modifier le frontend
+   - Ajouter colonnes BRUT et AMORT au menu accordéon
+   - Fichier: src/components/Clara_Components/[Composant]
+   - Colonnes: brut_n, amort_n
+
+================================================================================
+FICHIERS MODIFIES
+================================================================================
+
+1. py_backend/export_liasse.py
+   - Colonnes changées: F, G, H, I (au lieu de E, F, G, H)
+   - Fonction remplir_onglet_actif_avec_brut_amort() mise à jour
+
+2. py_backend/etats_financiers_v2.py
+   - Ajout de balance_n_df et balance_n1_df au return
+
+================================================================================
+FICHIERS A VERIFIER/MODIFIER
+================================================================================
+
+1. py_backend/main.py
+   - Identifier l'endpoint qui génère les états
+   - Vérifier quel fichier est importé
+
+2. py_backend/etats_financiers.py
+   - Si c'est le fichier utilisé, ajouter les balances au return
+   - Vérifier que le TFT est bien ajouté aux results
+
+3. py_backend/Liasse_officielle_revise.xlsx
+   - Vérifier manuellement les colonnes exactes
+
+4. src/components/Clara_Components/[Composant Menu Accordéon]
+   - Ajouter colonnes brut_n et amort_n
+
+================================================================================
+CODE A AJOUTER SI etats_financiers.py EST UTILISE
+================================================================================
+
+Dans etats_financiers.py, fonction process_balance_to_etats_financiers():
+
+Avant le return, ajouter:
+```python
+# Ajouter les balances aux résultats pour l'export
+results['balance_n_df'] = balance_df
+results['balance_n1_df'] = balance_n1_df
+```
+
+================================================================================
+TEST RAPIDE
+================================================================================
+
+1. Redémarrer le backend:
+   .\start-claraverse.ps1
+
+2. Importer la balance:
+   py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+3. Générer les états financiers
+
+4. Exporter la liasse officielle
+
+5. Vérifier:
+   - Onglet ACTIF: colonnes F, G, H, I
+   - Totalisations: AZ, BQ, BZ, CZ, DZ
+   - Onglet TFT: colonnes I, K (ou autres)
+
+================================================================================
+DOCUMENTATION CREEE
+================================================================================
+
+1. 00_CORRECTION_URGENTE_PROBLEMES_PERSISTANTS_06_AVRIL_2026.txt
+2. 00_CORRECTIONS_FINALES_PROBLEMES_PERSISTANTS_06_AVRIL_2026.txt (ce fichier)
+3. verifier_template_colonnes.py (script de vérification)
+
+================================================================================
+PROCHAINE ETAPE
+================================================================================
+
+PRIORITE 1: Identifier le fichier utilisé (etats_financiers.py ou etats_financiers_v2.py)
+PRIORITE 2: Vérifier les colonnes du template manuellement
+PRIORITE 3: Tester l'export complet
+
+TEMPS ESTIME: 30 minutes
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 22:00
+Agent: Kiro AI Assistant
+Statut: Corrections partielles appliquées - Tests requis
+================================================================================

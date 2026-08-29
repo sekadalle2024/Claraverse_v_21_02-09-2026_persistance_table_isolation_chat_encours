@@ -1,0 +1,109 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   🔍 DIAGNOSTIC SCORE RÉSULTAT - MAINTENANT                 ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════
+                    🎯 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════
+
+✅ Le menu contextuel s'affiche
+❌ La table "Résultat Final" ne se remplit pas avec le score
+
+
+═══════════════════════════════════════════════════════════════
+                    📋 ÉTAPES DE DIAGNOSTIC
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir: http://localhost:5173/test-menu-cia-simple.html
+
+2. Ouvrir la console (F12)
+
+3. Cocher quelques réponses dans les tables
+
+4. Clic droit → "Résultat final"
+
+5. Dans la console, taper:
+   ```
+   diagnosticScoreResultat()
+   ```
+
+6. Copier TOUS les logs et me les envoyer
+
+
+═══════════════════════════════════════════════════════════════
+                    🔧 TESTS SUPPLÉMENTAIRES
+═══════════════════════════════════════════════════════════════
+
+Si le diagnostic ne suffit pas, essayer:
+
+```javascript
+// Test 1: Forcer le calcul des scores
+forcerCalculScores()
+
+// Test 2: Vérifier les données des tables
+const tables = document.querySelectorAll('table');
+tables.forEach((table, i) => {
+  console.log(`Table ${i+1}:`, {
+    totalScore: table.dataset.totalScore,
+    questionCount: table.dataset.questionCount
+  });
+});
+
+// Test 3: Vérifier la table Résultat Final
+const resultatTable = document.querySelector('[data-resultat-table]');
+console.log('Table Résultat:', resultatTable);
+if (resultatTable) {
+  const scoreCell = resultatTable.querySelector('tbody td');
+  console.log('Cellule score:', scoreCell?.textContent);
+}
+```
+
+
+═══════════════════════════════════════════════════════════════
+                    📊 INFORMATIONS À ME DONNER
+═══════════════════════════════════════════════════════════════
+
+1. Que affiche diagnosticScoreResultat() ?
+
+2. Y a-t-il des erreurs dans la console ?
+
+3. Les tables CIA ont-elles des scores calculés ?
+   (totalScore et questionCount)
+
+4. La table "Résultat Final" existe-t-elle ?
+
+5. Si oui, que contient sa cellule de score ?
+
+
+═══════════════════════════════════════════════════════════════
+                    🚀 TEST RAPIDE
+═══════════════════════════════════════════════════════════════
+
+Pour tester rapidement:
+
+```javascript
+// Mise à jour manuelle de la table résultat
+const resultatTable = document.querySelector('[data-resultat-table]');
+
+if (resultatTable) {
+  const scoreCell = resultatTable.querySelector('tbody td');
+  if (scoreCell) {
+    scoreCell.textContent = '2/2'; // Test
+    scoreCell.style.backgroundColor = '#d4edda';
+    console.log('✅ Table mise à jour manuellement');
+  }
+}
+```
+
+
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║   📞 AVEC CES INFORMATIONS, JE POURRAI CORRIGER             ║
+║      LE PROBLÈME IMMÉDIATEMENT                              ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+Version: DIAGNOSTIC SCORE
+Date: Décembre 2024

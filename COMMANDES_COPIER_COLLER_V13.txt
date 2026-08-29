@@ -1,0 +1,118 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║           COMMANDES À COPIER-COLLER - SAUVEGARDE CLARAVERSE V13               ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+  OPTION 1: SCRIPT AUTOMATIQUE (LE PLUS SIMPLE)
+═══════════════════════════════════════════════════════════════════════════════
+
+Copier-coller cette ligne dans PowerShell:
+
+.\push-claraverse-v13-20-avril-2026.ps1
+
+✓ Tout est automatisé!
+
+═══════════════════════════════════════════════════════════════════════════════
+  OPTION 2: COMMANDES MANUELLES (TOUT EN UNE FOIS)
+═══════════════════════════════════════════════════════════════════════════════
+
+Copier-coller TOUTES ces lignes dans PowerShell:
+
+git config core.compression 0
+git config http.postBuffer 2147483647
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+git config http.maxRequestBuffer 536870912
+git add .
+git commit -m "Sauvegarde ClaraVerse V13 - 20-04-2026 - Docker Zeabur OK + Switch Editeur"
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+git push -u origin master
+git status
+
+═══════════════════════════════════════════════════════════════════════════════
+  OPTION 3: COMMANDES ÉTAPE PAR ÉTAPE
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Configuration Git
+────────────────────────────────────────────────────────────────────────────────
+git config core.compression 0
+git config http.postBuffer 2147483647
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+git config http.maxRequestBuffer 536870912
+
+
+ÉTAPE 2: Ajouter et Commiter
+────────────────────────────────────────────────────────────────────────────────
+git add .
+git commit -m "Sauvegarde ClaraVerse V13 - 20-04-2026 - Docker Zeabur OK + Switch Editeur"
+
+
+ÉTAPE 3: Changer le Repository
+────────────────────────────────────────────────────────────────────────────────
+git remote set-url origin https://github.com/sekadalle2024/Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur.git
+
+
+ÉTAPE 4: Vérifier la Configuration
+────────────────────────────────────────────────────────────────────────────────
+git remote -v
+git branch
+
+
+ÉTAPE 5: Push vers GitHub
+────────────────────────────────────────────────────────────────────────────────
+git push -u origin master
+
+
+ÉTAPE 6: Vérification Finale
+────────────────────────────────────────────────────────────────────────────────
+git status
+git log -1 --oneline
+
+═══════════════════════════════════════════════════════════════════════════════
+  SI LE PUSH ÉCHOUE (PROJET TROP VOLUMINEUX)
+═══════════════════════════════════════════════════════════════════════════════
+
+Utiliser le script de commits multiples:
+
+.\push-commits-multiples-v13.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+  VÉRIFICATION SUR GITHUB
+═══════════════════════════════════════════════════════════════════════════════
+
+Ouvrir dans le navigateur:
+
+https://github.com/sekadalle2024/Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur
+
+═══════════════════════════════════════════════════════════════════════════════
+  EN CAS D'ERREUR
+═══════════════════════════════════════════════════════════════════════════════
+
+Si erreur "cannot lock ref" ou "unrelated histories":
+────────────────────────────────────────────────────────────────────────────────
+git fetch origin master
+git merge origin/master --allow-unrelated-histories
+git commit -m "Fusion avec origin/master"
+git push -u origin master
+
+
+Si erreur "HTTP 408 Timeout":
+────────────────────────────────────────────────────────────────────────────────
+.\push-commits-multiples-v13.ps1
+
+
+Si erreur "Connection reset":
+────────────────────────────────────────────────────────────────────────────────
+# Attendre 2-3 minutes puis réessayer:
+git push -u origin master
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Date:       20 Avril 2026
+Projet:     ClaraVerse V13
+Repository: Claverse_windows__v_13_20-04-2026_V5_docker_zeabur_ok_switch_editeur
+
+═══════════════════════════════════════════════════════════════════════════════

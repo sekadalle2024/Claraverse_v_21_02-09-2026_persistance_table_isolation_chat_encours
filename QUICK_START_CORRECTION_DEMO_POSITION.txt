@@ -1,0 +1,81 @@
+═══════════════════════════════════════════════════════════════════════
+  QUICK START - CORRECTION [Demo] = Activate
+  E-audit Pro - Toutes les étapes de mission
+═══════════════════════════════════════════════════════════════════════
+
+✅ CORRECTION TERMINÉE AVEC SUCCÈS !
+
+3 occurrences ont été corrigées dans DemarrerMenu.tsx
+
+
+RÉSUMÉ :
+────────
+La ligne [Demo] = Activate a été déplacée de la position AVANT [Nb de lignes]
+vers la position APRÈS [Nb de lignes] (en dernière ligne).
+
+
+ÉTAPES EFFECTUÉES :
+───────────────────
+✓ Suppression des 12 fichiers créés par erreur
+✓ Création du script de correction Python
+✓ Création du script de test PowerShell
+✓ Exécution du script avec succès
+✓ Vérification : 0 occurrence incorrecte restante
+✓ Vérification : 50+ occurrences correctes trouvées
+
+
+FICHIERS CRÉÉS :
+────────────────
+1. Doc menu demarrer/Scripts/fix_demo_position_feuille_couverture_e_audit_pro.py
+   → Script Python de correction (réutilisable)
+
+2. test-fix-demo-feuille-couverture.ps1
+   → Script PowerShell de test et validation
+
+3. 00_CORRECTION_DEMO_FEUILLE_COUVERTURE_05_MAI_2026.txt
+   → Documentation détaillée
+
+4. QUICK_START_CORRECTION_DEMO_POSITION.txt
+   → Ce fichier (guide rapide)
+
+
+BACKUP CRÉÉ :
+─────────────
+src/components/Clara_Components/DemarrerMenu.tsx.bak_20260505_150933
+
+
+PROCHAINES ÉTAPES :
+───────────────────
+1. Relancer l'application :
+   npm run dev
+
+2. Tester le menu Demarrer :
+   E-audit Pro > Phase de réalisation > Feuille couverture
+
+3. Sélectionner le mode "Demo"
+
+4. Vérifier que la commande générée a [Demo] = Activate en DERNIÈRE ligne
+
+
+COMMANDES UTILES :
+──────────────────
+# Vérifier qu'il n'y a plus d'occurrences incorrectes :
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Demo\] = Activate\n\[Nb de lignes\]"
+
+# Compter les occurrences correctes :
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Nb de lignes\] = \d+\n\[Demo\] = Activate" | Measure-Object
+
+
+ÉTAPES CORRIGÉES :
+──────────────────
+Les 3 occurrences suivantes ont été corrigées :
+1. Étape de mission (ligne ~1143)
+2. Étape de mission (ligne ~1213)
+3. Évaluation des risques (ligne ~1281)
+
+Note: L'étape "Feuille couverture" (ligne ~1337) était déjà correcte.
+
+
+═══════════════════════════════════════════════════════════════════════
+  MISSION ACCOMPLIE - 05 MAI 2026
+═══════════════════════════════════════════════════════════════════════

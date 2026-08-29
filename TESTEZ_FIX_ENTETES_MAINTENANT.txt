@@ -1,0 +1,69 @@
+═══════════════════════════════════════════════════════════════════
+🧪 TESTEZ LE FIX DES EN-TÊTES INSENSIBLES À LA CASSE
+═══════════════════════════════════════════════════════════════════
+
+✅ FIX APPLIQUÉ dans Flowise.js
+
+Le script accepte maintenant TOUTES les variations de casse pour :
+- Rubrique / RUBRIQUE / rubrique
+- Description / DESCRIPTION / description
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPES DE TEST
+═══════════════════════════════════════════════════════════════════
+
+1. Rechargez votre application (Ctrl+F5 ou Cmd+Shift+R)
+
+2. Créez des tables de test avec différentes casses :
+
+   Table 1 (minuscules) :
+   | rubrique    | description        |
+   |-------------|--------------------|
+   | Flowise     | Test minuscules    |
+
+   Table 2 (Première lettre majuscule) :
+   | Rubrique    | Description        |
+   |-------------|--------------------|
+   | Flowise     | Test majuscules    |
+
+   Table 3 (TOUT EN MAJUSCULES) :
+   | RUBRIQUE    | DESCRIPTION        |
+   |-------------|--------------------|
+   | Flowise     | Test MAJUSCULES    |
+
+3. Ouvrez la console du navigateur (F12)
+
+4. Observez les logs :
+   ✅ Les 3 tables devraient être collectées
+   ✅ Vous verrez : "✅ Div #X - Mot-clé trouvé"
+
+5. Vérifiez que les tables sont envoyées à n8n
+
+═══════════════════════════════════════════════════════════════════
+🔍 LOGS À SURVEILLER
+═══════════════════════════════════════════════════════════════════
+
+✅ BON SIGNE :
+  ✅ Div #1 - Mot-clé trouvé
+     ├─ Tables dans cette div: 1
+     ├─ En-têtes de la première table: [Rubrique, Description]
+
+❌ SI IGNORÉE (autres en-têtes) :
+  ⏭️ Div #5 - En-têtes: [Nom, Valeur] - Pas de Rubrique/Description, ignorée
+
+═══════════════════════════════════════════════════════════════════
+💡 ASTUCE
+═══════════════════════════════════════════════════════════════════
+
+Si certaines tables ne s'affichent toujours pas :
+1. Vérifiez qu'elles ont bien les en-têtes "Rubrique" ET "Description"
+2. Vérifiez qu'elles contiennent le mot-clé (ex: "Flowise")
+3. Regardez les logs de la console pour comprendre pourquoi
+
+═══════════════════════════════════════════════════════════════════
+📄 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════
+
+Voir : FIX_ENTETES_INSENSIBLE_CASSE_APPLIQUE.md
+
+═══════════════════════════════════════════════════════════════════

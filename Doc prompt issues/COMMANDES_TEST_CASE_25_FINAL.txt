@@ -1,0 +1,317 @@
+═══════════════════════════════════════════════════════════════════════════
+  🚀 COMMANDES TEST CASE 25 - FINAL
+  Date: 29 Mars 2026 - 20h00
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: REDÉMARRER LE SERVEUR
+═══════════════════════════════════════════════════════════════════════════
+
+# Arrêter le serveur
+.\stop-claraverse.ps1
+
+# Démarrer le serveur
+.\start-claraverse.ps1
+
+# Attendre que le serveur soit prêt (environ 30 secondes)
+# Vérifier dans la console: "Local: http://localhost:5173/"
+
+ÉTAPE 2: OUVRIR LE FRONTEND
+═══════════════════════════════════════════════════════════════════════════
+
+# Ouvrir le navigateur
+start http://localhost:5173
+
+# Ouvrir la console du navigateur
+# Appuyer sur F12
+
+ÉTAPE 3: ENVOYER UN MESSAGE CASE 25
+═══════════════════════════════════════════════════════════════════════════
+
+Message à copier-coller dans le chat:
+
+[Command] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+ÉTAPE 4: VÉRIFIER LES LOGS DANS LA CONSOLE (F12)
+═══════════════════════════════════════════════════════════════════════════
+
+LOGS ATTENDUS - PARTIE 1: ROUTER
+───────────────────────────────────────────────────────────────────────────
+═══════════════════════════════════════════════════════════════════════════
+🔀 ROUTER N8N - INFORMATION DE ROUTING
+═══════════════════════════════════════════════════════════════════════════
+📍 Case détecté: Case 25 : recos_controle_interne
+📍 Route: recos_controle_interne
+📍 URL: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+═══════════════════════════════════════════════════════════════════════════
+
+LOGS ATTENDUS - PARTIE 2: MESSAGE ENVOYÉ
+───────────────────────────────────────────────────────────────────────────
+═══════════════════════════════════════════════════════════════════════════
+📤 MESSAGE ENVOYÉ À N8N
+═══════════════════════════════════════════════════════════════════════════
+🌐 Endpoint: https://t22wtwxl.rpcld.app/webhook/recos_contrôle_interne_comptable
+📦 Request Body: {
+  "question": "[Command] : Recos contrôle interne comptable\n[Cycle] : RH..."
+}
+📝 Message brut: [Command] : Recos contrôle interne comptable...
+═══════════════════════════════════════════════════════════════════════════
+
+LOGS ATTENDUS - PARTIE 3: RÉPONSE REÇUE
+───────────────────────────────────────────────────────────────────────────
+═══════════════════════════════════════════════════════════════════════════
+📥 RÉPONSE REÇUE DE N8N
+═══════════════════════════════════════════════════════════════════════════
+📦 Réponse complète: {
+  "response": {
+    "body": [{
+      "data": {
+        "Etape mission - Recos contrôle interne comptable": [...]
+      }
+    }],
+    ...
+  }
+}
+🔍 Type de réponse: object
+🔍 Est un Array? false
+🔍 Clés principales: ["response"]
+═══════════════════════════════════════════════════════════════════════════
+
+LOGS ATTENDUS - PARTIE 4: EXTRACTION
+───────────────────────────────────────────────────────────────────────────
+🔍 === DEBUT ANALYSE REPONSE N8N ===
+📦 Structure reçue: {"response":{"body":[{"data":...
+🔧 FORMAT WEBHOOK N8N: Extraction de response.body[0].data
+✅ Structure response.body détectée
+✅ Extraction de response.body[0].data réussie
+📊 Données extraites: {"Etape mission - Recos contrôle interne comptable":[...
+🔄 Données transformées pour traitement FORMAT 4
+
+LOGS ATTENDUS - PARTIE 5: TRAITEMENT FORMAT 4
+───────────────────────────────────────────────────────────────────────────
+✅ FORMAT 4 DETECTE: Nouveau format "Programme de travail" avec structure data
+📊 Contenu de data: {
+  type: "object",
+  keys: ["Etape mission - Recos contrôle interne comptable"],
+  firstKey: "Etape mission - Recos contrôle interne comptable"
+}
+🔄 Début de la conversion en Markdown...
+✅ Conversion terminée: XXXX caractères générés
+
+LOGS ATTENDUS - PARTIE 6: SUCCÈS
+───────────────────────────────────────────────────────────────────────────
+✅✅✅ Contenu extrait avec succès et prêt à être retourné via la Promise.
+
+ÉTAPE 5: VÉRIFIER L'AFFICHAGE DES TABLES
+═══════════════════════════════════════════════════════════════════════════
+
+TABLES ATTENDUES
+───────────────────────────────────────────────────────────────────────────
+
+✅ Table 1 (En-tête 2 colonnes):
+| Rubrique | Description |
+|----------|-------------|
+| **Etape de mission** | Recos contrôle interne comptable |
+| **Norme** | 14.3 Évaluation des constats |
+| **Méthode** | Méthode des ... |
+| **Reference** | Frap-AA010 |
+
+✅ Table 2 (Intitule):
+**Intitule**
+
+[Titre de l'anomalie sur le recrutement du DG]
+
+✅ Table 3 (Observation):
+**Observation**
+
+[Description du contexte RH et recrutement...]
+
+✅ Table 4 (Constat):
+**Constat**
+
+[Constat sur l'inexistence de procédure de recrutement du DG...]
+
+✅ Table 5 (Risque):
+**Risque**
+
+[Risques liés à l'absence de procédure...]
+
+✅ Table 6 (Recommendation):
+**Recommendation**
+
+[Recommandations pour formaliser la procédure...]
+
+ÉTAPE 6: VÉRIFIER LE CONTENU
+═══════════════════════════════════════════════════════════════════════════
+
+VÉRIFICATIONS CRITIQUES
+───────────────────────────────────────────────────────────────────────────
+
+✅ Le contenu parle de RH (pas Achats, pas Ventes, pas Trésorerie)
+✅ Le contenu parle de Recrutement (pas autre chose)
+✅ Le contenu parle du DG (pas fournisseurs, pas clients)
+✅ Le contenu mentionne l'inexistence de procédure
+
+ÉTAPE 7: TESTS SUPPLÉMENTAIRES
+═══════════════════════════════════════════════════════════════════════════
+
+TEST 2: CYCLE TRÉSORERIE
+───────────────────────────────────────────────────────────────────────────
+[Command] : Recos contrôle interne comptable
+[Cycle] : trésorerie
+[test] : AA010
+[reference] : test sur la validation du compte caisse
+[Anomalie] = Fraude de pièce justificatives de caisse de 4770000 FCFA
+
+Vérifier:
+✅ Contenu parle de Trésorerie
+✅ Contenu parle de Caisse
+✅ Contenu mentionne la fraude de 4770000 FCFA
+
+TEST 3: CYCLE ACHATS
+───────────────────────────────────────────────────────────────────────────
+[Command] : Recos contrôle interne comptable
+[Cycle] : Achats
+[test] : AA020
+[reference] : test sur les bons de commande
+[Anomalie] = Absence de validation des BC
+
+Vérifier:
+✅ Contenu parle d'Achats
+✅ Contenu parle de Bons de Commande
+✅ Contenu mentionne l'absence de validation
+
+DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME 1: CASE 25 NON DÉTECTÉ
+───────────────────────────────────────────────────────────────────────────
+Symptôme: Router affiche "Case 1" au lieu de "Case 25"
+
+Solution:
+1. Vérifier que le message contient "[Command]" ou "[VAE]"
+2. Vérifier que le message contient "Recos contrôle interne comptable"
+3. Redémarrer le serveur
+
+PROBLÈME 2: ERREUR "response.body[0] ne contient pas de propriété 'data'"
+───────────────────────────────────────────────────────────────────────────
+Symptôme: Log d'erreur dans la console
+
+Solution:
+1. Vérifier que le workflow n8n retourne bien response.body[0].data
+2. Ouvrir n8n et vérifier les logs d'exécution
+3. Vérifier que le node "Respond to Webhook" retourne le bon format
+
+PROBLÈME 3: SEULE LA TABLE 1 S'AFFICHE
+───────────────────────────────────────────────────────────────────────────
+Symptôme: Table 1 OK, tables 2-6 manquantes
+
+Solution:
+1. Vérifier que convertHeaderTableToMarkdown() utilise Markdown simple
+2. Vérifier que le workflow n8n génère bien les 6 tables
+3. Ouvrir n8n et vérifier la réponse en mode manuel
+
+PROBLÈME 4: CONTENU SUR MAUVAIS CYCLE
+───────────────────────────────────────────────────────────────────────────
+Symptôme: Message parle de RH mais contenu parle d'Achats
+
+Solution:
+1. Vérifier que le workflow n8n reçoit bien le message utilisateur
+2. Ouvrir n8n et vérifier les logs du node "Recos controle interne comptable2"
+3. Vérifier que le prompt système contient {{ $json.question }}
+
+PROBLÈME 5: PLACEHOLDERS LITTÉRAUX
+───────────────────────────────────────────────────────────────────────────
+Symptôme: Contenu affiche "[Titre de l'anomalie...]"
+
+Solution:
+1. Vérifier que le prompt système n'a PAS de placeholders entre crochets
+2. Copier le prompt système corrigé depuis PROMPT_SYSTEME_CORRIGE_CASE_25_FINAL.md
+3. Redémarrer le workflow n8n
+
+FICHIERS DE RÉFÉRENCE
+═══════════════════════════════════════════════════════════════════════════
+
+1. 00_SOLUTION_EXTRACTION_RESPONSE_BODY_29_MARS_2026.txt
+   → Solution complète extraction response.body[0].data
+
+2. 00_SOLUTION_FINALE_CASE_25_29_MARS_2026.txt
+   → Vue d'ensemble de toutes les corrections
+
+3. 00_WORKFLOW_N8N_FONCTIONNE_MODE_MANUEL_29_MARS_2026.txt
+   → Diagnostic workflow n8n
+
+4. GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+   → Guide d'implémentation complet
+
+COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════
+
+# Voir les logs du serveur
+Get-Content .\logs\claraverse.log -Tail 50 -Wait
+
+# Redémarrer rapidement
+.\stop-claraverse.ps1; .\start-claraverse.ps1
+
+# Ouvrir n8n
+start https://t22wtwxl.rpcld.app
+
+# Ouvrir le frontend
+start http://localhost:5173
+
+# Voir les fichiers modifiés
+git status
+
+# Voir les modifications
+git diff src/services/claraApiService.ts
+
+CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════════════
+
+AVANT LE TEST
+───────────────────────────────────────────────────────────────────────────
+[ ] Serveur arrêté
+[ ] Serveur redémarré
+[ ] Frontend ouvert
+[ ] Console ouverte (F12)
+
+PENDANT LE TEST
+───────────────────────────────────────────────────────────────────────────
+[ ] Message Case 25 envoyé
+[ ] Router détecte Case 25
+[ ] Endpoint correct appelé
+[ ] Message envoyé visible dans logs
+[ ] Réponse reçue visible dans logs
+[ ] Extraction response.body[0].data réussie
+[ ] FORMAT 4 détecté
+[ ] Conversion Markdown réussie
+
+APRÈS LE TEST
+───────────────────────────────────────────────────────────────────────────
+[ ] 6 tables affichées
+[ ] Table 1 en-tête 2 colonnes
+[ ] Tables 2-6 avec en-tête + contenu
+[ ] Contenu spécifique au cycle
+[ ] Contenu mentionne l'anomalie
+[ ] Pas de placeholders littéraux
+
+SUCCÈS FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+Si tous les tests passent:
+✅ Case 25 fonctionne correctement
+✅ Router détecte Case 25
+✅ Workflow n8n génère les 6 tables
+✅ Frontend extrait et affiche correctement
+✅ Contenu spécifique au cycle
+
+PROCHAINE ÉTAPE: Commit et push sur GitHub
+
+═══════════════════════════════════════════════════════════════════════════
+
+Dernière mise à jour: 29 Mars 2026 - 20h00
+Version: 1.0
+Statut: PRÊT POUR LES TESTS

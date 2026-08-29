@@ -1,0 +1,133 @@
+================================================================================
+🔧 CORRECTION EN COURS - DOUBLE PROBLÈME EXPORT LIASSE
+05 AVRIL 2026 - 17h15
+================================================================================
+
+📋 STATUT: CORRECTIONS APPLIQUÉES
+
+================================================================================
+✅ PROBLÈME 1: ÉTATS DE CONTRÔLE - CORRIGÉ
+================================================================================
+
+FICHIER: py_backend/generer_onglet_controle_coherence.py
+
+CHANGEMENTS APPLIQUÉS:
+----------------------
+
+1. Fonction generer_etats_controle_pour_export() modifiée:
+   
+   AVANT:
+   - Utilisait generer_controles_exhaustifs() qui retourne des dicts
+   - Tentait de convertir en format Excel manuellement
+   - Générait seulement 8 états (incomplet)
+   
+   APRÈS:
+   - Utilise les 16 fonctions dédiées de etats_controle_exhaustifs.py:
+     * calculer_etat_controle_bilan_actif_n()
+     * calculer_etat_controle_bilan_actif_n1()
+     * calculer_etat_controle_bilan_actif_variation()
+     * calculer_etat_controle_bilan_passif_n()
+     * calculer_etat_controle_bilan_passif_n1()
+     * calculer_etat_controle_bilan_passif_variation()
+     * calculer_etat_controle_compte_resultat_n()
+     * calculer_etat_controle_compte_resultat_n1()
+     * calculer_etat_controle_compte_resultat_variation()
+     * calculer_etat_controle_tft_n()
+     * calculer_etat_controle_tft_n1()
+     * calculer_etat_controle_tft_variation()
+     * calculer_etat_controle_sens_comptes_n()
+     * calculer_etat_controle_sens_comptes_n1()
+     * calculer_etat_equilibre_bilan_n()
+     * calculer_etat_equilibre_bilan_n1()
+   
+   - Génère maintenant les 16 états exhaustifs
+   - Format directement compatible avec Excel
+
+RÉSULTAT:
+---------
+✅ Les 16 états de contrôle sont maintenant générés
+✅ Même source que le frontend (etats_controle_exhaustifs.py)
+✅ Cohérence totale entre menu accordéon et export Excel
+
+================================================================================
+⚠️  PROBLÈME 2: VALEURS NON RENSEIGNÉES - EN ANALYSE
+================================================================================
+
+FICHIER: py_backend/export_liasse.py
+
+PROBLÈME IDENTIFIÉ:
+-------------------
+Les mappings de cellules (MAPPING_BILAN_ACTIF, MAPPING_BILAN_PASSIF, etc.)
+utilisent des références qui ne correspondent PAS aux vraies références des
+postes générés par etats_financiers_v2.py.
+
+EXEMPLE DU PROBLÈME:
+--------------------
+MAPPING_BILAN_ACTIF utilise:
+  'AD': 'C10'  # Charges immobilisées
+  'AE': 'C11'  # Frais de recherche
+
+Mais etats_financiers_v2.py génère des postes avec des références comme:
+  'AA', 'AB', 'AC', etc. (structure_liasse_complete.json)
+
+SOLUTION NÉCESSAIRE:
+--------------------
+1. Lire structure_liasse_complete.json pour voir les VRAIES références
+2. Corriger TOUS les mappings pour qu'ils correspondent
+3. OU: Utiliser une approche dynamique qui lit les références depuis results
+
+PROCHAINE ÉTAPE:
+----------------
+→ Lire structure_liasse_complete.json
+→ Identifier les vraies références des postes
+→ Corriger les mappings dans export_liasse.py
+
+================================================================================
+📊 PRINCIPE FONDAMENTAL (RAPPEL)
+================================================================================
+
+"Utiliser strictement nos propres formules et valeurs qui en découlent 
+pour TOUTES les cellules concernées"
+
+→ Source unique: etats_financiers_v2.py
+→ Pas de formules Excel du template
+→ Remplir TOUTES les cellules avec NOS valeurs
+
+================================================================================
+🔍 DIAGNOSTIC EN COURS
+================================================================================
+
+FICHIERS À ANALYSER:
+1. py_backend/structure_liasse_complete.json (références réelles)
+2. py_backend/etats_financiers_v2.py (génération des postes)
+3. py_backend/export_liasse.py (mappings à corriger)
+
+TESTS À EFFECTUER:
+1. Charger une balance de test
+2. Générer les états financiers
+3. Vérifier les références des postes générés
+4. Comparer avec les mappings actuels
+5. Corriger les mappings
+
+================================================================================
+⏱️  TEMPS ESTIMÉ POUR CORRECTION COMPLÈTE
+================================================================================
+
+Problème 1 (États de contrôle): ✅ TERMINÉ (15 min)
+Problème 2 (Valeurs vides): 🔧 EN COURS (30 min estimé)
+
+TOTAL: ~45 minutes
+
+================================================================================
+📞 PROCHAINES ACTIONS
+================================================================================
+
+1. Lire structure_liasse_complete.json
+2. Identifier les vraies références
+3. Corriger les mappings dans export_liasse.py
+4. Tester l'export complet
+5. Valider que toutes les cellules sont remplies
+
+================================================================================
+Dernière mise à jour: 05 AVRIL 2026 - 17h15
+================================================================================

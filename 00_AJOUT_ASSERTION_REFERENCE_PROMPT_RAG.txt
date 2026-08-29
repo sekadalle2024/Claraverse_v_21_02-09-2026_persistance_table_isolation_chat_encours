@@ -1,0 +1,139 @@
+═══════════════════════════════════════════════════════════════════════════════
+   AJOUT DES VARIABLES ASSERTION ET REFERENCE DANS LE PROMPT RAG
+   29 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Les variables [assertion] et [reference] étaient bien extraites par le node
+"Extract Variables for RAG" et présentes dans la section [DONNÉES D'ENTRÉE]
+du prompt, MAIS elles n'étaient PAS utilisées dans les instructions de
+recherche RAG (ÉTAPE 2).
+
+Résultat : L'agent RAG ne les utilisait pas pour affiner ses recherches.
+
+✅ SOLUTION APPLIQUÉE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MODIFICATION 1 : ÉTAPE 1 - Ajout du contexte des variables
+─────────────────────────────────────────────────────────────────────────
+
+AVANT :
+Analyse :
+- Quelle est la nature de l'opération sous-jacente ?
+  → Analyser la [référence] et l'[anomalie] pour identifier l'opération
+
+APRÈS :
+CONTEXTE DU CONTRÔLE :
+- [reference] = "{{ $json.reference || "Non fourni" }}" 
+  → Décrit le test/contrôle effectué (ex: "test sur la validation du compte caisse")
+- [assertion] = "{{ $json.assertion || "Non fourni" }}"
+  → Assertion d'audit testée (existence, exhaustivité, validité, exactitude, etc.)
+- [anomalie] = "{{ $json.anomalie || "Non fourni" }}"
+  → Anomalie détectée lors du contrôle
+
+Analyse :
+- Quelle est la nature de l'opération sous-jacente ?
+  → Analyser la [reference] et l'[anomalie] pour identifier l'opération
+- Quels sont les flux économiques ?
+  → Déduire des informations de la [reference] et du [cycle]
+- Quelle est l'écriture de régularisation probable ?
+  → Analyser l'[anomalie] pour déterminer la régularisation
+- Quelle assertion est testée ?
+  → Utiliser [assertion] pour orienter les recherches (ex: validité → vérifier pièces justificatives)
+
+MODIFICATION 2 : ÉTAPE 2 - Intégration dans les recherches RAG
+─────────────────────────────────────────────────────────────────────────
+
+RECHERCHE 1 - COMPTE PRINCIPAL DU CYCLE :
+Query → "compte {{ $json.cycle }} SYSCOHADA fonctionnement débit crédit {{ $json.reference }}"
+                                                                         ^^^^^^^^^^^^^^^^^^^^
+                                                                         AJOUTÉ
+
+RECHERCHE 2 - COMPTES DE CHARGES/PRODUITS :
+Query → "compte charges produits {{ $json.cycle }} SYSCOHADA {{ $json.reference }}"
+                                                              ^^^^^^^^^^^^^^^^^^^^
+                                                              AJOUTÉ
+
+RECHERCHE 4 - ÉCRITURE DE RÉGULARISATION SELON ASSERTION :
+Query → "écriture régularisation extourne {{ $json.cycle }} SYSCOHADA ajustement audit {{ $json.assertion }} {{ $json.anomalie }}"
+                                                                                         ^^^^^^^^^^^^^^^^^^^
+                                                                                         AJOUTÉ
+Contexte → Utiliser [assertion] pour orienter la régularisation (ex: validité → pièces justificatives manquantes)
+
+RECHERCHE 6 (NOUVELLE) - PIÈCES JUSTIFICATIVES :
+Query → "pièces justificatives {{ $json.cycle }} SYSCOHADA contrôle {{ $json.assertion }}"
+Objectif → Identifier les pièces justificatives requises selon l'assertion testée
+
+📊 UTILISATION DES VARIABLES DANS LES RECHERCHES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Variable [reference] :
+─────────────────────────────────────────────────────────────────────────
+Contenu : "test sur la validation du compte caisse"
+Utilisation :
+  - RECHERCHE 1 : Affiner la recherche du compte principal
+  - RECHERCHE 2 : Identifier les comptes de charges/produits concernés
+
+Variable [assertion] :
+─────────────────────────────────────────────────────────────────────────
+Contenu : "validité"
+Utilisation :
+  - RECHERCHE 4 : Orienter la régularisation selon l'assertion
+  - RECHERCHE 6 : Identifier les pièces justificatives requises
+
+Exemples d'assertions :
+  - existence → Vérifier que le compte existe
+  - exhaustivité → Vérifier que toutes les opérations sont enregistrées
+  - validité → Vérifier les pièces justificatives
+  - exactitude → Vérifier les montants et calculs
+  - imputation → Vérifier l'affectation aux bons comptes
+
+📤 RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Avec les données de test :
+- [reference] = "test sur la validation du compte caisse"
+- [assertion] = "validité"
+- [anomalie] = "VOL de caisse de 600 0000 FCFA sur les petites depenses fournisseurs"
+
+L'agent RAG va maintenant :
+
+1. Utiliser [reference] pour affiner les recherches de comptes
+   → "compte trésorerie SYSCOHADA fonctionnement débit crédit test sur la validation du compte caisse"
+
+2. Utiliser [assertion] pour orienter la régularisation
+   → "écriture régularisation extourne trésorerie SYSCOHADA ajustement audit validité VOL de caisse..."
+
+3. Effectuer une recherche spécifique sur les pièces justificatives
+   → "pièces justificatives trésorerie SYSCOHADA contrôle validité"
+
+🔧 ACTION À FAIRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvre le node "Agent RAG" dans N8N
+2. Copie TOUT le contenu du fichier : n8n_prompt_agent_rag_7_variables.txt
+3. Colle-le dans le champ "System Message" ou "Prompt"
+4. Sauvegarde
+5. Teste le workflow
+
+📁 FICHIER MODIFIÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+n8n_prompt_agent_rag_7_variables.txt (CORRIGÉ)
+  → [assertion] et [reference] maintenant utilisées dans les recherches RAG
+  → Ajout d'une RECHERCHE 6 pour les pièces justificatives
+  → Ajout du contexte des variables dans ÉTAPE 1
+
+✅ VÉRIFICATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après avoir mis à jour le prompt :
+
+1. Exécute le workflow dans N8N
+2. Vérifie que l'agent RAG affiche les 7 variables dans son prompt
+3. Vérifie que les recherches RAG utilisent [reference] et [assertion]
+4. Vérifie que les résultats sont plus précis grâce à ces variables
+
+═══════════════════════════════════════════════════════════════════════════════

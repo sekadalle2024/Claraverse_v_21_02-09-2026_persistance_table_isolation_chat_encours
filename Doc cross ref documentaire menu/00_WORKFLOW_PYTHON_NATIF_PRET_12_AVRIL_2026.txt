@@ -1,0 +1,179 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║      WORKFLOW N8N PYTHON NATIF - PRÊT À IMPORTER - 12 AVRIL 2026          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ FICHIER CRÉÉ : WORKFLOW_N8N_XREF_PYTHON_NATIF_COMPLET.json
+═══════════════════════════════════════════════════════════════════════════════
+
+Ce workflow utilise des NODES CODE PYTHON NATIFS dans n8n.
+Pas besoin d'installer de librairies ou de créer un endpoint FastAPI !
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1 : CONFIGURER OAUTH2 GOOGLE DRIVE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Dans n8n : Settings > Credentials > New Credential
+
+2. Choisir "Google OAuth2 API"
+
+3. Remplir :
+   Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+   Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+   Scopes: 
+   - https://www.googleapis.com/auth/drive
+   - https://www.googleapis.com/auth/drive.file
+
+4. Cliquer sur "Connect my account"
+
+5. Autoriser l'accès
+
+6. Sauvegarder avec le nom : "Google OAuth2 API"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 2 : IMPORTER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Dans n8n : Workflows > Import from File
+
+2. Sélectionner : WORKFLOW_N8N_XREF_PYTHON_NATIF_COMPLET.json
+
+3. Cliquer sur "Import"
+
+4. Le workflow s'ouvre automatiquement
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 3 : VÉRIFIER LES CREDENTIALS
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour chaque node Code Python (8 nodes au total) :
+
+1. Cliquer sur le node
+
+2. Aller dans l'onglet "Credentials"
+
+3. Sélectionner "Google OAuth2 API" (celui créé à l'étape 1)
+
+4. Sauvegarder
+
+Nodes à vérifier :
+- Search Dossier CAC
+- Create Dossier CAC
+- Search Client Folder
+- Create Client Folder + 10 Cycles
+- Search Selected Cycle
+- Upload File
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 4 : ACTIVER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cliquer sur le bouton "Active" en haut à droite
+
+2. Copier l'URL du formulaire (Form Trigger)
+
+3. Tester en ouvrant l'URL dans un navigateur
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 ÉTAPE 5 : TESTER LE WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir l'URL du formulaire
+
+2. Remplir les champs :
+   - Client: Orange
+   - Exercice: 2025
+   - Cycle comptable: Trésorerie
+   - Cross référence: I1
+   - Document: Lead sheet trésorerie
+   - Fichier: Sélectionner un fichier Excel
+
+3. Soumettre
+
+4. Vérifier dans Google Drive :
+   Dossier CAC/
+   └── Orange-2025/
+       └── Trésorerie/
+           └── [I1]-Lead sheet trésorerie.xlsx
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 STRUCTURE DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+9 NODES :
+
+1. Form Trigger (6 champs)
+   ↓
+2. Search Dossier CAC (Python Code)
+   ↓
+3. IF Dossier CAC Exists?
+   ├─ TRUE → 5. Search Client Folder
+   └─ FALSE → 4. Create Dossier CAC → 5. Search Client Folder
+   
+5. Search Client Folder (Python Code)
+   ↓
+6. IF Client Folder Exists?
+   ├─ TRUE → 8. Search Selected Cycle
+   └─ FALSE → 7. Create Client + 10 Cycles → 8. Search Selected Cycle
+   
+8. Search Selected Cycle (Python Code)
+   ↓
+9. Upload File (Python Code)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ AVANTAGES DE CETTE SOLUTION
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Python natif dans n8n (pas d'installation)
+✅ API REST Google Drive (pas de librairie externe)
+✅ OAuth2 géré par n8n
+✅ Module requests inclus dans n8n
+✅ Code lisible et maintenable
+✅ Pas de dépendance externe
+✅ Fonctionne avec n8n 2.15.1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+ERREUR : "requests module not found"
+SOLUTION : n8n inclut requests par défaut, vérifier la version de n8n
+
+ERREUR : "Invalid credentials"
+SOLUTION : Reconnecter le compte Google dans le credential
+
+ERREUR : "File upload failed"
+SOLUTION : Vérifier que le fichier est bien dans file_data
+
+ERREUR : "_get_credentials is not defined"
+SOLUTION : Vérifier que le credential est bien sélectionné dans le node
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Importer le workflow
+2. ✅ Configurer OAuth2
+3. ✅ Tester avec un document
+4. ⏳ Intégrer l'URL dans le menu contextuel Claraverse
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ WORKFLOW_N8N_XREF_PYTHON_NATIF_COMPLET.json (workflow complet)
+✅ 00_WORKFLOW_PYTHON_NATIF_PRET_12_AVRIL_2026.txt (ce fichier)
+✅ 00_SOLUTION_PYTHON_NATIF_N8N_12_AVRIL_2026.txt (documentation détaillée)
+
+═══════════════════════════════════════════════════════════════════════════════

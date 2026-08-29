@@ -1,0 +1,247 @@
+================================================================================
+✅ INSTRUCTIONS POUR EXÉCUTER LES TESTS DE DIAGNOSTIC
+Date: 06 Avril 2026
+================================================================================
+
+SITUATION:
+----------
+Les corrections pour l'erreur "failed to fetch" ont été appliquées.
+Le backend doit être démarré pour effectuer les tests de diagnostic.
+
+⚠️  IMPORTANT: Le backend N'EST PAS actuellement en cours d'exécution!
+
+================================================================================
+ÉTAPE 1: DÉMARRER LE BACKEND
+================================================================================
+
+Commande à exécuter:
+```powershell
+.\start-claraverse.ps1
+```
+
+Attendre les messages suivants:
+✅ Backend demarre (Job ID: X)
+✅ Frontend demarre (Job ID: Y)
+✅ CLARAVERSE DEMARRE AVEC SUCCES!
+
+Temps d'attente: ~10-15 secondes
+
+================================================================================
+ÉTAPE 2: VÉRIFIER QUE LE BACKEND RÉPOND
+================================================================================
+
+Commande à exécuter:
+```powershell
+.\test-backend-direct.ps1
+```
+
+Résultat attendu:
+✅ Backend accessible (Status: 200)
+✅ Endpoint accessible
+
+Si erreur "Backend NON accessible":
+  → Le backend n'a pas démarré correctement
+  → Voir les logs: Receive-Job -Id <BackendJobId> -Keep
+  → Chercher les messages d'erreur Python
+
+================================================================================
+ÉTAPE 3: TESTER L'IMPORT DU MODULE (OPTIONNEL)
+================================================================================
+
+Cette étape vérifie qu'il n'y a pas d'erreur de syntaxe dans etats_financiers.py
+
+Commande à exécuter:
+```powershell
+cd py_backend
+conda run -n claraverse_backend python test_import_etats_financiers.py
+```
+
+OU (si vous n'utilisez pas conda):
+```powershell
+cd py_backend
+python test_import_etats_financiers.py
+```
+
+Résultat attendu:
+✅ Module etats_financiers importé avec succès
+✅ Cache global disponible: True
+✅ Router disponible
+
+Si erreur "No module named 'fastapi'":
+  → Vous n'êtes pas dans le bon environnement Python
+  → Utilisez: conda run -n claraverse_backend python test_import_etats_financiers.py
+
+Si erreur de syntaxe Python:
+  → Il y a une erreur dans etats_financiers.py
+  → Lire le message d'erreur et corriger
+  → Redémarrer le backend
+
+================================================================================
+ÉTAPE 4: TESTER L'IMPORT D'UNE BALANCE (TEST PRINCIPAL)
+================================================================================
+
+C'est le test le plus important pour vérifier que l'erreur "failed to fetch"
+est corrigée.
+
+Actions à effectuer:
+
+1. Ouvrir le navigateur: http://localhost:5173
+
+2. Aller dans le menu "Démarrer" (bouton en haut à gauche)
+
+3. Cliquer sur "États Financiers"
+
+4. Importer le fichier de test:
+   py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+5. Observer la console du backend (où vous avez exécuté start-claraverse.ps1)
+
+Logs attendus dans le backend:
+📊 Stockage des balances dans le cache global pour l'export...
+✅ Balances stockées dans le cache: N=XXX lignes, N-1=YYY lignes
+
+✅ SI VOUS VOYEZ CES LOGS:
+   → L'erreur "failed to fetch" est CORRIGÉE!
+   → Passer à l'étape 5
+
+❌ SI VOUS VOYEZ "ERROR" ou "Exception":
+   → Copier le message d'erreur complet
+   → L'erreur vient du traitement de la balance
+   → Identifier la ligne qui cause l'erreur
+
+❌ SI VOUS VOYEZ "failed to fetch" dans le frontend:
+   → Le backend n'a pas reçu la requête OU
+   → Le backend a planté pendant le traitement
+   → Voir les logs du backend pour l'erreur exacte
+
+================================================================================
+ÉTAPE 5: TESTER L'EXPORT DE LA LIASSE (PROBLÈMES 1, 2, 3, 4)
+================================================================================
+
+Cette étape vérifie que les 4 problèmes sont corrigés:
+1. Colonnes BRUT et AMORTISSEMENT vides
+2. Totalisations manquantes
+3. Menu accordéon manque colonnes
+4. TFT vide
+
+Actions à effectuer:
+
+1. Après avoir importé la balance (étape 4)
+
+2. Dans le menu accordéon des états financiers, cliquer sur:
+   "Exporter la liasse officielle"
+
+3. Observer les logs du backend
+
+Logs attendus:
+📊 Récupération des balances depuis le cache global...
+✅ Balance N récupérée: XXX lignes
+✅ Balance N-1 récupérée: YYY lignes
+📊 Enrichissement du Bilan ACTIF avec BRUT et AMORTISSEMENT...
+✅ ACTIF enrichi avec BRUT et AMORTISSEMENT
+
+4. Ouvrir le fichier Excel téléchargé
+
+5. Vérifier l'onglet "ACTIF":
+   ✓ Colonne F (BRUT) - doit être remplie
+   ✓ Colonne G (AMORTISSEMENT) - doit être remplie
+   ✓ Colonne H (NET N) - doit être remplie
+   ✓ Colonne I (NET N-1) - doit être remplie
+
+6. Vérifier les totalisations (lignes AZ, BQ, BZ, CZ, DZ):
+   ✓ Colonne I (N-1) - doit être remplie
+
+7. Vérifier l'onglet "TFT":
+   ✓ Doit contenir des données (pas vide)
+
+================================================================================
+ÉTAPE 6: VÉRIFIER LE MENU ACCORDÉON (PROBLÈME 3)
+================================================================================
+
+Cette étape vérifie que le menu accordéon affiche les colonnes BRUT et AMORT.
+
+Actions à effectuer:
+
+1. Dans le frontend, après avoir importé la balance
+
+2. Observer le menu accordéon des états financiers
+
+3. Vérifier que les colonnes suivantes sont affichées:
+   ✓ BRUT
+   ✓ AMORTISSEMENT
+   ✓ NET N
+   ✓ NET N-1
+
+⚠️  NOTE: Cette correction n'a PAS encore été appliquée!
+   Si les colonnes BRUT et AMORT ne s'affichent pas, c'est normal.
+   Cette correction sera faite après avoir validé les étapes 1-5.
+
+================================================================================
+COMMANDES RAPIDES - RÉSUMÉ
+================================================================================
+
+# 1. Démarrer le backend
+.\start-claraverse.ps1
+
+# 2. Vérifier l'accessibilité
+.\test-backend-direct.ps1
+
+# 3. Tester l'import du module (optionnel)
+cd py_backend
+conda run -n claraverse_backend python test_import_etats_financiers.py
+
+# 4. Voir les logs du backend
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep
+
+# 5. Arrêter le backend (si nécessaire)
+.\stop-claraverse.ps1
+
+================================================================================
+CHECKLIST DE VALIDATION
+================================================================================
+
+Cocher au fur et à mesure:
+
+□ Étape 1: Backend démarré avec succès
+□ Étape 2: Backend répond sur http://localhost:5000
+□ Étape 3: Module etats_financiers s'importe sans erreur (optionnel)
+□ Étape 4: Import de balance réussit sans "failed to fetch"
+□ Étape 4: Logs montrent "Balances stockées dans le cache"
+□ Étape 5: Export de la liasse réussit
+□ Étape 5: Logs montrent "Balance N récupérée"
+□ Étape 5: Colonnes BRUT et AMORT remplies dans Excel
+□ Étape 5: Totalisations N-1 remplies dans Excel
+□ Étape 5: TFT contient des données
+
+================================================================================
+EN CAS DE PROBLÈME
+================================================================================
+
+Si l'erreur "failed to fetch" persiste:
+
+1. Copier les logs du backend:
+   Receive-Job -Id <BackendJobId> -Keep > logs_backend.txt
+
+2. Copier le message d'erreur exact du frontend
+
+3. Vérifier la console du navigateur (F12 → Network)
+
+4. Fournir ces informations pour diagnostic approfondi
+
+================================================================================
+DOCUMENTATION COMPLÈTE
+================================================================================
+
+Pour plus de détails sur la correction appliquée:
+  cat 00_CORRECTION_FAILED_TO_FETCH_06_AVRIL_2026.txt
+
+Pour le guide de dépannage rapide:
+  cat GUIDE_DEPANNAGE_RAPIDE_FAILED_TO_FETCH.txt
+
+Pour le diagnostic des causes possibles:
+  cat 00_DIAGNOSTIC_ERREUR_PERSISTANTE_06_AVRIL_2026.txt
+
+================================================================================
+FIN DES INSTRUCTIONS
+================================================================================

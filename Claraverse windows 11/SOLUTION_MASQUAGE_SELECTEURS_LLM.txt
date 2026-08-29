@@ -1,0 +1,137 @@
+═══════════════════════════════════════════════════════════════
+  ✅ SOLUTION APPLIQUÉE - MASQUAGE DES SÉLECTEURS LLM
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF
+───────────────────────────────────────────────────────────────
+Masquer:
+  1. Le dropdown de sélection de modèles LLM (gemini-3-pro-image-...)
+  2. L'icône de paramètres (⚙️) à droite
+
+✅ MODIFICATIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════
+
+1️⃣ SCRIPT JAVASCRIPT CRÉÉ
+   📄 Fichier: public/masquer-selecteurs-llm.js
+   
+   Ce script:
+   - Masque automatiquement les boutons contenant "gemini", "gpt", "claude", etc.
+   - Masque les icônes de paramètres (Settings)
+   - Observe le DOM pour masquer les éléments ajoutés dynamiquement
+   - S'exécute au chargement et en continu
+
+2️⃣ SCRIPT AJOUTÉ À INDEX.HTML
+   📄 Fichier: index.html
+   
+   Le script est chargé automatiquement au démarrage de l'application
+
+3️⃣ CSS RENFORCÉ
+   📄 Fichier: src/styles/grok-style-overrides.css
+   
+   Règles CSS pour masquer:
+   - Les sélecteurs de provider et modèles
+   - Les icônes de paramètres
+   - Les dropdowns de sélection
+
+═══════════════════════════════════════════════════════════════
+🚀 POUR VOIR LES MODIFICATIONS
+═══════════════════════════════════════════════════════════════
+
+1️⃣ ARRÊTER LE SERVEUR
+   Ctrl+C (dans le terminal)
+
+2️⃣ NETTOYER LE CACHE
+   .\nettoyer-cache.bat
+   
+   OU manuellement:
+   Remove-Item -Recurse -Force node_modules\.vite -ErrorAction SilentlyContinue
+   Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue
+
+3️⃣ REDÉMARRER
+   npm run dev
+
+4️⃣ RAFRAÎCHIR LE NAVIGATEUR
+   Ctrl+Shift+R (Windows) ou Cmd+Shift+R (Mac)
+
+═══════════════════════════════════════════════════════════════
+✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+Vous NE verrez PLUS:
+  ❌ Le dropdown "gemini-3-pro-image-..."
+  ❌ L'icône de paramètres (⚙️)
+  ❌ Les boutons de sélection de modèles
+
+Vous verrez UNIQUEMENT:
+  ✓ Logo centré
+  ✓ Texte "E-audit"
+  ✓ Zone de saisie ovale
+  ✓ Icône 📎 (Paperclip) à gauche
+  ✓ Bouton ➤ (Send) à droite
+
+═══════════════════════════════════════════════════════════════
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════
+
+Pour vérifier que le script fonctionne:
+
+1. Ouvrir la console du navigateur (F12)
+2. Chercher ces messages:
+   🎨 Masquage des sélecteurs LLM - Style Grok
+   ✅ Bouton masqué: ...
+   ✅ Observateur de DOM activé
+
+Si vous voyez ces messages, le script fonctionne correctement.
+
+═══════════════════════════════════════════════════════════════
+🆘 SI LES ÉLÉMENTS SONT TOUJOURS VISIBLES
+═══════════════════════════════════════════════════════════════
+
+1. VÉRIFIER LA CONSOLE
+   - Ouvrir F12
+   - Onglet "Console"
+   - Chercher des erreurs en rouge
+
+2. VÉRIFIER QUE LE SCRIPT EST CHARGÉ
+   - Onglet "Network" dans F12
+   - Chercher "masquer-selecteurs-llm.js"
+   - Vérifier qu'il est chargé (statut 200)
+
+3. FORCER LE RECHARGEMENT
+   - Ctrl+Shift+R plusieurs fois
+   - Ou ouvrir en mode incognito
+
+4. VÉRIFIER LE CACHE
+   - Nettoyer complètement le cache
+   - Redémarrer le navigateur
+
+═══════════════════════════════════════════════════════════════
+📚 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+1. public/masquer-selecteurs-llm.js (créé)
+   → Script JavaScript pour masquage dynamique
+
+2. index.html (modifié)
+   → Ajout du script de masquage
+
+3. src/styles/grok-style-overrides.css (réécrit)
+   → Règles CSS simplifiées et renforcées
+
+═══════════════════════════════════════════════════════════════
+💡 COMMENT ÇA FONCTIONNE
+═══════════════════════════════════════════════════════════════
+
+Le script JavaScript:
+  1. S'exécute au chargement de la page
+  2. Parcourt tous les boutons et éléments
+  3. Masque ceux qui contiennent des mots-clés (gemini, gpt, etc.)
+  4. Masque les icônes de paramètres
+  5. Observe le DOM pour masquer les nouveaux éléments
+
+Le CSS:
+  - Fournit un masquage de base
+  - Complète le JavaScript
+  - Garantit que les éléments restent masqués
+
+═══════════════════════════════════════════════════════════════

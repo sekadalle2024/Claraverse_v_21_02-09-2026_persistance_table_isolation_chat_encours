@@ -1,0 +1,83 @@
+============================================================
+   TEST FIX COLONNES CIA V1.2 - CORRECTION DÉFINITIVE
+============================================================
+
+PROBLÈME CORRIGÉ:
+- Décalage des colonnes après activation de "Résultat Final"
+- Les en-têtes ne correspondaient plus aux contenus
+
+CORRECTIONS APPLIQUÉES (menu_cia.js v1.2):
+1. Nouvelle fonction getColumnIndexes() - Index DOM réels
+2. showColumn() - Utilise les index DOM directs
+3. calculateScores() - Utilise les index DOM réels
+4. mergeScoreColumn() et mergeRemarquesColumn() corrigés
+
+============================================================
+                    ÉTAPES DE TEST
+============================================================
+
+1. VIDER LE CACHE DU NAVIGATEUR (IMPORTANT!)
+   - Ctrl+Shift+R (ou Cmd+Shift+R sur Mac)
+   - Ou F12 > Network > cocher "Disable cache" > F5
+
+2. OUVRIR LA CONSOLE (F12 > Console)
+   - Vous devriez voir: "🎯 Claraverse CIA Menu - Démarrage"
+
+3. GÉNÉRER UN QUESTIONNAIRE CIA
+   - Via Flowise ou votre endpoint
+
+4. VÉRIFIER L'ÉTAT INITIAL
+   Colonnes visibles:
+   ✓ Ref Question (fusionnée)
+   ✓ Question (fusionnée)
+   ✓ Option
+   ✓ Reponse User (checkboxes)
+   
+   Colonnes masquées:
+   ✗ Reponse CIA
+   ✗ Remarques
+   ✗ Score (si présent)
+
+5. ACTIVER LE RÉSULTAT FINAL
+   - Clic droit sur une table CIA
+   - Cliquer sur "📊 Résultat final"
+
+6. VÉRIFIER LES LOGS CONSOLE
+   Vous devriez voir:
+   🎯 [CIA Menu] 📊 Affichage du résultat final
+   🎯 [CIA Menu] 👁️ Colonne reponse_cia trouvée à l'index DOM X
+   🎯 [CIA Menu] ✅ En-tête "Reponse CIA" affiché
+   🎯 [CIA Menu] 👁️ Colonne remarques trouvée à l'index DOM Y
+   🎯 [CIA Menu] ✅ En-tête "Remarques" affiché
+   🎯 [CIA Menu] 📊 Index des colonnes: {...}
+   🎯 [CIA Menu] ✅ Résultat final affiché
+
+7. VÉRIFIER L'ORDRE DES COLONNES (APRÈS)
+   L'ordre doit être:
+   ✓ Ref Question | Question | Option | Reponse CIA | Reponse User | Remarques | Score
+
+   IMPORTANT: Chaque en-tête doit correspondre à son contenu!
+
+============================================================
+                 SI LE PROBLÈME PERSISTE
+============================================================
+
+Exécutez dans la console:
+
+// Diagnostic des colonnes
+const table = document.querySelector("table");
+const headerRow = table.querySelector("thead tr") || table.querySelector("tr");
+const headers = headerRow.querySelectorAll("th, td");
+headers.forEach((h, i) => {
+    console.log(`[${i}] "${h.textContent.trim()}" - display: ${h.style.display || "visible"}`);
+});
+
+// Vérifier les cellules de la première ligne de données
+const tbody = table.querySelector("tbody") || table;
+const firstRow = tbody.querySelector("tr:nth-child(2)") || tbody.querySelector("tr");
+const cells = firstRow.querySelectorAll("td");
+cells.forEach((c, i) => {
+    console.log(`[${i}] "${c.textContent.trim().substring(0,20)}..." - display: ${c.style.display || "visible"}`);
+});
+
+============================================================

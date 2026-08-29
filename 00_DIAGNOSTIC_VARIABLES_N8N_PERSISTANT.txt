@@ -1,0 +1,180 @@
+═══════════════════════════════════════════════════════════════════════════════
+   DIAGNOSTIC : VARIABLES TOUJOURS NON REÇUES - 29 MARS 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 SYMPTÔME ACTUEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+L'agent RAG affiche maintenant les VALEURS PAR DÉFAUT au lieu des valeurs réelles :
+
+[user_message] = Message non fourni
+[cycle_detecte] = Non détecté
+[constat] = Non fourni
+[anomalie] = Non fournie
+
+✅ BONNE NOUVELLE : La syntaxe N8N fonctionne !
+❌ PROBLÈME : Le node précédent n'envoie PAS les données
+
+🔍 CAUSES POSSIBLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Le node AVANT l'agent RAG n'envoie pas de données
+2. Les noms de variables dans le JSON ne correspondent pas
+3. Le node précédent est un Router qui ne transmet pas les données
+4. Les données sont dans un sous-objet (ex: $json.data.cycle)
+
+🔧 SOLUTION 1 : VÉRIFIER LE NODE PRÉCÉDENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Identifier le node précédent
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Dans N8N, regardez quel node est JUSTE AVANT l'agent RAG :
+   - Est-ce un Router ?
+   - Est-ce un HTTP Request ?
+   - Est-ce un Set ?
+   - Est-ce un AI Agent ?
+
+ÉTAPE 2 : Vérifier l'output du node précédent
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur le node précédent
+   2. Regardez l'onglet "Output" ou "Sortie"
+   3. Vérifiez la structure JSON
+
+   EXEMPLE DE CE QUE VOUS DEVRIEZ VOIR :
+   {
+     "user_message": "Facture non comptabilisée",
+     "cycle": "Achats",
+     "constat": "Facture reçue",
+     "anomalie": "Charge manquante"
+   }
+
+   SI VOUS NE VOYEZ PAS CES DONNÉES → C'est le problème !
+
+🔧 SOLUTION 2 : AJOUTER UN NODE "SET" AVANT L'AGENT RAG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si le node précédent ne transmet pas les données, ajoutez un node "Set" :
+
+ÉTAPE 1 : Ajouter un node "Set"
+   ─────────────────────────────────────────────────────────────────────────
+   
+   1. Cliquez sur le "+" entre le node précédent et l'agent RAG
+   2. Cherchez "Set"
+   3. Ajoutez le node "Set"
+
+ÉTAPE 2 : Configurer le node "Set"
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Mode : "Manual Mapping"
+   
+   Ajoutez ces champs :
+   
+   user_message → {{ $json.message || $json.user_message || $json.input }}
+   cycle → {{ $json.cycle || $json.category || "Achats" }}
+   constat → {{ $json.constat || $json.observation || "À compléter" }}
+   anomalie → {{ $json.anomalie || $json.issue || "À compléter" }}
+
+ÉTAPE 3 : Connecter le node Set à l'agent RAG
+   ─────────────────────────────────────────────────────────────────────────
+   
+   Node Précédent → Node Set → Agent RAG
+
+🔧 SOLUTION 3 : UTILISER $input AU LIEU DE $json
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si les données viennent d'un node spécifique, utilisez :
+
+{{ $input.item.json.user_message }}
+{{ $input.item.json.cycle }}
+{{ $input.item.json.constat }}
+{{ $input.item.json.anomalie }}
+
+OU depuis un node nommé :
+
+{{ $('Router').item.json.user_message }}
+{{ $('Router').item.json.cycle }}
+{{ $('Router').item.json.constat }}
+{{ $('Router').item.json.anomalie }}
+
+🔧 SOLUTION 4 : STRUCTURE JSON NESTED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si les données sont dans un sous-objet :
+
+{
+  "data": {
+    "user_message": "...",
+    "cycle": "..."
+  }
+}
+
+Utilisez :
+
+{{ $json.data.user_message || "Message non fourni" }}
+{{ $json.data.cycle || "Non détecté" }}
+
+🔧 SOLUTION 5 : PROMPT ALTERNATIF SANS VARIABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si rien ne fonctionne, utilisez un prompt qui DEMANDE à l'agent de lire
+les données depuis le contexte :
+
+[ROLE]
+Tu es un agent RAG spécialisé dans le référentiel comptable SYSCOHADA Révisé.
+
+[OBJECTIF]
+À partir du message utilisateur fourni dans le contexte de cette conversation,
+tu dois identifier TOUS les comptes comptables susceptibles d'être mouvementés.
+
+[INSTRUCTIONS]
+1. LIS le message utilisateur dans le contexte
+2. IDENTIFIE le cycle comptable concerné
+3. RECHERCHE dans la vector store les comptes appropriés
+4. RETOURNE une fiche structurée
+
+[DONNÉES D'ENTRÉE]
+Les données sont disponibles dans le contexte de cette conversation.
+Analyse le message pour extraire :
+- Le message utilisateur
+- Le cycle détecté
+- Le constat
+- L'anomalie
+
+📋 CHECKLIST DE DEBUGGING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ J'ai vérifié l'output du node précédent
+□ J'ai confirmé que les données existent dans le JSON
+□ J'ai vérifié les noms exacts des variables
+□ J'ai testé avec {{ JSON.stringify($json) }} pour voir toute la structure
+□ J'ai ajouté un node Set si nécessaire
+□ J'ai testé avec $input.item.json au lieu de $json
+□ J'ai vérifié si les données sont dans un sous-objet
+
+🎯 TEST RAPIDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dans le prompt de l'agent RAG, ajoutez TEMPORAIREMENT cette ligne :
+
+DEBUG : {{ JSON.stringify($json) }}
+
+Cela affichera TOUTE la structure JSON disponible.
+
+Exemple de ce que vous verrez :
+
+DEBUG : {"message":"Test","category":"Achats","data":{"constat":"..."}}
+
+Ensuite, ajustez vos variables en fonction de la structure réelle.
+
+📁 FICHIERS À CONSULTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ n8n_prompt_agent_rag_solution_alternative.txt
+   → Prompt avec approche alternative
+
+✅ 00_DIAGNOSTIC_VARIABLES_N8N_PERSISTANT.txt
+   → Ce fichier (diagnostic complet)
+
+═══════════════════════════════════════════════════════════════════════════════

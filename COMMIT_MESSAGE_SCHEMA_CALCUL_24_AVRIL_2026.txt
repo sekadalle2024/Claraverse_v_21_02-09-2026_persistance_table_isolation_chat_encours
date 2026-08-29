@@ -1,0 +1,59 @@
+feat: Intégration schéma de calcul dans menu contextuel
+
+✨ Nouvelles fonctionnalités:
+- Ajout de 3 options dans la section "Papier de travail" du menu contextuel
+  * 📐 Ajouter Schéma de calcul (Ctrl+Shift+K)
+  * 🔄 Actualiser Schéma de calcul
+  * 🗑️ Supprimer Schéma de calcul
+
+- Détection automatique de la "Nature de test" dans la table 2
+- Génération automatique du schéma selon 9 modèles:
+  * Validation, Mouvement, Rapprochement, Séparation
+  * Estimation, Revue analytique, Cadrage TVA
+  * Cotisations sociales, Modélisation (auto-détection)
+
+- Sauvegarde persistante avec localStorage
+- Édition des cellules du schéma
+- Restauration automatique après actualisation
+
+🔧 Modifications techniques:
+- public/menu.js: Ajout de 3 méthodes (ajouterSchemaCalcul, actualiserSchemaCalcul, supprimerSchemaCalcul)
+- index.html: Chargement de papier-travail-schema-calcul.js
+- Réutilisation de la logique existante (papier-travail-schema-calcul.js)
+- Pas d'utilisation de claraPapierTravailService.ts
+
+⚡ Raccourcis clavier:
+- Ctrl+Shift+K: Ajouter un schéma de calcul
+
+💾 Sauvegarde:
+- Clé localStorage: "claraverse_schema_calcul_data"
+- Sauvegarde automatique (debounce 500ms)
+- Restauration automatique au chargement
+
+📚 Documentation:
+- 00_INTEGRATION_SCHEMA_CALCUL_MENU_24_AVRIL_2026.txt
+- QUICK_START_SCHEMA_CALCUL_MENU.txt
+- LISTE_FICHIERS_SCHEMA_CALCUL_MENU_24_AVRIL_2026.md
+- EXEMPLE_VISUEL_SCHEMA_CALCUL_MENU.txt
+- SYNTHESE_VISUELLE_SCHEMA_CALCUL_24_AVRIL_2026.txt
+- 00_INDEX_SCHEMA_CALCUL_MENU_24_AVRIL_2026.md
+- COMMANDES_RAPIDES_SCHEMA_CALCUL.txt
+- 00_LIRE_EN_PREMIER_SCHEMA_CALCUL.txt
+
+✅ Tests recommandés:
+- Ajout manuel via menu contextuel
+- Raccourci Ctrl+Shift+K
+- Détection automatique
+- Actualisation du schéma
+- Suppression du schéma
+- Sauvegarde dans localStorage
+- Restauration après actualisation
+- Édition des cellules
+
+🎯 Objectif atteint:
+Intégration complète du schéma de calcul dans le menu contextuel,
+avec réutilisation du code existant et sauvegarde persistante.
+
+Date: 24 avril 2026
+Version: 1.0
+Statut: ✅ OPÉRATIONNEL

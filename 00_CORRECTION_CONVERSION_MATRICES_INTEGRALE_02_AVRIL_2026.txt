@@ -1,0 +1,83 @@
+================================================================================
+CORRECTION: CONVERSION INTÉGRALE DES MATRICES DE RISQUES
+Date: 02 Avril 2026
+Problème: Conversion Alpha-3 → Num-5 incomplète
+================================================================================
+
+PROBLÈME IDENTIFIÉ:
+-------------------
+Les méthodes de conversion de matrices (convertToMatrixNum3/4/5 et 
+convertToMatrixAlpha3/4/5) utilisent des méthodes normalize*() qui ne 
+convertissent PAS les valeurs alphabétiques vers numériques ou vice-versa.
+
+Exemple:
+- "Faible" → Num-5 ne fonctionne pas
+- "1" → Alpha-3 ne fonctionne pas
+
+SOLUTION:
+---------
+1. Créer 6 nouvelles méthodes de conversion INTÉGRALE:
+   - convertToNumeric3(value)  // Alpha → Num-3
+   - convertToNumeric4(value)  // Alpha → Num-4
+   - convertToNumeric5(value)  // Alpha → Num-5
+   - convertToAlpha3(value)    // Num → Alpha-3
+   - convertToAlpha4(value)    // Num → Alpha-4
+   - convertToAlpha5(value)    // Num → Alpha-5
+
+2. Modifier les 6 méthodes de conversion de matrices pour utiliser
+   ces nouvelles méthodes au lieu de normalize*()
+
+EMPLACEMENT DANS LE CODE:
+--------------------------
+Fichier: public/menu.js
+Classe: ContextualMenuManager
+
+Insérer les nouvelles méthodes après normalizeToNum5() (ligne ~1958)
+et avant le commentaire "COULEURS POUR LES MATRICES"
+
+MÉTHODES À MODIFIER:
+--------------------
+1. convertToMatrixNum3()  - ligne ~2049
+   Remplacer: this.normalizeToNum3()
+   Par: this.convertToNumeric3()
+
+2. convertToMatrixNum4()  - ligne ~2116
+   Remplacer: this.normalizeToNum4()
+   Par: this.convertToNumeric4()
+
+3. convertToMatrixNum5()  - ligne ~2409
+   Remplacer: this.normalizeToNum5()
+   Par: this.convertToNumeric5()
+
+4. convertToMatrixAlpha3() - ligne ~2041
+   Remplacer: this.normalizeToAlpha3()
+   Par: this.convertToAlpha3()
+
+5. convertToMatrixAlpha5() - ligne ~2117
+   Remplacer: this.normalizeToAlpha5()
+   Par: this.convertToAlpha5()
+
+6. convertToMatrixAlpha4() - ligne ~2184
+   Remplacer: this.normalizeToAlpha4()
+   Par: this.convertToAlpha4()
+
+FICHIERS CRÉÉS:
+---------------
+- fix-all-matrix-conversions.ps1 (script PowerShell - non utilisé)
+- fix-menu-methods.ps1 (script de nettoyage - a causé une troncature)
+- Ce fichier de documentation
+
+STATUT:
+-------
+❌ Tentative 1: Script PowerShell trop complexe
+❌ Tentative 2: Ajout des méthodes en dehors de la classe (erreur)
+❌ Tentative 3: Fichier tronqué par script de nettoyage
+✅ Fichier restauré via git checkout
+
+PROCHAINE ÉTAPE:
+-----------------
+Utiliser l'outil editCode ou strReplace pour:
+1. Insérer les 6 nouvelles méthodes au bon endroit
+2. Modifier les 6 méthodes existantes une par une
+
+================================================================================

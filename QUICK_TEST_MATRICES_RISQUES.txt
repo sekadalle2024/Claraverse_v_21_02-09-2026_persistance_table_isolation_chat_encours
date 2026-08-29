@@ -1,0 +1,132 @@
+================================================================================
+GUIDE DE TEST RAPIDE - MATRICES D'ÉVALUATION DES RISQUES
+================================================================================
+
+🎯 OBJECTIF: Vérifier que toutes les valeurs et couleurs apparaissent correctement
+
+================================================================================
+MÉTHODE DE TEST
+================================================================================
+
+1. Ouvrir test-evaluation-risques.html dans le navigateur
+2. Clic droit sur la table de test
+3. Sélectionner chaque option de matrice
+4. Vérifier les résultats selon les critères ci-dessous
+
+================================================================================
+CHECKLIST PAR MATRICE
+================================================================================
+
+✅ MATRICE ALPHABÉTIQUE - 3 NIVEAUX
+   Valeurs attendues:
+   □ Faible (vert)
+   □ Modéré (jaune)
+   □ Élevé (rouge)
+   
+   Test: Toutes les 3 valeurs doivent apparaître
+
+---
+
+✅ MATRICE ALPHABÉTIQUE - 4 NIVEAUX (CORRIGÉ)
+   Valeurs attendues:
+   □ Mineur (vert)
+   □ Significatif (jaune)
+   □ Majeur (orange)
+   □ Critique (rouge)
+   
+   Test: Les 4 valeurs doivent apparaître (avant: 0 cellules)
+
+---
+
+✅ MATRICE ALPHABÉTIQUE - 5 NIVEAUX (CORRIGÉ)
+   Valeurs attendues:
+   □ Très faible (vert foncé)
+   □ Faible (vert clair)
+   □ Modéré (jaune)
+   □ Élevé (orange)
+   □ Très élevé (rouge)
+   
+   Test: Les 5 valeurs doivent apparaître (avant: manquait Très faible et Très élevé)
+
+---
+
+✅ MATRICE NUMÉRIQUE - 3 NIVEAUX (CORRIGÉ)
+   Valeurs attendues:
+   □ 1 (vert pour criticité 1-3)
+   □ 2 (jaune pour criticité 4-6)
+   □ 3 (rouge pour criticité 7-9)
+   
+   Test: Couleurs variées (avant: tout en vert)
+
+---
+
+✅ MATRICE NUMÉRIQUE - 4 NIVEAUX (CORRIGÉ)
+   Valeurs attendues:
+   □ 1 (vert pour criticité 1-2)
+   □ 2 (jaune pour criticité 3-6)
+   □ 3 (orange pour criticité 7-12)
+   □ 4 (rouge pour criticité 13-16)
+   
+   Test: La valeur 4 doit apparaître (avant: manquante)
+
+---
+
+✅ MATRICE NUMÉRIQUE - 5 NIVEAUX (CORRIGÉ)
+   Valeurs attendues:
+   □ 1 (vert foncé pour criticité 1-2)
+   □ 2 (vert clair pour criticité 3-6)
+   □ 3 (jaune pour criticité 7-12)
+   □ 4 (orange pour criticité 13-20)
+   □ 5 (rouge pour criticité 21-25)
+   
+   Test: Les valeurs 4 et 5 doivent apparaître (avant: manquantes)
+
+================================================================================
+RÉSULTATS ATTENDUS
+================================================================================
+
+NOTIFICATION APRÈS CHAQUE CONVERSION:
+--------------------------------------
+✅ Conversion Alpha-3: X cellules mises à jour
+✅ Conversion Alpha-4: X cellules mises à jour (avant: 0)
+✅ Conversion Alpha-5: X cellules mises à jour
+✅ Conversion Num-3: X cellules mises à jour
+✅ Conversion Num-4: X cellules mises à jour
+✅ Conversion Num-5: X cellules mises à jour
+
+COULEURS ATTENDUES:
+-------------------
+Vert foncé: #28a745
+Vert clair: #90ee90
+Jaune: #ffc107
+Orange: #ff8c00
+Rouge: #dc3545
+
+================================================================================
+EN CAS DE PROBLÈME
+================================================================================
+
+Si une matrice ne fonctionne pas:
+
+1. Ouvrir la console du navigateur (F12)
+2. Vérifier les messages d'erreur
+3. Vérifier que la table a bien les colonnes:
+   - Probabilité
+   - Impact
+   - Criticité
+
+4. Vérifier que les cellules contiennent des valeurs numériques ou textuelles
+
+5. Consulter le fichier:
+   00_CORRECTION_BUGS_EVALUATION_RISQUES_02_AVRIL_2026.txt
+
+================================================================================
+COMMANDE RAPIDE
+================================================================================
+
+# Windows
+start test-evaluation-risques.html
+
+# Ou double-cliquer sur le fichier test-evaluation-risques.html
+
+================================================================================

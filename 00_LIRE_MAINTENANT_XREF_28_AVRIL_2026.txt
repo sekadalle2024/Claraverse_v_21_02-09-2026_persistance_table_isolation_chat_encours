@@ -1,0 +1,121 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🔍 PROBLÈME DÉTECTION TABLE X-REF - LIRE EN PREMIER
+  Date: 28 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+Erreur en front-end:
+  "Aucune table X-Ref documentaire trouvée"
+
+Pourtant:
+  ✅ Le workflow n8n fonctionne (test AFRILAND réussi)
+  ✅ La table existe dans Claraverse
+  ❌ Le code JavaScript ne la détecte pas
+
+
+🎯 SOLUTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: Lancer le test de diagnostic
+--------------------------------------
+Copier-coller dans PowerShell:
+
+    .\test-detection-xref.ps1
+
+
+ÉTAPE 2: Analyser les résultats
+--------------------------------
+Le test affiche:
+  - Structure de la table
+  - Colonnes détectées
+  - Index des colonnes
+  - Données extraites
+
+
+ÉTAPE 3: Comparer avec Claraverse
+----------------------------------
+1. Ouvrir Claraverse
+2. Afficher la table X-Ref
+3. F12 → Elements
+4. Copier le HTML de la table
+
+
+ÉTAPE 4: Me fournir les informations
+-------------------------------------
+  - Résultats du test
+  - HTML de la table Claraverse
+  - Capture d'écran de l'erreur
+
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ test-detection-xref-table.html
+   → Page de test avec table X-Ref
+
+2. ✅ test-detection-xref.ps1
+   → Script pour lancer le test
+
+3. ✅ 00_DIAGNOSTIC_DETECTION_XREF_28_AVRIL_2026.txt
+   → Analyse détaillée du problème
+
+4. ✅ QUICK_START_DIAGNOSTIC_XREF_28_AVRIL_2026.txt
+   → Guide rapide
+
+5. ✅ 00_SOLUTION_DETECTION_XREF_28_AVRIL_2026.txt
+   → Solution proposée
+
+
+🚀 COMMANDE À EXÉCUTER MAINTENANT
+═══════════════════════════════════════════════════════════════════════════════
+
+    .\test-detection-xref.ps1
+
+
+💡 CE QUE LE TEST VA FAIRE
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Ouvrir une page de test dans le navigateur
+✅ Afficher une table X-Ref avec la structure correcte
+✅ Exécuter automatiquement les tests de détection
+✅ Afficher les résultats en couleur (vert = OK, rouge = erreur)
+
+
+📊 RÉSULTATS ATTENDUS
+═══════════════════════════════════════════════════════════════════════════════
+
+SI LE TEST FONCTIONNE:
+  → Le problème vient de la table dans Claraverse
+  → Comparer le HTML pour trouver la différence
+
+SI LE TEST NE FONCTIONNE PAS:
+  → Le problème vient du code de détection
+  → Je vais corriger la logique
+
+
+🔍 HYPOTHÈSES PRINCIPALES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Structure HTML différente
+   → Pas de <thead> dans Claraverse
+   → En-têtes dans <tbody>
+
+2. Nom de colonne différent
+   → "Cross reference" au lieu de "Cross references"
+   → Espaces ou caractères invisibles
+
+3. Mauvaise table sélectionnée
+   → Plusieurs tables dans la page
+   → La table X-Ref n'est pas celle qui est active
+
+
+═══════════════════════════════════════════════════════════════════════════════
+  ACTION IMMÉDIATE
+═══════════════════════════════════════════════════════════════════════════════
+
+    .\test-detection-xref.ps1
+
+
+═══════════════════════════════════════════════════════════════════════════════

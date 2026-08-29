@@ -1,0 +1,121 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              QUICK START - WORKFLOW UPLOAD GOOGLE DRIVE                     ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🚀 DÉMARRAGE RAPIDE EN 5 MINUTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1️⃣ CONFIGURER OAUTH2 (2 min)
+────────────────────────────────────────────────────────────────────────────────
+   n8n → Settings → Credentials → New Credential → Google OAuth2 API
+   
+   Client ID: [Votre Client ID Google Cloud]
+   Client Secret: [Votre Client Secret]
+   Scope: https://www.googleapis.com/auth/drive
+   
+   → Connect my account → Autoriser → Save
+
+2️⃣ IMPORTER LE WORKFLOW (1 min)
+────────────────────────────────────────────────────────────────────────────────
+   n8n → Menu "..." → Import from File
+   
+   Fichier: WORKFLOW_N8N_XREF_CORRIGE_FINAL.json
+   
+   → Import
+
+3️⃣ ASSOCIER LES CREDENTIALS (1 min)
+────────────────────────────────────────────────────────────────────────────────
+   Pour chaque node Google Drive (7 nodes) :
+   
+   Cliquer sur le node → Credential to connect with → Google Drive OAuth2
+
+4️⃣ ACTIVER LE WORKFLOW (10 sec)
+────────────────────────────────────────────────────────────────────────────────
+   Bouton "Active" en haut à droite → ON
+
+5️⃣ TESTER (1 min)
+────────────────────────────────────────────────────────────────────────────────
+   Copier l'URL du Form Trigger → Ouvrir dans navigateur
+   
+   Remplir :
+   - Client: ORANGE
+   - Exercice: 2025
+   - Cycle: Trésorerie
+   - Cross ref: [I10]
+   - Document: Test
+   - File: [Choisir un fichier]
+   
+   → Submit
+
+✅ VÉRIFICATION
+────────────────────────────────────────────────────────────────────────────────
+   Google Drive → Dossier CAC → ORANGE-2025 → Trésorerie → [I10]-Test
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 NODES À CONFIGURER (7 nodes Google Drive)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Find Dossier CAC
+2. Create Dossier CAC
+3. Find Client Folder
+4. Create Client Folder
+5. Create Cycle Folders
+6. Find Cycle Folder
+7. Upload File to Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ ERREURS COURANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ "401 Unauthorized"
+   → Reconnecter le credential OAuth2
+
+❌ "Credential not found"
+   → Associer le credential à tous les nodes Google Drive
+
+❌ "Folder not created"
+   → Vérifier les permissions du compte Google
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 FICHIERS UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+- WORKFLOW_N8N_XREF_CORRIGE_FINAL.json (workflow à importer)
+- GUIDE_IMPORT_WORKFLOW_CORRIGE_FINAL.md (guide détaillé)
+- DIAGNOSTIC_WORKFLOW_UPLOAD_13_AVRIL_2026.md (diagnostic)
+- 00_SOLUTION_FINALE_WORKFLOW_UPLOAD_13_AVRIL_2026.txt (solution)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+Structure créée automatiquement :
+
+Dossier CAC/
+└── ORANGE-2025/
+    ├── Capitaux propres/
+    ├── Charge d'exploitation/
+    ├── Client/
+    ├── Fournisseur/
+    ├── Immobilisations/
+    ├── Impôt et taxes/
+    ├── Personnel/
+    ├── Stock/
+    ├── Trésorerie/
+    │   └── [I10]-Test.pdf ✅
+    └── Ventes/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ C'EST TOUT !
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre workflow est maintenant opérationnel.
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,178 @@
+═══════════════════════════════════════════════════════════════
+   DIAGNOSTIC - EXPORT SYNTHÈSE CAC
+═══════════════════════════════════════════════════════════════
+
+📅 Date: 25 Mars 2026
+⚠️ Problème: "Aucune table Claraverse trouvée"
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 1: VÉRIFIER LE RECHARGEMENT DU FRONTEND
+═══════════════════════════════════════════════════════════════
+
+Le code a été modifié, mais le navigateur peut avoir gardé l'ancienne version en cache.
+
+✅ SOLUTION:
+   1. Appuyer sur Ctrl+Shift+R (Windows/Linux) ou Cmd+Shift+R (Mac)
+      → Cela force le rechargement complet sans cache
+   
+   2. OU: Ouvrir la console (F12) → Onglet "Network" → Cocher "Disable cache"
+      → Puis rafraîchir avec F5
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 2: VÉRIFIER QUE DES TABLES SONT PRÉSENTES
+═══════════════════════════════════════════════════════════════
+
+Le système ne peut exporter que des tables qui existent déjà dans le chat.
+
+✅ VÉRIFICATION:
+   1. Ouvrir la console (F12)
+   
+   2. Taper cette commande:
+      
+      document.querySelectorAll('table.min-w-full.border.border-gray-200').length
+   
+   3. Résultat attendu:
+      - Si 0: Aucune table Claraverse → Générer des tables d'abord
+      - Si > 0: Des tables existent → Passer à l'étape 3
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 3: VÉRIFIER LES LOGS CONSOLE
+═══════════════════════════════════════════════════════════════
+
+Après avoir cliqué sur "Export Synthèse CAC", vérifier les logs:
+
+✅ LOGS ATTENDUS:
+   
+   🔍 [Export CAC] Conteneur trouvé: DIV.prose
+   🔍 [Export CAC] Sélecteur tables: table.min-w-full.border...
+   🔍 [Export CAC] 15 table(s) Claraverse trouvée(s)
+   📊 [Export CAC] Points collectés:
+      - FRAP: 3
+      - Recos Révision: 2
+      - Recos CI: 1
+
+❌ SI VOUS VOYEZ:
+   
+   🔍 [Export CAC] 0 table(s) Claraverse trouvée(s)
+   
+   → Les tables n'ont pas les bonnes classes CSS
+   → Passer à l'étape 4
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 4: GÉNÉRER DES TABLES DE TEST
+═══════════════════════════════════════════════════════════════
+
+Si aucune table n'est détectée, vous pouvez:
+
+A) UTILISER LE SCRIPT POWERSHELL DE TEST
+   
+   1. Ouvrir PowerShell dans le dossier du projet
+   
+   2. Exécuter:
+      .\test-export-synthese-cac-final.ps1
+   
+   3. Ce script envoie des données de test directement au backend
+      (sans passer par la détection des tables)
+
+B) GÉNÉRER DES TABLES DANS LE CHAT
+   
+   1. Utiliser n8n ou Flowise pour générer des tables
+   
+   2. Les tables doivent avoir ces classes CSS:
+      class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg"
+   
+   3. Les tables doivent contenir:
+      - Pour FRAP: le mot "frap" dans l'en-tête ou les données
+      - Pour Recos Révision: "recommandation" + "révision" ou "compte"
+      - Pour Recos CI: "recommandation" + "contrôle interne"
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 5: VÉRIFIER LE BACKEND
+═══════════════════════════════════════════════════════════════
+
+Le backend doit être démarré pour que l'export fonctionne.
+
+✅ VÉRIFICATION:
+   
+   1. Vérifier que le backend Python est démarré:
+      - Chercher "Clara Backend API" dans les processus
+      - OU: Ouvrir http://localhost:5000/docs dans le navigateur
+   
+   2. Si le backend n'est pas démarré:
+      
+      cd py_backend
+      python main.py
+   
+   3. Vérifier les logs du backend:
+      
+      ✅ Export Synthèse CAC FINAL router loaded successfully
+
+═══════════════════════════════════════════════════════════════
+   ÉTAPE 6: TESTER AVEC LE SCRIPT POWERSHELL
+═══════════════════════════════════════════════════════════════
+
+Le script de test envoie des données directement au backend:
+
+✅ COMMANDE:
+   
+   .\test-export-synthese-cac-final.ps1
+
+✅ CE QUE LE SCRIPT FAIT:
+   
+   1. Crée des données de test (FRAP, Recos Révision, Recos CI)
+   2. Envoie les données au backend
+   3. Télécharge le fichier Word généré
+   4. Affiche le résultat
+
+✅ RÉSULTAT ATTENDU:
+   
+   ✅ Fichier généré: synthese_cac_test_2026-03-25.docx
+   ✅ Taille: ~50 KB
+   ✅ Contenu: 3 sections avec sommaires
+
+═══════════════════════════════════════════════════════════════
+   RÉSUMÉ DES SOLUTIONS
+═══════════════════════════════════════════════════════════════
+
+1. ✅ Forcer le rechargement: Ctrl+Shift+R
+
+2. ✅ Vérifier les tables:
+   document.querySelectorAll('table.min-w-full.border.border-gray-200').length
+
+3. ✅ Vérifier les logs console après clic sur "Export Synthèse CAC"
+
+4. ✅ Tester avec le script PowerShell:
+   .\test-export-synthese-cac-final.ps1
+
+5. ✅ Vérifier que le backend est démarré:
+   http://localhost:5000/docs
+
+═══════════════════════════════════════════════════════════════
+   COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════
+
+# Vérifier les tables dans la console (F12):
+document.querySelectorAll('table.min-w-full.border.border-gray-200').length
+
+# Tester l'export avec le script:
+.\test-export-synthese-cac-final.ps1
+
+# Démarrer le backend:
+cd py_backend
+python main.py
+
+# Vérifier le backend:
+http://localhost:5000/docs
+
+═══════════════════════════════════════════════════════════════
+
+✅ PROCHAINE ÉTAPE
+
+Suivez les étapes ci-dessus dans l'ordre pour identifier le problème.
+
+Si le problème persiste après toutes ces vérifications, partagez:
+- Les logs de la console (F12)
+- Le résultat de la commande de vérification des tables
+- Les logs du backend
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,93 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  ✅ FIX FINAL - Tables Disparaissent                         ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+PROBLÈME : Le script de restauration complète faisait disparaître
+les tables originales en créant des doublons.
+
+SOLUTION : Désactiver la restauration complète et forcer la
+restauration des checkboxes dans les tables existantes.
+
+═══════════════════════════════════════════════════════════════
+
+🔧 MODIFICATIONS EFFECTUÉES
+
+1. index.html
+   - ❌ DÉSACTIVÉ: restaurer-tables-cia-complet.js
+   - ✅ AJOUTÉ: force-restauration-cia-delai.js
+
+2. Nouveau script créé
+   - public/force-restauration-cia-delai.js
+   - Restaure les checkboxes dans les tables EXISTANTES
+   - Ne recrée PAS les tables
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CE QUE LE NOUVEAU SCRIPT FAIT
+
+1. Attend que conso.js soit chargé
+2. Attend que les tables soient créées (2 secondes)
+3. Vérifie qu'il y a des tables CIA
+4. Force la restauration des checkboxes
+5. Affiche une notification de succès
+
+═══════════════════════════════════════════════════════════════
+
+🧪 TESTEZ MAINTENANT
+
+1. Actualisez la page (Ctrl+F5)
+
+2. Attendez 5 secondes
+
+3. Vous devriez voir :
+   - ✅ Les tables CIA restent visibles
+   - ✅ Les checkboxes apparaissent
+   - ✅ Les checkboxes sont cochées selon l'état sauvegardé
+   - ✅ Notification "X checkbox(es) restaurée(s)"
+
+4. Dans la console :
+   - "🔄 FORCE RESTAURATION CIA - Démarrage"
+   - "✅ conso.js détecté"
+   - "📊 X table(s) CIA trouvée(s) dans le DOM"
+   - "✅ Restauration forcée déclenchée"
+   - "✅ Restauration réussie !"
+
+═══════════════════════════════════════════════════════════════
+
+💡 DIFFÉRENCE AVEC AVANT
+
+AVANT (restaurer-tables-cia-complet.js) :
+❌ Recréait les tables depuis localStorage
+❌ Faisait disparaître les tables originales
+❌ Créait des doublons
+
+APRÈS (force-restauration-cia-delai.js) :
+✅ Utilise les tables existantes
+✅ Restaure seulement les checkboxes
+✅ Pas de doublons
+
+═══════════════════════════════════════════════════════════════
+
+🔍 EN CAS DE PROBLÈME
+
+Si les checkboxes ne sont toujours pas restaurées :
+
+1. Vérifiez la console pour les erreurs
+
+2. Vérifiez que les tables existent :
+   document.querySelectorAll('table').length
+
+3. Forcez manuellement la restauration :
+   claraverseProcessor.restoreAllTablesData()
+
+4. Vérifiez localStorage :
+   const data = JSON.parse(localStorage.getItem('claraverse_tables_data'));
+   console.log('Tables CIA:', Object.values(data).filter(t => t.isCIATable).length);
+
+═══════════════════════════════════════════════════════════════
+
+Date : 26 novembre 2025
+Statut : ✅ Fix appliqué
+Action : Actualisez et testez

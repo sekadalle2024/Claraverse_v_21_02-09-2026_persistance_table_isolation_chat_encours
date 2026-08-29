@@ -1,0 +1,158 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║     EXECUTER LE SCRIPT MAINTENANT - 17 AVRIL 2026        ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+🎯 COMMANDE SIMPLE À COPIER-COLLER
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 1: OUVRIR POWERSHELL
+───────────────────────────
+
+1. Appuyer sur Windows + R
+2. Taper: powershell
+3. Appuyer sur Entrée
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 2: ALLER DANS LE DOSSIER
+───────────────────────────────
+
+Copier-coller cette commande:
+
+cd "H:\ClaraVerse"
+
+Appuyer sur Entrée
+
+═══════════════════════════════════════════════════════════
+
+ETAPE 3: EXECUTER LE SCRIPT
+────────────────────────────
+
+Copier-coller cette commande:
+
+.\Doc` render` deploy\verifier-fichiers-github-simple.ps1
+
+Appuyer sur Entrée
+
+═══════════════════════════════════════════════════════════
+
+✅ CE QUE LE SCRIPT VA FAIRE
+
+Le script va automatiquement:
+
+1. ✓ Vérifier si runtime.txt existe sur GitHub
+2. ✓ Vérifier si requirements_render.txt existe sur GitHub
+3. ✓ Vérifier si main.py existe sur GitHub
+4. ✓ Afficher le contenu de runtime.txt
+5. ✓ Afficher les tailles des fichiers
+
+AUCUNE VALEUR À RENSEIGNER!
+Tout est automatique.
+
+═══════════════════════════════════════════════════════════
+
+📋 COMMANDES COMPLETES (COPIER-COLLER)
+
+Voici les 2 commandes à copier-coller une par une:
+
+1. cd "H:\ClaraVerse"
+
+2. .\Doc` render` deploy\verifier-fichiers-github-simple.ps1
+
+═══════════════════════════════════════════════════════════
+
+⚠️  SI VOUS AVEZ UNE ERREUR "EXECUTION DE SCRIPTS DESACTIVEE"
+
+Copier-coller cette commande AVANT d'exécuter le script:
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+Puis exécuter le script normalement.
+
+═══════════════════════════════════════════════════════════
+
+🎓 EXPLICATION DE L'ERREUR PRECEDENTE
+
+Vous avez essayé:
+
+cd "h:\ClaraVerse" ; curl -s "https://api.github.com/repos/sekadalle2024/Back-end-python-V0_03_03_2026/contents" | ConvertFrom-Json | Select-Object -Property name, type | Format-Table -AutoSize
+
+Le problème:
+- PowerShell a demandé "Uri:" car la commande était mal formatée
+- curl en PowerShell est un alias pour Invoke-WebRequest
+- La syntaxe était incorrecte
+
+SOLUTION:
+Utiliser le script qui fait tout automatiquement!
+
+═══════════════════════════════════════════════════════════
+
+✅ RESULTAT ATTENDU
+
+Après avoir exécuté le script, vous verrez:
+
+═══════════════════════════════════════════════════════════
+  VERIFICATION FICHIERS SUR GITHUB BACKEND
+═══════════════════════════════════════════════════════════
+
+Repository: sekadalle2024/Back-end-python-V0_03_03_2026
+
+1. Verification runtime.txt...
+   ✓ runtime.txt EXISTE sur GitHub!
+   Contenu: python-3.11.9
+
+2. Verification requirements_render.txt...
+   ✓ requirements_render.txt EXISTE sur GitHub!
+   Taille: 1234 octets
+
+3. Verification main.py...
+   ✓ main.py EXISTE sur GitHub!
+   Taille: 5678 octets
+
+═══════════════════════════════════════════════════════════
+
+Si vous voyez ces ✓ verts, les fichiers SONT sur GitHub!
+
+═══════════════════════════════════════════════════════════
+
+🚀 APRES L'EXECUTION DU SCRIPT
+
+Si le script confirme que les fichiers existent:
+
+1. VERIFIER SUR GITHUB (navigateur)
+   ─────────────────────────────────
+   https://github.com/sekadalle2024/Back-end-python-V0_03_03_2026
+   
+   Rafraîchir avec Ctrl + F5
+
+2. VERIFIER RENDER
+   ────────────────
+   https://dashboard.render.com/
+   
+   - Cliquer sur votre service backend
+   - Regarder les logs récents
+   - Chercher "Using Python version 3.11.9"
+
+3. SI RENDER N'A PAS REBUILD
+   ─────────────────────────
+   - Cliquer sur "Manual Deploy"
+   - Sélectionner "Deploy latest commit"
+
+═══════════════════════════════════════════════════════════
+
+📞 AIDE SUPPLEMENTAIRE
+
+Si vous avez encore des problèmes:
+
+1. Copier-coller le résultat du script
+2. Indiquer ce que vous voyez
+3. Indiquer si vous voyez des ✓ verts ou des ✗ rouges
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+
+═══════════════════════════════════════════════════════════

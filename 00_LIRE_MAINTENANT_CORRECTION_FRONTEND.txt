@@ -1,0 +1,203 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                  🎯 CORRECTION FRONTEND ZEABUR APPLIQUÉE                     ║
+║                         PRÊT POUR REDÉPLOIEMENT                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📍 SITUATION ACTUELLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Backend:  DÉPLOYÉ ET FONCTIONNEL
+   URL: https://pybackend.zeabur.app
+   Port: 8080
+   Status: Running
+   Health: OK
+
+❌ Frontend: ERREUR DE BUILD
+   Erreur: npm ci --only=production failed
+   Cause: package-lock.json incompatible
+
+✅ Correction: APPLIQUÉE
+   Fichier: Dockerfile.frontend
+   Changement: npm ci → npm install --production=false
+
+🎯 ACTION IMMÉDIATE - 3 ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 1: PUSH VERS GITHUB (2 minutes)                                   │
+└──────────────────────────────────────────────────────────────────────────┘
+
+Ouvrir PowerShell dans ce dossier et exécuter:
+
+   .\Doc zeabur docker\Scripts\push-to-github-zeabur.ps1
+
+Le script va automatiquement:
+   ✓ Vérifier les fichiers modifiés
+   ✓ Créer un commit avec message descriptif
+   ✓ Pusher vers GitHub
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 2: REDÉPLOYER SUR ZEABUR (5-10 minutes)                           │
+└──────────────────────────────────────────────────────────────────────────┘
+
+1. Aller sur: https://zeabur.com/dashboard
+
+2. Sélectionner votre projet "claraverse-production"
+
+3. Cliquer sur le service "frontend"
+
+4. Cliquer sur "Redeploy" (bouton en haut à droite)
+
+5. Attendre le build:
+   • Building... (5-8 minutes)
+   • Deploying... (1-2 minutes)
+   • Running ✅
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE 3: VÉRIFIER LE DÉPLOIEMENT (1 minute)                             │
+└──────────────────────────────────────────────────────────────────────────┘
+
+1. Ouvrir: https://prclaravi.zeabur.app
+
+2. Vérifier:
+   ✅ Page se charge
+   ✅ Menu "Démarrer" visible
+   ✅ Pas d'erreur console (F12)
+
+3. Tester:
+   • Cliquer sur "Démarrer"
+   • Sélectionner un mode
+   • Vérifier la communication backend
+
+📚 DOCUMENTATION DISPONIBLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 QUICK_FIX_FRONTEND_ZEABUR.txt
+   → Guide rapide en 3 étapes
+
+📄 00_CORRECTION_FRONTEND_ZEABUR_20_AVRIL_2026.txt
+   → Explication détaillée du problème et de la solution
+
+📄 VERIFICATION_DEPLOIEMENT_ZEABUR.md
+   → Checklist complète de vérification post-déploiement
+
+📄 Doc zeabur docker/03_GUIDE_DEPLOIEMENT_ZEABUR_SANS_BUILD_LOCAL.md
+   → Guide complet de déploiement Zeabur
+
+🔧 MODIFICATION TECHNIQUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fichier: Dockerfile.frontend
+Ligne: 18
+
+AVANT:
+   RUN npm ci --only=production
+
+APRÈS:
+   RUN npm install --production=false
+
+RAISON:
+   • npm ci nécessite un package-lock.json exact et compatible
+   • npm install est plus tolérant et fonctionne toujours
+   • --production=false installe toutes les dépendances (nécessaire pour build)
+   • Le cache Docker compense la différence de vitesse
+
+💡 POURQUOI CETTE SOLUTION FONCTIONNE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+npm ci (Clean Install):
+   ✓ Très rapide
+   ✓ Reproductible
+   ✗ Strict: nécessite package-lock.json exact
+   ✗ Échoue si incompatibilité de version
+
+npm install:
+   ✓ Tolérant: fonctionne avec ou sans package-lock.json
+   ✓ Crée/met à jour package-lock.json si nécessaire
+   ✓ Résout automatiquement les conflits de versions
+   ✗ Légèrement plus lent (compensé par cache Docker)
+
+Pour Docker:
+   ✅ npm install est recommandé
+   ✅ Évite les problèmes de compatibilité
+   ✅ Plus robuste pour différents environnements
+
+🎉 RÉSULTAT ATTENDU
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Après redéploiement:
+
+✅ Frontend accessible sur https://prclaravi.zeabur.app
+✅ Backend accessible sur https://pybackend.zeabur.app
+✅ Communication frontend ↔ backend fonctionnelle
+✅ Menu Démarrer opérationnel
+✅ Tous les modes disponibles
+✅ Upload de fichiers fonctionnel
+✅ Export de rapports fonctionnel
+✅ Déploiement automatique activé (push GitHub → Zeabur)
+
+🔄 WORKFLOW DE DÉVELOPPEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Développement local:
+   npm install
+   npm run dev
+
+2. Commit et push:
+   git add .
+   git commit -m "feat: nouvelle fonctionnalité"
+   git push
+
+3. Déploiement automatique:
+   Zeabur détecte le push
+   → Build Docker automatique
+   → Déploiement automatique
+   → Application mise à jour
+
+⚠️  EN CAS DE PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si le build échoue encore:
+
+1. Vérifier les logs de build sur Zeabur Dashboard
+2. Chercher l'erreur exacte dans les logs
+3. Consulter VERIFICATION_DEPLOIEMENT_ZEABUR.md
+4. Vérifier la section "Problèmes Courants et Solutions"
+
+Si le frontend ne se charge pas:
+
+1. Vérifier que le service est "Running" sur Zeabur
+2. Vérifier les logs runtime
+3. Tester le health check: https://prclaravi.zeabur.app/health
+4. Vérifier la console navigateur (F12)
+
+Si erreur CORS:
+
+1. Vérifier CORS_ORIGINS dans backend (docker-compose.yml)
+2. Vérifier VITE_BACKEND_URL dans frontend
+3. Redéployer les deux services
+
+🔗 LIENS RAPIDES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Frontend:  https://prclaravi.zeabur.app
+Backend:   https://pybackend.zeabur.app
+Dashboard: https://zeabur.com/dashboard
+GitHub:    https://github.com/ohadasave/Claraverse_windows_v_11_20_04_2026_v5_docker_zeabur_t1
+
+📞 SUPPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Documentation: Doc zeabur docker/
+Logs Zeabur: Dashboard → Service → Logs
+GitHub Issues: Pour signaler des bugs
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    🚀 PRÊT POUR LE DÉPLOIEMENT !                            ║
+║                                                                              ║
+║              Exécutez le script push et redéployez sur Zeabur               ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝

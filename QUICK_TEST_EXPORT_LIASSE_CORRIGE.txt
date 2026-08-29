@@ -1,0 +1,84 @@
+================================================================================
+TEST RAPIDE - EXPORT LIASSE CORRIGÉ
+================================================================================
+
+✅ CORRECTION APPLIQUÉE: Gestion cellules fusionnées + conversion LIST→DICT
+
+================================================================================
+TEST 1: VÉRIFICATION RAPIDE (2 minutes)
+================================================================================
+
+cd py_backend
+python diagnostic_export_liasse.py
+
+Résultat attendu:
+  ✅ Fichier test_liasse_remplie.xlsx créé
+  ✅ Valeurs 123456.78 visibles dans les cellules
+  ✅ Pas d'erreur "MergedCell object attribute 'value' is read-only"
+
+================================================================================
+TEST 2: GÉNÉRATION COMPLÈTE (5 minutes)
+================================================================================
+
+cd py_backend
+python generer_etats_liasse.py
+
+Résultat attendu:
+  ✅ Fichier HTML généré sur le Bureau
+  ✅ Données visibles dans le HTML
+  ✅ Export Excel fonctionnel depuis le HTML
+
+================================================================================
+TEST 3: VÉRIFICATION LOGS
+================================================================================
+
+Chercher dans la sortie console:
+
+✅ "Données converties:"
+✅ "ACTIF: X cellules remplies, Y erreurs"
+✅ "PASSIF: X cellules remplies, Y erreurs"
+✅ "RESULTAT: X cellules remplies, Y erreurs"
+
+Si Y (erreurs) > 0:
+  → Normal pour les cellules fusionnées non mappées
+  → Vérifier que X (succès) > 0
+
+================================================================================
+PROBLÈME RÉSOLU SI:
+================================================================================
+
+✅ test_liasse_remplie.xlsx contient des valeurs
+✅ Logs montrent "X cellules remplies"
+✅ Pas d'erreur MergedCell
+✅ Fichier HTML généré avec données
+
+================================================================================
+SI LE PROBLÈME PERSISTE:
+================================================================================
+
+1. Vérifier l'environnement:
+   conda activate claraverse_backend
+   python -c "import openpyxl; print(openpyxl.__version__)"
+
+2. Vérifier le template:
+   cd py_backend
+   python -c "import openpyxl; wb = openpyxl.load_workbook('Liasse_officielle_revise.xlsx'); print(wb.sheetnames[:10])"
+
+3. Vérifier les logs détaillés:
+   cd py_backend
+   python generer_etats_liasse.py 2>&1 | tee test_export.log
+
+================================================================================
+COMMANDES ULTRA-RAPIDES
+================================================================================
+
+# Test minimal (30 secondes)
+cd py_backend ; python diagnostic_export_liasse.py
+
+# Test complet (2 minutes)
+cd py_backend ; python generer_etats_liasse.py
+
+# Ouvrir le fichier test
+start py_backend/test_liasse_remplie.xlsx
+
+================================================================================

@@ -1,0 +1,136 @@
+═══════════════════════════════════════════════════════════════════════════════
+  📊 SYNTHÈSE VISUELLE - CORRECTION TIMEOUT CLARAAPI
+  Date: 15 avril 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          🎯 OBJECTIFS ATTEINTS                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ✅ Timeout configuré à 3 minutes (au lieu de 10 minutes)
+  ✅ Message de notification système en français
+  ✅ Numéro WhatsApp de l'éditeur affiché
+  ✅ Tableau d'informations techniques professionnel
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          📝 MODIFICATIONS APPLIQUÉES                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  📁 Fichier: src/services/claraApiService.ts
+  
+  1️⃣ LIGNE 330: Timeout réduit
+     ─────────────────────────────────────────────────────────────────────────
+     AVANT: private n8nTimeout = 10 * 60 * 1000; // 10 minutes
+     APRÈS: private n8nTimeout = 3 * 60 * 1000;  // 3 minutes
+     ─────────────────────────────────────────────────────────────────────────
+  
+  2️⃣ LIGNES 2078-2095: Message de notification système
+     ─────────────────────────────────────────────────────────────────────────
+     AVANT: Message technique en anglais
+     APRÈS: Message clair en français avec WhatsApp
+     ─────────────────────────────────────────────────────────────────────────
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          📱 MESSAGE DE NOTIFICATION                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ┌───────────────────────────────────────────────────────────────────────────┐
+  │ ## Notification système                                                   │
+  │                                                                            │
+  │ ⏱️ **Délai d'attente dépassé** (>3 minutes)                              │
+  │                                                                            │
+  │ Nous sommes en surcharge de requêtes.                                     │
+  │                                                                            │
+  │ **Merci de notifier l'événement à l'éditeur par WhatsApp :**             │
+  │                                                                            │
+  │ 📱 **+225 05 44 13 07 98**                                                │
+  │                                                                            │
+  │ ---                                                                        │
+  │                                                                            │
+  │ ### Informations techniques                                               │
+  │                                                                            │
+  │ | Rubrique | Description |                                                │
+  │ |----------|-------------|                                                │
+  │ | **Endpoint** | https://hkj0631c.rpcl.app/webhook/... |                 │
+  │ | **Timeout configuré** | 3 minutes |                                    │
+  │ | **Type d'erreur** | Délai d'attente dépassé |                         │
+  └───────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          🔄 FLUX DE TRAITEMENT                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  1. Utilisateur envoie une requête
+     ↓
+  2. ClaraApiService démarre le timer (3 minutes)
+     ↓
+  3. Requête envoyée vers n8n
+     ↓
+  4. SI réponse < 3 min → Affichage normal
+     ↓
+  5. SI réponse > 3 min → AbortError
+     ↓
+  6. Affichage du message de notification système
+     ↓
+  7. Utilisateur contacte l'éditeur par WhatsApp
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          🧪 COMMANDES DE TEST                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  # Redémarrer le frontend
+  npm run dev
+
+  # Vérifier le timeout en console (F12)
+  claraApiService.getN8nTimeout()
+  → Devrait retourner: 180000 (3 minutes en ms)
+
+  # Modifier le timeout temporairement (pour test)
+  claraApiService.setN8nTimeout(10000); // 10 secondes
+
+  # Restaurer le timeout normal
+  claraApiService.setN8nTimeout(3 * 60 * 1000); // 3 minutes
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          📊 COMPARAISON AVANT/APRÈS                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────┬─────────────────────────┬─────────────────────┐
+  │ Critère                 │ AVANT                   │ APRÈS               │
+  ├─────────────────────────┼─────────────────────────┼─────────────────────┤
+  │ Timeout                 │ 10 minutes              │ 3 minutes           │
+  │ Langue du message       │ Anglais                 │ Français            │
+  │ Type de message         │ Technique               │ Utilisateur final   │
+  │ Contact éditeur         │ ❌ Non                  │ ✅ Oui (WhatsApp)   │
+  │ Informations techniques │ ❌ Non structurées      │ ✅ Tableau clair    │
+  │ Expérience utilisateur  │ ⚠️ Confuse              │ ✅ Claire           │
+  └─────────────────────────┴─────────────────────────┴─────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          📁 FICHIERS CRÉÉS                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ✅ 00_SOLUTION_TIMEOUT_CLARAAPI_15_AVRIL_2026.txt
+     → Documentation complète de la solution
+
+  ✅ QUICK_TEST_TIMEOUT_CLARAAPI.txt
+     → Guide de test rapide
+
+  ✅ SYNTHESE_VISUELLE_TIMEOUT_15_AVRIL_2026.txt
+     → Ce fichier (synthèse visuelle)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          ✅ STATUT FINAL                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  🎯 MISSION ACCOMPLIE
+
+  Le timeout a été configuré à 3 minutes et le message de notification
+  système avec le numéro WhatsApp de l'éditeur a été intégré.
+
+  Les utilisateurs bénéficient maintenant d'une expérience claire et
+  professionnelle en cas de surcharge du système.
+
+  📱 Contact éditeur: +225 05 44 13 07 98
+
+═══════════════════════════════════════════════════════════════════════════════

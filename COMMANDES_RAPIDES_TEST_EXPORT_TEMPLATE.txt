@@ -1,0 +1,143 @@
+═══════════════════════════════════════════════════════════════════════════════
+   ⚡ COMMANDES RAPIDES - TEST EXPORT TEMPLATE
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 OBJECTIF: Tester rapidement la correction de l'export template Excel/Word
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPE 1: OUVRIR LA CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+Windows: F12 ou Ctrl+Shift+I
+Mac: Cmd+Option+I
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPE 2: CRÉER UN MESSAGE DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans le chat Claraverse, demander à l'agent de créer plusieurs tables.
+
+Exemple de prompt:
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Crée 3 tables différentes:                                              │
+│ 1. Table des ventes (5 lignes, 3 colonnes)                             │
+│ 2. Table des clients (8 lignes, 4 colonnes)                            │
+│ 3. Table des produits (6 lignes, 2 colonnes)                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPE 3: TESTER L'EXPORT EXCEL
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cliquer sur n'importe quelle table
+2. Clic droit → Menu contextuel
+3. Section "Excel" → "Exporter template Excel"
+4. Vérifier dans la console:
+
+   ✅ [Export Template] 3 table(s) trouvée(s) dans le conteneur du message
+   🔍 [Export Template] Premières tables détectées:
+     Table 1: { rows: 5, cols: 3 }
+     Table 2: { rows: 8, cols: 4 }
+     Table 3: { rows: 6, cols: 2 }
+   📊 Export template: 3 tables seront exportées
+   ✅ Export template terminé! (3 tables)
+
+5. Ouvrir le fichier Excel téléchargé
+6. ✅ VÉRIFIER: Les 3 tables sont présentes avec lignes vides entre elles
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPE 4: TESTER L'EXPORT WORD
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Cliquer sur n'importe quelle table
+2. Clic droit → Menu contextuel
+3. Section "Excel" → "Exporter template Word"
+4. Vérifier dans la console:
+
+   ✅ [Export Word] 3 table(s) trouvée(s) dans le conteneur du message
+   📄 Export Word: 3 tables seront exportées
+
+5. Ouvrir le fichier Word téléchargé
+6. ✅ VÉRIFIER: Les 3 tables sont présentes
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ÉTAPE 5: COMPARER AVEC "EXPORT SYNTHÈSE CAC"
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Créer un message avec des tables FRAP
+2. Tester "Export Synthèse CAC"
+3. Vérifier dans la console le nombre de tables détectées
+4. Tester "Exporter template Excel"
+5. ✅ VÉRIFIER: Les deux actions détectent le même nombre de tables
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 COMMANDES CONSOLE POUR DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════════════════
+
+[Compter toutes les tables dans le chat]
+document.querySelectorAll('div.prose table').length
+
+[Afficher les tables détectées]
+Array.from(document.querySelectorAll('div.prose table')).forEach((t, i) => {
+  console.log(`Table ${i+1}:`, {
+    rows: t.querySelectorAll('tr').length,
+    cols: t.querySelectorAll('tr')[0]?.querySelectorAll('td, th').length || 0
+  });
+});
+
+[Vérifier le conteneur parent d'une table]
+// Cliquer sur une table, puis dans la console:
+$0.closest('div.prose.prose-base.dark\\:prose-invert.max-w-none')
+
+[Compter les tables dans le conteneur]
+$0.closest('div.prose.prose-base.dark\\:prose-invert.max-w-none')
+  .querySelectorAll('table').length
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+[Console]
+✅ Logs de diagnostic affichés
+✅ Nombre correct de tables détectées
+✅ Message de succès "Export template terminé! (X tables)"
+
+[Fichier Excel/Word]
+✅ Toutes les tables présentes
+✅ Lignes vides entre les tables
+✅ En-têtes stylés (rouge bordeaux)
+✅ Données complètes
+
+═══════════════════════════════════════════════════════════════════════════════
+❌ EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+[Problème: 0 table détectée]
+→ Vérifier la structure HTML du message (F12 → Inspecteur)
+→ Vérifier que les tables ont les classes CSS Claraverse
+→ Essayer: document.querySelectorAll('table').length
+
+[Problème: 1 seule table détectée]
+→ Vérifier les logs: "X table(s) trouvée(s)"
+→ Vérifier le conteneur parent: $0.closest('div.prose...')
+→ Essayer le fallback: document.querySelectorAll('div.prose table')
+
+[Problème: Fichier vide ou incomplet]
+→ Vérifier extractTableDataOptimized()
+→ Vérifier les logs de diagnostic
+→ Ouvrir la console et chercher les erreurs
+
+═══════════════════════════════════════════════════════════════════════════════
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════════
+
+Documentation complète:
+→ 00_CORRECTION_EXPORT_TEMPLATE_TOUTES_TABLES_09_MAI_2026.txt
+
+Guide de test détaillé:
+→ QUICK_TEST_EXPORT_TEMPLATE_TOUTES_TABLES.txt
+
+Synthèse visuelle:
+→ SYNTHESE_VISUELLE_CORRECTION_EXPORT_TEMPLATE_09_MAI_2026.txt
+
+═══════════════════════════════════════════════════════════════════════════════

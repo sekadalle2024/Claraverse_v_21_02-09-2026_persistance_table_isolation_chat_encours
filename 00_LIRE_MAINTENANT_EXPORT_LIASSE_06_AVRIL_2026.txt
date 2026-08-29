@@ -1,0 +1,234 @@
+================================================================================
+⚠️  LIRE MAINTENANT - PROBLÈMES EXPORT LIASSE (06 AVRIL 2026)
+================================================================================
+
+📋 SITUATION ACTUELLE:
+
+Malgré les corrections du 05 avril, 3 problèmes persistent dans l'export de la 
+liasse officielle Excel:
+
+1. ❌ Bilan ACTIF: Colonnes BRUT et AMORTISSEMENT vides
+2. ❌ Bilan ACTIF: Lignes de totalisation vides (AZ, BQ, BZ, CZ, DZ)
+3. ❌ TFT: Onglet complètement vierge
+
+================================================================================
+🚀 DÉMARRAGE ULTRA-RAPIDE (3 ÉTAPES)
+================================================================================
+
+ÉTAPE 1: Exécuter le diagnostic (2 min)
+   ```powershell
+   .\test-diagnostic-export-liasse.ps1
+   ```
+   
+   Ce script va:
+   - Charger les balances de test
+   - Générer les états financiers
+   - Analyser le template Excel
+   - Créer un fichier de test: py_backend/test_export_diagnostic.xlsx
+
+ÉTAPE 2: Lire l'analyse détaillée (10 min)
+   ```
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+   ```
+   
+   Ce document contient:
+   - Analyse technique détaillée de chaque problème
+   - Solutions proposées avec code
+   - Plan d'action complet
+
+ÉTAPE 3: Examiner le fichier de test (5 min)
+   - Ouvrir: py_backend/test_export_diagnostic.xlsx
+   - Vérifier que les valeurs sont bien écrites en colonnes H et I
+   - Comparer avec le template vierge
+
+================================================================================
+📁 FICHIERS CRÉÉS AUJOURD'HUI
+================================================================================
+
+1. py_backend/diagnostic_export_liasse_complet.py
+   → Script Python de diagnostic complet
+
+2. test-diagnostic-export-liasse.ps1
+   → Script PowerShell pour exécuter le diagnostic
+
+3. Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+   → Analyse détaillée des problèmes et solutions
+
+4. Ce fichier (00_LIRE_MAINTENANT_EXPORT_LIASSE_06_AVRIL_2026.txt)
+   → Guide de démarrage rapide
+
+================================================================================
+🎯 LES 3 PROBLÈMES EN DÉTAIL
+================================================================================
+
+PROBLÈME 1: Colonnes BRUT et AMORTISSEMENT
+   Symptôme:
+   - Le template Excel a 3 colonnes pour N: BRUT, AMORTISSEMENT, NET
+   - Seule la colonne NET est renseignée
+   - Le menu accordéon n'affiche que NET
+   
+   Solution:
+   - Extraire les valeurs brutes depuis les comptes 2xxx
+   - Extraire les amortissements depuis les comptes 28xx
+   - Calculer: NET = BRUT - AMORTISSEMENT
+   - Remplir les 3 colonnes dans l'export
+   - Ajouter les colonnes dans le menu accordéon
+
+PROBLÈME 2: Totalisations manquantes
+   Symptôme:
+   - Les lignes de totalisation restent vides:
+     * AZ: TOTAL ACTIF IMMOBILISÉ
+     * BQ: TOTAL ACTIF CIRCULANT
+     * BZ: TOTAL TRÉSORERIE-ACTIF
+     * CZ: TOTAL ÉCARTS DE CONVERSION-ACTIF
+     * DZ: TOTAL GÉNÉRAL ACTIF
+   
+   Solution:
+   - Identifier les postes inclus dans chaque totalisation
+   - Calculer les sommes (brut, amortissement, net)
+   - Remplir les lignes de totalisation
+
+PROBLÈME 3: TFT vierge
+   Symptôme:
+   - L'onglet TFT reste complètement vide
+   - Le TFT est pourtant généré (format dict)
+   
+   Solution:
+   - Vérifier le mapping des colonnes (I et K au lieu de H et I)
+   - Améliorer la conversion dict → liste de postes
+   - Scanner correctement la colonne A pour les REF
+
+================================================================================
+📊 PLAN D'ACTION RECOMMANDÉ
+================================================================================
+
+Phase 1: Diagnostic (FAIT ✅)
+   [x] Script de diagnostic créé
+   [x] Analyse des problèmes documentée
+   [x] Solutions proposées
+
+Phase 2: Corrections Backend (À FAIRE)
+   [ ] Modifier etats_financiers_v2.py
+       - Ajouter calcul brut et amortissement
+       - Ajouter calcul des totalisations
+   
+   [ ] Tester les calculs
+       - Exécuter test_brut_amortissement.py
+       - Vérifier les valeurs
+
+Phase 3: Corrections Export (À FAIRE)
+   [ ] Modifier export_liasse.py
+       - Vérifier les colonnes du template
+       - Remplir brut et amortissement
+       - Remplir les totalisations
+       - Corriger le mapping TFT
+   
+   [ ] Tester l'export
+       - Exécuter test_export_complet.py
+       - Vérifier le fichier généré
+
+Phase 4: Corrections Frontend (À FAIRE)
+   [ ] Modifier le menu accordéon
+       - Ajouter colonnes BRUT et AMORTISSEMENT
+       - Tester l'affichage
+
+Phase 5: Validation Finale (À FAIRE)
+   [ ] Tests complets
+   [ ] Vérification de cohérence
+   [ ] Documentation mise à jour
+
+================================================================================
+🔧 COMMANDES RAPIDES
+================================================================================
+
+# Exécuter le diagnostic
+.\test-diagnostic-export-liasse.ps1
+
+# Tester les calculs (après corrections)
+cd py_backend
+python test_brut_amortissement.py
+
+# Tester l'export complet (après corrections)
+cd py_backend
+python test_export_complet.py
+
+# Redémarrer le backend
+.\start-claraverse.ps1
+
+================================================================================
+📝 FICHIERS À MODIFIER
+================================================================================
+
+Backend:
+1. py_backend/etats_financiers_v2.py
+   → Ajouter calcul brut/amortissement et totalisations
+
+2. py_backend/export_liasse.py
+   → Modifier le remplissage pour inclure toutes les colonnes
+
+Frontend:
+3. src/components/Clara_Components/[Composant Menu Accordéon]
+   → Ajouter colonnes BRUT et AMORTISSEMENT
+
+================================================================================
+💡 POINTS CLÉS À RETENIR
+================================================================================
+
+1. Le template Excel est RIGIDE (cellules fusionnées)
+   → Utiliser l'approche "frappe balistique" (ciblage absolu)
+
+2. Les valeurs brutes et amortissements EXISTENT dans la balance
+   → Comptes 2xxx (brut) et 28xx (amortissement)
+
+3. Les totalisations DOIVENT être calculées
+   → Somme des postes inclus dans chaque section
+
+4. Le TFT est généré mais pas exporté correctement
+   → Vérifier le mapping des colonnes (I et K)
+
+5. Le frontend DOIT être cohérent avec l'export
+   → Afficher les mêmes colonnes
+
+================================================================================
+📞 BESOIN D'AIDE?
+================================================================================
+
+1. Lire l'analyse détaillée:
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+2. Consulter les solutions précédentes:
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/01_SOLUTIONS_IMPLEMENTEES_06_AVRIL_2026.md
+
+3. Voir l'architecture:
+   Doc_Etat_Fin/00_ARCHITECTURE_ETATS_FINANCIERS.md
+
+4. Exécuter le diagnostic:
+   .\test-diagnostic-export-liasse.ps1
+
+================================================================================
+⏱️ ESTIMATION DU TEMPS
+================================================================================
+
+Diagnostic:           2 min  (FAIT ✅)
+Lecture analyse:     10 min
+Corrections backend: 30 min
+Corrections export:  20 min
+Corrections frontend: 15 min
+Tests et validation: 15 min
+------------------------
+TOTAL:              ~90 min
+
+================================================================================
+✅ PROCHAINE ÉTAPE IMMÉDIATE
+================================================================================
+
+Exécuter le diagnostic pour confirmer les problèmes:
+
+   .\test-diagnostic-export-liasse.ps1
+
+Puis lire l'analyse détaillée pour comprendre les solutions.
+
+================================================================================
+Dernière mise à jour: 06 AVRIL 2026 - 16:30
+Agent: Kiro AI Assistant
+================================================================================

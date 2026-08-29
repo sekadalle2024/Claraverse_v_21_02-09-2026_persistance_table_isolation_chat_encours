@@ -1,0 +1,122 @@
+feat: Ajout onglet "Contrôle de cohérence" dans l'export liasse officielle
+
+Intégration d'un onglet Excel "Contrôle de cohérence" contenant les 16 états
+de contrôle organisés en 6 sections, identiques au menu accordéon frontend.
+
+## Changements
+
+### Nouveau module créé
+- `py_backend/generer_onglet_controle_coherence.py` (300+ lignes)
+  - Fonction `ajouter_onglet_controle_coherence()` : Crée l'onglet Excel
+  - Fonction `generer_etats_controle_pour_export()` : Génère les 16 états
+  - Styles Excel professionnels (couleurs, bordures, alignements)
+  - Organisation par sections (6 sections, 16 états)
+
+### Fichier modifié
+- `py_backend/export_liasse.py`
+  - Import du nouveau module
+  - Ajout de l'onglet avant sauvegarde du fichier
+  - Gestion des erreurs (continue si échec)
+
+### Documentation créée (4 fichiers)
+- `Doc_Etat_Fin/00_ONGLET_CONTROLE_COHERENCE_05_AVRIL_2026.txt`
+  - Documentation technique complète
+  - Structure de l'onglet
+  - Fonctionnement détaillé
+  
+- `Doc_Etat_Fin/QUICK_START_ONGLET_CONTROLE.txt`
+  - Guide de démarrage rapide
+  - 3 méthodes d'utilisation
+  - Tests rapides
+  
+- `Doc_Etat_Fin/Scripts/test-onglet-controle-coherence.ps1`
+  - Script de test automatisé
+  - Vérification des modules
+  - Instructions de test
+  
+- `00_ONGLET_CONTROLE_COHERENCE_AJOUTE_05_AVRIL_2026.txt`
+  - Récapitulatif complet
+  - Vue d'ensemble
+  - Statistiques
+
+## Structure de l'onglet
+
+**Nom** : "Contrôle de cohérence"  
+**Position** : Premier onglet du fichier Excel  
+**Colonnes** : REF | LIBELLÉ | EXERCICE N | EXERCICE N-1
+
+### 6 Sections - 16 États
+
+1. **CONTRÔLES BILAN ACTIF** (3 états)
+   - État 1 : Bilan Actif N
+   - État 2 : Bilan Actif N-1
+   - État 3 : Variation
+
+2. **CONTRÔLES BILAN PASSIF** (3 états)
+   - État 4 : Bilan Passif N
+   - État 5 : Bilan Passif N-1
+   - État 6 : Variation
+
+3. **CONTRÔLES COMPTE DE RÉSULTAT** (3 états)
+   - État 7 : CR N
+   - État 8 : CR N-1
+   - État 9 : Variation
+
+4. **CONTRÔLES TFT** (3 états)
+   - État 10 : TFT N
+   - État 11 : TFT N-1
+   - État 12 : Variation
+
+5. **CONTRÔLES SENS DES COMPTES** (2 états)
+   - État 13 : Sens N
+   - État 14 : Sens N-1
+
+6. **CONTRÔLES ÉQUILIBRE BILAN** (2 états)
+   - État 15 : Équilibre N
+   - État 16 : Équilibre N-1
+
+## Avantages
+
+✅ **Cohérence totale** avec le menu accordéon frontend  
+✅ **Traçabilité** : Tous les contrôles dans un seul onglet  
+✅ **Audit** : Facilite la revue des états financiers  
+✅ **Conformité** : SYSCOHADA Révisé  
+✅ **Professionnel** : Format Excel soigné avec styles  
+✅ **Robuste** : Gestion des erreurs (continue si échec)
+
+## Fonctionnement
+
+1. **Génération des états** : Utilise `etats_controle_exhaustifs.py`
+2. **Création de l'onglet** : Applique styles et formatage Excel
+3. **Intégration** : Ajout automatique avant sauvegarde
+4. **Gestion erreurs** : Continue l'export si échec
+
+## Tests à effectuer
+
+- [ ] Test import module
+- [ ] Test génération complète (generer_etats_liasse.py)
+- [ ] Test via menu contextuel
+- [ ] Test via API
+- [ ] Vérification des valeurs vs frontend
+- [ ] Vérification du formatage Excel
+
+## Breaking Changes
+
+Aucun - Fonctionnalité additionnelle sans impact sur l'existant.
+
+## Modules utilisés
+
+- `py_backend/etats_controle_exhaustifs.py` (existant)
+- `py_backend/controles_exhaustifs.py` (existant)
+- `openpyxl` pour la manipulation Excel
+
+## Version
+
+Version 2.2 - 05 Avril 2026
+
+## Statistiques
+
+- Code : 300+ lignes (nouveau module)
+- Documentation : 4 fichiers (~1000 lignes)
+- États de contrôle : 16
+- Sections : 6

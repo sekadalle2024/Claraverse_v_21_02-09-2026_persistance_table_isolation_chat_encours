@@ -1,0 +1,151 @@
+═══════════════════════════════════════════════════════════════════
+⚡ QUICK FIX - DÉPLOIEMENT ZEABUR
+═══════════════════════════════════════════════════════════════════
+Date: 20 avril 2026
+
+═══════════════════════════════════════════════════════════════════
+🎯 PROBLÈMES IDENTIFIÉS ET CORRIGÉS
+═══════════════════════════════════════════════════════════════════
+
+1. ✅ FRONTEND - Erreur nginx.conf
+   Problème: "events" directive is not allowed here
+   Solution: Fichier nginx.conf conflictuel supprimé
+   
+2. ⚠️  BACKEND - Build du mauvais service
+   Problème: Le service backend build le frontend
+   Solution: Reconfigurer dans Zeabur Dashboard
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 1: PUSH DES CORRECTIONS (2 minutes)
+═══════════════════════════════════════════════════════════════════
+
+EXÉCUTER CE SCRIPT:
+```powershell
+.\Doc zeabur docker\Scripts\push-correction-nginx-zeabur.ps1
+```
+
+OU MANUELLEMENT:
+```powershell
+git add .
+git commit -m "fix: correction nginx.conf pour déploiement Zeabur
+
+- Suppression nginx.conf conflictuel (directive events)
+- Configuration nginx correcte dans Dockerfile.frontend
+- Prêt pour redéploiement Zeabur"
+git push origin main
+```
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 2: CORRECTION FRONTEND ZEABUR (3 minutes)
+═══════════════════════════════════════════════════════════════════
+
+1. ZEABUR DÉTECTERA LE PUSH
+   • Rebuild automatique du frontend
+   • Attendre fin du build
+
+2. VÉRIFIER LES LOGS
+   ✓ Doit voir: "Configuration complete; ready for start up"
+   ✓ Plus d'erreur "events directive"
+
+3. TESTER L'URL
+   • Ouvrir: https://prclaravi.zeabur.app
+   • L'application doit s'afficher
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 3: CORRECTION BACKEND ZEABUR (5 minutes)
+═══════════════════════════════════════════════════════════════════
+
+DANS ZEABUR DASHBOARD:
+
+1. OUVRIR LE SERVICE BACKEND
+   • Aller sur https://zeabur.com/dashboard
+   • Projet: claraverse-production
+   • Service: backend
+
+2. VÉRIFIER LA CONFIGURATION
+   Onglet "Settings" ou "Configuration":
+   
+   ✓ Build Method: Docker Compose
+   ✓ Service Name: backend ← VÉRIFIER CECI
+   ✓ Port: 8080
+   
+   SI "Service Name" = "frontend":
+   → C'est le problème !
+   → Changer en "backend"
+
+3. SAUVEGARDER ET REDÉPLOYER
+   • Cliquer "Save" ou "Update"
+   • Cliquer "Redeploy" ou "Deploy"
+
+4. VÉRIFIER LES NOUVEAUX LOGS
+   Doit voir:
+   ```
+   FROM python:3.11-slim
+   pip install -r requirements.txt
+   INFO: Uvicorn running on http://0.0.0.0:8080
+   ```
+
+5. TESTER L'URL BACKEND
+   • Ouvrir: https://pybackend.zeabur.app
+   • Doit voir: {"message": "Clara API is running"}
+
+═══════════════════════════════════════════════════════════════════
+📋 ÉTAPE 4: VÉRIFICATION COMPLÈTE (2 minutes)
+═══════════════════════════════════════════════════════════════════
+
+1. FRONTEND
+   URL: https://prclaravi.zeabur.app
+   ✓ Page s'affiche
+   ✓ Pas d'erreur console
+
+2. BACKEND
+   URL: https://pybackend.zeabur.app
+   ✓ Retourne JSON
+   ✓ Status: Running dans Zeabur
+
+3. COMMUNICATION FRONTEND ↔ BACKEND
+   • Dans le frontend, tester une fonctionnalité
+   • Vérifier que les appels API fonctionnent
+
+═══════════════════════════════════════════════════════════════════
+⏱️ TEMPS TOTAL ESTIMÉ
+═══════════════════════════════════════════════════════════════════
+
+• Étape 1 (Push):           2 minutes
+• Étape 2 (Frontend):       3 minutes
+• Étape 3 (Backend):        5 minutes
+• Étape 4 (Vérification):   2 minutes
+─────────────────────────────────────
+TOTAL:                     12 minutes
+
+═══════════════════════════════════════════════════════════════════
+📞 SI PROBLÈME PERSISTE
+═══════════════════════════════════════════════════════════════════
+
+FRONTEND:
+• Vérifier les logs Zeabur
+• Chercher d'autres erreurs nginx
+• Vérifier le fichier Dockerfile.frontend
+
+BACKEND:
+• Vérifier que "Service Name" = "backend"
+• Vérifier le port 8080
+• Vérifier py_backend/Dockerfile
+• Vérifier docker-compose.yml
+
+AIDE:
+• Lire: Doc zeabur docker/00_CORRECTION_NGINX_CONF_20_AVRIL_2026.txt
+• Lire: Doc zeabur docker/00_ANALYSE_ERREUR_BACKEND_20_AVRIL_2026.txt
+
+═══════════════════════════════════════════════════════════════════
+✅ CHECKLIST FINALE
+═══════════════════════════════════════════════════════════════════
+
+□ Corrections pushées sur GitHub
+□ Frontend Zeabur: Status = Running
+□ Backend Zeabur: Status = Running
+□ Frontend accessible via URL
+□ Backend accessible via URL
+□ Communication frontend-backend OK
+
+QUAND TOUT EST ✓ → DÉPLOIEMENT RÉUSSI ! 🎉

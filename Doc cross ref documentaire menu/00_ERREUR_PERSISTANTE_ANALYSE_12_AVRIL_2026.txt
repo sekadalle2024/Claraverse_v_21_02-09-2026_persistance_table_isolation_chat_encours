@@ -1,0 +1,71 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║         ANALYSE ERREUR PERSISTANTE - HTTP REQUEST - 12 AVRIL 2026          ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌ ERREUR TOUJOURS PRÉSENTE
+═══════════════════════════════════════════════════════════════════════════════
+
+TypeError: Cannot read properties of undefined (reading 'status')
+at HttpRequestV3.node.ts:796:23
+
+L'erreur persiste même avec le workflow V2 corrigé.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 ANALYSE APPROFONDIE
+═══════════════════════════════════════════════════════════════════════════════
+
+Le problème vient de la façon dont HTTP Request v4.2 dans n8n 2.15.1 gère
+les paramètres. La structure JSON que j'ai utilisée n'est pas compatible.
+
+PROBLÈME IDENTIFIÉ :
+
+1. ❌ La structure "queryParameters" avec "parameters" array n'est pas correcte
+2. ❌ La structure "bodyContent" avec JSON.stringify() ne fonctionne pas
+3. ❌ Le node HTTP Request v4.2 attend une structure différente
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ SOLUTION ALTERNATIVE
+═══════════════════════════════════════════════════════════════════════════════
+
+Au lieu d'utiliser HTTP Request v4.2, nous devons utiliser une approche
+différente :
+
+OPTION 1 : Utiliser des nodes Code pour faire les requêtes HTTP
+- Utiliser axios ou fetch dans des nodes Code
+- Contrôle total sur les requêtes
+- Pas de problème de compatibilité
+
+OPTION 2 : Utiliser HTTP Request v3 au lieu de v4.2
+- Revenir à la version 3 qui a une syntaxe différente
+- Plus stable pour n8n 2.15.1
+
+OPTION 3 : Utiliser les nodes Google Drive natifs (si disponibles)
+- Vérifier si une version plus récente est disponible
+- Utiliser les nodes officiels Google Drive
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 RECOMMANDATION : UTILISER DES NODES CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+La solution la plus robuste est d'utiliser des nodes Code avec axios pour
+faire les requêtes HTTP directement. Cela évite tous les problèmes de
+compatibilité avec les versions de HTTP Request.
+
+Je vais créer un workflow V3 qui utilise cette approche.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 PROCHAINE ÉTAPE
+═══════════════════════════════════════════════════════════════════════════════
+
+Créer WORKFLOW_N8N_XREF_CODE_SOLUTION_V3.json qui utilise :
+- Des nodes Code pour toutes les requêtes HTTP
+- axios pour faire les appels API Google Drive
+- Gestion manuelle de l'authentification OAuth2
+
+═══════════════════════════════════════════════════════════════════════════════

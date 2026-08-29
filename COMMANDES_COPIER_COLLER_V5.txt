@@ -1,0 +1,68 @@
+═══════════════════════════════════════════════════════════════════════════
+  📋 COMMANDES À COPIER-COLLER - SAUVEGARDE V5
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 COMMANDE PRINCIPALE (COPIER-COLLER)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.\push-claraverse-v5-29-avril-2026.ps1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ VÉRIFICATIONS APRÈS LE PUSH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier le statut Git
+git status
+
+# Vérifier les commits
+git log --oneline -7
+
+# Vérifier le remote
+git remote -v
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 SI PROBLÈME DE SECRETS OAUTH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Option 1: Autoriser les secrets sur GitHub
+# (Ouvrir les liens fournis par GitHub et cliquer "Allow secret")
+
+# Option 2: Créer un .env pour les secrets
+echo "GOOGLE_OAUTH_CLIENT_ID=votre_client_id" > .env.google-oauth
+echo "GOOGLE_OAUTH_CLIENT_SECRET=votre_secret" >> .env.google-oauth
+echo ".env.google-oauth" >> .gitignore
+
+# Puis relancer le script
+.\push-claraverse-v5-29-avril-2026.ps1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 DÉPANNAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vérifier la connexion Internet
+Test-Connection github.com -Count 4
+
+# Vérifier le repository distant
+git ls-remote origin
+
+# Réinitialiser la configuration Git si nécessaire
+git config --unset core.compression
+git config --unset http.postBuffer
+git config --unset http.lowSpeedTime
+git config --unset http.lowSpeedLimit
+
+# Puis relancer le script
+.\push-claraverse-v5-29-avril-2026.ps1
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 LIENS UTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Repository GitHub:
+https://github.com/sekadalle2024/Claverse_windows__v_14_29-04-2026_V5_docker_zeabur_ok_switch_editeur-.git
+
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,185 @@
+╔═══════════════════════════════════════════════════════════╗
+║                                                           ║
+║    📝 MISE À JOUR GUIDE DÉPLOIEMENT - 17 AVRIL 2026     ║
+║                                                           ║
+╚═══════════════════════════════════════════════════════════╝
+
+📅 Date: 17 Avril 2026
+✅ Statut: Guide mis à jour avec correction Rust
+
+═══════════════════════════════════════════════════════════
+
+🔄 MODIFICATIONS APPORTÉES AU GUIDE
+
+Le guide GUIDE_DEPLOIEMENT_RENDER_16_AVRIL_2026.md reste valide,
+mais avec ces ajouts importants:
+
+═══════════════════════════════════════════════════════════
+
+📦 FICHIERS REQUIS (MISE À JOUR)
+
+Avant de déployer sur Render, assurez-vous que ces fichiers
+sont présents dans le repo GitHub:
+
+✅ requirements_render.txt
+   → Dépendances Python avec wheels pré-compilés
+   → pydantic==2.6.4
+   → pydantic-core==2.16.3
+
+✅ runtime.txt (NOUVEAU - OBLIGATOIRE)
+   → Force Python 3.11.9
+   → Évite Python 3.14.3 (pas de wheels pour pydantic-core)
+
+✅ main.py
+   → Point d'entrée de l'application
+
+═══════════════════════════════════════════════════════════
+
+⚙️ CONFIGURATION RENDER (MISE À JOUR)
+
+Les paramètres restent identiques:
+
+Root Directory: VIDE
+Build Command: pip install -r requirements_render.txt
+Start Command: python main.py --host 0.0.0.0 --port $PORT
+Runtime: Python 3 (sera 3.11.9 grâce à runtime.txt)
+Branch: main
+
+═══════════════════════════════════════════════════════════
+
+🔧 NOUVELLE SECTION: RUNTIME.TXT
+
+Pourquoi runtime.txt est maintenant obligatoire?
+
+1. Python 3.14.3 est trop récent
+   → Pas de wheels pré-compilés pour pydantic-core
+   → Nécessite compilation Rust
+   → Système de fichiers Render en lecture seule
+
+2. Python 3.11.9 est stable
+   → Wheels pré-compilés disponibles
+   → Pas de compilation nécessaire
+   → Build rapide (3-5 minutes)
+
+3. 100% compatible
+   → Tout votre code fonctionne
+   → Mêmes fonctionnalités
+   → Meilleure stabilité
+
+═══════════════════════════════════════════════════════════
+
+📝 NOUVELLE ÉTAPE DANS LE GUIDE
+
+ÉTAPE 0.5: Vérifier runtime.txt (AVANT de créer le service)
+
+Avant de suivre le guide de déploiement, vérifier que:
+
+1. runtime.txt existe dans le repo GitHub
+2. Contenu: python-3.11.9
+3. Situé à la racine du repo (pas dans un sous-dossier)
+
+Si manquant:
+```powershell
+cd "Doc render deploy"
+.\push-fix-rust-render.ps1
+```
+
+═══════════════════════════════════════════════════════════
+
+🐛 NOUVELLE SECTION DÉPANNAGE
+
+### Erreur: "maturin failed" ou "Cargo metadata failed"
+
+**Cause:** Python 3.14.3 utilisé, pydantic-core nécessite Rust
+
+**Solution:**
+1. Vérifier que runtime.txt existe dans le repo GitHub
+2. Contenu doit être: python-3.11.9
+3. Redéployer le service
+
+**Vérification:**
+Dans les logs Render, vous devez voir:
+```
+==> Using Python version 3.11.9 (from runtime.txt)
+```
+
+Si vous voyez Python 3.14.3, runtime.txt est manquant ou mal configuré.
+
+═══════════════════════════════════════════════════════════
+
+📊 VERSIONS RECOMMANDÉES (MISE À JOUR)
+
+Python:
+✅ 3.11.9 (forcé via runtime.txt)
+❌ 3.14.3 (trop récent, pas de wheels)
+
+Pydantic:
+✅ 2.6.4 (wheels disponibles pour Python 3.11)
+❌ 2.8.2 (nécessite compilation sur Python 3.14)
+
+Pydantic-core:
+✅ 2.16.3 (wheels disponibles pour Python 3.11)
+❌ 2.20.1 (nécessite compilation Rust)
+
+═══════════════════════════════════════════════════════════
+
+🎯 CHECKLIST MISE À JOUR
+
+Avant de déployer sur Render:
+
+- [ ] runtime.txt créé localement
+- [ ] runtime.txt contient: python-3.11.9
+- [ ] requirements_render.txt utilise pydantic 2.6.4
+- [ ] requirements_render.txt utilise pydantic-core 2.16.3
+- [ ] Les deux fichiers sont à la racine de py_backend/
+- [ ] Les deux fichiers sont poussés sur GitHub
+- [ ] Vérification sur GitHub effectuée
+- [ ] Prêt pour déploiement Render
+
+═══════════════════════════════════════════════════════════
+
+📚 ORDRE DE LECTURE RECOMMANDÉ
+
+Pour un nouveau déploiement:
+
+1. Lire ce fichier (00_MISE_A_JOUR_GUIDE_17_AVRIL_2026.txt)
+2. Vérifier/Créer runtime.txt (QUICK_START_FIX_RUST.txt)
+3. Suivre le guide complet (GUIDE_DEPLOIEMENT_RENDER_16_AVRIL_2026.md)
+4. En cas de problème (TROUBLESHOOTING.md)
+
+═══════════════════════════════════════════════════════════
+
+🔗 LIENS UTILES
+
+Documentation Python Render:
+https://render.com/docs/python-version
+
+Documentation runtime.txt:
+https://render.com/docs/python-version#specifying-a-python-version
+
+Wheels pydantic-core:
+https://pypi.org/project/pydantic-core/#files
+
+═══════════════════════════════════════════════════════════
+
+✅ RÉSUMÉ
+
+Le guide de déploiement reste valide, avec un ajout crucial:
+
+🔥 runtime.txt est maintenant OBLIGATOIRE
+
+Sans ce fichier:
+❌ Python 3.14.3 utilisé par défaut
+❌ Compilation Rust nécessaire
+❌ Build échoue
+
+Avec ce fichier:
+✅ Python 3.11.9 utilisé
+✅ Wheels pré-compilés
+✅ Build réussit
+
+═══════════════════════════════════════════════════════════
+
+Créé le: 17 Avril 2026
+Auteur: Clara Team
+Version: 1.0.0

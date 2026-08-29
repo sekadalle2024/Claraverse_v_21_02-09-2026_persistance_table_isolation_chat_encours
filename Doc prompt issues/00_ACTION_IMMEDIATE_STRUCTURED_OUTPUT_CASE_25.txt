@@ -1,0 +1,165 @@
+═══════════════════════════════════════════════════════════════════════════
+  🔴 ACTION IMMÉDIATE - CASE 25 : STRUCTURED OUTPUT PARSER
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLÈME
+═══════════════════════════════════════════════════════════════════════════
+
+Message envoyé: Cycle RH - Recrutement DG
+Réponse reçue:  Cycle Achats - Bons de Commande
+
+→ Le LLM ignore le message utilisateur
+
+SOLUTION
+═══════════════════════════════════════════════════════════════════════════
+
+3 FICHIERS CRÉÉS avec le code complet à copier dans n8n:
+
+1. NODE_CLEAN1_CORRIGE_CASE_25.js
+   → Code pour le node "node clean1"
+
+2. MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+   → Code pour le nouveau node "Markdown Generator1 corrige29"
+
+3. GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+   → Guide complet étape par étape
+
+ACTIONS RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: OUVRIR N8N
+───────────────────────────────────────────────────────────────────────────
+URL: https://t22wtwxl.rpcld.app
+Workflow: recos_contrôle_interne_comptable
+
+ÉTAPE 2: AJOUTER 2 NODES DE DEBUG (AVANT LE LLM)
+───────────────────────────────────────────────────────────────────────────
+
+Node 1: "Debug Message Reception" (Code)
+```javascript
+const webhook = $input.item.json;
+console.log("=== DEBUG ===");
+console.log("question:", webhook.question);
+console.log("data:", webhook.data);
+console.log("body:", webhook.body);
+console.log("Full:", JSON.stringify(webhook, null, 2));
+return { json: webhook };
+```
+
+Node 2: "Extract User Message" (Code)
+```javascript
+const webhook = $input.item.json;
+const userMessage = webhook.question || webhook.data || webhook.body;
+const cycleMatch = userMessage.match(/\[Cycle\]\s*:\s*([^\n\-]+)/i);
+const cycle = cycleMatch ? cycleMatch[1].trim() : "Non spécifié";
+console.log("Message:", userMessage);
+console.log("Cycle:", cycle);
+return { json: { userMessage, cycle } };
+```
+
+ÉTAPE 3: MODIFIER LE PROMPT (NODE "PREPARE PROMPT")
+───────────────────────────────────────────────────────────────────────────
+
+Voir le code complet dans: GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+Section: "Étape 3: Modifier le Node Prepare Prompt"
+
+Points clés:
+- Prompt système MINIMAL (pas d'exemples détaillés)
+- Message utilisateur INCLUS dans le prompt
+- Cycle et anomalie EXTRAITS et MENTIONNÉS
+
+ÉTAPE 4: COPIER LE CODE DES 2 NODES FINAUX
+───────────────────────────────────────────────────────────────────────────
+
+Node "node clean1":
+→ Copier le contenu de: NODE_CLEAN1_CORRIGE_CASE_25.js
+
+Node "Markdown Generator1 corrige29" (NOUVEAU):
+→ Copier le contenu de: MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+
+ÉTAPE 5: TESTER
+───────────────────────────────────────────────────────────────────────────
+
+Message:
+[VAE] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation de procedure de recrutement
+[Anomalie] = inexistence de procedure de recrutement du DG
+
+Résultat attendu:
+✅ Parle de RH (pas Achats)
+✅ Parle de Recrutement (pas BC)
+✅ Parle du DG (pas fournisseurs)
+
+ARCHITECTURE DU WORKFLOW CORRIGÉ
+═══════════════════════════════════════════════════════════════════════════
+
+Webhook
+  ↓
+[1] Debug Message Reception (NOUVEAU)
+  ↓
+[2] Extract User Message (NOUVEAU)
+  ↓
+[3] Prepare Prompt (MODIFIÉ - prompt minimal)
+  ↓
+[4] OpenAI Chat Model (MODIFIÉ - config)
+  ↓
+[5] Structured Output Parser (EXISTANT)
+  ↓
+[6] node clean1 (MODIFIÉ - code corrigé)
+  ↓
+[7] Markdown Generator1 corrige29 (NOUVEAU)
+  ↓
+Respond to Webhook
+
+CHECKLIST RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+[ ] Node "Debug Message Reception" ajouté
+[ ] Node "Extract User Message" ajouté
+[ ] Node "Prepare Prompt" modifié (prompt minimal)
+[ ] Node "OpenAI Chat Model" configuré (temp 0.3)
+[ ] Node "node clean1" modifié (code corrigé)
+[ ] Node "Markdown Generator1 corrige29" ajouté
+[ ] Test effectué avec message RH
+[ ] Réponse parle de RH (pas Achats)
+
+FICHIERS À LIRE
+═══════════════════════════════════════════════════════════════════════════
+
+1. GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+   → Guide complet avec tout le code
+
+2. NODE_CLEAN1_CORRIGE_CASE_25.js
+   → Code pour node clean1
+
+3. MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+   → Code pour Markdown Generator
+
+4. STATUT_FINAL_CASE_25_29_MARS_2026.txt
+   → Vue d'ensemble du problème
+
+COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir le guide complet:
+   code GUIDE_IMPLEMENTATION_STRUCTURED_OUTPUT_CASE_25.md
+
+2. Ouvrir n8n:
+   start https://t22wtwxl.rpcld.app
+
+3. Voir le code node clean1:
+   code NODE_CLEAN1_CORRIGE_CASE_25.js
+
+4. Voir le code Markdown Generator:
+   code MARKDOWN_GENERATOR1_CORRIGE29_CASE_25.js
+
+PRIORITÉ
+═══════════════════════════════════════════════════════════════════════════
+
+🔴 CRITIQUE - Le workflow génère du contenu mais ignore le message utilisateur
+
+═══════════════════════════════════════════════════════════════════════════
+

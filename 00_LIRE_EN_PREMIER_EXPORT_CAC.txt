@@ -1,0 +1,173 @@
+=================================================================
+À LIRE EN PREMIER - Export Synthèse CAC
+Date: 25 Mars 2026
+=================================================================
+
+TRAVAUX TERMINÉS:
+=================
+
+✅ TÂCHE 1: Correction Export Synthèse CAC
+   - Template Word non utilisable → Création programmatique
+   - Champs manquants → Tous les champs maintenant exportés
+   - Fichier créé: py_backend/export_synthese_cac_v2.py
+
+✅ TÂCHE 2: Réorganisation Menu et Correction Détection
+   - "Export Rapport Structuré" supprimé du menu "Rapports d'Audit"
+   - Détection "Recos contrôle interne comptable" corrigée
+   - Logs de debug ajoutés
+
+PROCHAINE ÉTAPE:
+================
+
+REDÉMARRER LE BACKEND:
+
+   .\start-claraverse-conda.ps1
+
+Puis rafraîchir le navigateur (Ctrl+F5)
+
+VÉRIFICATIONS RAPIDES:
+======================
+
+1. Menu:
+   - Clic droit sur une table
+   - "Rapports d'Audit" ne doit PLUS contenir "Export Rapport Structuré"
+   - "Rapports CAC & Expert-Comptable" doit contenir "Export Synthèse CAC"
+
+2. Détection:
+   - Ouvrir console (F12)
+   - Générer une table "Recos contrôle interne comptable"
+   - Clic droit → Export Synthèse CAC
+   - Vérifier les logs: "✅ [Recos CI] Table détectée"
+
+3. Export:
+   - Générer des tables (FRAP, Recos Révision, Recos CI)
+   - Exporter la synthèse CAC
+   - Vérifier le document Word: tous les champs présents
+
+DOCUMENTATION COMPLÈTE:
+=======================
+
+Dossier: Doc export rapport/
+
+📖 00_INDEX.md
+   → Index complet de toute la documentation
+
+📖 GUIDE_TEST_RAPIDE.md
+   → Guide de test détaillé (4 tests)
+
+📖 SYNTHESE_FINALE.txt
+   → Vue d'ensemble de la session
+
+📖 00_EXPORT_SYNTHESE_CAC_CORRIGE.txt
+   → Documentation technique V2
+
+📖 CORRECTION_MENU_ET_DETECTION_RECOS_CI.md
+   → Modifications menu et détection
+
+LOGS ATTENDUS:
+==============
+
+Backend (au démarrage):
+✅ Export Synthèse CAC V2 router loaded successfully
+
+Frontend (console F12, lors de l'export):
+🔍 [Recos CI] Analyse de X table(s)
+✅ [Recos CI] Table détectée avec 6 sous-tables
+📊 [Export CAC] Points collectés: ...
+✅ Synthèse CAC exportée! (X points)
+
+Backend (lors de l'export):
+📊 Export Synthèse CAC V2: X points au total
+✅ Document généré avec succès (version programmatique)
+✅ Export réussi: synthese_cac_2026-03-25_XX-XX-XX.docx
+
+STRUCTURE DU DOCUMENT WORD:
+===========================
+
+1. INTRODUCTION
+
+2. OBSERVATIONS D'AUDIT (Recos Révision)
+   Pour chaque point:
+   ✅ Intitulé
+   ✅ Référence
+   ✅ Description (CORRIGÉ - était manquant)
+   ✅ Observation
+   ✅ Ajustement/Reclassement
+   ✅ Régularisation comptable
+
+3. POINTS DE CONTRÔLE INTERNE (FRAP + Recos CI)
+   Pour chaque point:
+   ✅ Intitulé
+   ✅ Référence
+   ✅ Type (FRAP ou Recos CI)
+   ✅ Observation
+   ✅ Constat
+   ✅ Risques identifiés
+   ✅ Recommandation
+
+4. CONCLUSION
+
+CRITÈRES DE DÉTECTION:
+======================
+
+FRAP:
+→ Première table contient "Frap"
+
+Recos Révision:
+→ Première table contient "Recos revision des comptes"
+   OU "Recommendations comptables"
+
+Recos Contrôle Interne:
+→ Première table contient les 4 mots-clés:
+   "recos" ET "controle" ET "interne" ET "comptable"
+
+PROBLÈMES COURANTS:
+===================
+
+❌ "Export Rapport Structuré" encore visible
+✅ Solution: Ctrl+F5 pour forcer le rafraîchissement
+
+❌ Tables Recos CI non détectées
+✅ Solution: Vérifier que la première cellule contient
+   "Recos contrôle interne comptable"
+
+❌ Champs manquants dans le Word
+✅ Solution: Vérifier que le backend utilise V2
+   (logs doivent afficher "Export Synthèse CAC V2")
+
+❌ Erreur 500 du backend
+✅ Solution: Vérifier que python-docx est installé
+   conda activate claraverse
+   pip install python-docx
+
+FICHIERS MODIFIÉS:
+==================
+
+Backend:
+✅ py_backend/export_synthese_cac_v2.py (NOUVEAU)
+✅ py_backend/main.py (routeur V2 ajouté)
+
+Frontend:
+✅ public/menu.js (2 modifications)
+   - Suppression "Export Rapport Structuré"
+   - Amélioration détection Recos CI
+
+AVANTAGES VERSION V2:
+=====================
+
+✅ Pas de dépendance template Word
+✅ Fonctionne avec python-docx standard
+✅ Tous les champs exportés
+✅ Code plus simple et maintenable
+✅ Gestion correcte des retours à la ligne
+✅ Logs détaillés pour le debug
+
+=================================================================
+
+COMMANDE POUR DÉMARRER:
+
+   .\start-claraverse-conda.ps1
+
+Puis Ctrl+F5 dans le navigateur
+
+=================================================================

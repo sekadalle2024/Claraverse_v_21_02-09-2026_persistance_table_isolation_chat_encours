@@ -1,0 +1,113 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION APPLIQUÉE - FORMAT PROGRAMME CONTROLE COMPTES
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 31 Mars 2026
+🎯 Objectif: Corriger l'affichage des tableaux Markdown pour le workflow "Programme contrôle comptes"
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔴 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n "Programme contrôle comptes" retourne une structure spécifique:
+
+{
+  "Tableau entete": { ... },
+  "Tableau processus": [ ... ]
+}
+
+La fonction convertStructuredDataToMarkdown() cherchait une clé contenant "tableau" 
+(ligne 496-505), trouvait "Tableau entete", puis vérifiait si c'était un array.
+
+Comme "Tableau entete" est un OBJET (pas un array), la fonction appelait 
+convertGenericStructureToMarkdown() qui génère du texte brut.
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Ajout d'une détection spécifique AVANT la vérification array (ligne ~508):
+
+1. Vérifier si data contient directement "Tableau entete" ET "Tableau processus"
+2. Si OUI:
+   - Traiter "Tableau entete" comme une table header
+   - Traiter "Tableau processus" comme une table data_array
+   - Retourner le Markdown généré
+3. Si NON: continuer avec la logique existante
+
+═══════════════════════════════════════════════════════════════════════════════
+  📝 CODE AJOUTÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Fichier: src/services/claraApiService.ts
+Ligne: ~508 (après la détection de la clé principale)
+
+// 🔧 NOUVEAU FORMAT: Programme contrôle comptes avec "Tableau entete" et "Tableau processus"
+const hasTableauEntete = "Tableau entete" in data;
+const hasTableauProcessus = "Tableau processus" in data;
+
+if (hasTableauEntete && hasTableauProcessus) {
+  console.log("🔧 FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ");
+  
+  // Traiter "Tableau entete" comme header
+  const tableauEntete = data["Tableau entete"];
+  if (tableauEntete && typeof tableauEntete === 'object') {
+    markdown += this.convertHeaderTableToMarkdown(tableauEntete, 0);
+  }
+  
+  // Traiter "Tableau processus" comme data_array
+  const tableauProcessus = data["Tableau processus"];
+  if (Array.isArray(tableauProcessus)) {
+    markdown += this.convertArrayTableToMarkdown("Tableau processus", tableauProcessus);
+  }
+  
+  return markdown;
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Le webhook retourne bien la structure attendue:
+   ✅ [{ data: { "Tableau entete": {...}, "Tableau processus": [...] } }]
+
+2. Dans l'application Clara (console F12), vous devriez voir:
+   ✅ "🔧 FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ"
+   ✅ "📋 Traitement de 'Tableau entete' (type: header)"
+   ✅ "📋 Traitement de 'Tableau processus' (type: data_array, X items)"
+
+3. L'affichage devrait montrer:
+   ✅ Tableau d'en-tête avec bordures
+   ✅ Tableau des processus avec colonnes alignées
+   ✅ Pas de texte brut
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔄 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Redémarrer l'application Clara (si nécessaire)
+2. Tester avec la commande "Programme_controle_comptes"
+3. Vérifier les logs dans la console (F12)
+4. Confirmer l'affichage des tableaux Markdown
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 FLUX DE TRAITEMENT CORRIGÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+n8n Webhook
+  ↓ Retourne [{ data: { "Tableau entete": {...}, "Tableau processus": [...] } }]
+claraApiService.ts - FORMAT 4 détecté
+  ↓ Extrait data = { "Tableau entete": {...}, "Tableau processus": [...] }
+convertStructuredDataToMarkdown()
+  ↓ Détecte "Tableau entete" in data && "Tableau processus" in data
+  ↓ ✅ FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ
+  ↓ Traite "Tableau entete" → convertHeaderTableToMarkdown()
+  ↓ Traite "Tableau processus" → convertArrayTableToMarkdown()
+  ↓ Retourne Markdown complet
+Front-end
+  ↓ Affiche les tableaux formatés ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Créé le: 31 Mars 2026
+Statut: ✅ Correction appliquée et prête à tester

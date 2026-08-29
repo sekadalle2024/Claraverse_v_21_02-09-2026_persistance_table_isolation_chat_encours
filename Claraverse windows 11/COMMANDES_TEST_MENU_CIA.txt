@@ -1,0 +1,324 @@
+# 🎯 COMMANDES TEST MENU CIA - CLARAVERSE
+
+## 📋 COMMANDES RAPIDES
+
+### 1. OUVRIR LA PAGE DE TEST
+```
+http://localhost:5173/test-menu-cia.html
+```
+
+### 2. TESTER DANS LA CONSOLE (F12)
+
+#### Vérifier que le menu est chargé
+```javascript
+console.log(window.ClaraverseCIAMenu);
+```
+
+#### Afficher l'état du menu
+```javascript
+window.ClaraverseCIAMenu.columnsVisible
+```
+
+#### Forcer l'affichage du résultat (sans clic droit)
+```javascript
+// Sélectionner une table CIA
+const table = document.querySelector('table');
+window.ClaraverseCIAMenu.currentTable = table;
+window.ClaraverseCIAMenu.showResultatFinal();
+```
+
+#### Vérifier les tables CIA détectées
+```javascript
+const tables = document.querySelectorAll('table');
+tables.forEach((table, i) => {
+  const isCIA = window.ClaraverseCIAMenu.isCIATable(table);
+  console.log(`Table ${i+1}: ${isCIA ? '✅ CIA' : '❌ Non-CIA'}`);
+});
+```
+
+#### Compter les tables CIA
+```javascript
+const allTables = document.querySelectorAll('table');
+const ciaTables = Array.from(allTables).filter(t => 
+  window.ClaraverseCIAMenu.isCIATable(t)
+);
+console.log(`📊 ${ciaTables.length} table(s) CIA trouvée(s)`);
+```
+
+### 3. TESTER LES FONCTIONNALITÉS
+
+#### Test 1: Afficher une colonne
+```javascript
+const table = document.querySelector('table');
+window.ClaraverseCIAMenu.showColumn(table, 'remarques');
+```
+
+#### Test 2: Créer la colonne Score
+```javascript
+const table = document.querySelector('table');
+window.ClaraverseCIAMenu.createScoreColumn(table);
+```
+
+#### Test 3: Calculer les scores
+```javascript
+const table = document.querySelector('table');
+window.ClaraverseCIAMenu.calculateScores(table);
+```
+
+#### Test 4: Fusionner la colonne Score
+```javascript
+const table = document.querySelector('table');
+window.ClaraverseCIAMenu.mergeScoreColumn(table);
+```
+
+### 4. DEBUG
+
+#### Activer les logs détaillés
+```javascript
+// Les logs sont déjà activés par défaut
+// Pour les désactiver:
+window.ClaraverseCIAMenu.constructor.CONFIG = { debugMode: false };
+```
+
+#### Vérifier les en-têtes d'une table
+```javascript
+const table = document.querySelector('table');
+const headers = window.ClaraverseCIAMenu.getTableHeaders(table);
+console.table(headers);
+```
+
+#### Vérifier les scores d'une table
+```javascript
+const table = document.querySelector('table');
+console.log('Score total:', table.dataset.totalScore);
+console.log('Nombre de questions:', table.dataset.questionCount);
+```
+
+### 5. NETTOYAGE
+
+#### Supprimer la table Résultat
+```javascript
+const resultatTable = document.querySelector('[data-resultat-table]');
+if (resultatTable) resultatTable.remove();
+```
+
+#### Réinitialiser le menu
+```javascript
+window.ClaraverseCIAMenu.destroy();
+// Puis recharger la page
+location.reload();
+```
+
+## 🧪 SCÉNARIOS DE TEST
+
+### Scénario 1: Test Complet
+```javascript
+// 1. Trouver une table CIA
+const table = document.querySelector('table');
+
+// 2. Cocher quelques réponses
+const checkboxes = table.querySelectorAll('input[type="checkbox"]');
+checkboxes[0].checked = true;  // Première réponse
+checkboxes[1].checked = false;
+
+// 3. Afficher le résultat
+window.ClaraverseCIAMenu.currentTable = table;
+window.ClaraverseCIAMenu.showResultatFinal();
+
+// 4. Vérifier le score
+console.log('Score:', table.dataset.totalScore);
+```
+
+### Scénario 2: Test Multiple Tables
+```javascript
+// Trouver toutes les tables CIA
+const container = document.querySelector('.container');
+const allTables = window.ClaraverseCIAMenu.findAllCIATablesInContainer(container);
+
+console.log(`📊 ${allTables.length} tables CIA trouvées`);
+
+// Cocher des réponses dans chaque table
+allTables.forEach((table, i) => {
+  const checkbox = table.querySelector('input[type="checkbox"]');
+  if (checkbox) {
+    checkbox.checked = true;
+    console.log(`✅ Table ${i+1}: réponse cochée`);
+  }
+});
+
+// Afficher le résultat global
+window.ClaraverseCIAMenu.currentTable = allTables[0];
+window.ClaraverseCIAMenu.showResultatFinal();
+```
+
+### Scénario 3: Test Calcul Score
+```javascript
+// Créer une fonction de test
+function testScoreCalculation() {
+  const table = document.querySelector('table');
+  
+  // Avant calcul
+  console.log('📊 AVANT CALCUL:');
+  console.log('Score:', table.dataset.totalScore || 'Non calculé');
+  
+  // Calculer
+  window.ClaraverseCIAMenu.calculateScores(table);
+  
+  // Après calcul
+  console.log('📊 APRÈS CALCUL:');
+  console.log('Score:', table.dataset.totalScore);
+  console.log('Questions:', table.dataset.questionCount);
+  console.log('Pourcentage:', 
+    (parseInt(table.dataset.totalScore) / parseInt(table.dataset.questionCount) * 100).toFixed(1) + '%'
+  );
+}
+
+testScoreCalculation();
+```
+
+## 📊 VÉRIFICATIONS
+
+### Vérifier l'intégration dans index.html
+```bash
+# Dans le terminal
+grep -n "menu_cia.js" index.html
+```
+
+### Vérifier que le fichier existe
+```bash
+ls -la public/menu_cia.js
+```
+
+### Vérifier la syntaxe JavaScript
+```bash
+node -c public/menu_cia.js
+```
+
+## 🎯 TESTS MANUELS
+
+### Test 1: Menu Contextuel
+1. ✅ Ouvrir test-menu-cia.html
+2. ✅ Clic droit sur une table
+3. ✅ Vérifier que le menu apparaît
+4. ✅ Vérifier l'option "📊 Résultat final"
+
+### Test 2: Affichage Colonnes
+1. ✅ Cliquer sur "Résultat final"
+2. ✅ Vérifier que Remarques s'affiche
+3. ✅ Vérifier que Score est créé
+4. ✅ Vérifier que les en-têtes sont visibles
+
+### Test 3: Calcul Scores
+1. ✅ Cocher des réponses
+2. ✅ Afficher le résultat
+3. ✅ Vérifier les scores (0 ou 1)
+4. ✅ Vérifier la fusion des cellules
+
+### Test 4: Table Résultat
+1. ✅ Afficher le résultat
+2. ✅ Vérifier la table en haut
+3. ✅ Vérifier le score global
+4. ✅ Vérifier la couleur (vert/jaune/rouge)
+
+## 🐛 DÉPANNAGE
+
+### Problème: Menu ne s'affiche pas
+```javascript
+// Vérifier que le script est chargé
+console.log('Menu CIA:', typeof window.ClaraverseCIAMenu);
+
+// Vérifier les event listeners
+console.log('Listeners:', getEventListeners(document));
+```
+
+### Problème: Scores incorrects
+```javascript
+// Vérifier les valeurs des colonnes
+const table = document.querySelector('table');
+const rows = table.querySelectorAll('tbody tr');
+
+rows.forEach((row, i) => {
+  const cells = row.querySelectorAll('td');
+  console.log(`Ligne ${i+1}:`, {
+    option: cells[2]?.textContent,
+    reponse_cia: cells[3]?.textContent,
+    checked: cells[5]?.querySelector('input')?.checked
+  });
+});
+```
+
+### Problème: Colonne ne s'affiche pas
+```javascript
+// Vérifier les styles
+const table = document.querySelector('table');
+const headers = table.querySelectorAll('th');
+
+headers.forEach((h, i) => {
+  console.log(`Colonne ${i+1}:`, {
+    text: h.textContent,
+    display: h.style.display,
+    hidden: h.getAttribute('data-hidden')
+  });
+});
+```
+
+## 📝 NOTES
+
+- Les logs sont affichés avec le préfixe "🎯 [CIA Menu]"
+- Le menu contextuel a un z-index de 10001
+- Les scores sont stockés dans table.dataset.totalScore
+- La table Résultat a l'attribut data-resultat-table="true"
+
+## 🚀 COMMANDES AVANCÉES
+
+### Exporter les résultats
+```javascript
+function exportResults() {
+  const tables = document.querySelectorAll('table');
+  const results = [];
+  
+  tables.forEach((table, i) => {
+    if (window.ClaraverseCIAMenu.isCIATable(table)) {
+      results.push({
+        table: i + 1,
+        score: table.dataset.totalScore || 0,
+        questions: table.dataset.questionCount || 0
+      });
+    }
+  });
+  
+  console.table(results);
+  return results;
+}
+
+exportResults();
+```
+
+### Statistiques globales
+```javascript
+function getGlobalStats() {
+  const tables = Array.from(document.querySelectorAll('table'))
+    .filter(t => window.ClaraverseCIAMenu.isCIATable(t));
+  
+  const totalScore = tables.reduce((sum, t) => 
+    sum + parseInt(t.dataset.totalScore || 0), 0);
+  
+  const totalQuestions = tables.reduce((sum, t) => 
+    sum + parseInt(t.dataset.questionCount || 0), 0);
+  
+  const percentage = (totalScore / totalQuestions * 100).toFixed(1);
+  
+  console.log('📊 STATISTIQUES GLOBALES:');
+  console.log(`Tables CIA: ${tables.length}`);
+  console.log(`Score total: ${totalScore}/${totalQuestions}`);
+  console.log(`Pourcentage: ${percentage}%`);
+  
+  return { tables: tables.length, totalScore, totalQuestions, percentage };
+}
+
+getGlobalStats();
+```
+
+---
+
+**Dernière mise à jour**: Décembre 2024

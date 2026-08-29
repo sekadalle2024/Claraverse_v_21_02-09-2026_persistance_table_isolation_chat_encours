@@ -1,0 +1,103 @@
+═══════════════════════════════════════════════════════════════════════════════
+   SOLUTION SIMPLE : REMPLACER LE NODE "ALEA16" PAR UN NODE CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le node "Alea16" (Edit Fields) est difficile à configurer manuellement
+et impossible à importer via JSON.
+
+✅ SOLUTION : REMPLACER PAR UN NODE CODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Au lieu de configurer 8 champs manuellement, utilise un node "Code" JavaScript
+qui fait exactement la même chose en 1 seule étape.
+
+📋 ÉTAPES À SUIVRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1 : Supprimer le node "Alea16"
+─────────────────────────────────────────────────────────────────────────
+
+1. Dans N8N, clique sur le node "Alea16"
+2. Appuie sur la touche "Delete" ou clique sur l'icône poubelle
+3. Confirme la suppression
+
+ÉTAPE 2 : Ajouter un nouveau node "Code"
+─────────────────────────────────────────────────────────────────────────
+
+1. Clique sur le "+" entre "Extract Variables for RAG" et "Agent RAG"
+2. Cherche "Code" dans la liste des nodes
+3. Sélectionne "Code" (JavaScript)
+4. Nomme-le "Alea Generator" ou "Alea16" (comme tu veux)
+
+ÉTAPE 3 : Copier le code JavaScript
+─────────────────────────────────────────────────────────────────────────
+
+1. Ouvre le fichier : n8n_node_alea16_remplacement_code.js
+2. Copie TOUT le code
+3. Colle-le dans le node "Code" que tu viens de créer
+4. Sauvegarde
+
+ÉTAPE 4 : Connecter le node
+─────────────────────────────────────────────────────────────────────────
+
+1. Connecte "Extract Variables for RAG" → "Alea Generator" (nouveau node Code)
+2. Connecte "Alea Generator" → "Agent RAG"
+
+ÉTAPE 5 : Tester
+─────────────────────────────────────────────────────────────────────────
+
+1. Exécute le workflow
+2. Vérifie l'output du node "Alea Generator" :
+   
+   {
+     "alea": 2,
+     "command": "Recos contrôle interne comptable",
+     "cycle": "trésorerie",
+     "test": "AA010",
+     "reference": "test sur la validation du compte caisse",
+     "nature_test": "Rapprochement",
+     "assertion": "validité",
+     "anomalie": "VOL de caisse..."
+   }
+
+3. Vérifie que l'agent RAG reçoit toutes les variables
+
+🔧 ARCHITECTURE FINALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Webhook9
+  ↓
+Code integrate7
+  ↓
+Extract Variables for RAG
+  ↓
+Alea Generator (nouveau node Code) ← REMPLACE "Alea16"
+  ↓
+Agent RAG
+  ↓
+code RAG4
+
+💡 AVANTAGES DE CETTE SOLUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Plus simple : 1 seul copier/coller au lieu de 8 champs à configurer
+✅ Plus rapide : Pas besoin de cliquer 8 fois sur "Add Field"
+✅ Plus fiable : Le code garantit que toutes les variables sont préservées
+✅ Plus maintenable : Si tu dois ajouter une variable, tu modifies juste le code
+
+⚠️ IMPORTANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+N'oublie pas de :
+1. Mettre à jour le node "Extract Variables for RAG" avec le code complet
+2. Mettre à jour le prompt de l'agent RAG avec les 7 variables
+
+Fichiers à utiliser :
+- n8n_node_extract_variables_rag_complet.js (pour Extract Variables)
+- n8n_node_alea16_remplacement_code.js (pour remplacer Alea16)
+- n8n_prompt_agent_rag_7_variables.txt (pour l'agent RAG)
+
+═══════════════════════════════════════════════════════════════════════════════

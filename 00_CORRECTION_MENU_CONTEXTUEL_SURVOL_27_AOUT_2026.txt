@@ -1,0 +1,79 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION MENU CONTEXTUEL - DÉSACTIVATION OUVERTURE AU SURVOL
+  Date: 27 août 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+Le menu contextuel s'ouvrait automatiquement dès qu'on approchait la souris 
+d'une table, au lieu de s'ouvrir uniquement au clic droit.
+
+🔍 CAUSE RACINE
+─────────────────────────────────────────────────────────────────────────────
+Dans le fichier: public/menu.js
+Fonction: handleTableHover(e, table) - ligne ~9635
+
+Le code contenait un setTimeout qui déclenchait automatiquement l'affichage
+du menu après 300ms de survol (hoverDelay):
+
+```javascript
+if (this.targetTable !== table && !this.isMenuVisible) {
+  this.hoverTimeout = setTimeout(() => { 
+    if (this.isHoveringTable && !this.isMenuVisible) 
+      this.showMenu(e.pageX + 10, e.pageY + 10, table); 
+  }, this.config.hoverDelay);
+}
+```
+
+✅ SOLUTION APPLIQUÉE
+─────────────────────────────────────────────────────────────────────────────
+1. Désactivation du setTimeout dans handleTableHover()
+2. Commentaire explicatif ajouté
+3. Le menu ne s'ouvre maintenant QUE au clic droit (événement contextmenu)
+
+📝 CODE CORRIGÉ
+─────────────────────────────────────────────────────────────────────────────
+```javascript
+handleTableHover(e, table) {
+  this.isHoveringTable = true;
+  this.clearHideTimeout();
+  // Menu contextuel désactivé au survol - activation uniquement au clic droit
+  // Le code ci-dessous était responsable de l'ouverture automatique au survol
+  // if (this.targetTable !== table && !this.isMenuVisible) {
+  //   this.hoverTimeout = setTimeout(() => { 
+  //     if (this.isHoveringTable && !this.isMenuVisible) 
+  //       this.showMenu(e.pageX + 10, e.pageY + 10, table); 
+  //   }, this.config.hoverDelay);
+  // }
+}
+```
+
+🎯 COMPORTEMENT ATTENDU MAINTENANT
+─────────────────────────────────────────────────────────────────────────────
+✅ Survol de la table → AUCUNE action
+✅ Clic droit sur la table → Menu contextuel s'affiche
+✅ Clic gauche en dehors → Menu se ferme
+✅ Touche Échap → Menu se ferme
+
+🧪 POUR TESTER
+─────────────────────────────────────────────────────────────────────────────
+1. Redémarrer le serveur frontend: npm run dev
+2. Ouvrir l'application ClaraVerse
+3. Passer la souris sur une table → Le menu NE DOIT PAS s'ouvrir
+4. Faire clic droit sur une table → Le menu s'ouvre normalement
+5. Vérifier que toutes les actions du menu fonctionnent correctement
+
+📁 FICHIER MODIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+✓ h:/ClaraVerse/public/menu.js (ligne ~9635)
+
+🎓 NOTE TECHNIQUE
+─────────────────────────────────────────────────────────────────────────────
+La fonction handleTableHover() garde son rôle de gestion d'état (isHoveringTable)
+pour la logique de fermeture automatique du menu, mais ne déclenche plus son
+ouverture.
+
+L'événement 'contextmenu' (clic droit) reste le SEUL déclencheur pour afficher
+le menu contextuel, ce qui est le comportement attendu et standard.
+
+═══════════════════════════════════════════════════════════════════════════════

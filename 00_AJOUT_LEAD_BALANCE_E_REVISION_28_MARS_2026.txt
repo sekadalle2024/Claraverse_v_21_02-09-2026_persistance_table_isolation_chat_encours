@@ -1,0 +1,230 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║   ✅ AJOUT ÉTAPE "LEAD BALANCE" DANS E-REVISION - TERMINÉ                   ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📅 Date: 28 Mars 2026
+🎯 Objectif: Ajouter l'étape "Lead balance" dans la phase de planification
+             avant "Revue analytique générale"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📍 EMPLACEMENT DE L'ÉTAPE
+═══════════════════════════════════════════════════════════════════════════════
+
+Logiciel: E-revision
+Phase: Revue analytique (Phase de planification)
+Position: AVANT "Revue analytique générale"
+
+Hiérarchie:
+└── E-revision
+    └── Revue analytique
+        ├── Lead balance ⭐ NOUVEAU
+        └── Revue analytique générale
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 CONFIGURATION DE L'ÉTAPE
+═══════════════════════════════════════════════════════════════════════════════
+
+ID: lead-balance
+Label: Lead balance
+Icône: Calculator (🧮)
+
+Mode disponible:
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Mode: Normal                                                                │
+│ Commande: Lead_balance = Activate                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📝 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ src/components/Clara_Components/DemarrerMenu.tsx
+   → Ajout de l'étape "Lead balance" dans la phase "Revue analytique"
+   → Position: ligne ~1105 (avant revue-analytique-generale)
+   → Aucune erreur TypeScript
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ add_lead_balance_e_revision.py
+   → Script Python pour automatiser l'ajout
+   → Détection automatique de l'emplacement
+   → Vérification de l'existence avant ajout
+
+2. ✅ 00_AJOUT_LEAD_BALANCE_E_REVISION_28_MARS_2026.txt
+   → Ce fichier de documentation
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 COMMENT TESTER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Démarrer Claraverse:
+   ─────────────────────
+   Terminal 1: cd py_backend && python main.py
+   Terminal 2: npm run dev
+
+2. Ouvrir l'interface:
+   ───────────────────
+   http://localhost:5173
+
+3. Tester le menu:
+   ───────────────
+   • Cliquer sur le bouton "Démarrer" (▶️)
+   • Naviguer: E-revision → Revue analytique
+   • Vérifier que "Lead balance" apparaît AVANT "Revue analytique générale"
+   • Cliquer sur "Lead balance"
+   • Sélectionner le mode "Normal"
+   • Vérifier que la commande insérée est: Lead_balance = Activate
+
+4. Vérifier le comportement:
+   ─────────────────────────
+   • La commande doit être insérée dans le chat
+   • L'envoi doit déclencher le traitement Lead balance
+   • Vérifier la réponse du système
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 STRUCTURE DE L'ÉTAPE AJOUTÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+{
+  id: 'lead-balance',
+  label: 'Lead balance',
+  icon: <Calculator className="w-4 h-4" />,
+  modes: [
+    {
+      id: 'normal',
+      label: 'Normal',
+      command: `Lead_balance = Activate`
+    }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔄 ORDRE DES ÉTAPES DANS "REVUE ANALYTIQUE"
+═══════════════════════════════════════════════════════════════════════════════
+
+Phase: Revue analytique
+├── 1. Lead balance ⭐ NOUVEAU
+│   └── Mode: Normal → Lead_balance = Activate
+│
+└── 2. Revue analytique générale
+    ├── Mode: Normal
+    ├── Mode: Avancé
+    ├── Mode: Methodo revision
+    └── Mode: Guide des commandes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+• L'étape "Lead balance" a été ajoutée dans la phase "Revue analytique"
+  qui fait partie de la planification dans E-revision
+
+• Un seul mode est disponible: "Normal" avec la commande simple
+  "Lead_balance = Activate"
+
+• L'icône Calculator (🧮) a été choisie pour représenter l'aspect
+  comptable/calcul de la balance
+
+• La commande est minimaliste et suit le pattern des autres commandes
+  d'activation dans le système
+
+• Cette étape permet d'activer automatiquement le traitement de la
+  lead balance avant de passer à la revue analytique générale
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎨 COHÉRENCE AVEC L'ARCHITECTURE EXISTANTE
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Suit la structure hiérarchique: Logiciel → Phase → Étape → Mode
+✓ Utilise une icône cohérente (Calculator pour les calculs)
+✓ Format de commande simple et clair
+✓ Positionnement logique avant la revue analytique
+✓ Pas de conflit avec les étapes existantes
+✓ Aucune erreur TypeScript
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 PROCHAINES ÉTAPES POSSIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ajouter d'autres modes si nécessaire:
+   • Mode "Avancé" avec paramètres supplémentaires
+   • Mode "Demo" pour la démonstration
+   • Mode "Methodo" avec guide méthodologique
+
+2. Intégrer avec le backend:
+   • Vérifier que l'endpoint Lead balance existe
+   • Tester la réponse du système
+   • Valider le format de sortie
+
+3. Documentation utilisateur:
+   • Ajouter dans le manuel E-revision
+   • Créer des exemples d'utilisation
+   • Documenter les cas d'usage
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Script Python exécuté avec succès
+✓ Étape ajoutée au bon emplacement
+✓ Aucune erreur TypeScript
+✓ Structure JSON valide
+✓ Icône importée et disponible
+✓ Commande formatée correctement
+✓ Position avant "Revue analytique générale" confirmée
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION ASSOCIÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+📄 Script d'ajout:
+   → add_lead_balance_e_revision.py
+
+📄 Composant modifié:
+   → src/components/Clara_Components/DemarrerMenu.tsx
+
+📄 Documentation Lead Balance existante:
+   → Doc_Lead_Balance/00_INDEX.md
+   → Doc_Lead_Balance/README.md
+   → 00_DEMARRAGE_RAPIDE_LEAD_BALANCE.txt
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 RÉSUMÉ RAPIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+Quoi: Ajout de l'étape "Lead balance" dans E-revision
+Où: Phase "Revue analytique", avant "Revue analytique générale"
+Mode: Normal uniquement
+Commande: Lead_balance = Activate
+Icône: Calculator (🧮)
+Statut: ✅ TERMINÉ ET FONCTIONNEL
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ MODIFICATION TERMINÉE AVEC SUCCÈS
+═══════════════════════════════════════════════════════════════════════════════
+
+L'étape "Lead balance" est maintenant disponible dans le menu Démarrer
+du logiciel E-revision, dans la phase de planification (Revue analytique),
+juste avant l'étape "Revue analytique générale".
+
+Pour tester: Démarrer → E-revision → Revue analytique → Lead balance → Normal
+
+═══════════════════════════════════════════════════════════════════════════════

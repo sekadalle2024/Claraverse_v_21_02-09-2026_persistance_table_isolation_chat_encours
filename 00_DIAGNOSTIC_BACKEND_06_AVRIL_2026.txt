@@ -1,0 +1,127 @@
+================================================================================
+DIAGNOSTIC BACKEND - 06 AVRIL 2026
+================================================================================
+
+SITUATION ACTUELLE:
+-------------------
+Le backend n'est pas en cours d'exécution. Les tests de diagnostic ne peuvent
+pas être effectués tant que le backend n'est pas démarré.
+
+PORTS UTILISÉS:
+---------------
+- Backend Python: Port 5000 (par défaut dans main.py)
+- Frontend React: Port 5173
+- ATTENTION: test-backend-direct.ps1 teste le port 8000 (incorrect!)
+
+ÉTAPES DE DIAGNOSTIC:
+---------------------
+
+1️⃣  DÉMARRER LE BACKEND
+   
+   Commande:
+   .\start-claraverse.ps1
+   
+   Attendre les messages:
+   - "Backend demarre (Job ID: X)"
+   - "Frontend demarre (Job ID: Y)"
+   - "CLARAVERSE DEMARRE AVEC SUCCES!"
+
+2️⃣  VÉRIFIER QUE LE BACKEND RÉPOND
+   
+   Commande:
+   Invoke-WebRequest -Uri "http://localhost:5000/health" -Method GET
+   
+   Résultat attendu:
+   StatusCode: 200
+   
+   Si erreur:
+   - Le backend n'a pas démarré correctement
+   - Voir les logs: Receive-Job -Id <BackendJobId> -Keep
+
+3️⃣  TESTER L'IMPORT DU MODULE (avec conda)
+   
+   Commande:
+   cd py_backend
+   conda run -n claraverse_backend python test_import_etats_financiers.py
+   
+   OU (si pas conda):
+   cd py_backend
+   python test_import_etats_financiers.py
+   
+   Résultat attendu:
+   ✅ Module etats_financiers importé avec succès
+   ✅ Cache global disponible: True
+
+4️⃣  TESTER L'IMPORT D'UNE BALANCE
+   
+   Action:
+   1. Ouvrir http://localhost:5173
+   2. Aller dans le menu "Démarrer"
+   3. Cliquer sur "États Financiers"
+   4. Importer: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   5. Observer les logs du backend
+   
+   Logs attendus dans le backend:
+   📊 Stockage des balances dans le cache global pour l'export...
+   ✅ Balances stockées dans le cache: N=XXX lignes
+
+5️⃣  TESTER L'EXPORT DE LA LIASSE
+   
+   Action:
+   1. Après avoir importé la balance
+   2. Cliquer sur "Exporter la liasse officielle"
+   3. Observer les logs du backend
+   
+   Logs attendus:
+   📊 Récupération des balances depuis le cache global...
+   ✅ Balance N récupérée: XXX lignes
+   📊 Enrichissement du Bilan ACTIF avec BRUT et AMORTISSEMENT...
+
+COMMANDES UTILES:
+-----------------
+
+# Démarrer Claraverse
+.\start-claraverse.ps1
+
+# Voir les logs du backend
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep
+
+# Voir les logs du frontend
+Receive-Job -Id $jobs.Frontend -Keep
+
+# Arrêter Claraverse
+.\stop-claraverse.ps1
+
+# Vérifier les processus Python
+Get-Process -Name "python" | Select-Object Id, StartTime
+
+# Tester le backend (port 5000)
+Invoke-WebRequest -Uri "http://localhost:5000/health"
+
+# Tester l'endpoint états financiers
+Invoke-WebRequest -Uri "http://localhost:5000/etats-financiers/process" -Method OPTIONS
+
+CORRECTION DU SCRIPT test-backend-direct.ps1:
+----------------------------------------------
+Le script teste le port 8000 au lieu de 5000. Il faut le corriger:
+
+Ligne à modifier:
+  $response = Invoke-WebRequest -Uri "http://localhost:8000/docs"
+  
+Remplacer par:
+  $response = Invoke-WebRequest -Uri "http://localhost:5000/docs"
+
+PROCHAINES ÉTAPES:
+------------------
+
+1. Démarrer le backend avec .\start-claraverse.ps1
+2. Vérifier qu'il répond sur le port 5000
+3. Tester l'import d'une balance
+4. Observer les logs pour confirmer le stockage dans le cache
+5. Tester l'export de la liasse
+6. Vérifier les colonnes BRUT et AMORT dans le fichier Excel
+
+================================================================================
+FIN DU DIAGNOSTIC
+================================================================================

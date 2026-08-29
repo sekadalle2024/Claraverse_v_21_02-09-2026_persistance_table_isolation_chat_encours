@@ -1,0 +1,102 @@
+═══════════════════════════════════════════════════════════════════════════════
+  INTÉGRATION X-REF DOCUMENTAIRE - MENU CONTEXTUEL
+  Date: 12 Avril 2026
+  Statut: ✅ IMPLÉMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 OBJECTIF
+──────────
+Intégrer dans le menu contextuel (menu.js) la fonctionnalité "Importer X-Ref 
+documentaire" permettant d'ouvrir un formulaire n8n pour uploader des documents 
+de test d'audit dans Google Drive avec une indexation structurée.
+
+🎯 FONCTIONNALITÉS IMPLÉMENTÉES
+────────────────────────────────
+1. ✅ Importer X-Ref documentaire
+   - Ouvre le formulaire n8n dans une nouvelle fenêtre
+   - URL: https://hkj0631c.rpcl.app/form/20bcf9fd-b7bb-49de-9707-590a794c4763
+   - Raccourci: Ctrl+Shift+X
+
+2. ✅ Afficher X-Ref documentaire
+   - Détecte et affiche la table des cross-références dans la barre latérale
+   - Colonnes clés: "Cross references" et "Document"
+
+3. ✅ Rechercher document
+   - Permet de rechercher un document par son index ou nom
+   - Affiche les résultats dans une barre latérale
+
+📁 STRUCTURE DES DOCUMENTS DANS GOOGLE DRIVE
+─────────────────────────────────────────────
+Dossier CAC/
+├── [Client]-[Exercice]/
+│   ├── Capitaux propres/
+│   ├── Charge d'exploitation/
+│   ├── Client/
+│   ├── Fournisseur/
+│   ├── Immobilisations/
+│   ├── Impôt et taxes/
+│   ├── Personnel/
+│   ├── Stock/
+│   ├── Trésorerie/
+│   └── Ventes/
+
+📝 FORMAT D'INDEXATION
+──────────────────────
+[Cross Reference]-[Nom Document]
+
+Exemples:
+- [I1]-Lead sheet trésorerie
+- [I20]-Proces verbal inventaire de caisse
+- [I150]-Balances generle
+
+🔧 FICHIERS MODIFIÉS
+────────────────────
+1. public/menu.js
+   - Ajout des 3 méthodes d'implémentation
+   - Intégration dans la section "Papier de travail"
+
+2. Doc menu contextuel issues/INTEGRATION_XREF_DOCUMENTAIRE.md
+   - Documentation complète de l'implémentation
+
+3. Doc menu contextuel issues/WORKFLOW_N8N_XREF.json
+   - Configuration du workflow n8n
+
+📊 WORKFLOW N8N
+───────────────
+Node Form (Trigger):
+- Client (texte)
+- Exercice (texte)
+- Cycle comptable (dropdown: 10 options)
+- Cross référence (texte)
+- Document (texte)
+- Files (upload fichiers)
+
+Node Google Drive:
+- Vérification existence dossier client
+- Création structure si nécessaire
+- Upload fichier avec indexation
+
+🎨 INTERFACE UTILISATEUR
+────────────────────────
+Barre latérale droite pour affichage:
+- Liste des documents X-Ref
+- Bouton de fermeture
+- Recherche intégrée
+- Prévisualisation (si possible)
+
+✅ TESTS À EFFECTUER
+────────────────────
+1. Ouvrir le formulaire n8n
+2. Remplir et soumettre un document
+3. Vérifier la création dans Google Drive
+4. Afficher la table X-Ref
+5. Rechercher un document
+
+🚀 PROCHAINES ÉTAPES
+────────────────────
+1. Tester l'intégration complète
+2. Valider le workflow n8n
+3. Créer des exemples de tables X-Ref
+4. Documenter les cas d'usage
+
+═══════════════════════════════════════════════════════════════════════════════

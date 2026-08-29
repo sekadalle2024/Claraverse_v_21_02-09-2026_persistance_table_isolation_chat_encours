@@ -1,0 +1,146 @@
+═══════════════════════════════════════════════════════════════════════════════
+   COMMANDES RAPIDES - MODE DOCUMENT E-CONTROLE PRO
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 EXÉCUTER LE SCRIPT D'AJOUT
+─────────────────────────────
+
+python "Doc menu demarrer/Scripts/add_document_mode_e_controle_pro.py"
+
+Résultat attendu :
+✓ 9 étapes de mission modifiées
+✓ Fichier mis à jour avec succès!
+
+🧪 TESTER LES MODIFICATIONS
+───────────────────────────
+
+.\test-mode-document-e-controle.ps1
+
+Résultat attendu :
+✓ TEST RÉUSSI : Mode Document ajouté avec succès à E-controle pro
+
+🔍 VÉRIFIER LES MODES AJOUTÉS
+─────────────────────────────
+
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Document"
+
+Résultat attendu :
+22 occurrences trouvées (9 pour E-controle pro + autres logiciels)
+
+🔍 VÉRIFIER LA VARIABLE [Router]
+────────────────────────────────
+
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Router\] = Document"
+
+Résultat attendu :
+38 occurrences trouvées
+
+🔧 VÉRIFIER LES DIAGNOSTICS TYPESCRIPT
+──────────────────────────────────────
+
+# Aucune commande nécessaire, déjà vérifié
+# Résultat : Aucune erreur trouvée ✅
+
+📖 OUVRIR LA DOCUMENTATION
+──────────────────────────
+
+# Démarrage rapide
+notepad 00_COMMENCER_ICI_MODE_DOCUMENT_E_CONTROLE.txt
+
+# Vue d'ensemble
+notepad QUICK_START_MODE_DOCUMENT_E_CONTROLE.txt
+
+# Synthèse visuelle
+notepad 00_SYNTHESE_VISUELLE_MODE_DOCUMENT_E_CONTROLE_10_AVRIL_2026.txt
+
+# Index complet
+notepad 00_INDEX_MODE_DOCUMENT_E_CONTROLE_10_AVRIL_2026.md
+
+# Documentation technique
+notepad "Doc menu demarrer/Documentation/AJOUT_MODE_DOCUMENT_E_CONTROLE_PRO_10_AVRIL_2026.md"
+
+# Mission accomplie
+notepad 00_MISSION_ACCOMPLIE_MODE_DOCUMENT_E_CONTROLE_10_AVRIL_2026.txt
+
+📝 OUVRIR LE FICHIER MODIFIÉ
+────────────────────────────
+
+code "src/components/Clara_Components/DemarrerMenu.tsx"
+
+🔍 RECHERCHER DANS LE FICHIER
+─────────────────────────────
+
+# Rechercher "Mode Document" dans E-controle
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Document" -Context 2,2
+
+# Rechercher [Router] = Document
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Router\] = Document" -Context 2,2
+
+📊 COMPTER LES OCCURRENCES
+──────────────────────────
+
+# Compter les "Mode Document"
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "Mode Document" -AllMatches).Matches.Count
+
+# Compter les [Router] = Document
+(Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "\[Router\] = Document" -AllMatches).Matches.Count
+
+🗂️ LISTER LES FICHIERS CRÉÉS
+─────────────────────────────
+
+Get-ChildItem -Filter "*MODE_DOCUMENT_E_CONTROLE*"
+
+Résultat attendu :
+9 fichiers trouvés
+
+🔄 RESTAURER UNE VERSION PRÉCÉDENTE (SI NÉCESSAIRE)
+───────────────────────────────────────────────────
+
+# Voir l'historique Git
+git log --oneline -10
+
+# Restaurer une version précédente
+git checkout HEAD~1 "src/components/Clara_Components/DemarrerMenu.tsx"
+
+⚠️ ATTENTION : Cette commande annulera les modifications !
+
+🚀 COMMITER LES MODIFICATIONS (OPTIONNEL)
+─────────────────────────────────────────
+
+git add "src/components/Clara_Components/DemarrerMenu.tsx"
+git add "Doc menu demarrer/Scripts/add_document_mode_e_controle_pro.py"
+git add "Doc menu demarrer/Documentation/AJOUT_MODE_DOCUMENT_E_CONTROLE_PRO_10_AVRIL_2026.md"
+git add "test-mode-document-e-controle.ps1"
+git add "00_*.txt" "00_*.md" "QUICK_START_*.txt" "LISTE_FICHIERS_*.md" "COMMANDES_RAPIDES_*.txt"
+
+git commit -m "Ajout Mode Document à E-controle pro - 9 étapes modifiées"
+
+git push origin main
+
+📱 TESTER DANS L'APPLICATION
+────────────────────────────
+
+1. Démarrer l'application E-audit
+2. Sélectionner "E-controle pro"
+3. Cliquer sur "Matrice de surveillance permanente"
+4. Vérifier que "Mode Document" apparaît dans la liste des modes
+5. Sélectionner "Mode Document"
+6. Vérifier que la commande contient [Router] = Document
+
+🔧 DÉPANNAGE
+────────────
+
+# Si le script Python échoue
+python --version
+# Vérifier que Python 3.x est installé
+
+# Si le script PowerShell échoue
+Get-ExecutionPolicy
+# Si "Restricted", exécuter :
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Si le fichier n'est pas trouvé
+Test-Path "src/components/Clara_Components/DemarrerMenu.tsx"
+# Doit retourner True
+
+═══════════════════════════════════════════════════════════════════════════════

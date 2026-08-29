@@ -1,0 +1,95 @@
+===============================================================
+  📋 COMMANDES À COPIER-COLLER
+  Test X-Ref Documentaire
+===============================================================
+
+SCRIPT DE DIAGNOSTIC
+===============================================================
+
+Copiez-collez ce script dans la console de Claraverse (F12)
+pour diagnostiquer la détection de la table X-Ref :
+
+
+(function() {
+  console.log("🔍 === DIAGNOSTIC X-REF DOCUMENTAIRE ===");
+  
+  const tables = document.querySelectorAll('table');
+  console.log(`📊 Nombre de tables trouvées: ${tables.length}`);
+  
+  tables.forEach((table, index) => {
+    console.log(`\n📋 === TABLE ${index + 1} ===`);
+    
+    let headerRow = null;
+    if (table.querySelector('thead')) {
+      headerRow = table.querySelector('thead tr');
+      console.log("✅ En-tête trouvé dans <thead>");
+    } else if (table.querySelector('tbody')) {
+      headerRow = table.querySelector('tbody tr');
+      console.log("✅ En-tête trouvé dans <tbody>");
+    } else {
+      headerRow = table.querySelector('tr');
+      console.log("✅ En-tête trouvé dans <tr>");
+    }
+    
+    if (!headerRow) {
+      console.log("❌ Aucun en-tête trouvé");
+      return;
+    }
+    
+    const headerCells = Array.from(headerRow.querySelectorAll('th, td'));
+    const headers = headerCells.map(cell => cell.textContent.trim());
+    
+    console.log("📝 En-têtes:", headers);
+    
+    const hasCrossRef = headers.some(h => {
+      const text = h.toLowerCase();
+      const normalized = text.replace(/[\s\-_]/g, '');
+      return normalized.includes('cross') || 
+             normalized.includes('xref') || 
+             normalized.includes('reference') ||
+             text.includes('cross') ||
+             text.includes('x-ref') ||
+             text.includes('x ref');
+    });
+    
+    const hasDocument = headers.some(h => {
+      const text = h.toLowerCase();
+      const normalized = text.replace(/[\s\-_]/g, '');
+      return normalized.includes('document') || 
+             normalized.includes('doc');
+    });
+    
+    console.log("🔍 Détection Cross Ref:", hasCrossRef ? "✅ OUI" : "❌ NON");
+    console.log("🔍 Détection Document:", hasDocument ? "✅ OUI" : "❌ NON");
+    
+    if (hasCrossRef && hasDocument) {
+      console.log("✅ Cette table est une table X-Ref documentaire !");
+      
+      headerCells.forEach((cell, idx) => {
+        const text = cell.textContent.trim().toLowerCase();
+        const normalized = text.replace(/[\s\-_]/g, '');
+        
+        if (normalized.includes('cross') || normalized.includes('xref') || normalized.includes('reference')) {
+          console.log(`  📌 Colonne Cross Ref à l'index ${idx}: "${cell.textContent.trim()}"`);
+        }
+        if (normalized.includes('document') || normalized.includes('doc')) {
+          console.log(`  📌 Colonne Document à l'index ${idx}: "${cell.textContent.trim()}"`);
+        }
+      });
+      
+      const dataRows = Array.from(table.querySelectorAll('tr')).slice(1, 4);
+      console.log("\n📄 Aperçu des données:");
+      dataRows.forEach((row, rowIdx) => {
+        const cells = Array.from(row.querySelectorAll('td, th'));
+        console.log(`  Ligne ${rowIdx + 1}:`, cells.map(c => c.textContent.trim()));
+      });
+    }
+  });
+  
+  console.log("\n✅ === FIN DU DIAGNOSTIC ===");
+})();
+
+
+===============================================================
+  FIN
+===============================================================

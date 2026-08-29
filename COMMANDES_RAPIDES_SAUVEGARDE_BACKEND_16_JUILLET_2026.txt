@@ -1,0 +1,205 @@
+═══════════════════════════════════════════════════════════════════════════
+                    COMMANDES RAPIDES - SAUVEGARDE BACKEND
+                            16 Juillet 2026
+═══════════════════════════════════════════════════════════════════════════
+
+⚡ SAUVEGARDER LE BACKEND MAINTENANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Copier-coller cette commande dans PowerShell :
+
+.\Doc` backend` github\Scripts\push-backend-to-github-V5-MISE-A-JOUR-16-JUILLET-2026.ps1
+
+───────────────────────────────────────────────────────────────────────────
+
+🔍 VÉRIFIER L'ÉTAT DU BACKEND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+git status
+git log --oneline -5
+git remote -v
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+🔧 DIAGNOSTIC EN CAS DE PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+.\Doc` backend` github\Scripts\diagnostiquer-probleme-github.ps1
+
+───────────────────────────────────────────────────────────────────────────
+
+🌐 VÉRIFIER SUR GITHUB
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ouvrir dans le navigateur :
+
+https://github.com/sekadalle2024/Back-end-python-V5_23_04_2026--tree-master
+
+───────────────────────────────────────────────────────────────────────────
+
+🔄 INITIALISER GIT DANS PY_BACKEND (SI NÉCESSAIRE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+git init
+git remote add origin https://github.com/sekadalle2024/Back-end-python-V5_23_04_2026--tree-master.git
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+📊 VÉRIFIER LES FICHIERS CRITIQUES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+Test-Path main.py
+Test-Path endpoint_editeur.py
+Test-Path requirements.txt
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+🧹 NETTOYER LE DOSSIER BACKEND (ATTENTION !)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Supprimer les fichiers Python compilés
+cd py_backend
+Get-ChildItem -Recurse -Filter "__pycache__" | Remove-Item -Recurse -Force
+Get-ChildItem -Recurse -Filter "*.pyc" | Remove-Item -Force
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+📝 CRÉER UN COMMIT MANUEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+git add .
+git commit -m "Mise à jour manuelle - $(Get-Date -Format 'dd/MM/yyyy HH:mm')"
+git push -u origin master --force
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+🔐 CONFIGURER GIT (SI NÉCESSAIRE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+git config --global user.name "Votre Nom"
+git config --global user.email "votre.email@example.com"
+
+───────────────────────────────────────────────────────────────────────────
+
+🌲 AFFICHER L'ARBORESCENCE DU BACKEND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+tree /F
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+🔍 COMPARER LOCAL ET DISTANT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+git fetch origin
+git diff origin/master
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+🗑️ SUPPRIMER LE REMOTE (RESET COMPLET)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd py_backend
+git remote remove origin
+cd ..
+
+───────────────────────────────────────────────────────────────────────────
+
+📦 CRÉER UN BACKUP LOCAL DU BACKEND
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$date = Get-Date -Format "yyyyMMdd_HHmmss"
+Compress-Archive -Path "py_backend\*" -DestinationPath "backup_backend_$date.zip"
+
+───────────────────────────────────────────────────────────────────────────
+
+📂 OUVRIR LE DOSSIER BACKEND DANS L'EXPLORATEUR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+explorer py_backend
+
+───────────────────────────────────────────────────────────────────────────
+
+🔗 OUVRIR GITHUB DANS LE NAVIGATEUR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+start https://github.com/sekadalle2024/Back-end-python-V5_23_04_2026--tree-master
+
+───────────────────────────────────────────────────────────────────────────
+
+📖 OUVRIR LA DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+notepad "00_RECAP_FINAL_SAUVEGARDE_BACKEND_16_JUILLET_2026.txt"
+
+───────────────────────────────────────────────────────────────────────────
+
+🚀 WORKFLOW COMPLET EN UNE SEULE COMMANDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Sauvegarder + Vérifier + Ouvrir GitHub
+.\Doc` backend` github\Scripts\push-backend-to-github-V5-MISE-A-JOUR-16-JUILLET-2026.ps1; `
+start https://github.com/sekadalle2024/Back-end-python-V5_23_04_2026--tree-master
+
+───────────────────────────────────────────────────────────────────────────
+
+⚙️ COMMANDES DE DÉPANNAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Forcer la synchronisation
+cd py_backend
+git fetch --all
+git reset --hard origin/master
+cd ..
+
+# Supprimer le cache Git
+cd py_backend
+git rm -r --cached .
+git add .
+git commit -m "Nettoyage cache Git"
+cd ..
+
+# Vérifier les permissions
+cd py_backend
+git config core.fileMode false
+cd ..
+
+═══════════════════════════════════════════════════════════════════════════
+
+💡 ASTUCES
+
+1. Pour exécuter plusieurs commandes à la suite, séparez-les par ";"
+2. Utilisez Tab pour l'autocomplétion des chemins
+3. Utilisez les flèches haut/bas pour naviguer dans l'historique
+4. Ctrl+C pour interrompre une commande
+5. Utilisez "cd -" pour revenir au dossier précédent (dans bash)
+
+═══════════════════════════════════════════════════════════════════════════
+
+📌 RACCOURCIS UTILES
+
+# Alias pour le script principal (à définir une fois)
+Set-Alias -Name save-backend -Value ".\Doc backend github\Scripts\push-backend-to-github-V5-MISE-A-JOUR-16-JUILLET-2026.ps1"
+
+# Utilisation ensuite :
+save-backend
+
+═══════════════════════════════════════════════════════════════════════════
+
+Date : 16 Juillet 2026
+Version : 1.0
+
+═══════════════════════════════════════════════════════════════════════════

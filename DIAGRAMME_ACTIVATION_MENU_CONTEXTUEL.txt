@@ -1,0 +1,215 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║           🎯 DIAGRAMME D'ACTIVATION DU MENU CONTEXTUEL                   ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+📌 FLUX D'EXÉCUTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CHARGEMENT DE LA PAGE
+   │
+   ├─► index.html charge
+   │   └─► <script src="/menu.js"></script>  (ligne ~143)
+   │
+   │
+2. EXÉCUTION DE menu.js
+   │
+   ├─► Création de la classe ContextualMenuManager
+   │   └─► new ContextualMenuManager()  (ligne ~12300)
+   │
+   ├─► Exposition des méthodes globales  (lignes ~12302-12305)
+   │   ├─► window.initContextualMenu()
+   │   ├─► window.forceContextualMenu()
+   │   └─► window.cleanupContextualMenu()
+   │
+   │
+3. INITIALISATION AUTOMATIQUE
+   │
+   ├─► Délai de 2 secondes après DOMContentLoaded
+   │   └─► setTimeout(() => contextualMenuManager.init(), 2000)
+   │
+   │
+4. MÉTHODE init()
+   │
+   ├─► createMenuElement()  → Crée le HTML du menu
+   │
+   ├─► attachEventListeners()  → Attache les événements
+   │   │
+   │   └─► document.addEventListener("contextmenu", ...)  (ligne ~393)
+   │       └─► POINT CLÉ : Écoute du clic droit !
+   │
+   ├─► observeNewTables()  → Observe les nouvelles tables
+   │
+   └─► processExistingTables()  → Traite les tables existantes
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+🖱️ DÉCLENCHEMENT DU MENU (CLIC DROIT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+                       Utilisateur fait un clic droit
+                                    │
+                                    ▼
+                    Événement "contextmenu" déclenché
+                                    │
+                                    ▼
+        ┌──────────────────────────────────────────────────┐
+        │  document.addEventListener("contextmenu", (e))   │
+        │  Ligne ~393 dans menu.js                         │
+        └──────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+                    e.target.closest("table")
+                    (Cherche la table parente)
+                                    │
+                    ┌───────────────┴───────────────┐
+                    │                               │
+                    ▼                               ▼
+             Table trouvée ?                  Pas de table
+             ET dans le chat ?                      │
+                    │                               │
+                    ▼                               ▼
+                   OUI                          Rien ne se passe
+                    │                      (menu natif reste)
+                    ▼
+            e.preventDefault()
+        (Bloque le menu natif du navigateur)
+                    │
+                    ▼
+        this.showMenu(e.pageX, e.pageY, table)
+        (Affiche le menu ClaraVerse personnalisé)
+                    │
+                    ▼
+            ╔═══════════════════════╗
+            ║   MENU CONTEXTUEL     ║
+            ║   AFFICHÉ !           ║
+            ╚═══════════════════════╝
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+📋 STRUCTURE DU MENU AFFICHÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Menu Contextuel ClaraVerse (Accordéon)
+│
+├─► 📂 Édition des cellules
+│   ├─ Activer édition (Ctrl+E)
+│   └─ Désactiver édition
+│
+├─► 📂 Lignes
+│   ├─ Insérer ligne (Ctrl+Shift+↓)
+│   ├─ Dupliquer ligne (Ctrl+D)
+│   ├─ Supprimer ligne
+│   ├─ Effacer contenu toutes lignes
+│   └─ Coller depuis Excel (Ctrl+V)
+│
+├─► 📂 Colonnes
+│   ├─ Insérer colonne (Ctrl+Shift+→)
+│   ├─ Dupliquer colonne
+│   ├─ Vider cellules colonne
+│   └─ Supprimer colonne
+│
+├─► 📂 Arithmétique
+│   ├─ Validation (Ctrl+1)
+│   ├─ Mouvement (Ctrl+2)
+│   ├─ Rapprochement (Ctrl+3)
+│   ├─ Séparation (Ctrl+4)
+│   ├─ Estimation (Ctrl+5)
+│   └─ Confirmation bancaire (Ctrl+6)
+│
+├─► 📂 Évaluation des risques
+│   ├─ Calculer criticité (Ctrl+R)
+│   ├─ Appliquer couleurs risques
+│   └─ Matrice Alpha/Num (3/4/5 niveaux)
+│
+├─► 📂 Tables
+│   ├─ Créer ce tableau
+│   ├─ Copier table (Ctrl+C)
+│   ├─ Coller table (Ctrl+Shift+P)
+│   └─ Supprimer la table
+│
+├─► 📂 Excel
+│   ├─ Importer Excel
+│   ├─ Exporter Excel
+│   ├─ Import template Word
+│   └─ Export template Word A3
+│
+├─► 📂 Modélisation Pandas
+│   ├─ Calcul des écarts (Ctrl+P)
+│   ├─ Modélisation N8N (Ctrl+M)
+│   ├─ Lead Balance (Ctrl+L)
+│   └─ États Financiers (Ctrl+F)
+│
+└─► 📂 États Financiers SYSCOHADA
+    ├─ Calculer États Financiers
+    └─ Exporter Liasse Officielle
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+🔧 MÉTHODES DE DÉBOGAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dans la console du navigateur :
+
+1. Vérifier si le menu est initialisé :
+   └─► window.initContextualMenu
+
+2. Forcer l'initialisation :
+   └─► window.initContextualMenu()
+
+3. Forcer avec reset complet :
+   └─► window.forceContextualMenu()
+
+4. Nettoyer le menu :
+   └─► window.cleanupContextualMenu()
+
+5. Voir les logs d'initialisation :
+   └─► Chercher dans la console :
+       "🎯 Initialisation du menu contextuel ClaraVerse"
+       "✅ Menu contextuel initialisé avec succès"
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+⚙️ FICHIERS IMPLIQUÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. index.html
+   └─► Charge le script menu.js (ligne ~143)
+
+2. public/menu.js
+   └─► Contient toute la logique du menu contextuel
+   └─► Version 9.3
+   └─► ~12310 lignes de code
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+📝 CONCLUSION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ UN SEUL fichier gère le menu contextuel : menu.js
+
+✅ Activation : Clic droit sur une table dans le chat
+
+✅ Initialisation : Automatique après 2 secondes
+
+✅ Désactivation : Commenter la ligne dans index.html
+
+✅ Version : 9.3 (Export Word via backend Python + fallback JS)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+Date : 27 août 2026

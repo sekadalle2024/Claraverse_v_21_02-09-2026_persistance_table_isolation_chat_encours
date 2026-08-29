@@ -1,0 +1,145 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTION FINALE - RETRAIT TITRE ET TIRET
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date: 31 Mars 2026
+🎯 Objectif: Retirer le titre "Tableau processus" et le tiret entre les deux tableaux
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔴 PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Après la première correction, l'affichage montrait:
+1. ✅ Tableau d'en-tête formaté correctement
+2. ❌ Texte "Tableau processus" affiché
+3. ❌ Tiret de séparation entre les deux tableaux
+4. ✅ Tableau des processus formaté correctement
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✅ CORRECTIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. RETRAIT DU TITRE "Tableau processus"
+   Fichier: src/services/claraApiService.ts
+   Ligne: ~515
+   
+   Modification:
+   - Passer une chaîne vide "" comme titre au lieu de "Tableau processus"
+   - La fonction convertArrayTableToMarkdown() ne génère pas de titre si tableName est vide
+   
+   Code modifié:
+   ```typescript
+   markdown += this.convertArrayTableToMarkdown("", tableauProcessus);
+   ```
+
+2. MODIFICATION DE convertArrayTableToMarkdown()
+   Fichier: src/services/claraApiService.ts
+   Ligne: ~722
+   
+   Modification:
+   - Ne pas générer de titre si tableName est vide
+   - Retourner une chaîne vide si pas de données et pas de titre
+   
+   Code modifié:
+   ```typescript
+   if (!data || data.length === 0) {
+     return tableName ? `### ${tableName}\n\n*Aucune donnée disponible*\n\n` : "";
+   }
+   
+   let md = tableName ? `### ${tableName}\n\n` : "";
+   ```
+
+3. RÉDUCTION DE L'ESPACEMENT ENTRE LES TABLEAUX
+   Fichier: src/services/claraApiService.ts
+   Ligne: ~669
+   
+   Modification:
+   - Réduire l'espacement de "\n\n" à "\n" après le premier tableau
+   
+   Code modifié:
+   ```typescript
+   return md + "\n";  // Au lieu de "\n\n"
+   ```
+
+═══════════════════════════════════════════════════════════════════════════════
+  📊 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT:
+  ┌─────────────────────────────────────┐
+  │ Tableau d'en-tête                   │
+  └─────────────────────────────────────┘
+  
+  Tableau processus                      ← À RETIRER
+  ─────────────────────────────────────  ← À RETIRER
+  
+  ┌─────────────────────────────────────┐
+  │ Tableau des processus               │
+  └─────────────────────────────────────┘
+
+APRÈS:
+  ┌─────────────────────────────────────┐
+  │ Tableau d'en-tête                   │
+  └─────────────────────────────────────┘
+  ┌─────────────────────────────────────┐
+  │ Tableau des processus               │
+  └─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+  🔄 FLUX DE TRAITEMENT CORRIGÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Détection du format "Programme contrôle comptes"
+   ✅ "Tableau entete" in data && "Tableau processus" in data
+
+2. Traitement de "Tableau entete"
+   ✅ convertHeaderTableToMarkdown(tableauEntete, 0)
+   ✅ Retourne le tableau avec "\n" à la fin (pas "\n\n")
+
+3. Traitement de "Tableau processus"
+   ✅ convertArrayTableToMarkdown("", tableauProcessus)
+   ✅ Pas de titre généré car tableName = ""
+   ✅ Génère directement le tableau
+
+4. Résultat final
+   ✅ Deux tableaux collés sans titre ni tiret
+
+═══════════════════════════════════════════════════════════════════════════════
+  📝 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. src/services/claraApiService.ts
+   - Ligne ~515: Passage de "" comme titre pour "Tableau processus"
+   - Ligne ~669: Réduction de l'espacement après le premier tableau
+   - Ligne ~722: Gestion du cas tableName vide dans convertArrayTableToMarkdown()
+
+═══════════════════════════════════════════════════════════════════════════════
+  🧪 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Dans la console du navigateur (F12), vous devriez voir:
+  ✅ "🔧 FORMAT PROGRAMME CONTROLE COMPTES DÉTECTÉ"
+  ✅ "📋 Traitement de 'Tableau entete' (type: header)"
+  ✅ "📋 Traitement de 'Tableau processus' (type: data_array, X items)"
+  ✅ "🔄 Conversion de (sans titre) avec X lignes"
+
+Dans l'application:
+  ✅ Tableau d'en-tête avec bordures
+  ✅ PAS de texte "Tableau processus"
+  ✅ PAS de tiret de séparation
+  ✅ Tableau des processus directement après l'en-tête
+  ✅ Espacement minimal entre les deux tableaux
+
+═══════════════════════════════════════════════════════════════════════════════
+  ✨ RÉSUMÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Trois modifications simples pour un affichage propre:
+1. Titre vide → Pas de "Tableau processus" affiché
+2. Espacement réduit → Pas de tiret entre les tableaux
+3. Tableaux collés → Affichage compact et professionnel
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Créé le: 31 Mars 2026
+Statut: ✅ Corrections appliquées et prêtes à tester

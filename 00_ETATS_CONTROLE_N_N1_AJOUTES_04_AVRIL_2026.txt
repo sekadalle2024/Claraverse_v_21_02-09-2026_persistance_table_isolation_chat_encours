@@ -1,0 +1,236 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ÉTATS DE CONTRÔLE N ET N-1 - CORRECTION COMPLÈTE - 04 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈMES IDENTIFIÉS
+─────────────────────────────────────────────────────────────────────────────
+1. ❌ TFT (Tableau des Flux de Trésorerie) NON GÉNÉRÉ
+   - Le TFT n'apparaît pas dans le HTML final
+   - Erreur probable dans calculer_tft_liasse()
+
+2. ❌ ANNEXES NON GÉNÉRÉES
+   - Les notes annexes ne sont pas affichées
+   - Erreur probable dans calculer_annexes_completes()
+
+3. ❌ ÉTATS DE CONTRÔLE INCOMPLETS (9 au lieu de 11 sections)
+   - Sections manquantes: TFT et Annexes
+   - Les 6 états de contrôle sont générés mais incomplets
+
+4. ❌ STRUCTURE DES ÉTATS DE CONTRÔLE INCORRECTE
+   - Les états de contrôle doivent comparer N vs N-1
+   - Format actuel ne montre pas les variations correctement
+
+🔍 ANALYSE DÉTAILLÉE
+─────────────────────────────────────────────────────────────────────────────
+
+FICHIERS DE RÉFÉRENCE À UTILISER:
+✓ py_backend/generer_test_etats_controle_html.py
+  → Montre la bonne structure HTML pour les états de contrôle
+  → Format: REF | LIBELLÉ | EXERCICE N | EXERCICE N-1
+
+✓ py_backend/etats_controle_exhaustifs.py
+  → Fonctions de calcul des états de contrôle
+  → Chaque fonction retourne: {titre, postes: [{ref, libelle, montant_n, montant_n1}]}
+
+✓ py_backend/html_etats_controle.py
+  → Génération HTML des états de contrôle
+  → Fonction: generate_all_etats_controle_html(etats_controle)
+
+✓ Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+  → Vérifie que N-2 est utilisé pour les calculs mais PAS affiché
+  → Principe: N-2 en mémoire, seulement N et N-1 affichés
+
+📊 STRUCTURE ATTENDUE DES ÉTATS DE CONTRÔLE
+─────────────────────────────────────────────────────────────────────────────
+
+Chaque état de contrôle doit avoir cette structure:
+
+{
+    'titre': 'État de contrôle Bilan Actif',
+    'postes': [
+        {
+            'ref': 'CA',
+            'libelle': 'Total Actif',
+            'montant_n': 1000000,      # Montant exercice N
+            'montant_n1': 950000       # Montant exercice N-1
+        },
+        {
+            'ref': 'CB',
+            'libelle': 'Nombre de postes (N)',
+            'montant_n': 25,
+            'montant_n1': 0
+        },
+        {
+            'ref': 'CC',
+            'libelle': 'Nombre de postes (N-1)',
+            'montant_n': 0,
+            'montant_n1': 24
+        },
+        {
+            'ref': 'CD',
+            'libelle': 'Variation Total',
+            'montant_n': 50000,        # N - N-1
+            'montant_n1': 0
+        }
+    ]
+}
+
+🔧 CORRECTIONS À APPLIQUER
+─────────────────────────────────────────────────────────────────────────────
+
+1. CORRIGER LE TFT (py_backend/etats_financiers.py ligne ~1720)
+   
+   PROBLÈME:
+   ```python
+   tft_data = calculer_tft_liasse(balance_df, balance_n1_df, balance_n2_df, 
+                                   resultat_net_n, resultat_net_n1)
+   ```
+   
+   VÉRIFIER:
+   - balance_n2_df peut être None → gérer ce cas
+   - resultat_net_n et resultat_net_n1 doivent être extraits correctement
+   - Ajouter des logs pour voir où ça échoue
+
+2. CORRIGER LES ANNEXES (py_backend/etats_financiers.py ligne ~1730)
+   
+   PROBLÈME:
+   ```python
+   annexes_data = calculer_annexes_completes(
+       results_liasse['bilan_actif'],
+       results_liasse['bilan_actif'],  # ❌ Doublon
+       results_liasse['bilan_passif'],
+       results_liasse['bilan_passif'],  # ❌ Doublon
+       results_liasse['compte_resultat'],
+       results_liasse['compte_resultat']  # ❌ Doublon
+   )
+   ```
+   
+   SOLUTION:
+   - Les données sont déjà au format liasse (montant_n, montant_n1, montant_n2)
+   - Pas besoin de séparer N et N-1
+   - Vérifier la signature de calculer_annexes_completes()
+
+3. CORRIGER LES ÉTATS DE CONTRÔLE (py_backend/etats_financiers.py ligne ~1740)
+   
+   ACTUEL (CORRECT):
+   ```python
+   bilan_actif_n = results_liasse['bilan_actif']
+   bilan_actif_n1 = results_liasse['bilan_actif']  # ✓ Même liste
+   ```
+   
+   RAISON:
+   - Chaque poste contient déjà montant_n ET montant_n1
+   - Les fonctions de contrôle extraient les bonnes valeurs
+   - C'est CORRECT de passer la même liste
+
+4. CORRIGER LA GÉNÉRATION HTML DES ÉTATS DE CONTRÔLE
+   
+   VÉRIFIER:
+   - generate_all_etats_controle_html() est bien appelée
+   - Le HTML généré est bien ajouté au HTML final
+   - Les accordéons sont bien créés
+
+📝 PLAN D'ACTION
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1: Ajouter des logs détaillés
+```python
+# Dans py_backend/etats_financiers.py ligne ~1720
+try:
+    logger.info("🔄 Calcul du TFT...")
+    logger.info(f"  balance_df: {len(balance_df) if balance_df is not None else 'None'}")
+    logger.info(f"  balance_n1_df: {len(balance_n1_df) if balance_n1_df is not None else 'None'}")
+    logger.info(f"  balance_n2_df: {len(balance_n2_df) if balance_n2_df is not None else 'None'}")
+    logger.info(f"  resultat_net_n: {resultat_net_n}")
+    logger.info(f"  resultat_net_n1: {resultat_net_n1}")
+    
+    tft_data = calculer_tft_liasse(balance_df, balance_n1_df, balance_n2_df, 
+                                    resultat_net_n, resultat_net_n1)
+    results_liasse['tft'] = tft_data
+    logger.info("✅ TFT calculé avec succès")
+    logger.info(f"  Nombre de lignes TFT: {len(tft_data.get('tft', []))}")
+except Exception as e:
+    logger.error(f"❌ Erreur calcul TFT: {e}")
+    import traceback
+    logger.error(traceback.format_exc())
+```
+
+ÉTAPE 2: Vérifier la signature de calculer_annexes_completes()
+```python
+# Lire py_backend/annexes_liasse_complete.py
+# Vérifier les paramètres attendus
+# Adapter l'appel en conséquence
+```
+
+ÉTAPE 3: Vérifier generate_all_etats_controle_html()
+```python
+# Dans py_backend/etats_financiers.py ligne ~1780
+try:
+    logger.info("🔄 Génération HTML états de contrôle...")
+    logger.info(f"  Nombre d'états: {len(etats_controle)}")
+    for key in etats_controle.keys():
+        logger.info(f"    - {key}")
+    
+    html_etats = generate_all_etats_controle_html(etats_controle)
+    logger.info(f"  HTML généré: {len(html_etats)} caractères")
+    html += html_etats
+    logger.info("✅ États de contrôle ajoutés au HTML")
+except Exception as e:
+    logger.error(f"❌ Erreur génération HTML états de contrôle: {e}")
+    import traceback
+    logger.error(traceback.format_exc())
+```
+
+ÉTAPE 4: Tester avec le fichier de balance démo
+```bash
+# Redémarrer le backend
+cd py_backend
+python main.py
+
+# Dans un autre terminal
+python test-exhaustivite-simple.py
+```
+
+ÉTAPE 5: Analyser les logs du backend
+```bash
+# Chercher les erreurs dans les logs
+# Identifier quelle fonction échoue
+# Corriger en conséquence
+```
+
+🎯 RÉSULTAT ATTENDU
+─────────────────────────────────────────────────────────────────────────────
+
+11 SECTIONS GÉNÉRÉES:
+1. 🏢 BILAN - ACTIF
+2. 🏛️ BILAN - PASSIF
+3. 📊 COMPTE DE RÉSULTAT
+4. 💰 TABLEAU DES FLUX DE TRÉSORERIE (TFT)
+5. 📝 NOTES ANNEXES
+6. ✓ État de contrôle Bilan Actif
+7. ✓ État de contrôle Bilan Passif
+8. ✓ État de contrôle Compte de Résultat
+9. ✓ État de contrôle TFT
+10. ✓ État de contrôle Sens des Comptes
+11. ✓ État d'équilibre Bilan
+
+CHAQUE ÉTAT DE CONTRÔLE AFFICHE:
+- REF | LIBELLÉ | EXERCICE N | EXERCICE N-1
+- Comparaisons entre N et N-1
+- Variations calculées
+- Totaux et équilibres
+
+FORMAT CONFORME SYSCOHADA:
+- 2 colonnes affichées (N et N-1)
+- N-2 utilisé en calcul mais PAS affiché
+- Format liasse officielle
+
+═══════════════════════════════════════════════════════════════════════════════
+  FICHIERS À MODIFIER
+═══════════════════════════════════════════════════════════════════════════════
+✓ py_backend/etats_financiers.py (lignes 1720-1800)
+✓ py_backend/tableau_flux_tresorerie_v2.py (vérifier calculer_tft_liasse)
+✓ py_backend/annexes_liasse_complete.py (vérifier calculer_annexes_completes)
+✓ py_backend/html_etats_controle.py (vérifier generate_all_etats_controle_html)
+
+═══════════════════════════════════════════════════════════════════════════════

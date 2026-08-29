@@ -1,0 +1,211 @@
+═══════════════════════════════════════════════════════════════════
+🚨 ACTION IMMÉDIATE - DIAGNOSTIC COLLECTE TABLES
+═══════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+───────────────────────────────────────────────────────────────────
+HTTP REQUEST → n8n ✅ Données reçues dans Google Sheet
+Claraverse → n8n ❌ Google Sheet vide
+
+HYPOTHÈSE : Les tables ne sont pas collectées correctement dans
+Claraverse par la fonction collectCriteriaTables()
+
+═══════════════════════════════════════════════════════════════════
+🔧 ÉTAPE 1 : LANCER LE DIAGNOSTIC (2 min)
+═══════════════════════════════════════════════════════════════════
+
+1. Démarrer Claraverse :
+    npm run dev
+
+2. Créer des tables de test dans le chat :
+
+    | Rubrique    | Description |
+    |-------------|-------------|
+    | Etape       | Programme   |
+    | Référence   | TEST-001    |
+
+    | Flowise |
+    |---------|
+    | CIA     |
+
+3. Ouvrir l'outil de diagnostic :
+    http://localhost:5173/diagnostic-collecte-tables-claraverse.html
+
+4. Cliquer sur "Analyser le DOM"
+
+5. Observer les statistiques :
+    - Divs Prose : Doit être > 0
+    - Tables Totales : Doit être > 0
+    - Avec En-têtes Requis : Doit être > 0
+    - Correspondantes : Doit être > 0
+
+═══════════════════════════════════════════════════════════════════
+🔍 ÉTAPE 2 : INTERPRÉTER LES RÉSULTATS (2 min)
+═══════════════════════════════════════════════════════════════════
+
+CAS 1 : Divs Prose = 0
+└─ ❌ Vous n'êtes pas dans Claraverse ou aucun message affiché
+   Solution : Créer des messages dans le chat
+
+CAS 2 : Tables Totales = 0
+└─ ❌ Aucune table trouvée
+   Solution : Vérifier le format des tables (Markdown)
+
+CAS 3 : Avec En-têtes Requis = 0
+└─ ❌ Tables sans "Rubrique" et "Description"
+   Solution : Ajouter ces en-têtes à vos tables
+
+CAS 4 : Correspondantes = 0
+└─ ❌ Aucune table avec mots-clés
+   Solution : Ajouter "CIA", "Flowise", ou "Programme" dans les cellules
+
+CAS 5 : Correspondantes > 0
+└─ ✅ Les tables devraient être collectées
+   Problème : L'envoi à n8n échoue (voir Étape 3)
+
+═══════════════════════════════════════════════════════════════════
+📊 ÉTAPE 3 : VÉRIFIER LES LOGS FLOWISE.JS (3 min)
+═══════════════════════════════════════════════════════════════════
+
+1. Ouvrir la console du navigateur (F12)
+
+2. Déclencher le processus (créer une table avec "CIA")
+
+3. Chercher ces logs :
+
+    ✅ LOGS ATTENDUS :
+    ═══════════════════════════════════════════════════════════════════
+    🔍 CONTENU HTML ENVOYÉ VERS N8N
+    ═══════════════════════════════════════════════════════════════════
+    🎯 Mot-clé: CIA
+    📊 Taille totale: XXXX caractères
+    📡 Endpoint: https://barow52161.app.n8n.cloud/webhook/htlm_processor
+    ═══════════════════════════════════════════════════════════════════
+    📋 CONTENU HTML COMPLET:
+    ═══════════════════════════════════════════════════════════════════
+    <table>...</table>
+    ═══════════════════════════════════════════════════════════════════
+
+4. Vérifier la taille :
+    - Si "Taille totale: 0 caractères" → ❌ Aucune table collectée
+    - Si "Taille totale: > 0 caractères" → ✅ Tables collectées
+
+5. Copier le HTML affiché et le tester avec curl :
+
+    curl -X POST "https://barow52161.app.n8n.cloud/webhook/htlm_processor" \
+         -H "Content-Type: application/json" \
+         -d '{"question":"<table>...</table>"}'
+
+═══════════════════════════════════════════════════════════════════
+🔧 ÉTAPE 4 : SOLUTIONS SELON LE DIAGNOSTIC
+═══════════════════════════════════════════════════════════════════
+
+PROBLÈME A : Aucune table collectée (Taille = 0)
+───────────────────────────────────────────────────────────────────
+Cause : collectCriteriaTables() ne trouve rien
+
+Solutions :
+1. Vérifier les en-têtes des tables ("Rubrique" + "Description")
+2. Ajouter un mot-clé dans les cellules ("CIA", "Flowise", etc.)
+3. Vérifier le sélecteur CSS des tables
+4. Consulter : DIAGNOSTIC_COLLECTE_TABLES_GUIDE.md
+
+PROBLÈME B : Tables collectées mais Google Sheet vide
+───────────────────────────────────────────────────────────────────
+Cause : L'envoi à n8n échoue ou n8n ne traite pas les données
+
+Solutions :
+1. Vérifier les logs de queryN8nEndpoint() dans la console
+2. Vérifier que le status HTTP est 200
+3. Vérifier que response.text() contient des données
+4. Tester le workflow n8n avec HTTP REQUEST
+5. Consulter : FIX_N8N_REPONSE_VIDE_V17.2_SOLUTION.md
+
+PROBLÈME C : Workflow n8n ne reçoit pas les données
+───────────────────────────────────────────────────────────────────
+Cause : Le node "Webhook" dans n8n ne capture pas le body
+
+Solutions :
+1. Vérifier la configuration du node "Webhook" :
+    - HTTP Method: POST
+    - Path: htlm_processor
+    - Response Mode: responseNode
+
+2. Ajouter un node "Edit Fields" après le webhook :
+    - Champ: user_message
+    - Valeur: {{ $json.body.question }}
+
+3. Vérifier dans Google Sheet que la colonne JSON contient :
+    - Les données HTML brutes
+    - Pas une chaîne vide ""
+
+═══════════════════════════════════════════════════════════════════
+📝 CHECKLIST DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════════
+
+Côté Claraverse (Frontend)
+├─ [ ] Tables créées avec en-têtes "Rubrique" et "Description"
+├─ [ ] Mot-clé présent dans les cellules ("CIA", "Flowise", etc.)
+├─ [ ] Outil de diagnostic lancé
+├─ [ ] Statistiques > 0 pour "Correspondantes"
+├─ [ ] Logs Flowise.js affichent le HTML collecté
+└─ [ ] Taille du HTML > 0 caractères
+
+Côté N8N (Backend)
+├─ [ ] Node "Webhook" configuré (POST, htlm_processor)
+├─ [ ] Node "Edit Fields" avec user_message = {{ $json.body.question }}
+├─ [ ] Node "Google Sheet" enregistre dans la colonne JSON
+├─ [ ] Test avec HTTP REQUEST fonctionne
+└─ [ ] Google Sheet contient les données HTML
+
+═══════════════════════════════════════════════════════════════════
+🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════
+
+# Démarrer Claraverse
+npm run dev
+
+# Ouvrir l'outil de diagnostic
+start public/diagnostic-collecte-tables-claraverse.html
+
+# Tester n8n directement
+curl -X POST "https://barow52161.app.n8n.cloud/webhook/htlm_processor" \
+     -H "Content-Type: application/json" \
+     -d '{"question":"<table><tr><td>Test</td></tr></table>"}'
+
+# Nettoyer le cache
+start public/fix-urgent-n8n-localstorage.html
+
+═══════════════════════════════════════════════════════════════════
+📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════
+
+Diagnostic Collecte :
+    → DIAGNOSTIC_COLLECTE_TABLES_GUIDE.md
+
+Outil de Diagnostic :
+    → public/diagnostic-collecte-tables-claraverse.html
+
+Fix Réponse Vide :
+    → FIX_N8N_REPONSE_VIDE_V17.2_SOLUTION.md
+
+Code Source :
+    → public/Flowise.js (fonction collectCriteriaTables)
+
+═══════════════════════════════════════════════════════════════════
+🎯 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════
+
+1. Lancer le diagnostic (Étape 1)
+2. Interpréter les résultats (Étape 2)
+3. Vérifier les logs Flowise.js (Étape 3)
+4. Appliquer les solutions (Étape 4)
+5. Tester à nouveau
+
+═══════════════════════════════════════════════════════════════════
+
+Version: 1.0
+Date: 2025-12-06
+Status: Outil de Diagnostic Créé
+
+═══════════════════════════════════════════════════════════════════

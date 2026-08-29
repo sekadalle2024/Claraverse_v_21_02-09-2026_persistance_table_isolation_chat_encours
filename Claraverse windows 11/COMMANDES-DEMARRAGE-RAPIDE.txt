@@ -1,0 +1,67 @@
+═══════════════════════════════════════════════════════════════════════════
+                    COMMANDES DE DÉMARRAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+
+🚀 DEPUIS WSL2 UBUNTU
+═══════════════════════════════════════════════════════════════════════════
+
+# 1. Ouvrir WSL2
+wsl
+
+# 2. Aller dans le projet
+cd /mnt/d/ClaraVerse-v\ firebase
+
+# 3. Démarrer
+docker compose up -d
+
+# 4. Vérifier
+docker compose ps
+
+
+🪟 DEPUIS WINDOWS (PowerShell ou CMD)
+═══════════════════════════════════════════════════════════════════════════
+
+# Démarrer (une seule ligne)
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose up -d"
+
+# Vérifier
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose ps"
+
+# Arrêter
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose down"
+
+
+📁 SCRIPTS WINDOWS (Double-clic)
+═══════════════════════════════════════════════════════════════════════════
+
+✅ start-containers.bat  → Démarrer les conteneurs
+✅ stop-containers.bat   → Arrêter les conteneurs
+
+
+🌐 ACCÈS
+═══════════════════════════════════════════════════════════════════════════
+
+Frontend: http://localhost:8080
+Backend:  http://localhost:5000
+
+
+🔍 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════
+
+# Logs en temps réel
+docker compose logs -f
+
+# État des conteneurs
+docker compose ps
+
+# Redémarrer
+docker compose restart
+
+# Arrêter
+docker compose down
+
+
+═══════════════════════════════════════════════════════════════════════════
+                        C'EST TOUT! 🎉
+═══════════════════════════════════════════════════════════════════════════

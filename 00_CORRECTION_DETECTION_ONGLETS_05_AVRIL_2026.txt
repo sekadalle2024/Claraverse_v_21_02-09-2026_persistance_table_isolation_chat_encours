@@ -1,0 +1,152 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION DÉTECTION ONGLETS - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 PROBLÈME IDENTIFIÉ
+─────────────────────────────────────────────────────────────────────────────
+Le fichier de balance démo "P000 -BALANCE DEMO N_N-1_N-2.xls" contient 3 onglets:
+  - BALANCE 2018 (N)
+  - BALANCE 2017 (N-1)
+  - BALANCE 2016 (N-2)
+
+MAIS le code cherchait des patterns comme:
+  - "Balance N", "balance n", "BALANCE N", etc.
+  - "Balance N-1", "balance n-1", "BALANCE N-1", etc.
+  - "Balance N-2", "balance n-2", "BALANCE N-2", etc.
+
+RÉSULTAT: Les onglets N-1 et N-2 n'étaient PAS détectés!
+  ❌ balance_n1_df = None
+  ❌ balance_n2_df = None
+
+CONSÉQUENCE: Le TFT ne pouvait pas être calculé correctement car il nécessite
+les 3 balances (N, N-1, N-2) pour calculer les variations.
+
+✅ CORRECTION APPLIQUÉE
+─────────────────────────────────────────────────────────────────────────────
+Fichier: py_backend/etats_financiers.py
+
+LIGNES 1458-1475 (Détection Balance N et N-1):
+```python
+# Si pas d'onglets spécifiques trouvés, utiliser l'ordre des onglets
+# (1er = N, 2ème = N-1, 3ème = N-2)
+if balance_df is None:
+    balance_df = pd.read_excel(excel_data, sheet_name=0)
+    logger.info(f"📊 Balance N chargée depuis le premier onglet '{sheet_names[0]}': {len(balance_df)} lignes")
+
+if balance_n1_df is None and len(sheet_names) >= 2:
+    balance_n1_df = pd.read_excel(excel_data, sheet_name=1)
+    logger.info(f"📊 Balance N-1 chargée depuis le deuxième onglet '{sheet_names[1]}': {len(balance_n1_df)} lignes")
+```
+
+LIGNES 1520-1528 (Détection Balance N-2):
+```python
+# Si pas trouvé par pattern et qu'il y a au moins 3 onglets, utiliser le 3ème
+if balance_n2_df is None and len(sheet_names) >= 3:
+    balance_n2_df = pd.read_excel(excel_data, sheet_name=2)
+    logger.info(f"📊 Balance N-2 chargée depuis le troisième onglet '{sheet_names[2]}': {len(balance_n2_df)} lignes")
+```
+
+PRINCIPE:
+1. D'abord essayer de détecter par patterns (pour compatibilité avec anciens fichiers)
+2. Si aucun pattern ne correspond, utiliser l'ordre des onglets:
+   - 1er onglet = Balance N
+   - 2ème onglet = Balance N-1
+   - 3ème onglet = Balance N-2
+
+📊 RÉSULTAT ACTUEL
+─────────────────────────────────────────────────────────────────────────────
+Après correction, le test génère 9 sections au lieu de 11:
+
+SECTIONS PRÉSENTES (9):
+  1. ✓ BILAN - ACTIF
+  2. ✓ BILAN - PASSIF
+  3. ✓ COMPTE DE RÉSULTAT
+  4. ✓ NOTES ANNEXES
+  5. ✓ État de contrôle Bilan Actif
+  6. ✓ État de contrôle Bilan Passif
+  7. ✓ État de contrôle Compte de Résultat
+  8. ✓ État de contrôle Sens des Comptes
+  9. ✓ État d'équilibre Bilan
+
+SECTIONS MANQUANTES (2):
+  ❌ TABLEAU DES FLUX DE TRÉSORERIE (TFT)
+  ❌ État de contrôle TFT
+
+🔍 ANALYSE COMPLÉMENTAIRE
+─────────────────────────────────────────────────────────────────────────────
+Test direct de calculer_tft_liasse():
+  ✅ La fonction fonctionne correctement quand appelée directement
+  ✅ Elle retourne 19 lignes de TFT
+  ✅ Les calculs sont corrects
+
+CONCLUSION:
+  - La fonction calculer_tft_liasse() fonctionne
+  - Les balances N, N-1, N-2 sont maintenant chargées correctement
+  - MAIS le TFT n'apparaît pas dans le HTML final
+
+HYPOTHÈSE:
+  - Le TFT est calculé mais une exception est capturée silencieusement
+  - OU le TFT est calculé mais pas ajouté à results_liasse
+  - OU le TFT est dans results_liasse mais la condition if échoue
+
+📝 LOGS AJOUTÉS POUR DIAGNOSTIC
+─────────────────────────────────────────────────────────────────────────────
+Ligne 1558 (après calcul TFT):
+```python
+logger.info(f"  TFT ajouté à results_liasse: {'tft' in results_liasse}")
+```
+
+Ligne 1560 (gestion erreur):
+```python
+logger.error(traceback.format_exc())
+```
+
+Lignes 1739-1750 (avant ajout HTML TFT):
+```python
+logger.info(f"🔍 Vérification TFT dans results_liasse: {'tft' in results_liasse}")
+if 'tft' in results_liasse:
+    logger.info(f"  TFT présent: {results_liasse['tft'] is not None}")
+    if results_liasse['tft']:
+        logger.info(f"  Nombre de lignes TFT: {len(results_liasse['tft'].get('tft', []))}")
+        html += generate_tft_html_liasse(results_liasse['tft'])
+        logger.info("✅ HTML TFT ajouté")
+    else:
+        logger.warning("⚠️ TFT est vide")
+else:
+    logger.warning("⚠️ TFT non trouvé dans results_liasse")
+```
+
+🔄 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+1. REDÉMARRER LE BACKEND pour charger le code avec les nouveaux logs
+   ```powershell
+   # Arrêter le backend actuel (Ctrl+C dans le terminal)
+   # Puis relancer:
+   .\start-claraverse-conda.ps1
+   ```
+
+2. RELANCER LE TEST
+   ```powershell
+   python test-exhaustivite-simple.py
+   ```
+
+3. CONSULTER LES LOGS DU BACKEND
+   - Chercher les messages avec "TFT" ou "tft"
+   - Identifier si une erreur est capturée
+   - Vérifier si le TFT est bien ajouté à results_liasse
+   - Vérifier si le HTML TFT est bien généré
+
+4. CORRIGER EN FONCTION DES LOGS
+   - Si erreur dans calculer_tft_liasse(): corriger la fonction
+   - Si TFT non ajouté à results_liasse: vérifier le try/except
+   - Si HTML TFT non généré: vérifier generate_tft_html_liasse()
+
+═══════════════════════════════════════════════════════════════════════════════
+  FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════════════════════
+✓ py_backend/etats_financiers.py (lignes 1458-1475, 1520-1528, 1543-1560, 1739-1750)
+✓ test-detection-onglets.py (créé pour diagnostic)
+✓ test-tft-direct.py (créé pour tester calculer_tft_liasse directement)
+✓ 00_CORRECTION_DETECTION_ONGLETS_05_AVRIL_2026.txt (ce fichier)
+
+═══════════════════════════════════════════════════════════════════════════════

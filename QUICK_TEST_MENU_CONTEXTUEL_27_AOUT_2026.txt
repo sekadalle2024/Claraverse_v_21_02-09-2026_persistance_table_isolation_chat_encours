@@ -1,0 +1,90 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║  🚀 GUIDE TEST RAPIDE - MENU CONTEXTUEL (27 août 2026)          ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 1️⃣  REDÉMARRER LE SERVEUR                                       │
+└─────────────────────────────────────────────────────────────────┘
+
+Ouvrir terminal dans h:/ClaraVerse :
+
+npm run dev
+
+Attendre que le serveur démarre (généralement sur http://localhost:5173)
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 2️⃣  TESTER LE COMPORTEMENT AU SURVOL                            │
+└─────────────────────────────────────────────────────────────────┘
+
+✅ TEST 1: Survol simple
+   - Passer la souris sur une table
+   - ❌ Le menu NE DOIT PAS s'ouvrir automatiquement
+   - ✅ Rien ne se passe = CORRECT
+
+✅ TEST 2: Survol prolongé
+   - Laisser la souris sur la table pendant 2 secondes
+   - ❌ Le menu NE DOIT TOUJOURS PAS s'ouvrir
+   - ✅ Rien ne se passe = CORRECT
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 3️⃣  TESTER LE CLIC DROIT                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+✅ TEST 3: Clic droit
+   - Faire clic droit sur une table
+   - ✅ Le menu s'ouvre normalement
+   - ✅ Le menu est bien positionné près du curseur
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 4️⃣  TESTER LES ACTIONS DU MENU                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+✅ TEST 4: Actions du menu
+   - Ouvrir le menu (clic droit)
+   - Cliquer sur "Insérer ligne"
+   - ✅ Une ligne doit être ajoutée
+   - ✅ Le menu se ferme automatiquement
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 5️⃣  TESTER LA FERMETURE DU MENU                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+✅ TEST 5: Fermeture clic gauche
+   - Ouvrir le menu (clic droit)
+   - Cliquer en dehors du menu
+   - ✅ Le menu se ferme
+
+✅ TEST 6: Fermeture Échap
+   - Ouvrir le menu (clic droit)
+   - Appuyer sur la touche Échap
+   - ✅ Le menu se ferme
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  ✅ RÉSULTAT ATTENDU                                              ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+Le menu contextuel doit s'afficher UNIQUEMENT au clic droit.
+Plus AUCUNE ouverture au survol de la table avec la souris.
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  ⚠️  EN CAS DE PROBLÈME                                           ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+Si le menu s'ouvre encore au survol:
+
+1. Vider le cache du navigateur (Ctrl+Shift+R)
+2. Vérifier que le fichier menu.js a bien été modifié
+3. Redémarrer complètement le serveur npm
+
+Si le problème persiste:
+- Vérifier la console du navigateur (F12)
+- Chercher des erreurs JavaScript
+- Consulter 00_CORRECTION_MENU_CONTEXTUEL_SURVOL_27_AOUT_2026.txt
+
+═══════════════════════════════════════════════════════════════════

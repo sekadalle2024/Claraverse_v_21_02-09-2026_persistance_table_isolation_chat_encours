@@ -1,0 +1,72 @@
+feat: Configuration complète pour déploiement Render (Plan Starter)
+
+## Modifications principales
+
+### py_backend/main.py
+- Ajout du support de la variable d'environnement PORT
+- Compatible avec Render, Railway, et exécution locale
+- Code : `PORT = args.port if args.port is not None else int(os.getenv('PORT', 5000))`
+
+### render.yaml
+- Configuration complète pour déploiement automatique
+- Plan Starter configuré (sans cold start)
+- Variables d'environnement incluses
+- Région Frankfurt (Europe)
+
+## Documentation créée
+
+### Guides de déploiement
+- 00_DEPLOIEMENT_RENDER_INTERFACE_WEB_16_AVRIL_2026.txt
+- QUICK_START_DEPLOIEMENT_RENDER.txt
+- 00_PRET_POUR_DEPLOIEMENT_RENDER_16_AVRIL_2026.txt
+
+### Astuces et alternatives
+- Doc Koyeb deploy/ASTUCE_EVITER_COLD_START_RENDER_16_AVRIL_2026.md
+- COMPARAISON_TARIFS_SANS_COLD_START_16_AVRIL_2026.md
+
+### Index et organisation
+- Doc Koyeb deploy/00_INDEX_DEPLOIEMENT_RENDER_16_AVRIL_2026.md
+- LISTE_FICHIERS_RENDER_CLI_16_AVRIL_2026.md
+
+## Options de déploiement
+
+1. **Render Starter** ($7/mois, sans cold start)
+   - Recommandé pour production
+   - Configuration simple via interface web
+   - Auto-deploy depuis GitHub
+
+2. **Render Free + UptimeRobot** ($0/mois, sans cold start)
+   - Gratuit avec monitoring
+   - Ping toutes les 5 minutes
+   - Idéal pour projets personnels
+
+3. **Railway** ($5 crédit gratuit, sans cold start)
+   - Alternative viable
+   - Pay-as-you-go après crédit
+
+## Prochaines étapes
+
+1. Aller sur https://render.com
+2. Créer un compte avec GitHub
+3. Suivre le guide QUICK_START_DEPLOIEMENT_RENDER.txt
+4. Déployer en 10 minutes
+
+## Fichiers modifiés
+- py_backend/main.py
+
+## Fichiers créés
+- render.yaml
+- 00_DEPLOIEMENT_RENDER_INTERFACE_WEB_16_AVRIL_2026.txt
+- QUICK_START_DEPLOIEMENT_RENDER.txt
+- 00_PRET_POUR_DEPLOIEMENT_RENDER_16_AVRIL_2026.txt
+- COMMIT_MESSAGE_DEPLOIEMENT_RENDER_16_AVRIL_2026.txt
+- LISTE_FICHIERS_RENDER_CLI_16_AVRIL_2026.md
+- 00_SYNTHESE_VISUELLE_RENDER_CLI_16_AVRIL_2026.txt
+- 00_RECAP_FINAL_RENDER_CLI_16_AVRIL_2026.txt
+- COMPARAISON_TARIFS_SANS_COLD_START_16_AVRIL_2026.md
+- Doc Koyeb deploy/ASTUCE_EVITER_COLD_START_RENDER_16_AVRIL_2026.md
+- Doc Koyeb deploy/00_INDEX_DEPLOIEMENT_RENDER_16_AVRIL_2026.md
+- Doc Koyeb deploy/GUIDE_DEPLOIEMENT_RENDER_CLI_16_AVRIL_2026.md
+- Doc Koyeb deploy/Scripts/deploy-render-cli.ps1
+
+Date: 16 avril 2026

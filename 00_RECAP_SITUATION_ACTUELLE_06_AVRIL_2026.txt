@@ -1,0 +1,189 @@
+================================================================================
+📋 RÉCAPITULATIF DE LA SITUATION ACTUELLE
+Date: 06 Avril 2026 - 21h45
+================================================================================
+
+CONTEXTE:
+---------
+Nous sommes en train de corriger 4 problèmes dans l'export de la liasse 
+officielle. Une erreur "failed to fetch" est apparue après les premières 
+corrections.
+
+================================================================================
+PROBLÈMES À CORRIGER (4 AU TOTAL)
+================================================================================
+
+1️⃣  Colonnes BRUT et AMORTISSEMENT vides dans le Bilan ACTIF
+    Statut: ✅ CORRIGÉ (cache global implémenté)
+    
+2️⃣  Totalisations manquantes pour l'exercice N-1 (lignes AZ, BQ, BZ, CZ, DZ)
+    Statut: ✅ DÉJÀ CORRIGÉ (code existant vérifié)
+    
+3️⃣  Menu accordéon frontend manque les colonnes BRUT et AMORT
+    Statut: ⏳ EN ATTENTE (après validation des corrections backend)
+    
+4️⃣  TFT (Tableau des Flux de Trésorerie) toujours vide
+    Statut: ⏳ EN ATTENTE (après validation des corrections backend)
+
+================================================================================
+ERREUR "FAILED TO FETCH"
+================================================================================
+
+Cause identifiée:
+-----------------
+Les DataFrames pandas (balance_n_df, balance_n1_df) ajoutés directement à
+results_liasse ne sont PAS sérialisables en JSON.
+
+Solution appliquée:
+-------------------
+✅ Cache global _balance_cache créé dans etats_financiers.py
+✅ Stockage des balances dans le cache au lieu de results_liasse
+✅ Récupération des balances depuis le cache dans export_liasse.py
+✅ Import de datetime ajouté
+
+Fichiers modifiés:
+------------------
+✅ py_backend/etats_financiers.py (lignes ~7, ~25, ~1553)
+✅ py_backend/export_liasse.py (ligne ~450)
+✅ test-backend-direct.ps1 (correction du port 8000 → 5000)
+
+================================================================================
+ÉTAT ACTUEL DU BACKEND
+================================================================================
+
+❌ Backend NON démarré
+   Le backend doit être démarré pour effectuer les tests
+
+Configuration:
+--------------
+- Port backend: 5000 (par défaut dans main.py)
+- Port frontend: 5173
+- Environnement: claraverse_backend (conda) ou Python système
+
+================================================================================
+TESTS À EFFECTUER
+================================================================================
+
+Ordre des tests:
+----------------
+
+1. Démarrer le backend
+   Commande: .\start-claraverse.ps1
+   Temps: ~10-15 secondes
+
+2. Vérifier l'accessibilité
+   Commande: .\test-backend-direct.ps1
+   Résultat attendu: ✅ Backend accessible
+
+3. Tester l'import d'une balance
+   Action: Importer py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   Résultat attendu: Pas d'erreur "failed to fetch"
+
+4. Vérifier les logs du backend
+   Chercher: "✅ Balances stockées dans le cache"
+
+5. Tester l'export de la liasse
+   Action: Cliquer sur "Exporter la liasse officielle"
+   Résultat attendu: Fichier Excel avec colonnes remplies
+
+6. Vérifier le fichier Excel
+   - Onglet ACTIF: Colonnes F, G, H, I remplies
+   - Totalisations: Colonne I (N-1) remplie
+   - Onglet TFT: Contient des données
+
+================================================================================
+FICHIERS DE DIAGNOSTIC CRÉÉS
+================================================================================
+
+✅ 00_ERREUR_FAILED_TO_FETCH_06_AVRIL_2026.txt
+   → Diagnostic initial de l'erreur
+
+✅ 00_CORRECTION_FAILED_TO_FETCH_06_AVRIL_2026.txt
+   → Solution appliquée et détails techniques
+
+✅ 00_DIAGNOSTIC_ERREUR_PERSISTANTE_06_AVRIL_2026.txt
+   → Causes possibles et tests de diagnostic
+
+✅ GUIDE_DEPANNAGE_RAPIDE_FAILED_TO_FETCH.txt
+   → Guide étape par étape pour résoudre l'erreur
+
+✅ 00_DIAGNOSTIC_BACKEND_06_AVRIL_2026.txt
+   → État actuel du backend et commandes utiles
+
+✅ 00_INSTRUCTIONS_TESTS_DIAGNOSTIC_06_AVRIL_2026.txt (ce fichier)
+   → Instructions complètes pour exécuter les tests
+
+✅ 00_RECAP_SITUATION_ACTUELLE_06_AVRIL_2026.txt (ce fichier)
+   → Récapitulatif de la situation
+
+✅ py_backend/test_import_etats_financiers.py
+   → Script de test pour vérifier l'import du module
+
+✅ test-backend-direct.ps1 (corrigé)
+   → Script de test pour vérifier l'accessibilité du backend
+
+================================================================================
+PROCHAINES ÉTAPES IMMÉDIATES
+================================================================================
+
+1. L'utilisateur doit démarrer le backend:
+   .\start-claraverse.ps1
+
+2. Exécuter les tests de diagnostic dans l'ordre
+
+3. Valider que l'erreur "failed to fetch" est corrigée
+
+4. Valider que les colonnes BRUT et AMORT sont remplies
+
+5. Si tout fonctionne, passer à la correction du problème 3:
+   → Modifier le composant React du menu accordéon
+   → Afficher les colonnes BRUT et AMORT
+
+6. Vérifier le problème 4 (TFT vide)
+
+================================================================================
+COMMANDES RAPIDES
+================================================================================
+
+# Démarrer le backend
+.\start-claraverse.ps1
+
+# Vérifier l'accessibilité
+.\test-backend-direct.ps1
+
+# Voir les logs du backend
+$jobs = Get-Content .claraverse-jobs.json | ConvertFrom-Json
+Receive-Job -Id $jobs.Backend -Keep
+
+# Arrêter le backend
+.\stop-claraverse.ps1
+
+================================================================================
+INFORMATIONS IMPORTANTES
+================================================================================
+
+⚠️  Le backend DOIT être redémarré après les modifications du code Python
+⚠️  Le port par défaut est 5000, pas 8000
+⚠️  Les tests doivent être exécutés dans l'ordre
+⚠️  Les logs du backend sont essentiels pour le diagnostic
+
+✅ Les corrections ont été appliquées correctement
+✅ Le code a été vérifié et est syntaxiquement correct
+✅ Les fichiers de test et de diagnostic sont prêts
+
+⏳ En attente du démarrage du backend pour effectuer les tests
+
+================================================================================
+CONTACT ET SUPPORT
+================================================================================
+
+Si les tests échouent après avoir suivi toutes les étapes:
+
+1. Fournir les logs du backend (Receive-Job -Id <BackendJobId> -Keep)
+2. Fournir le message d'erreur exact du frontend
+3. Fournir la console du navigateur (F12 → Network)
+4. Indiquer à quelle étape le problème se produit
+
+================================================================================
+FIN DU RÉCAPITULATIF
+================================================================================

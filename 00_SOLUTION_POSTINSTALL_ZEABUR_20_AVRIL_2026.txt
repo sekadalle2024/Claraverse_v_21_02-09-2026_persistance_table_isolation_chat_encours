@@ -1,0 +1,157 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           🎯 SOLUTION FINALE - ERREUR POSTINSTALL ZEABUR                    ║
+║                        20 AVRIL 2026                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌ PROBLÈME IDENTIFIÉ
+═══════════════════════
+
+Erreur lors du build Docker:
+> clara-verse@0.1.25 postinstall
+> electron-builder install-app-deps
+
+sh: electron-builder: not found
+npm error code 127
+
+🔍 CAUSE RACINE
+═══════════════
+
+Le package.json contient un script postinstall (ligne 34):
+"postinstall": "electron-builder install-app-deps"
+
+Ce script:
+- ✅ Est nécessaire pour les builds Electron (desktop)
+- ❌ N'est PAS nécessaire pour le déploiement web
+- ❌ Cause l'échec du build Docker car electron-builder n'est pas installé
+
+💡 POURQUOI ELECTRON-BUILDER N'EST PAS INSTALLÉ ?
+═════════════════════════════════════════════════
+
+electron-builder est dans devDependencies, mais:
+1. npm install installe TOUTES les dépendances (dev + prod)
+2. electron-builder s'installe correctement
+3. MAIS le postinstall s'exécute PENDANT l'installation
+4. À ce moment, electron-builder n'est pas encore dans le PATH
+5. Résultat: "electron-builder: not found"
+
+✅ SOLUTION 1 : IGNORER LE POSTINSTALL (RECOMMANDÉ)
+═══════════════════════════════════════════════════
+
+Modifier la ligne dans Dockerfile.frontend:
+
+AVANT:
+RUN npm install
+
+APRÈS:
+RUN npm install --ignore-scripts
+
+Avantages:
+✓ Simple et direct
+✓ Ignore tous les scripts postinstall
+✓ Plus rapide (pas d'exécution de scripts inutiles)
+✓ Pas de modification du code source
+
+✅ SOLUTION 2 : VARIABLE D'ENVIRONNEMENT
+════════════════════════════════════════
+
+Ajouter avant npm install:
+
+ENV ELECTRON_SKIP_BINARY_DOWNLOAD=1
+RUN npm install
+
+Avantages:
+✓ Spécifique à Electron
+✓ Permet d'autres postinstall scripts de s'exécuter
+
+⚠️ SOLUTION 3 : MODIFIER package.json (NON RECOMMANDÉ)
+═══════════════════════════════════════════════════════
+
+Changer le postinstall pour vérifier l'environnement:
+"postinstall": "if [ \"$SKIP_ELECTRON\" != \"true\" ]; then electron-builder install-app-deps; fi"
+
+Inconvénients:
+✗ Modifie le code source
+✗ Peut affecter les développeurs locaux
+✗ Plus complexe
+
+🎯 DOCKERFILE CORRIGÉ (SOLUTION 1)
+═══════════════════════════════════
+
+# Installer TOUTES les dépendances (dev incluses, nécessaires pour le build Vite)
+# --ignore-scripts évite l'exécution du postinstall electron-builder
+RUN npm install --ignore-scripts
+
+📋 DOCKERFILE COMPLET CORRIGÉ
+═════════════════════════════
+
+Voir: COPIER_COLLER_DOCKERFILE_ZEABUR_CORRIGE.txt
+
+🔄 ÉTAPES POUR APPLIQUER
+════════════════════════
+
+1. Ouvrir le dashboard Zeabur
+2. Aller dans votre service Frontend
+3. Cliquer sur "Settings" ou "Configuration"
+4. Trouver la section "Dockerfile"
+5. Remplacer le contenu par le Dockerfile corrigé
+6. Sauvegarder
+7. Redéployer
+
+⏱️ TEMPS DE BUILD ESTIMÉ
+═════════════════════════
+
+Avec --ignore-scripts:
+- npm install: ~1-2 minutes (légèrement plus rapide)
+- npm run build: ~1-2 minutes
+- Total: ~3-4 minutes
+
+✅ VÉRIFICATION DU SUCCÈS
+═════════════════════════
+
+Vous verrez dans les logs:
+✓ npm install --ignore-scripts completed
+✓ npm run build completed
+✓ Build completed successfully
+✓ Deployed successfully
+
+❌ VOUS NE VERREZ PLUS:
+✗ > clara-verse@0.1.25 postinstall
+✗ sh: electron-builder: not found
+✗ npm error code 127
+
+🎉 RÉSULTAT FINAL
+═════════════════
+
+✅ Build réussit
+✅ Application déployée
+✅ CSS chargé correctement
+✅ Frontend fonctionnel
+
+📝 NOTES IMPORTANTES
+════════════════════
+
+1. --ignore-scripts est SÛRE pour le déploiement web
+2. Aucun script postinstall n'est nécessaire pour Vite
+3. Le build Vite fonctionne sans electron-builder
+4. Cette solution n'affecte pas le développement local
+
+🔗 FICHIERS ASSOCIÉS
+════════════════════
+
+- Dockerfile.frontend (à mettre à jour)
+- package.json (ligne 34 - postinstall)
+- vite.config.ts (déjà corrigé avec base: '/')
+
+💡 POURQUOI CETTE SOLUTION EST LA MEILLEURE
+═══════════════════════════════════════════
+
+1. ✅ Pas de modification du code source
+2. ✅ Pas d'impact sur le développement local
+3. ✅ Solution standard Docker
+4. ✅ Plus rapide (skip scripts inutiles)
+5. ✅ Plus sûre (moins de code exécuté)
+
+🎯 PROCHAINE ÉTAPE
+══════════════════
+
+Copier le Dockerfile corrigé dans Zeabur et redéployer !

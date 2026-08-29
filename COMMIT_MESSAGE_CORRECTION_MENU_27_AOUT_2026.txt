@@ -1,0 +1,159 @@
+╔═══════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                       ║
+║                    📝 MESSAGE DE COMMIT GIT SUGGÉRÉ                                   ║
+║                    Correction Menu Contextuel - 27 août 2026                          ║
+║                                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+  📋 FORMAT COMMIT STANDARD
+═══════════════════════════════════════════════════════════════════════════════════════
+
+fix: Désactive ouverture automatique menu contextuel au survol
+
+Le menu contextuel s'ouvrait automatiquement après 300ms de survol
+d'une table, ce qui était intrusif et non standard. Le comportement
+attendu est une ouverture uniquement au clic droit.
+
+Modifications:
+- Commenté le setTimeout dans handleTableHover() (menu.js:~9638)
+- Ajout de commentaires explicatifs dans le code
+- Conservation des événements mouseover/mouseout pour la fermeture
+- Aucun effet de bord sur les autres fonctionnalités
+
+Comportement après correction:
+- Survol de table: aucune action
+- Clic droit: menu s'affiche normalement
+- Toutes les actions du menu fonctionnent
+- Fermeture automatique préservée
+
+Fichiers modifiés:
+- public/menu.js
+
+Documentation:
+- 8 fichiers de documentation créés
+- Guides de test et dépannage fournis
+- Voir 00_RECAP_SESSION_CORRECTION_MENU_27_AOUT_2026.txt
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+  📋 FORMAT COMMIT COURT (si préféré)
+═══════════════════════════════════════════════════════════════════════════════════════
+
+fix: Menu contextuel uniquement au clic droit
+
+Désactive l'ouverture automatique au survol (300ms delay).
+Le menu s'affiche maintenant uniquement au clic droit.
+
+- Commenté setTimeout dans handleTableHover() (menu.js:~9638)
+- Comportement standard et professionnel
+- Aucun effet de bord
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+  📋 FORMAT COMMIT AVEC ISSUE (si applicable)
+═══════════════════════════════════════════════════════════════════════════════════════
+
+fix(menu): Désactive ouverture automatique au survol (#[numéro_issue])
+
+Le menu contextuel s'affichait au survol de la table après 300ms,
+comportement intrusif et non standard.
+
+Solution:
+- Désactivation du setTimeout dans handleTableHover()
+- Menu s'affiche maintenant UNIQUEMENT au clic droit
+- Documentation complète créée (8 fichiers)
+
+Closes #[numéro_issue]
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+  🔧 COMMANDES GIT À EXÉCUTER
+═══════════════════════════════════════════════════════════════════════════════════════
+
+# 1. Vérifier les fichiers modifiés
+git status
+
+# 2. Voir les modifications dans menu.js
+git diff public/menu.js
+
+# 3. Ajouter seulement menu.js (fichier corrigé)
+git add public/menu.js
+
+# 4. Commit avec le message (choisis le format ci-dessus)
+git commit -m "fix: Désactive ouverture automatique menu contextuel au survol
+
+Le menu contextuel s'ouvrait automatiquement après 300ms de survol
+d'une table, ce qui était intrusif et non standard.
+
+Modifications:
+- Commenté le setTimeout dans handleTableHover() (menu.js:~9638)
+- Comportement maintenant conforme: ouverture uniquement au clic droit
+
+Voir 00_RECAP_SESSION_CORRECTION_MENU_27_AOUT_2026.txt pour documentation"
+
+# 5. Optionnel: Ajouter aussi les fichiers de documentation
+git add 00_*.txt 00_*.md QUICK_*.txt SYNTHESE_*.txt COMMANDES_*.txt LISTE_*.md
+
+# 6. Commit de la documentation (séparé)
+git commit -m "docs: Documentation correction menu contextuel survol
+
+Ajout de 8 fichiers de documentation pour la correction du menu:
+- Guide de test détaillé
+- Synthèse visuelle
+- Commandes rapides
+- Index complet
+- Récapitulatif de session"
+
+# 7. Push vers le repository
+git push origin [nom_de_votre_branche]
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+  📝 NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════════════
+
+1. Faire 2 commits séparés est recommandé:
+   - 1er commit: correction du code (menu.js)
+   - 2ème commit: documentation
+
+2. Si vous travaillez sur une branche:
+   - Créer une branche: git checkout -b fix/menu-contextuel-survol
+   - Faire les commits
+   - Push: git push origin fix/menu-contextuel-survol
+   - Créer une Pull Request
+
+3. Avant de commit:
+   - ✅ Tester que la correction fonctionne
+   - ✅ Vérifier qu'il n'y a pas d'erreurs dans la console
+   - ✅ Valider tous les tests A-F
+
+4. Le message de commit doit être clair:
+   - Commencer par fix: (correction de bug)
+   - Expliquer le problème et la solution
+   - Mentionner les fichiers modifiés
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+  🎯 CHECKLIST PRE-COMMIT
+═══════════════════════════════════════════════════════════════════════════════════════
+
+Avant de committer, vérifier:
+
+□ Correction testée dans le navigateur
+□ Tests A à F tous validés ✅
+□ Aucune erreur dans la console (F12)
+□ Le menu s'ouvre uniquement au clic droit
+□ Le menu ne s'ouvre PAS au survol
+□ Toutes les actions du menu fonctionnent
+□ Fichier menu.js sauvegardé
+□ Message de commit préparé
+□ git status vérifié
+
+
+═══════════════════════════════════════════════════════════════════════════════════════
+
+                        🚀 PRÊT POUR LE COMMIT ! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════════════

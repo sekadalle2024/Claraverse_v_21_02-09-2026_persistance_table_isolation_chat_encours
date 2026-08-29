@@ -1,0 +1,122 @@
+================================================================================
+COMMANDES RAPIDES - 23 Mars 2026
+================================================================================
+
+DÉMARRER LE SYSTÈME
+===================
+
+Démarrer backend + frontend:
+  .\start-claraverse-conda.ps1
+
+Arrêter le système:
+  .\stop-claraverse.ps1
+
+
+TESTER L'API
+============
+
+Test complet:
+  .\test-final-complet.ps1
+
+Test API avec fichier:
+  .\test-api-curl.ps1
+
+Test console:
+  .\test-modifications-console.ps1
+
+
+VOIR LES LOGS
+=============
+
+Logs backend:
+  Receive-Job -Id 1 -Keep
+
+Logs frontend:
+  Receive-Job -Id 3 -Keep
+
+
+ACCÉDER À L'INTERFACE
+=====================
+
+Frontend React:
+  http://localhost:5173
+
+Backend API:
+  http://127.0.0.1:5000
+
+Health check:
+  http://127.0.0.1:5000/health
+
+
+FICHIERS IMPORTANTS
+====================
+
+Fichier de test:
+  py_backend/BALANCES_N_N1_N2.xlsx
+
+Documentation:
+  TRAVAIL_FINAL_COMPLET_23_MARS_2026.md
+  SOLUTION_FINALE_CSS_ACCORDEON.md
+  VERIFICATION_FINALE_WEB.txt
+
+Tests:
+  test-final-complet.ps1
+  test-api-curl.ps1
+
+
+ÉTAPES POUR VÉRIFIER
+====================
+
+1. Démarrer le système:
+   .\start-claraverse-conda.ps1
+
+2. Ouvrir l'interface:
+   http://localhost:5173
+
+3. Cliquer sur "Demarrer E-audit pro" → "États Financiers"
+
+4. Uploader le fichier:
+   py_backend/BALANCES_N_N1_N2.xlsx
+
+5. Vérifier:
+   ✅ Menu accordéon avec 5 sections
+   ✅ Sections cliquables
+   ✅ Colonnes N et N-1
+   ✅ TFT avec 19 lignes
+   ✅ Annexes avec 14 notes
+
+
+TROUBLESHOOTING
+===============
+
+Backend ne démarre pas:
+  1. Vérifier les logs: Receive-Job -Id 1 -Keep
+  2. Arrêter: .\stop-claraverse.ps1
+  3. Redémarrer: .\start-claraverse-conda.ps1
+
+API ne répond pas:
+  1. Vérifier: curl http://127.0.0.1:5000/health
+  2. Redémarrer le backend
+
+Frontend ne charge pas:
+  1. Vérifier: http://localhost:5173
+  2. Vérifier les logs: Receive-Job -Id 3 -Keep
+  3. Redémarrer le frontend
+
+Accordéon ne s'ouvre pas:
+  1. Vérifier la console du navigateur (F12)
+  2. Vérifier que le CSS est présent
+  3. Redémarrer le backend
+
+
+RÉSUMÉ DES CORRECTIONS
+======================
+
+✅ CSS accordéon ajouté dans etats_financiers.py
+✅ TFT avec 19 lignes et colonnes N/N-1
+✅ Annexes avec 14 notes et colonnes N/N-1
+✅ Menu accordéon avec 5 sections
+✅ Format liasse officielle
+✅ Animations fluides
+
+================================================================================

@@ -1,0 +1,118 @@
+================================================================================
+🚀 QUICK START - EXPORT LIASSE OFFICIELLE RÉVISÉE
+================================================================================
+
+✅ MODIFICATION TERMINÉE - 05 Avril 2026
+
+================================================================================
+📋 CE QUI A CHANGÉ
+================================================================================
+
+Le script d'export utilise maintenant le fichier SYSCOHADA Révisé :
+
+  📄 Liasse_officielle_revise.xlsx (84 onglets)
+
+Au lieu des anciens fichiers :
+  ❌ LIASSE.xlsx
+  ❌ Liasse officielle.xlsm
+
+================================================================================
+🎯 COMMENT UTILISER
+================================================================================
+
+MÉTHODE 1 : Menu Contextuel (Le plus simple)
+---------------------------------------------
+
+1. Taper "Etat fin" dans le chat
+2. Sélectionner votre fichier Balance Excel
+3. Attendre la génération des états
+4. Clic droit sur la table → "📥 Exporter liasse officielle"
+5. Le fichier Excel se télécharge automatiquement
+
+MÉTHODE 2 : Script Python
+--------------------------
+
+cd py_backend
+conda activate claraverse_backend
+python generer_etats_liasse.py
+
+→ Fichier HTML généré sur le Bureau avec option d'export
+
+================================================================================
+📊 CONTENU DU FICHIER EXPORTÉ
+================================================================================
+
+Le fichier Liasse_officielle_revise.xlsx contient 84 onglets :
+
+États de Synthèse :
+  ✅ BILAN (vue consolidée)
+  ✅ ACTIF (détail actif)
+  ✅ PASSIF (détail passif)
+  ✅ RESULTAT (compte de résultat)
+  ✅ TFT (tableau des flux de trésorerie)
+
+Notes Annexes :
+  ✅ NOTE 1 à NOTE 39 (notes détaillées)
+
+Fiches Complémentaires :
+  ✅ FICHE R1, R2, R3, R4
+
+Compléments :
+  ✅ Compléments DGI-INS
+  ✅ Suppléments (SUPPL1 à SUPPL7)
+
+================================================================================
+🧪 TESTER LA MODIFICATION
+================================================================================
+
+Test rapide :
+
+# Vérifier le template
+python -c "import openpyxl; wb = openpyxl.load_workbook('py_backend/Liasse_officielle_revise.xlsx'); print(f'✅ Template OK - {len(wb.sheetnames)} onglets')"
+
+Test complet :
+
+cd py_backend
+conda activate claraverse_backend
+python generer_etats_liasse.py
+
+================================================================================
+📚 DOCUMENTATION
+================================================================================
+
+Guides détaillés :
+  📖 Doc_Etat_Fin/GUIDE_EXPORT_LIASSE_REVISE.md
+  📖 Doc_Etat_Fin/00_CORRECTION_EXPORT_LIASSE_REVISE_05_AVRIL_2026.txt
+  📖 Doc_Etat_Fin/00_INDEX_COMPLET_V2.md (V2.1)
+
+Scripts :
+  📝 py_backend/export_liasse.py (modifié)
+  📝 Doc_Etat_Fin/Scripts/test-export-liasse-revise.ps1
+
+================================================================================
+⚠️ POINTS D'ATTENTION
+================================================================================
+
+Si les valeurs ne s'affichent pas dans le fichier exporté :
+  → Vérifier les mappings de cellules dans export_liasse.py
+  → Comparer avec le template réel
+  → Ajuster si nécessaire
+
+Le nouveau template peut avoir des cellules différentes pour les mêmes postes.
+
+================================================================================
+✅ RÉSUMÉ
+================================================================================
+
+✅ Script modifié pour utiliser Liasse_officielle_revise.xlsx
+✅ 84 onglets conformes SYSCOHADA Révisé
+✅ Fallback vers anciens templates conservé
+✅ Documentation complète créée
+⏳ Tests à effectuer pour validation
+
+================================================================================
+
+Tout est prêt ! Vous pouvez maintenant exporter vos états financiers vers
+le fichier liasse officielle SYSCOHADA Révisé avec ses 84 onglets complets.
+
+================================================================================

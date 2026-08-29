@@ -1,0 +1,145 @@
+═══════════════════════════════════════════════════════════════
+  PROBLÈME: Railway refuse les cartes prépayées
+  Date: 16 Avril 2026
+═══════════════════════════════════════════════════════════════
+
+❌ PROBLÈME RENCONTRÉ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Message d'erreur: "Prepaid cards can't be used for subscriptions. 
+Please use a credit card."
+
+Railway n'accepte PAS les cartes prépayées pour les abonnements.
+
+
+✅ SOLUTIONS ALTERNATIVES
+═══════════════════════════════════════════════════════════════
+
+SOLUTION 1: Utiliser Render.com (RECOMMANDÉ)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Avantages:
+  • Plan gratuit VRAIMENT gratuit (750h/mois)
+  • Accepte les cartes prépayées
+  • Pas de cold start si vous restez sous 750h
+  • Déploiement via GitHub (automatique)
+  • Support Docker natif
+
+⚠️  Inconvénients:
+  • Cold start après 15 min d'inactivité (plan gratuit)
+  • 512 MB RAM (suffisant pour votre backend)
+
+📋 Étapes:
+1. Aller sur: https://render.com
+2. Sign up avec GitHub
+3. New → Web Service
+4. Connecter votre repo: Back-end-python-V0_03_03_2026
+5. Sélectionner: py_backend comme Root Directory
+6. Build Command: (laisser vide, Docker détecté auto)
+7. Start Command: (laisser vide, Docker détecté auto)
+8. Plan: Free
+9. Variables d'environnement:
+   HOST=0.0.0.0
+   PORT=5000
+   PYTHONDONTWRITEBYTECODE=1
+   PYTHONUNBUFFERED=1
+10. Create Web Service
+
+⏱️  Temps: 5-10 minutes
+
+
+SOLUTION 2: Utiliser Fly.io
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Avantages:
+  • Plan gratuit généreux
+  • Pas de cold start
+  • Accepte les cartes prépayées
+  • Excellent pour Docker
+
+⚠️  Inconvénients:
+  • Configuration CLI un peu plus complexe
+  • Nécessite fly.toml
+
+📋 Étapes:
+1. Installer Fly CLI: 
+   PowerShell -Command "iwr https://fly.io/install.ps1 -useb | iex"
+2. fly auth signup
+3. cd py_backend
+4. fly launch
+5. Suivre les instructions
+6. fly deploy
+
+⏱️  Temps: 10-15 minutes
+
+
+SOLUTION 3: Utiliser Koyeb (Déjà configuré)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Avantages:
+  • Vous avez déjà une instance configurée
+  • Accepte les cartes prépayées
+  • Plan gratuit disponible
+
+⚠️  Inconvénients:
+  • Instance actuellement en pause
+  • Nécessite réactivation
+
+📋 Étapes:
+1. Aller sur: https://app.koyeb.com
+2. Sélectionner votre service: clara-backend-production
+3. Settings → Resume Service
+4. Attendre 2-3 minutes
+
+⏱️  Temps: 5 minutes
+
+
+SOLUTION 4: Utiliser une carte de crédit classique
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Si vous avez accès à une carte de crédit (Visa, Mastercard):
+  • Railway offre 5$ de crédit gratuit
+  • Pas de frais tant que vous restez sous 5$
+  • Meilleure performance que les alternatives gratuites
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 RECOMMANDATION FINALE
+═══════════════════════════════════════════════════════════════
+
+Pour votre cas, je recommande dans cet ordre:
+
+1️⃣  RENDER.COM (Meilleur choix)
+   → Gratuit, stable, accepte cartes prépayées
+   → Déploiement automatique via GitHub
+   → Pas de configuration complexe
+
+2️⃣  KOYEB (Si déjà configuré)
+   → Réactiver l'instance existante
+   → Plus rapide à mettre en place
+
+3️⃣  FLY.IO (Si vous voulez le meilleur gratuit)
+   → Pas de cold start
+   → Meilleure performance
+
+
+═══════════════════════════════════════════════════════════════
+  📝 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════
+
+Dites-moi quelle solution vous préférez et je vous guide 
+étape par étape pour le déploiement !
+
+Options:
+A) Render.com (recommandé)
+B) Koyeb (réactiver l'existant)
+C) Fly.io (meilleure performance gratuite)
+D) Autre solution
+
+
+═══════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION CRÉÉE
+═══════════════════════════════════════════════════════════════
+
+✅ 00_SOLUTION_CARTE_PREPAYEE_RAILWAY_16_AVRIL_2026.txt
+✅ GUIDE_DEPLOIEMENT_RENDER_16_AVRIL_2026.md (à créer)
+✅ GUIDE_DEPLOIEMENT_FLY_16_AVRIL_2026.md (à créer)

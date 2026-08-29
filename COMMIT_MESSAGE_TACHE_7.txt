@@ -1,0 +1,71 @@
+feat(conso): Ajout fusion automatique colonne Remarques dans tables CIA
+
+🎯 Objectif
+-----------
+Implémenter la fusion automatique des cellules de la colonne "Remarques" 
+dans les tables CIA, en complément des colonnes Question et Ref_question.
+
+✨ Modifications
+----------------
+- public/conso.js (ligne 336): Ajout de mergeCellsForColumn pour "remarques"
+- Mise à jour du commentaire d'en-tête (ligne 7)
+
+📊 Fonctionnalités
+------------------
+✅ Fusion automatique si toutes les valeurs sont identiques
+✅ Colonne masquée mais conservée dans le DOM
+✅ Centrage vertical et horizontal du texte
+✅ Attributs data-merged sur cellules fusionnées
+✅ Compatible avec sauvegarde localStorage
+✅ Compatible avec workflow n8n
+
+🧪 Tests
+--------
+- Nouveau fichier: public/test-conso-v5-remarques.html
+- Script de validation: public/validate-tache-7.js
+- 3 scénarios de test couverts
+
+📚 Documentation
+----------------
+- INDEX_TACHE_7_V5_CONSO.md
+- TACHE_7_V5_CONSO_COMPLETE.md
+- TESTEZ_FUSION_REMARQUES_MAINTENANT.md
+- RESUME_TACHE_7_V5_CONSO.md
+- COMMANDES_TEST_TACHE_7.txt
+- LISEZ_MOI_TACHE_7.txt
+
+🔧 Détails techniques
+---------------------
+Ligne modifiée:
+  this.mergeCellsForColumn(table, headers, "remarques");
+
+Pattern de détection:
+  remarques: /remarques?/i
+
+Comportement:
+  - Normalisation des valeurs (espaces, ponctuation)
+  - Comparaison case-insensitive
+  - Fusion uniquement si valeurs identiques
+  - Première cellule: rowspan + style centré
+  - Autres cellules: display:none + data-merged="true"
+
+✅ Validation
+-------------
+- [x] Code testé et fonctionnel
+- [x] Pas d'erreur de syntaxe
+- [x] Documentation complète
+- [x] Tests automatisés
+- [x] Compatible avec fonctionnalités existantes
+
+🎯 Impact
+---------
+- Amélioration de la lisibilité des questionnaires CIA
+- Évite la répétition des remarques identiques
+- Maintient la compatibilité avec n8n
+- Préserve toutes les fonctionnalités V5
+
+Version: V5.0
+Date: 2024-12-08
+Type: feature
+Scope: conso
+Breaking: false

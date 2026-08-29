@@ -1,0 +1,217 @@
+═══════════════════════════════════════════════════════════════════════════════
+  PROBLÈME : ÉTATS DE CONTRÔLE INCORRECTS - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 05 Avril 2026
+🎯 OBJECTIF : Corriger les états de contrôle pour qu'ils affichent correctement N et N-1
+
+═══════════════════════════════════════════════════════════════════════════════
+PROBLÈME IDENTIFIÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ LES ÉTATS DE CONTRÔLE ACTUELS NE SONT PAS LES BONS
+
+Les fichiers de référence montrent la bonne structure:
+✓ py_backend/generer_test_etats_controle_html.py
+✓ py_backend/etats_controle_exhaustifs.py
+✓ py_backend/html_etats_controle.py
+✓ Doc_Etat_Fin/Scripts/verifier_calculs_n1_n2.py
+
+Mais les états de contrôle générés par le backend ne suivent pas cette structure.
+
+═══════════════════════════════════════════════════════════════════════════════
+STRUCTURE CORRECTE DES ÉTATS DE CONTRÔLE
+═══════════════════════════════════════════════════════════════════════════════
+
+Chaque état de contrôle doit avoir cette structure:
+
+{
+    'titre': 'État de contrôle Bilan Actif',
+    'postes': [
+        {
+            'ref': 'CA',
+            'libelle': 'Total Actif',
+            'montant_n': 1000000,      # Montant exercice N
+            'montant_n1': 950000       # Montant exercice N-1
+        },
+        {
+            'ref': 'CB',
+            'libelle': 'Nombre de postes (N)',
+            'montant_n': 25,
+            'montant_n1': 0
+        },
+        {
+            'ref': 'CC',
+            'libelle': 'Nombre de postes (N-1)',
+            'montant_n': 0,
+            'montant_n1': 24
+        },
+        {
+            'ref': 'CD',
+            'libelle': 'Variation Total',
+            'montant_n': 50000,        # N - N-1
+            'montant_n1': 0
+        }
+    ]
+}
+
+═══════════════════════════════════════════════════════════════════════════════
+ÉTATS DE CONTRÔLE À GÉNÉRER
+═══════════════════════════════════════════════════════════════════════════════
+
+6 ÉTATS DE CONTRÔLE EXHAUSTIFS:
+
+1. 🔍 État de contrôle Bilan Actif
+   - Total Actif (N et N-1)
+   - Nombre de postes (N et N-1)
+   - Variation Total
+
+2. 🔍 État de contrôle Bilan Passif
+   - Total Passif (N et N-1)
+   - Nombre de postes (N et N-1)
+   - Variation Total
+
+3. 🔍 État de contrôle Compte de Résultat
+   - Résultat Net (N et N-1)
+   - Nombre de postes (N et N-1)
+   - Variation Résultat
+
+4. 🔍 État de contrôle Tableau des Flux de Trésorerie
+   - Trésorerie finale (N et N-1)
+   - Variation trésorerie (N et N-1)
+   - Flux opérationnels (N et N-1)
+
+5. 🔍 État de contrôle Sens des Comptes
+   - Comptes en débit (N et N-1)
+   - Comptes en crédit (N et N-1)
+   - Total débit (N et N-1)
+   - Total crédit (N et N-1)
+   - Équilibre (N et N-1)
+
+6. 🔍 État d'équilibre Bilan
+   - Total Actif (N et N-1)
+   - Total Passif (N et N-1)
+   - Résultat Net (N et N-1)
+   - Passif + Résultat (N et N-1)
+   - Équilibre (N et N-1)
+
+═══════════════════════════════════════════════════════════════════════════════
+FORMAT HTML ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+Chaque état de contrôle doit être affiché dans un accordéon avec ce format:
+
+<div class="etats-fin-section" data-section="etat_controle_bilan_actif">
+    <div class="section-header-ef">
+        <span>🔍 État de contrôle Bilan Actif</span>
+        <span class="arrow">›</span>
+    </div>
+    <div class="section-content-ef">
+        <table class="liasse-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">REF</th>
+                    <th style="width: auto;">LIBELLÉS</th>
+                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="ref-cell">CA</td>
+                    <td class="libelle-cell">Total Actif</td>
+                    <td class="montant-cell">1 000 000</td>
+                    <td class="montant-cell">950 000</td>
+                </tr>
+                <!-- Autres lignes -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+═══════════════════════════════════════════════════════════════════════════════
+FICHIERS À VÉRIFIER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. py_backend/etats_financiers.py (lignes 1740-1800)
+   → Vérifier que les états de contrôle sont calculés correctement
+   → Vérifier que generate_all_etats_controle_html() est appelée
+
+2. py_backend/etats_controle_exhaustifs.py
+   → Fonctions de calcul des états de contrôle
+   → Chaque fonction doit retourner {titre, postes: [{ref, libelle, montant_n, montant_n1}]}
+
+3. py_backend/html_etats_controle.py
+   → Fonction generate_all_etats_controle_html(etats_controle)
+   → Génère le HTML pour tous les états de contrôle
+
+4. py_backend/generer_test_etats_controle_html.py
+   → Script de test pour générer un fichier HTML de test
+   → Utilise les fonctions de etats_controle_exhaustifs.py
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMANDES DE TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TESTER LA GÉNÉRATION DES ÉTATS DE CONTRÔLE HTML:
+   .\Doc_Etat_Fin\Scripts\test-etats-controle-html.ps1
+
+2. VÉRIFIER LES CALCULS N-1 ET N-2:
+   python Doc_Etat_Fin\Scripts\verifier_calculs_n1_n2.py
+
+3. TESTER LE BACKEND COMPLET:
+   .\Doc_Etat_Fin\Scripts\test-backend-simple.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIER HTML GÉNÉRÉ SUR LE BUREAU:
+✓ test_etats_controle_html.html
+
+CONTENU DU FICHIER:
+✓ 6 états de contrôle en accordéons
+✓ Chaque état affiche 2 colonnes (N et N-1)
+✓ Les accordéons s'ouvrent et se ferment au clic
+✓ Les montants sont correctement formatés
+✓ Les totaux et variations sont calculés
+
+INTÉGRATION DANS LE BACKEND:
+✓ Les états de contrôle sont générés par le backend
+✓ Les états de contrôle sont ajoutés au HTML final
+✓ Les états de contrôle sont affichés dans le chat
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ⏳ Exécuter le script de test: .\Doc_Etat_Fin\Scripts\test-etats-controle-html.ps1
+2. ⏳ Ouvrir le fichier HTML généré sur le bureau
+3. ⏳ Vérifier que les 6 états de contrôle sont présents
+4. ⏳ Vérifier que chaque état affiche 2 colonnes (N et N-1)
+5. ⏳ Vérifier que les accordéons fonctionnent
+6. ⏳ Intégrer les états de contrôle dans le backend
+7. ⏳ Tester le workflow complet dans l'application
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ N-2 DOIT ÊTRE UTILISÉ MAIS PAS AFFICHÉ
+   - N-2 est utilisé pour calculer les variations de N-1
+   - Seules 2 colonnes sont affichées : N et N-1
+   - Format liasse officielle SYSCOHADA
+
+⚠️ STRUCTURE DES DONNÉES
+   - Chaque poste contient montant_n, montant_n1, montant_n2
+   - Les fonctions de contrôle extraient les bonnes valeurs
+   - Les états de contrôle comparent N vs N-1
+
+⚠️ FORMAT HTML
+   - Utiliser les classes CSS existantes: section-header-ef, section-content-ef
+   - Utiliser les classes de tableau: liasse-table, ref-cell, montant-cell
+   - Les accordéons doivent être cliquables
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,176 @@
+================================================================
+   WORKFLOW HTTP REQUEST PRÊT - 28 AVRIL 2026
+================================================================
+
+✅ WORKFLOW CRÉÉ AVEC SUCCÈS
+=============================
+
+Fichier: workflow_n8n_ouvrir_xref_HTTP_REQUEST.json
+
+Ce workflow utilise les nodes HTTP Request qui fonctionnent déjà
+dans votre instance n8n.
+
+
+AVANTAGES DE CETTE APPROCHE
+============================
+
+✓ Utilise les nodes HTTP Request (testés et fonctionnels)
+✓ Pas besoin de Google Drive v2 ou v3
+✓ Appelle directement l'API REST de Google Drive
+✓ Utilise le même credential OAuth2 que vos workflows existants
+✓ Plus stable et prévisible
+
+
+STRUCTURE DU WORKFLOW
+=====================
+
+1. Webhook OPTIONS (preflight CORS)
+2. Webhook POST (reçoit la requête)
+3. Find Dossier CAC (HTTP Request)
+   → Cherche le dossier "Dossier CAC"
+4. Find Document (HTTP Request)
+   → Cherche le document dans le dossier
+5. Format Response (Code)
+   → Formate la réponse JSON
+6. Respond to Webhook
+   → Retourne la réponse
+
+
+CONFIGURATION DANS N8N
+======================
+
+ÉTAPE 1: Importer le workflow
+------------------------------
+1. Aller sur https://n8nsqlite.zeabur.app
+2. Menu "Workflows" → "Import from File"
+3. Sélectionner: workflow_n8n_ouvrir_xref_HTTP_REQUEST.json
+4. Cliquer sur "Import"
+
+ÉTAPE 2: Configurer les credentials
+------------------------------------
+Le workflow référence le credential:
+- ID: xEmtGGojiTDYAGfS
+- Name: "Google Drive OAuth2"
+
+Si ce credential n'existe pas:
+1. Créer un nouveau credential "OAuth2 API"
+2. Utiliser les informations depuis .env.google-oauth.local:
+   - Authorization URL: https://accounts.google.com/o/oauth2/v2/auth
+   - Access Token URL: https://oauth2.googleapis.com/token
+   - Client ID: (voir .env.google-oauth.local)
+   - Client Secret: (voir .env.google-oauth.local)
+   - Scope: https://www.googleapis.com/auth/drive
+   - Auth URI Query Parameters: access_type=offline
+
+3. Associer ce credential aux nodes:
+   - "Find Dossier CAC"
+   - "Find Document"
+
+ÉTAPE 3: Activer le workflow
+-----------------------------
+1. Toggle "Active" en haut à droite
+2. Le workflow est prêt
+
+
+FORMAT DE LA REQUÊTE
+====================
+
+Le script de test envoie:
+```json
+{
+  "index": "[I30]-AFRILAND",
+  "dossier": "Dossier CAC"
+}
+```
+
+Le workflow:
+1. Cherche le dossier "Dossier CAC"
+2. Cherche un fichier contenant "[I30]-AFRILAND" dans ce dossier
+3. Retourne les informations du fichier
+
+
+FORMAT DE LA RÉPONSE
+====================
+
+Succès:
+```json
+{
+  "success": true,
+  "file": {
+    "id": "...",
+    "name": "[I30]-AFRILAND.pdf",
+    "mimeType": "application/pdf",
+    "webViewLink": "https://drive.google.com/...",
+    "webContentLink": "https://drive.google.com/...",
+    "thumbnailLink": "https://...",
+    "iconLink": "https://...",
+    "size": "123456",
+    "createdTime": "2026-04-28T...",
+    "modifiedTime": "2026-04-28T..."
+  },
+  "searchTerm": "[I30]-AFRILAND",
+  "dossier": "Dossier CAC"
+}
+```
+
+Échec:
+```json
+{
+  "success": false,
+  "message": "Document non trouvé dans Google Drive",
+  "searchTerm": "[I30]-AFRILAND",
+  "dossier": "Dossier CAC"
+}
+```
+
+
+TESTER LE WORKFLOW
+==================
+
+Exécuter:
+```powershell
+.\test-workflow-xref-afriland.ps1
+```
+
+
+DIFFÉRENCES AVEC LA VERSION PRÉCÉDENTE
+=======================================
+
+❌ Ancienne version:
+   - Utilisait Google Drive v2 nodes
+   - Configuration complexe
+   - Problèmes de compatibilité
+
+✅ Nouvelle version:
+   - Utilise HTTP Request nodes
+   - API REST directe
+   - Même approche que vos workflows fonctionnels
+   - Plus stable
+
+
+TROUBLESHOOTING
+===============
+
+❌ Erreur "Unauthorized"
+   → Vérifier que le credential OAuth2 est configuré
+   → Réautoriser l'accès si nécessaire
+
+❌ Erreur "Document non trouvé"
+   → Vérifier que le dossier "Dossier CAC" existe
+   → Vérifier que le fichier existe dans ce dossier
+
+❌ Erreur "files[0] is undefined"
+   → Le dossier "Dossier CAC" n'a pas été trouvé
+   → Vérifier l'orthographe exacte du nom
+
+
+PROCHAINES ÉTAPES
+=================
+
+1. Importer le workflow dans n8n
+2. Configurer les credentials OAuth2
+3. Activer le workflow
+4. Tester avec le script PowerShell
+5. Intégrer dans le menu contextuel
+
+================================================================

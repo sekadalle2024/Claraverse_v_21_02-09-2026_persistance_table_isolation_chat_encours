@@ -1,0 +1,345 @@
+================================================================================
+RECAP TESTS ET PROCHAINES ETAPES - PROBLEMES 1 ET 3 (06 AVRIL 2026)
+================================================================================
+
+STATUT GLOBAL: CORRECTIONS IMPLEMENTEES - TEST COMPLET REQUIS VIA INTERFACE WEB
+
+================================================================================
+TRAVAIL EFFECTUE
+================================================================================
+
+1. LECTURE DE LA DOCUMENTATION COMPLETE
+   - 02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+   - 00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+   - 00_TESTS_EFFECTUES_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+   - QUICK_START_PROBLEMES_1_ET_3.txt
+
+2. VERIFICATION DU CODE IMPLEMENTE
+   - py_backend/export_liasse.py: Corrections presentes
+   - Fonctions ajoutees:
+     * extraire_brut_et_amortissement_depuis_balance()
+     * enrichir_actif_avec_brut_amortissement()
+     * remplir_onglet_actif_avec_brut_amort()
+     * calculer_totalisations_actif() (modifiee)
+     * MAPPING_TFT_COMPLET (dictionnaire)
+     * Conversion TFT amelioree
+
+3. TENTATIVE DE TEST DIRECT
+   - Creation de test_simple_corrections.py
+   - Resultat: Impossible de tester sans FastAPI
+   - Confirmation: Les corrections necessitent l'environnement backend complet
+
+================================================================================
+RESULTATS DES TESTS
+================================================================================
+
+TEST 1: Verification de la structure de la balance
+   Statut: OK
+   - Balance N: 441 lignes
+   - Balance N-1: 405 lignes
+   - Balance N-2: Presente
+   - ATTENTION: Noms d'onglets avec espaces ("BALANCE N ", "BALANCE N-1 ")
+
+TEST 2: Verification du code implemente
+   Statut: OK
+   - Toutes les fonctions presentes dans export_liasse.py
+   - Logique d'enrichissement implementee
+   - Mapping TFT complet
+   - Logs detailles pour diagnostic
+
+TEST 3: Test d'export complet
+   Statut: IMPOSSIBLE SANS FASTAPI
+   - Module FastAPI requis mais non installe dans l'environnement de test
+   - Les corrections sont implementees mais non testees en conditions reelles
+   - Recommandation: Tester via l'interface web
+
+================================================================================
+PROCHAINES ETAPES - PRIORITE 1
+================================================================================
+
+METHODE RECOMMANDEE: Test via l'interface web
+
+ETAPE 1: Demarrer le backend (2 min)
+   Commande:
+      .\start-claraverse.ps1
+   
+   Verification:
+      - Backend demarre sur http://127.0.0.1:5000
+      - Frontend demarre sur http://localhost:5173
+      - Attendre 10-15 secondes pour le demarrage complet
+
+ETAPE 2: Importer la balance (1 min)
+   1. Ouvrir http://localhost:5173
+   2. Dans le chat, taper: Lead_balance
+   3. Selectionner le fichier: py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+   4. Attendre la fin de l'import
+
+ETAPE 3: Generer les etats financiers (1 min)
+   1. Dans le chat, taper: Etat fin
+   2. Attendre la generation des etats
+   3. Verifier que les etats s'affichent dans le menu accordeon
+
+ETAPE 4: Exporter la liasse officielle (1 min)
+   1. Cliquer sur "Export liasse officielle" (ou commande equivalente)
+   2. Telecharger le fichier Excel genere
+   3. Sauvegarder sous: test_export_liasse_06_avril_2026.xlsx
+
+ETAPE 5: Verification manuelle (5 min)
+   1. Ouvrir: test_export_liasse_06_avril_2026.xlsx
+   
+   2. Verifier PROBLEME 1 - Onglet ACTIF:
+      - Aller a l'onglet ACTIF
+      - Chercher la ligne AI (Terrains)
+      - Verifier les colonnes:
+        * Colonne E: BRUT N (doit etre remplie)
+        * Colonne F: AMORTISSEMENT N (doit etre remplie)
+        * Colonne G: NET N (doit etre remplie)
+        * Colonne H: NET N-1 (doit etre remplie)
+      - Verifier la coherence: NET = BRUT - AMORTISSEMENT
+      - Verifier les totalisations:
+        * AZ: TOTAL ACTIF IMMOBILISE
+        * DZ: TOTAL GENERAL ACTIF
+   
+   3. Verifier PROBLEME 3 - Onglet TFT:
+      - Aller a l'onglet TFT (Tableau des Flux de Tresorerie)
+      - Chercher la ligne ZA (Tresorerie ouverture)
+      - Verifier les colonnes:
+        * Colonne I: Exercice N (doit etre remplie)
+        * Colonne K: Exercice N-1 (doit etre remplie)
+      - Verifier les autres lignes:
+        * ZB: Flux operationnels
+        * ZC: Flux investissement
+        * ZH: Tresorerie cloture
+        * FA a FK: Details des flux
+
+ETAPE 6: Documenter les resultats (5 min)
+   1. Prendre des captures d'ecran:
+      - Onglet ACTIF avec colonnes E, F, G, H remplies
+      - Onglet TFT avec colonnes I, K remplies
+   
+   2. Creer un fichier de resultat:
+      00_RESULTATS_TEST_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+   
+   3. Indiquer:
+      - PROBLEME 1: RESOLU / PERSISTE
+      - PROBLEME 3: RESOLU / PERSISTE
+      - Observations et remarques
+
+================================================================================
+PROCHAINES ETAPES - PRIORITE 2 (SI PROBLEMES PERSISTENT)
+================================================================================
+
+SI PROBLEME 1 PERSISTE (Colonnes BRUT/AMORT vides):
+
+   CAUSE PROBABLE:
+      Les balances ne sont pas incluses dans results par etats_financiers_v2.py
+   
+   SOLUTION:
+      1. Ouvrir: py_backend/etats_financiers_v2.py
+      2. Chercher la fonction: process_balance_to_liasse_format()
+      3. Ajouter avant le return:
+         ```python
+         # Ajouter les balances aux resultats pour l'export
+         results['balance_n_df'] = balance_n_df
+         results['balance_n1_df'] = balance_n1_df
+         ```
+      4. Redemarrer le backend
+      5. Retester
+
+SI PROBLEME 3 PERSISTE (TFT vide):
+
+   CAUSE PROBABLE:
+      Le TFT n'est pas genere ou mal formate par etats_financiers_v2.py
+   
+   SOLUTION:
+      1. Verifier les logs du backend lors de l'export
+      2. Chercher les messages:
+         - "TFT recu: X cles"
+         - "TFT converti: Y postes"
+      3. Si TFT absent:
+         - Verifier que etats_financiers_v2.py genere le TFT
+         - Verifier que results['tft'] existe
+      4. Si TFT present mais vide:
+         - Verifier le format (dict ou list)
+         - Verifier les cles (doivent correspondre au MAPPING_TFT_COMPLET)
+      5. Ajuster le code si necessaire
+
+SI LES COLONNES SONT DECALEES:
+
+   CAUSE PROBABLE:
+      Les colonnes du template sont differentes des captures d'ecran
+   
+   SOLUTION:
+      1. Ouvrir: py_backend/Liasse_officielle_revise.xlsx
+      2. Verifier l'onglet ACTIF:
+         - Quelle colonne pour BRUT N?
+         - Quelle colonne pour AMORTISSEMENT N?
+         - Quelle colonne pour NET N?
+         - Quelle colonne pour NET N-1?
+      3. Verifier l'onglet TFT:
+         - Quelle colonne pour N?
+         - Quelle colonne pour N-1?
+      4. Modifier export_liasse.py:
+         - Fonction remplir_onglet_actif_avec_brut_amort()
+         - Lignes ~450-500
+         - Ajuster les colonnes (E, F, G, H ou autres)
+      5. Redemarrer le backend
+      6. Retester
+
+================================================================================
+PROCHAINES ETAPES - PRIORITE 3 (OPTIONNEL)
+================================================================================
+
+MODIFICATION DU FRONTEND (Coherence avec l'export):
+
+   OBJECTIF:
+      Afficher les colonnes BRUT et AMORTISSEMENT dans le menu accordeon
+   
+   FICHIER A MODIFIER:
+      src/components/Clara_Components/EtatsControleAccordionRenderer.tsx
+      (ou composant equivalent pour l'affichage du Bilan ACTIF)
+   
+   MODIFICATIONS:
+      1. Ajouter les colonnes dans le tableau:
+         ```typescript
+         const colonnesActif = [
+             { key: 'brut_n', label: 'Brut N' },
+             { key: 'amort_n', label: 'Amort. N' },
+             { key: 'montant_n', label: 'Net N' },
+             { key: 'montant_n1', label: 'Net N-1' }
+         ];
+         ```
+      
+      2. Afficher les colonnes dans le rendu:
+         ```typescript
+         <td>{formatMontant(poste.brut_n)}</td>
+         <td>{formatMontant(poste.amort_n)}</td>
+         <td>{formatMontant(poste.montant_n)}</td>
+         <td>{formatMontant(poste.montant_n1)}</td>
+         ```
+   
+   AVANTAGES:
+      - Coherence entre affichage et export
+      - Verification visuelle avant export
+      - Meilleure experience utilisateur
+
+================================================================================
+FICHIERS CREES POUR LES TESTS
+================================================================================
+
+Scripts de test:
+   - test_corrections_final.py (avec emojis - probleme d'encodage)
+   - test_simple_corrections.py (sans emojis - necessite FastAPI)
+
+Documentation:
+   - 00_RECAP_TESTS_ET_PROCHAINES_ETAPES_06_AVRIL_2026.txt (ce fichier)
+
+================================================================================
+FICHIERS A CONSULTER
+================================================================================
+
+Documentation complete:
+   - Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+     02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+   - 00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+   - 00_TESTS_EFFECTUES_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+   - QUICK_START_PROBLEMES_1_ET_3.txt
+
+Code modifie:
+   - py_backend/export_liasse.py (corrections implementees)
+
+Code a verifier:
+   - py_backend/etats_financiers_v2.py (pour ajouter balances et TFT aux results)
+
+Template:
+   - py_backend/Liasse_officielle_revise.xlsx (pour verifier les colonnes)
+
+Balance de test:
+   - py_backend/P000 -BALANCE DEMO N_N-1_N-2.xls
+
+================================================================================
+RESUME ULTRA-RAPIDE
+================================================================================
+
+STATUT:
+   - Corrections implementees dans export_liasse.py
+   - Code verifie et present
+   - Test complet impossible sans FastAPI
+   - Recommandation: Tester via l'interface web
+
+PROCHAINE ACTION:
+   1. Demarrer le backend: .\start-claraverse.ps1
+   2. Importer la balance via l'interface web
+   3. Generer les etats financiers
+   4. Exporter la liasse officielle
+   5. Verifier manuellement les colonnes:
+      - ACTIF: E, F, G, H
+      - TFT: I, K
+
+TEMPS ESTIME: 15 minutes
+
+================================================================================
+POINTS CLES A RETENIR
+================================================================================
+
+1. Les corrections sont IMPLEMENTEES dans le code
+   - Probleme 1: Fonctions d'enrichissement BRUT/AMORT
+   - Probleme 3: Mapping TFT complet et conversion amelioree
+
+2. Le test complet NECESSITE l'environnement backend
+   - FastAPI requis
+   - Impossible de tester en standalone
+   - Utiliser l'interface web pour le test
+
+3. Les balances DOIVENT etre dans results
+   - Cles: 'balance_n_df' et 'balance_n1_df'
+   - Si absentes: modifier etats_financiers_v2.py
+
+4. Le TFT DOIT etre dans results
+   - Cle: 'tft'
+   - Format: dict ou list
+   - Si absent: verifier etats_financiers_v2.py
+
+5. Les colonnes sont BASEES sur les captures d'ecran
+   - ACTIF: E, F, G, H
+   - TFT: I, K
+   - Verifier dans le template reel si different
+
+6. Le frontend N'EST PAS MODIFIE
+   - Les colonnes BRUT/AMORT ne sont pas affichees
+   - Modification optionnelle pour coherence
+
+================================================================================
+BESOIN D'AIDE?
+================================================================================
+
+1. Lire l'analyse detaillee:
+   Doc_Etat_Fin/Documentation/Double_Probleme_Export_Liasse/
+   02_ANALYSE_PROBLEMES_RESTANTS_06_AVRIL_2026.md
+
+2. Consulter les solutions:
+   00_SOLUTIONS_PROBLEMES_1_ET_3_APPLIQUEES_06_AVRIL_2026.txt
+
+3. Voir les tests effectues:
+   00_TESTS_EFFECTUES_PROBLEMES_1_ET_3_06_AVRIL_2026.txt
+
+4. Guide rapide:
+   QUICK_START_PROBLEMES_1_ET_3.txt
+
+================================================================================
+CONCLUSION
+================================================================================
+
+Les corrections des problemes 1 et 3 ont ete implementees dans le code.
+Le test complet necessite l'environnement backend avec FastAPI.
+
+PROCHAINE ETAPE IMMEDIATE:
+   Tester via l'interface web en suivant les etapes ci-dessus.
+
+TEMPS ESTIME: 15 minutes
+
+================================================================================
+Derniere mise a jour: 06 AVRIL 2026 - 21:00
+Agent: Kiro AI Assistant
+Statut: Corrections implementees - Test via interface web requis
+================================================================================

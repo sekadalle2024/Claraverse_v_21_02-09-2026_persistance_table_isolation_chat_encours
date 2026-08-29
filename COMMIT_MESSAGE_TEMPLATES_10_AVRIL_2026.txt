@@ -1,0 +1,32 @@
+feat: Ajout des cases 35-43 pour templates de tables
+
+Ajout de 9 nouveaux cases dans le switch router de claraApiService.ts
+pour générer des templates de tables localement sans appel n8n.
+
+Cases ajoutés :
+- Case 35 : Template_table_unicolonne
+- Case 36 : Template_table_simple
+- Case 37 : Template_table_etape_de_mission
+- Case 38 : Template_table_feuille_couverture_test_audit
+- Case 39 : Template_table_frap
+- Case 40 : Template_table_synthèses_frap
+- Case 41 : Template_table_rapport_provisoire
+- Case 42 : Template_table_rapport_final
+- Case 43 : Template_table_suivi_recos
+
+Modifications techniques :
+- Ajout sentinelle SENTINEL_TEMPLATE_TABLE
+- Ajout méthode generateTemplateTable()
+- Intégration avec convertStructuredDataToMarkdown()
+- Génération locale (pas d'appel HTTP)
+
+Fichiers modifiés :
+- src/services/claraApiService.ts
+
+Documentation :
+- 00_AJOUT_CASES_35_43_TEMPLATES_10_AVRIL_2026.txt
+- 00_SYNTHESE_VISUELLE_TEMPLATES_10_AVRIL_2026.txt
+- QUICK_START_TEMPLATES_TABLES.txt
+- 00_INDEX_TEMPLATES_10_AVRIL_2026.md
+- test-templates-tables.ps1
+- COMMIT_MESSAGE_TEMPLATES_10_AVRIL_2026.txt

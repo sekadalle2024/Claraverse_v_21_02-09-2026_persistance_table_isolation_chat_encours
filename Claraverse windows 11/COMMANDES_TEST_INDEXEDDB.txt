@@ -1,0 +1,136 @@
+═══════════════════════════════════════════════════════════════
+  🧪 COMMANDES DE TEST - IndexedDB Storage Manager
+═══════════════════════════════════════════════════════════════
+
+📍 ÉTAPE 1: OUVRIR LA PAGE DE TEST
+───────────────────────────────────────────────────────────────
+http://localhost:3000/test-indexeddb-storage.html
+
+
+📍 ÉTAPE 2: TESTER DANS LA CONSOLE
+───────────────────────────────────────────────────────────────
+
+// Vérifier que le script est chargé
+typeof ClaraverseStorageManager
+// → "function" ✅
+
+// Créer une instance
+const storage = new ClaraverseStorageManager();
+
+// Initialiser
+await storage.init();
+// → true (IndexedDB) ou false (localStorage)
+
+// Vérifier le type de stockage
+storage.isIndexedDBAvailable
+// → true (IndexedDB disponible) ou false (fallback localStorage)
+
+
+📍 ÉTAPE 3: TESTER LA SAUVEGARDE
+───────────────────────────────────────────────────────────────
+
+// Sauvegarder une table de test
+const testData = {
+  timestamp: Date.now(),
+  isCIATable: true,
+  headers: [{ text: 'question', hidden: false }],
+  cells: [
+    { row: 0, col: 0, value: 'Test question' },
+    { row: 0, col: 1, isCheckboxCell: true, isChecked: true }
+  ]
+};
+
+await storage.saveTable('test-001', testData);
+// → true ✅
+
+
+📍 ÉTAPE 4: TESTER LE CHARGEMENT
+───────────────────────────────────────────────────────────────
+
+// Charger la table
+const loaded = await storage.loadTable('test-001');
+console.log(loaded);
+
+// Charger toutes les tables
+const all = await storage.loadAllTables();
+console.log('Tables:', Object.keys(all));
+
+
+📍 ÉTAPE 5: VOIR LES STATISTIQUES
+───────────────────────────────────────────────────────────────
+
+const info = await storage.getStorageInfo();
+console.log('IndexedDB:', info.indexedDB);
+console.log('localStorage:', info.localStorage);
+console.log('Total:', info.total.tableCount, 'tables');
+
+
+📍 ÉTAPE 6: NETTOYER
+───────────────────────────────────────────────────────────────
+
+// Supprimer une table
+await storage.deleteTable('test-001');
+
+// Nettoyer les anciennes données (> 7 jours)
+await storage.cleanupOldData(7);
+
+// Tout supprimer (ATTENTION!)
+await storage.clearAll();
+
+
+📍 ÉTAPE 7: TESTER LA MIGRATION
+───────────────────────────────────────────────────────────────
+
+// Migrer les données de localStorage vers IndexedDB
+await storage.migrateFromLocalStorage();
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ VÉRIFICATION APRÈS INTÉGRATION DANS CONSO.JS
+═══════════════════════════════════════════════════════════════
+
+Une fois conso.js modifié, testez:
+
+// Vérifier l'initialisation
+claraverseProcessor.storageReady
+// → true ✅
+
+// Vérifier le type de stockage
+claraverseProcessor.storage.isIndexedDBAvailable
+// → true (IndexedDB) ou false (localStorage)
+
+// Voir les statistiques
+await claraverseCommands.getStorageInfo()
+
+// Nettoyer les anciennes données
+await claraverseCommands.cleanupOld(7)
+
+// Optimiser le stockage
+await claraverseCommands.optimizeStorage()
+
+// Migrer vers IndexedDB
+await claraverseCommands.migrateToIndexedDB()
+
+
+═══════════════════════════════════════════════════════════════
+  🎯 RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+✅ IndexedDB initialisée avec succès
+✅ Sauvegarde/chargement fonctionnels
+✅ Migration automatique des données
+✅ Plus de problème de quota
+✅ Capacité de stockage x50 minimum
+
+
+═══════════════════════════════════════════════════════════════
+  📚 DOCUMENTATION
+═══════════════════════════════════════════════════════════════
+
+Guide complet:     MIGRATION_INDEXEDDB_CONSO.md
+Guide rapide:      DEMARRAGE_RAPIDE_INDEXEDDB.md
+Page de test:      public/test-indexeddb-storage.html
+Intégration:       INTEGRATION_INDEXEDDB_TERMINEE.md
+
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,139 @@
+═══════════════════════════════════════════════════════════════════════════════
+📋 CONTINUATION - 16 ÉTATS DE CONTRÔLE - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 SITUATION ACTUELLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ FICHIERS CRÉÉS:
+1. py_backend/etats_controle_exhaustifs_html.py (601 lignes)
+   - Contient les fonctions 1-6 pour l'exercice N
+   - format_montant() helper function
+   
+2. py_backend/etats_controle_exhaustifs_html_part2.py
+   - Contient la fonction 7 (Hypothèse d'Affectation)
+   
+3. 00_COMPREHENSION_FINALE_16_ETATS_05_AVRIL_2026.txt
+   - Documentation complète de la compréhension
+
+📊 FONCTIONS CRÉÉES (6/16)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EXERCICE N:
+✅ 1. generate_etat_1_statistiques_couverture_n()
+✅ 2. generate_etat_2_equilibre_bilan_n()
+✅ 3. generate_etat_3_coherence_resultat_n()
+✅ 4. generate_etat_4_comptes_non_integres_n()
+✅ 5. generate_etat_5_comptes_sens_inverse_n()
+✅ 6. generate_etat_6_comptes_desequilibre_n()
+✅ 7. generate_etat_7_hypothese_affectation_n() (dans part2.py)
+❌ 8. generate_etat_8_comptes_sens_anormal_n() - À CRÉER
+
+EXERCICE N-1:
+❌ 9-16. Toutes les fonctions N-1 - À CRÉER
+
+🔧 PROCHAINES ÉTAPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE 1: Compléter le module Python
+────────────────────────────────────────────────────────────────────────────────
+1. Ajouter la fonction 8 (Comptes avec Sens Anormal par Nature)
+   - Tableaux séparés par gravité (CRITIQUES, ÉLEVÉS, MOYENS, FAIBLES)
+   - Badges animés pour les comptes critiques
+   - Actions correctives détaillées
+
+2. Créer les 8 fonctions pour N-1 (fonctions 9-16)
+   - Ce sont les MÊMES fonctions que N mais avec:
+     * Numéros 9-16 au lieu de 1-8
+     * Titre "(Exercice N-1)" au lieu de "(Exercice N)"
+     * Données de l'exercice N-1
+
+3. Créer la fonction principale generate_all_16_etats_controle_html()
+   - Appelle les 16 fonctions
+   - Concatène les 16 sections HTML
+   - Retourne le HTML complet
+
+ÉTAPE 2: Intégrer dans etats_financiers.py
+────────────────────────────────────────────────────────────────────────────────
+1. Importer le nouveau module
+2. Appeler generate_all_16_etats_controle_html()
+3. Intégrer le HTML dans la liasse complète
+
+ÉTAPE 3: Tester
+────────────────────────────────────────────────────────────────────────────────
+1. Tester avec la balance démo
+2. Vérifier que le HTML généré correspond au fichier de référence
+3. Valider l'affichage dans le frontend
+
+📝 STRUCTURE DE LA FONCTION 8 (Sens Anormal par Nature)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def generate_etat_8_comptes_sens_anormal_n(controles: Dict) -> str:
+    """8. Comptes avec Sens Anormal par Nature (Exercice N)"""
+    
+    # Récupérer les comptes par gravité
+    comptes_sens_anormal = controles.get('comptes_sens_anormal', {})
+    critiques = comptes_sens_anormal.get('critiques', [])
+    eleves = comptes_sens_anormal.get('eleves', [])
+    moyens = comptes_sens_anormal.get('moyens', [])
+    faibles = comptes_sens_anormal.get('faibles', [])
+    
+    # Générer le HTML avec:
+    # 1. Danger-box avec nombre de comptes critiques
+    # 2. Tableau des comptes CRITIQUES (badge-critical animé)
+    # 3. Tableau des comptes ÉLEVÉS (badge-warning)
+    # 4. Tableau des comptes MOYENS (badge-info) si présents
+    # 5. Tableau des comptes FAIBLES (badge gris) si présents
+    # 6. Info-box avec niveaux de gravité
+    # 7. Danger-box avec actions correctives pour comptes critiques
+
+📝 STRUCTURE DES FONCTIONS N-1 (9-16)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Les fonctions 9-16 sont IDENTIQUES aux fonctions 1-8, sauf:
+
+1. Nom de la fonction:
+   generate_etat_9_statistiques_couverture_n1() au lieu de _n()
+   
+2. Titre dans le HTML:
+   "📊 9. Statistiques de Couverture (Exercice N-1)"
+   au lieu de "📊 1. Statistiques de Couverture (Exercice N)"
+   
+3. Données utilisées:
+   controles_n1 au lieu de controles_n
+   totaux_n1 au lieu de totaux_n
+
+💡 ASTUCE: Créer une fonction générique
+────────────────────────────────────────────────────────────────────────────────
+Pour éviter la duplication de code, on peut créer des fonctions génériques:
+
+def _generate_etat_statistiques_couverture(numero: int, exercice: str, controles: Dict) -> str:
+    """Fonction générique pour les statistiques de couverture"""
+    # Code commun
+    html = f"""
+        <span>📊 {numero}. Statistiques de Couverture (Exercice {exercice})</span>
+    """
+    return html
+
+def generate_etat_1_statistiques_couverture_n(controles: Dict) -> str:
+    return _generate_etat_statistiques_couverture(1, "N", controles)
+
+def generate_etat_9_statistiques_couverture_n1(controles: Dict) -> str:
+    return _generate_etat_statistiques_couverture(9, "N-1", controles)
+
+🎯 OBJECTIF FINAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Avoir un module Python complet qui génère les 16 états de contrôle en HTML,
+conforme EXACTEMENT au fichier test_etats_controle_html.html fourni par
+l'utilisateur.
+
+Le module doit être utilisable par etats_financiers.py pour générer
+automatiquement les états de contrôle lors de la génération de la liasse
+complète.
+
+═══════════════════════════════════════════════════════════════════════════════
+📅 Date: 05 Avril 2026 - 02:00
+Statut: ✅ 6 fonctions créées sur 16 (37.5%)
+Prochaine étape: Créer les fonctions 7-16
+═══════════════════════════════════════════════════════════════════════════════

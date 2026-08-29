@@ -1,0 +1,164 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║   ✅ FIX V6 - ATTRIBUT CHECKED DANS LE DOM                   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+
+📌 PROBLÈME RÉSOLU
+═══════════════════════════════════════════════════════════════
+
+❌ AVANT: L'état des checkboxes était invisible dans le HTML brut
+✅ APRÈS: L'attribut checked="checked" est maintenant présent
+
+
+🎯 SOLUTION APPLIQUÉE
+═══════════════════════════════════════════════════════════════
+
+3 modifications dans public/conso.js:
+
+1️⃣  Ligne ~630: Création de checkbox
+    → Ajout de setAttribute('checked', 'checked')
+
+2️⃣  Ligne ~660: Changement d'état
+    → Ajout/suppression de l'attribut lors du clic
+
+3️⃣  Ligne ~2246: Restauration
+    → Ajout/suppression de l'attribut lors de la restauration
+
+
+📊 AVANT / APRÈS
+═══════════════════════════════════════════════════════════════
+
+AVANT (V5):
+<input type="checkbox">
+<!-- Attribut checked ABSENT → Invisible pour n8n -->
+
+APRÈS (V6):
+<input type="checkbox" checked="checked">
+<!-- Attribut checked PRÉSENT → Visible pour n8n ✅ -->
+
+
+🧪 TESTER MAINTENANT
+═══════════════════════════════════════════════════════════════
+
+1. Ouvrir: http://localhost:3000/test-checkbox-dom-attribute.html
+
+2. Cliquer sur "Cocher Option B"
+
+3. Cliquer sur "Vérifier le DOM"
+   → Doit afficher "✅ Tous les attributs sont synchronisés"
+
+4. Cliquer sur "Extraire HTML"
+   → Doit afficher "1 checkbox(es) avec attribut checked="checked""
+
+
+🔍 VÉRIFICATION RAPIDE
+═══════════════════════════════════════════════════════════════
+
+Dans la console (F12):
+
+// Trouver une checkbox cochée
+const cb = document.querySelector('input[type="checkbox"]:checked');
+
+// Vérifier l'attribut
+cb.hasAttribute('checked')
+// → true ✅
+
+cb.getAttribute('checked')
+// → "checked" ✅
+
+
+📝 SYNCHRONISATION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+3 indicateurs maintenant synchronisés:
+
+1. checkbox.checked = true          (Propriété JavaScript)
+2. checked="checked"                (Attribut HTML)
+3. data-checked="true"              (Data attribute)
+
+
+🎯 POUR N8N
+═══════════════════════════════════════════════════════════════
+
+n8n peut maintenant extraire le HTML et identifier les réponses:
+
+// Extraire le HTML
+const html = table.outerHTML;
+
+// Compter les checkboxes cochées
+const count = (html.match(/checked="checked"/g) || []).length;
+
+// Parser et trouver les réponses
+const parser = new DOMParser();
+const doc = parser.parseFromString(html, 'text/html');
+const checkedBoxes = doc.querySelectorAll('input[checked]');
+
+
+📂 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════
+
+✅ public/test-checkbox-dom-attribute.html
+   → Page de test interactive
+
+✅ FIX_V6_CHECKBOX_ATTRIBUT_DOM.md
+   → Guide complet du fix
+
+✅ TEST_CHECKBOX_ATTRIBUT_DOM.txt
+   → Commandes de test
+
+✅ SUCCES_FIX_V6_CHECKBOX_DOM.md
+   → Récapitulatif du succès
+
+✅ LISEZ_MOI_FIX_V6_CHECKBOX.txt
+   → Ce fichier
+
+
+📂 FICHIERS MODIFIÉS
+═══════════════════════════════════════════════════════════════
+
+✅ public/conso.js
+   → 3 modifications (lignes ~630, ~660, ~2246)
+
+
+✅ RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════
+
+HTML généré pour une checkbox cochée:
+
+<td data-checked="true" style="background-color: #e8f5e8;">
+  <input type="checkbox" 
+         checked="checked"
+         style="width: 20px; height: 20px;">
+</td>
+
+
+🎊 CONFIRMATION
+═══════════════════════════════════════════════════════════════
+
+Pour confirmer que tout fonctionne:
+
+1. Ouvrir une table CIA dans le chat
+2. Cocher une réponse
+3. Ouvrir DevTools → Elements
+4. Inspecter l'input checkbox
+5. Vérifier: checked="checked" doit être visible
+
+✅ Attribut présent → Fix réussi !
+❌ Attribut absent → Vérifier la console
+
+
+📚 DOCUMENTATION COMPLÈTE
+═══════════════════════════════════════════════════════════════
+
+Guide détaillé:  FIX_V6_CHECKBOX_ATTRIBUT_DOM.md
+Tests:           TEST_CHECKBOX_ATTRIBUT_DOM.txt
+Succès:          SUCCES_FIX_V6_CHECKBOX_DOM.md
+Page de test:    public/test-checkbox-dom-attribute.html
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║  L'état des checkboxes est maintenant visible dans le DOM !  ║
+║  n8n peut identifier les réponses cochées dans le HTML brut  ║
+╚═══════════════════════════════════════════════════════════════╝

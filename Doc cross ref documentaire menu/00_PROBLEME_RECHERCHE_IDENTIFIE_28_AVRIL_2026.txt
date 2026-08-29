@@ -1,0 +1,56 @@
+================================================================
+   PROBLÈME IDENTIFIÉ - 28 AVRIL 2026
+================================================================
+
+✅ LE WORKFLOW FONCTIONNE !
+===========================
+
+Le test a réussi et a retourné un fichier, mais pas le bon.
+
+
+RÉSULTAT DU TEST
+================
+
+Recherché: [I30]-AFRILAND
+Trouvé: [I10]-Norme cripp.pdf
+
+❌ Le fichier retourné ne correspond pas à la recherche
+
+
+CAUSE DU PROBLÈME
+=================
+
+La requête Google Drive utilise "contains" qui est trop permissive:
+
+```
+name contains '[I30]-AFRILAND'
+```
+
+Cette requête trouve n'importe quel fichier dont le nom contient
+une partie de la chaîne, pas nécessairement le fichier exact.
+
+
+SOLUTION
+========
+
+Utiliser une recherche plus précise avec "=" au lieu de "contains":
+
+```
+name = '[I30]-AFRILAND' or name = '[I30]-AFRILAND.pdf'
+```
+
+Ou utiliser une recherche qui commence par:
+
+```
+name contains '[I30]-AFRILAND'
+```
+
+Mais filtrer les résultats pour prendre celui qui correspond le mieux.
+
+
+PROCHAINE ÉTAPE
+===============
+
+Corriger la requête dans le node "Find Document" pour être plus précis.
+
+================================================================

@@ -1,0 +1,216 @@
+═══════════════════════════════════════════════════════════════════
+🧪 COMMANDES DE TEST - PROGRAMME DE TRAVAIL N8N
+═══════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1: OUVRIR LA PAGE DE TEST
+═══════════════════════════════════════════════════════════════════
+
+1. Démarrez votre serveur de développement (si ce n'est pas déjà fait):
+   npm run dev
+
+2. Ouvrez dans votre navigateur:
+   http://localhost:5173/test-n8n-programme-travail.html
+
+3. Ouvrez la console du navigateur (F12)
+
+
+📋 ÉTAPE 2: TESTS DANS LA PAGE HTML
+═══════════════════════════════════════════════════════════════════
+
+1. Cliquez sur "Tester la Connexion"
+   → Vérifie que l'endpoint n8n est accessible
+
+2. Cliquez sur "Envoyer Test Programme"
+   → Envoie des données simulées "Programme de travail"
+   → Affiche la structure exacte de la réponse
+
+3. Cliquez sur "Tester Normalisation"
+   → Teste la fonction de normalisation avec des données de test
+
+4. Regardez les "Logs Console"
+   → Tous les logs sont capturés en temps réel
+
+
+📋 ÉTAPE 3: TESTS DANS LA CONSOLE DU NAVIGATEUR
+═══════════════════════════════════════════════════════════════════
+
+Copiez-collez ces commandes une par une dans la console:
+
+// 1. Vérifier que Flowise.js est chargé
+console.log(window.ClaraverseN8nV17.version);
+
+// 2. Tester la connexion n8n
+await window.ClaraverseN8nV17.testN8nConnection();
+
+// 3. Voir les informations du cache
+window.ClaraverseN8nV17.getCacheInfo();
+
+// 4. Effacer le cache (si besoin)
+window.ClaraverseN8nV17.clearAllCache();
+
+// 5. Forcer un nouveau scan des tables
+window.ClaraverseN8nV17.scanAndProcess();
+
+
+📋 ÉTAPE 4: TEST AVEC CURL (OPTIONNEL)
+═══════════════════════════════════════════════════════════════════
+
+Testez l'endpoint n8n directement depuis votre terminal:
+
+curl -X POST "https://xomava4845.app.n8n.cloud/webhook/htlm_processor" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"question":"<table><tr><th>Rubrique</th><th>Description</th></tr><tr><td>Etape</td><td>Programme de travail</td></tr></table><table><tr><th>Flowise</th></tr><tr><td>Programme de travail</td></tr></table>"}'
+
+
+📋 ÉTAPE 5: APPLIQUER LE PATCH (SI NÉCESSAIRE)
+═══════════════════════════════════════════════════════════════════
+
+Si Flowise.js ne reconnaît toujours pas le format, appliquez le patch:
+
+1. Dans la console du navigateur:
+
+// Charger le script de patch
+const script = document.createElement('script');
+script.src = '/patch-flowise-n8n-response.js';
+document.head.appendChild(script);
+
+2. Attendez 2 secondes
+
+3. Vérifiez que le patch est appliqué:
+console.log("Patch appliqué:", typeof window.ClaraverseN8nV17.normalizeN8nResponse);
+
+
+📋 ÉTAPE 6: TEST RÉEL DANS CLARAVERSE
+═══════════════════════════════════════════════════════════════════
+
+1. Allez sur votre interface Claraverse principale
+
+2. Créez une table avec:
+   - Colonne "Flowise"
+   - Première ligne: "Programme de travail"
+
+3. Créez une table de critères avec:
+   - Colonnes "Rubrique" et "Description"
+   - Ligne 1: Etape | Programme de travail
+   - Ligne 2: reference | Prg-001
+
+4. Ouvrez la console (F12)
+
+5. Regardez les logs qui commencent par:
+   🔍 ========== NORMALISATION
+   📡 ========== ÉTAPE 3: ENVOI
+   ✅ ========== RÉPONSE REÇUE
+
+
+📋 LOGS À SURVEILLER
+═══════════════════════════════════════════════════════════════════
+
+✅ LOGS DE SUCCÈS:
+
+🔍 ========== NORMALISATION RÉPONSE N8N ==========
+📦 Type de réponse: Array
+✅ Réponse est un Array avec 1 élément(s)
+📦 Premier élément - Type: object
+📦 Premier élément - Clés: response
+🔍 Détection du format response.body...
+📦 Body détecté - Type: Array[1]
+📦 Body[0].output existe? true
+✅ ✅ ✅ FORMAT DÉTECTÉ: Webhook htlm_processor
+📊 Status: success
+📋 Content length: 19372
+
+
+❌ LOGS D'ERREUR À ÉVITER:
+
+❌ Output vide ou null après normalisation
+❌ Format de réponse non reconnu
+❌ Aucune table trouvée dans la réponse
+
+
+📋 DIAGNOSTIC EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════
+
+PROBLÈME 1: "Erreur n8n - Failed to execute 'json' on 'Response'"
+
+SOLUTION:
+1. Vérifiez que l'endpoint n8n retourne bien du JSON
+2. Testez avec curl (voir ÉTAPE 4)
+3. Vérifiez les headers de la réponse
+
+
+PROBLÈME 2: "Output vide ou null"
+
+SOLUTION:
+1. Vérifiez que le workflow n8n retourne des données
+2. Regardez les logs détaillés dans la console
+3. Copiez la structure complète de la réponse
+
+
+PROBLÈME 3: Table "Programme de travail" non détectée
+
+SOLUTION:
+1. Vérifiez que la table a une colonne "Flowise"
+2. Vérifiez que la première ligne contient "Programme de travail"
+3. Regardez les logs de extractDynamicKeyword
+
+
+PROBLÈME 4: Tables ne s'affichent pas
+
+SOLUTION:
+1. Vérifiez que la réponse contient du markdown
+2. Regardez les logs de extractTablesFromResponse
+3. Vérifiez que le markdown est bien formaté
+
+
+📋 INFORMATIONS À PARTAGER EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════
+
+Si le problème persiste, copiez et partagez:
+
+1. ✅ Version de Flowise.js:
+   console.log(window.ClaraverseN8nV17.version);
+
+2. ✅ Tous les logs de la console qui commencent par:
+   - 🔍 ========== NORMALISATION
+   - 📡 ========== ÉTAPE 3
+   - ✅ ========== RÉPONSE REÇUE
+
+3. ✅ Structure complète de la réponse n8n:
+   (visible dans les logs ou dans la page de test)
+
+4. ✅ Capture d'écran de votre table "Programme de travail"
+
+5. ✅ Résultat du test curl (ÉTAPE 4)
+
+
+📋 COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════
+
+// Recharger Flowise.js sans recharger la page
+location.reload();
+
+// Voir toutes les tables dans le DOM
+document.querySelectorAll('table.min-w-full').length;
+
+// Voir les tables avec colonne "Flowise"
+Array.from(document.querySelectorAll('table.min-w-full')).filter(table => {
+  const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent.trim().toLowerCase());
+  return headers.includes('flowise');
+});
+
+// Voir les divs prose
+document.querySelectorAll('div.prose.prose-base.dark\\:prose-invert.max-w-none').length;
+
+// Effacer le localStorage
+localStorage.clear();
+
+
+═══════════════════════════════════════════════════════════════════
+🎉 FIN DES COMMANDES DE TEST
+═══════════════════════════════════════════════════════════════════
+
+Pour plus d'informations, consultez:
+- SOLUTION_PROGRAMME_TRAVAIL_N8N.md
+- public/test-n8n-programme-travail.html
+- public/patch-flowise-n8n-response.js

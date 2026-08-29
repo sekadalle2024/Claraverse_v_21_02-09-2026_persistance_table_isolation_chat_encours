@@ -1,0 +1,180 @@
+═══════════════════════════════════════════════════════════════════════════════
+   🚀 GUIDE COMPLET : DÉPLOIEMENT BACKEND PYTHON SUR HUGGING FACE SPACES
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 Date : 18 Avril 2026
+🎯 Objectif : Déployer le backend Python (py_backend) sur Hugging Face Spaces
+🐳 Méthode : Docker Container
+👤 Niveau : Débutant (guide pas à pas)
+
+═══════════════════════════════════════════════════════════════════════════════
+   📋 TABLE DES MATIÈRES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Prérequis
+2. Préparation du projet
+3. Création du Space sur Hugging Face
+4. Configuration des fichiers
+5. Déploiement
+6. Vérification et tests
+7. Dépannage
+
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ ÉTAPE 1 : PRÉREQUIS
+═══════════════════════════════════════════════════════════════════════════════
+
+Avant de commencer, vous devez avoir :
+
+1. ✓ Un compte Hugging Face (gratuit)
+   → Créer un compte sur : https://huggingface.co/join
+
+2. ✓ Git installé sur votre machine
+   → Vérifier : git --version
+   → Installer si nécessaire : https://git-scm.com/downloads
+
+3. ✓ Votre projet Claraverse cloné localement
+   → Vous l'avez déjà ✓
+
+4. ✓ Un token d'accès Hugging Face
+   → Aller sur : https://huggingface.co/settings/tokens
+   → Cliquer sur "New token"
+   → Nom : "claraverse-deploy"
+   → Type : "Write"
+   → Copier le token (vous en aurez besoin)
+
+═══════════════════════════════════════════════════════════════════════════════
+   📦 ÉTAPE 2 : PRÉPARATION DU PROJET
+═══════════════════════════════════════════════════════════════════════════════
+
+Votre dossier py_backend contient déjà :
+✓ Dockerfile
+✓ requirements.txt
+✓ main.py
+✓ Tous les modules nécessaires
+
+Nous allons créer quelques fichiers supplémentaires pour Hugging Face.
+
+═══════════════════════════════════════════════════════════════════════════════
+   🌐 ÉTAPE 3 : CRÉATION DU SPACE SUR HUGGING FACE
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Aller sur : https://huggingface.co/new-space
+
+2. Remplir le formulaire :
+   ┌─────────────────────────────────────────────────────────────┐
+   │ Owner : [Votre nom d'utilisateur]                           │
+   │ Space name : claraverse-backend                             │
+   │ License : MIT                                               │
+   │ Select the Space SDK : Docker                               │
+   │ Space hardware : CPU basic (gratuit) ou CPU upgrade         │
+   │ Visibility : Public ou Private (selon votre choix)          │
+   └─────────────────────────────────────────────────────────────┘
+
+3. Cliquer sur "Create Space"
+
+4. Noter l'URL de votre Space :
+   https://huggingface.co/spaces/[votre-username]/claraverse-backend
+
+═══════════════════════════════════════════════════════════════════════════════
+   📝 ÉTAPE 4 : CONFIGURATION DES FICHIERS
+═══════════════════════════════════════════════════════════════════════════════
+
+Nous allons créer/modifier les fichiers nécessaires :
+
+1. README.md (pour Hugging Face)
+2. .dockerignore (optimiser l'image)
+3. Dockerfile (déjà existant, peut nécessiter des ajustements)
+
+Voir les fichiers créés dans le dossier "Doc Hugging Face deploy"
+
+═══════════════════════════════════════════════════════════════════════════════
+   🚀 ÉTAPE 5 : DÉPLOIEMENT
+═══════════════════════════════════════════════════════════════════════════════
+
+Méthode 1 : Via Git (RECOMMANDÉE)
+─────────────────────────────────────
+
+1. Ouvrir PowerShell dans le dossier py_backend
+
+2. Initialiser Git (si pas déjà fait) :
+   git init
+
+3. Ajouter le remote Hugging Face :
+   git remote add hf https://huggingface.co/spaces/[votre-username]/claraverse-backend
+
+4. Configurer Git pour utiliser votre token :
+   git config credential.helper store
+
+5. Ajouter tous les fichiers :
+   git add .
+
+6. Créer un commit :
+   git commit -m "Initial deployment of Claraverse backend"
+
+7. Pousser vers Hugging Face :
+   git push hf main
+
+   → Vous serez invité à entrer :
+     Username : [votre-username]
+     Password : [votre-token-hugging-face]
+
+8. Attendre le build (5-10 minutes)
+   → Suivre les logs sur : https://huggingface.co/spaces/[votre-username]/claraverse-backend
+
+Méthode 2 : Via l'interface Web
+────────────────────────────────
+
+1. Aller sur votre Space
+2. Cliquer sur "Files" → "Add file" → "Upload files"
+3. Glisser-déposer tous les fichiers du dossier py_backend
+4. Cliquer sur "Commit changes to main"
+
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ ÉTAPE 6 : VÉRIFICATION ET TESTS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Attendre que le build soit terminé (statut "Running")
+
+2. Votre API sera accessible à :
+   https://[votre-username]-claraverse-backend.hf.space
+
+3. Tester l'endpoint de santé :
+   https://[votre-username]-claraverse-backend.hf.space/health
+
+4. Tester la documentation API :
+   https://[votre-username]-claraverse-backend.hf.space/docs
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔧 ÉTAPE 7 : DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+Problème : Build échoue
+Solution : Vérifier les logs dans l'onglet "Logs" de votre Space
+
+Problème : Timeout pendant le build
+Solution : Réduire la taille de l'image Docker (voir .dockerignore)
+
+Problème : Application ne démarre pas
+Solution : Vérifier que le PORT est bien configuré (7860 pour HF)
+
+Problème : Erreur de mémoire
+Solution : Upgrader vers un hardware plus puissant (CPU upgrade ou GPU)
+
+═══════════════════════════════════════════════════════════════════════════════
+   📚 RESSOURCES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+• Documentation Hugging Face Spaces : https://huggingface.co/docs/hub/spaces
+• Docker Spaces : https://huggingface.co/docs/hub/spaces-sdks-docker
+• Support : https://discuss.huggingface.co/
+
+═══════════════════════════════════════════════════════════════════════════════
+   📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Lire le fichier : GUIDE_DEPLOIEMENT_HUGGINGFACE.md
+2. Exécuter le script : deploy-huggingface.ps1
+3. Configurer les variables d'environnement (si nécessaire)
+4. Mettre à jour le frontend pour pointer vers la nouvelle URL
+
+═══════════════════════════════════════════════════════════════════════════════

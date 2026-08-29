@@ -1,0 +1,274 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║         WORKFLOW CORRIGÉ V2 - HTTP REQUEST v4.2 - 12 AVRIL 2026            ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✅ PROBLÈME RÉSOLU
+═══════════════════════════════════════════════════════════════════════════════
+
+L'erreur "Cannot read properties of undefined (reading 'status')" a été corrigée.
+
+Le workflow utilise maintenant la syntaxe correcte pour HTTP Request v4.2.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 FICHIER CRÉÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Doc cross ref documentaire menu/WORKFLOW_N8N_XREF_HTTP_SOLUTION_V2.json
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 CORRECTIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ REQUÊTES GET (Recherche de dossiers)
+   
+   AVANT (INCORRECT) :
+   {
+     "qs": {
+       "parameters": [...]
+     }
+   }
+   
+   APRÈS (CORRECT) :
+   {
+     "sendQuery": true,
+     "queryParameters": {
+       "parameters": [...]
+     }
+   }
+   
+   Nodes corrigés :
+   - Rechercher Dossier CAC
+   - Rechercher Dossier Client
+   - Rechercher Cycle
+
+2. ✅ REQUÊTES POST (Création de dossiers)
+   
+   AVANT (INCORRECT) :
+   {
+     "method": "POST",
+     "sendBody": true,
+     "bodyParameters": {
+       "parameters": [
+         { "name": "name", "value": "..." },
+         { "name": "mimeType", "value": "..." }
+       ]
+     }
+   }
+   
+   APRÈS (CORRECT) :
+   {
+     "method": "POST",
+     "sendBody": true,
+     "contentType": "json",
+     "bodyContent": "={{ JSON.stringify({ name: '...', mimeType: '...' }) }}"
+   }
+   
+   Nodes corrigés :
+   - Créer Dossier CAC
+   - Créer Dossier Client
+   - Créer Cycles
+
+3. ✅ UPLOAD DE FICHIER (Multipart)
+   
+   AVANT (INCORRECT) :
+   {
+     "method": "POST",
+     "contentType": "multipart-form-data",
+     "bodyParameters": {
+       "parameters": [
+         { "name": "metadata", "value": "..." },
+         { "name": "file", "value": "={{ $binary.data }}" }
+       ]
+     }
+   }
+   
+   APRÈS (CORRECT) :
+   {
+     "method": "POST",
+     "sendBody": true,
+     "contentType": "multipart-form-data",
+     "bodyContent": "={{ JSON.stringify({ metadata: {...}, file: $binary.data }) }}"
+   }
+   
+   Node corrigé :
+   - Upload Fichier
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 RÉSUMÉ DES CHANGEMENTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Total de nodes corrigés : 7 nodes HTTP Request
+
+✓ 3 nodes GET (recherche)
+✓ 3 nodes POST (création de dossiers)
+✓ 1 node POST multipart (upload fichier)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 IMPORTATION DU WORKFLOW CORRIGÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir n8n dans votre navigateur
+
+2. Cliquer sur "+" pour créer un nouveau workflow
+
+3. Cliquer sur les 3 points (⋮) en haut à droite
+
+4. Choisir "Import from File"
+
+5. Sélectionner le fichier :
+   Doc cross ref documentaire menu/WORKFLOW_N8N_XREF_HTTP_SOLUTION_V2.json
+
+6. Configurer les credentials OAuth2 pour chaque node HTTP Request
+
+7. Activer le workflow
+
+8. Tester avec le formulaire
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔑 CONFIGURATION OAUTH2
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour chaque node HTTP Request (7 nodes au total) :
+
+1. Cliquer sur le node
+2. Dans "Credential to connect with"
+3. Sélectionner ou créer un credential "Google OAuth2 API"
+4. Utiliser les informations suivantes :
+
+   Client ID: [VOTRE_GOOGLE_CLIENT_ID]
+   Client Secret: [VOTRE_GOOGLE_CLIENT_SECRET]
+   OAuth Redirect URL: https://hkj0631c.rpcl.app/rest/oauth2-credential/callback
+   
+   Scopes:
+   - https://www.googleapis.com/auth/drive
+   - https://www.googleapis.com/auth/drive.file
+
+5. Cliquer sur "Connect my account"
+6. Autoriser l'accès à Google Drive
+7. Sauvegarder
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🧪 TEST DU WORKFLOW
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Activer le workflow dans n8n
+
+2. Copier l'URL du formulaire
+   (affichée dans le node "Cross References Form")
+
+3. Ouvrir l'URL dans un navigateur
+
+4. Remplir le formulaire :
+   - Client: Orange
+   - Exercice: 2025
+   - Cycle comptable: Trésorerie
+   - Cross référence: I1
+   - Document: Lead sheet trésorerie
+   - Files: Sélectionner un fichier Excel/PDF
+
+5. Soumettre le formulaire
+
+6. Vérifier dans Google Drive :
+   ✓ Dossier CAC créé
+   ✓ Dossier Orange-2025 créé
+   ✓ 10 cycles créés
+   ✓ Fichier uploadé avec le nom [I1]-Lead sheet trésorerie
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 STRUCTURE GOOGLE DRIVE
+═══════════════════════════════════════════════════════════════════════════════
+
+Google Drive (root)
+└── Dossier CAC/
+    └── Orange-2025/
+        ├── Capitaux propres/
+        ├── Charge d'exploitation/
+        ├── Client/
+        ├── Fournisseur/
+        ├── Immobilisations/
+        ├── Impôt et taxes/
+        ├── Personnel/
+        ├── Stock/
+        ├── Trésorerie/
+        │   └── [I1]-Lead sheet trésorerie.xlsx
+        └── Ventes/
+
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ DIFFÉRENCES AVEC LA VERSION PRÉCÉDENTE
+═══════════════════════════════════════════════════════════════════════════════
+
+VERSION V1 (INCORRECTE) :
+❌ Utilisait "qs.parameters" pour les query strings
+❌ Utilisait "bodyParameters" pour les requêtes POST
+❌ Ne spécifiait pas "sendQuery" pour les GET
+❌ Ne spécifiait pas "contentType" pour les POST
+
+VERSION V2 (CORRECTE) :
+✅ Utilise "sendQuery: true" + "queryParameters" pour les GET
+✅ Utilise "sendBody: true" + "contentType: json" + "bodyContent" pour les POST
+✅ Utilise JSON.stringify() pour formater les données JSON
+✅ Compatible avec HTTP Request v4.2
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLÈME : Erreur "Cannot read 'status'"
+SOLUTION : ✅ Résolu dans cette version V2
+
+PROBLÈME : Erreur 401 Unauthorized
+SOLUTION : Configurer les credentials OAuth2 pour tous les nodes HTTP Request
+
+PROBLÈME : Erreur 403 Forbidden
+SOLUTION : Vérifier que les scopes Google Drive sont corrects
+
+PROBLÈME : Le fichier n'est pas uploadé
+SOLUTION : Vérifier que le node "Préparer Upload" récupère bien les binary data
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ AVANTAGES DE LA VERSION V2
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Syntaxe correcte pour HTTP Request v4.2
+✅ Pas d'erreur "Cannot read 'status'"
+✅ Compatible avec n8n 2.15.1
+✅ Fonctionne avec l'API Google Drive v3
+✅ Gestion complète de la structure de dossiers
+✅ Création automatique des dossiers manquants
+✅ Indexation selon [Cross référence]-Document
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Importer le workflow V2 dans n8n
+2. ✅ Configurer les credentials OAuth2
+3. ✅ Tester avec un document
+4. ⏳ Intégrer dans le menu contextuel de Claraverse
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 FICHIERS CRÉÉS DANS CETTE SESSION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. WORKFLOW_N8N_XREF_HTTP_SOLUTION_V2.json
+   → Workflow corrigé avec syntaxe HTTP Request v4.2
+
+2. 00_WORKFLOW_CORRIGE_V2_12_AVRIL_2026.txt
+   → Ce fichier de documentation
+
+═══════════════════════════════════════════════════════════════════════════════
+

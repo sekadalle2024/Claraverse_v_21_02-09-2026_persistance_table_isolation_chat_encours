@@ -1,0 +1,90 @@
+===========================================
+COMMANDES POUR TESTER L'INTERFACE GROK
+===========================================
+
+1. DÉMARRER L'APPLICATION
+--------------------------
+npm run dev
+
+2. OUVRIR DANS LE NAVIGATEUR
+-----------------------------
+http://localhost:5173
+(ou le port affiché dans le terminal)
+
+3. NAVIGUER VERS LE CHAT
+-------------------------
+- Cliquer sur "Clara" dans la barre latérale gauche
+- Ou utiliser le raccourci clavier (si configuré)
+
+4. VÉRIFICATIONS À EFFECTUER
+-----------------------------
+✓ Logo centré avec légende "E-audit"
+✓ Icône Paperclip (📎) visible à gauche de la zone de saisie
+✓ Zone de saisie avec forme ovale
+✓ Bouton d'envoi (➤) à droite
+✓ Pas de sélecteurs de modèles LLM visibles
+
+5. TESTER LA SÉLECTION DE FICHIERS
+-----------------------------------
+- Cliquer sur l'icône Paperclip (📎)
+- Sélectionner un fichier (image, PDF, etc.)
+- Vérifier que le fichier apparaît au-dessus de la zone de saisie
+- Cliquer sur [X] pour supprimer le fichier
+
+6. TESTER LE MODE SOMBRE
+-------------------------
+- Activer le mode sombre dans les paramètres
+- Vérifier que tous les éléments sont visibles
+- Vérifier les contrastes
+
+7. TESTER LA RESPONSIVITÉ
+--------------------------
+- Redimensionner la fenêtre du navigateur
+- Vérifier que le design s'adapte correctement
+- Tester sur mobile (DevTools > Toggle device toolbar)
+
+8. VÉRIFIER LES ERREURS
+------------------------
+- Ouvrir la console (F12)
+- Vérifier qu'il n'y a pas d'erreurs JavaScript
+- Vérifier que les styles CSS sont bien appliqués
+
+===========================================
+FICHIERS DE DOCUMENTATION
+===========================================
+
+1. MODIFICATIONS_INTERFACE_GROK_STYLE.md
+   → Documentation détaillée des modifications
+
+2. GUIDE_TEST_INTERFACE_GROK.md
+   → Guide de test complet avec checklist
+
+3. RESUME_MODIFICATIONS_GROK.md
+   → Résumé exécutif des modifications
+
+4. COMMANDES_TEST_GROK.txt
+   → Ce fichier
+
+===========================================
+DÉPANNAGE RAPIDE
+===========================================
+
+PROBLÈME: L'icône Paperclip ne fonctionne pas
+SOLUTION: Vérifier la console pour les erreurs
+
+PROBLÈME: Les sélecteurs LLM sont visibles
+SOLUTION: Vérifier que grok-style-overrides.css est importé
+
+PROBLÈME: Le logo n'est pas centré
+SOLUTION: Vérifier les classes Tailwind dans WelcomeScreen
+
+===========================================
+CONTACT ET SUPPORT
+===========================================
+
+Pour toute question ou problème:
+1. Consulter les fichiers de documentation
+2. Vérifier les diagnostics TypeScript
+3. Examiner la console du navigateur
+
+===========================================

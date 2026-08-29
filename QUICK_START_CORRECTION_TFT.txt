@@ -1,0 +1,65 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GUIDE RAPIDE - CORRECTION TFT - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ CORRECTION APPLIQUÉE
+─────────────────────────────────────────────────────────────────────────────
+La détection des onglets de balance a été corrigée pour fonctionner avec des
+noms d'années (BALANCE 2018, BALANCE 2017, BALANCE 2016).
+
+📊 STATUT ACTUEL
+─────────────────────────────────────────────────────────────────────────────
+9 sections générées sur 11 attendues
+  ✓ BILAN - ACTIF
+  ✓ BILAN - PASSIF
+  ✓ COMPTE DE RÉSULTAT
+  ✓ NOTES ANNEXES
+  ✓ 5 États de contrôle
+
+  ❌ TFT (Tableau des Flux de Trésorerie) - MANQUANT
+  ❌ État de contrôle TFT - MANQUANT
+
+🔄 PROCHAINES ÉTAPES
+─────────────────────────────────────────────────────────────────────────────
+
+ÉTAPE 1: Redémarrer le backend
+  1. Ouvrir le terminal où le backend tourne
+  2. Appuyer sur Ctrl+C pour l'arrêter
+  3. Relancer: .\start-claraverse-conda.ps1
+  4. Attendre le message "Application startup complete"
+
+ÉTAPE 2: Relancer le test
+  Dans un autre terminal:
+  ```powershell
+  python test-exhaustivite-simple.py
+  ```
+
+ÉTAPE 3: Consulter les logs du backend
+  Dans le terminal du backend, chercher:
+  - "🔄 Calcul du TFT..."
+  - "✅ TFT calculé avec succès"
+  - "🔍 Vérification TFT dans results_liasse"
+  - "✅ HTML TFT ajouté"
+  
+  OU des erreurs:
+  - "❌ Erreur calcul TFT"
+  - "⚠️ TFT est vide"
+  - "⚠️ TFT non trouvé dans results_liasse"
+
+ÉTAPE 4: Partager les logs
+  Copier les lignes contenant "TFT" ou "tft" et les partager pour diagnostic
+
+═══════════════════════════════════════════════════════════════════════════════
+  TESTS DISPONIBLES
+═══════════════════════════════════════════════════════════════════════════════
+
+Test complet (avec ouverture navigateur):
+  python test-exhaustivite-simple.py
+
+Test détection onglets:
+  python test-detection-onglets.py
+
+Test TFT direct (sans backend):
+  python test-tft-direct.py
+
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,145 @@
+================================================================================
+                    QUICK START - SUPPRESSION TESTS STOCK
+                        CC02, CC03, CC04 - E-REVISION
+================================================================================
+
+🚀 DÉMARRAGE RAPIDE
+
+Cette tâche supprime les tests CC02, CC03, CC04 de la section Stock dans le
+PROGRAMME DE CONTRÔLE pour E-revision.
+
+================================================================================
+⚡ EXÉCUTION RAPIDE
+================================================================================
+
+1. Ouvrir PowerShell dans le dossier du projet
+
+2. Exécuter le script :
+   ./test-suppression-stock-cc02-cc03-cc04.ps1
+
+3. Confirmer l'opération (taper O puis Entrée)
+
+4. Vérifier les résultats affichés
+
+C'est tout ! ✅
+
+================================================================================
+🎯 CE QUI SERA SUPPRIMÉ
+================================================================================
+
+4 tests avec tous leurs modes (24 modes au total) :
+
+1. CC02 - Feuilles maîtresses-STOCKS
+   └─ 6 modes : Normal, Papier de travail, Demo, Avancé, Methodo, Guide
+
+2. CC02 - Travaux analytiques -Stocks
+   └─ 6 modes : Normal, Papier de travail, Demo, Avancé, Methodo, Guide
+
+3. CC03 - Revue du Contrôle interne
+   └─ 6 modes : Normal, Papier de travail, Demo, Avancé, Methodo, Guide
+
+4. CC04 - Revue des techniques comptables
+   └─ 6 modes : Normal, Papier de travail, Demo, Avancé, Methodo, Guide
+
+================================================================================
+✅ CE QUI RESTERA
+================================================================================
+
+Les autres tests de la section Stock ne seront pas affectés :
+
+✅ CC020 - Test sur la centralisation
+✅ CC025 - Test Stock Phys_Théorique
+✅ CC030 - Test Stock Physi_Inventorié
+✅ CC035 - Test Stock PV_Valorisé
+✅ CC040 - Rapprochement de solde BG AAchier stock
+
+================================================================================
+🔍 VÉRIFICATION RAPIDE
+================================================================================
+
+Après exécution, vérifier que les tests ont été supprimés :
+
+Select-String -Path "src/components/Clara_Components/DemarrerMenu.tsx" -Pattern "stocks-cc02|stocks-cc03|stocks-cc04"
+
+Résultat attendu : Uniquement CC020, CC025, CC030, CC035, CC040
+                   (pas CC02, CC03, CC04)
+
+================================================================================
+💾 SAUVEGARDE AUTOMATIQUE
+================================================================================
+
+Une sauvegarde est créée automatiquement avant modification :
+
+src/components/Clara_Components/DemarrerMenu.tsx.backup_stock_YYYYMMDD_HHMMSS
+
+Pour restaurer en cas de problème :
+
+Copy-Item "src/components/Clara_Components/DemarrerMenu.tsx.backup_stock_*" "src/components/Clara_Components/DemarrerMenu.tsx" -Force
+
+================================================================================
+📋 PROCHAINES ÉTAPES
+================================================================================
+
+1. Tester l'application
+   npm run dev
+
+2. Vérifier le menu E-revision
+   E-revision > Programme de contrôle > Stock
+   Vérifier que CC02, CC03, CC04 ne sont plus présents
+
+3. Commit les changements
+   git add .
+   git commit -m "Suppression des tests CC02, CC03, CC04 de la section Stock - E-revision"
+
+================================================================================
+📚 DOCUMENTATION COMPLÈTE
+================================================================================
+
+Pour plus de détails, consulter :
+
+- Index complet :
+  00_INDEX_SUPPRESSION_STOCK_CC02_CC03_CC04_16_MAI_2026.md
+
+- Documentation détaillée :
+  Doc menu demarrer/Documentation/SUPPRESSION_TESTS_STOCK_CC02_CC03_CC04_E_REVISION_16_MAI_2026.md
+
+- Récapitulatif final :
+  00_RECAP_FINAL_SUPPRESSION_STOCK_CC02_CC03_CC04_16_MAI_2026.txt
+
+- Synthèse visuelle :
+  SYNTHESE_VISUELLE_SUPPRESSION_STOCK_16_MAI_2026.txt
+
+================================================================================
+🔧 COMMANDES ALTERNATIVES
+================================================================================
+
+Si le script PowerShell ne fonctionne pas, exécuter directement avec Python :
+
+python "Doc menu demarrer/Scripts/remove_stock_tests_cc02_cc03_cc04_e_revision.py"
+
+================================================================================
+❓ BESOIN D'AIDE ?
+================================================================================
+
+En cas de problème :
+
+1. Vérifier que Python est installé : python --version
+2. Vérifier que le fichier DemarrerMenu.tsx existe
+3. Consulter la documentation complète
+4. Restaurer depuis la sauvegarde si nécessaire
+
+================================================================================
+✨ RÉSUMÉ
+================================================================================
+
+✅ Script prêt à l'emploi
+✅ Sauvegarde automatique
+✅ Vérification intégrée
+✅ Documentation complète
+✅ Restauration facile
+
+Temps estimé : 2 minutes
+
+================================================================================
+                            FIN DU QUICK START
+================================================================================

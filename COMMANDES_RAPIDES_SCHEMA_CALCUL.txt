@@ -1,0 +1,201 @@
+═══════════════════════════════════════════════════════════════════════════════
+⚡ COMMANDES RAPIDES - SCHÉMA DE CALCUL
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 COPIER-COLLER DANS LA CONSOLE DU NAVIGATEUR (F12)
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 AFFICHER LE CONTENU DU LOCALSTORAGE
+───────────────────────────────────────────────────────────────────────────────
+schemaCalculCommands.showStorage()
+
+
+🔄 FORCER LE TRAITEMENT DE TOUTES LES TABLES
+───────────────────────────────────────────────────────────────────────────────
+schemaCalculCommands.processAll()
+
+
+📥 RESTAURER TOUS LES SCHÉMAS DEPUIS LOCALSTORAGE
+───────────────────────────────────────────────────────────────────────────────
+schemaCalculCommands.restoreAll()
+
+
+🗑️ EFFACER TOUS LES SCHÉMAS SAUVEGARDÉS
+───────────────────────────────────────────────────────────────────────────────
+schemaCalculCommands.clearStorage()
+
+
+🔧 ACCÉDER AU MANAGER
+───────────────────────────────────────────────────────────────────────────────
+window.SchemaCalculManager
+
+
+📊 AFFICHER LES TABLES TRAITÉES
+───────────────────────────────────────────────────────────────────────────────
+console.log(window.SchemaCalculManager.processedTables)
+
+
+💾 SAUVEGARDER MANUELLEMENT UN SCHÉMA
+───────────────────────────────────────────────────────────────────────────────
+// Trouver le schéma
+const schema = document.querySelector('.claraverse-schema-calcul');
+// Sauvegarder
+window.SchemaCalculManager.saveSchemaDataNow(schema);
+
+
+🔍 VÉRIFIER SI UN SCHÉMA EXISTE POUR UNE TABLE
+───────────────────────────────────────────────────────────────────────────────
+// Remplacer TABLE_ID par l'ID de votre table
+const tableId = 'TABLE_ID';
+const schema = document.querySelector(`table.claraverse-schema-calcul[data-for-table="${tableId}"]`);
+console.log(schema ? 'Schéma trouvé' : 'Aucun schéma');
+
+
+📋 LISTER TOUS LES SCHÉMAS DANS LE DOM
+───────────────────────────────────────────────────────────────────────────────
+const schemas = document.querySelectorAll('.claraverse-schema-calcul');
+console.log(`${schemas.length} schéma(s) trouvé(s)`);
+schemas.forEach((s, i) => {
+  console.log(`${i+1}. ID: ${s.dataset.schemaId}, Pour table: ${s.dataset.forTable}`);
+});
+
+
+🔍 AFFICHER LES DONNÉES D'UN SCHÉMA SPÉCIFIQUE
+───────────────────────────────────────────────────────────────────────────────
+// Remplacer SCHEMA_ID par l'ID de votre schéma
+const schemaId = 'SCHEMA_ID';
+const allData = window.SchemaCalculManager.loadAllData();
+console.log(allData[schemaId]);
+
+
+📊 STATISTIQUES DU LOCALSTORAGE
+───────────────────────────────────────────────────────────────────────────────
+const data = window.SchemaCalculManager.loadAllData();
+const schemaCount = Object.keys(data).length;
+const totalSize = JSON.stringify(data).length;
+console.log(`Schémas: ${schemaCount}`);
+console.log(`Taille: ${(totalSize / 1024).toFixed(2)} KB`);
+
+
+🔄 RETRAITER UNE DIV SPÉCIFIQUE
+───────────────────────────────────────────────────────────────────────────────
+// Trouver la div contenant vos tables
+const div = document.querySelector('div.prose');
+// Retraiter
+window.SchemaCalculManager.processDivTables(div);
+
+
+🗑️ SUPPRIMER UN SCHÉMA SPÉCIFIQUE
+───────────────────────────────────────────────────────────────────────────────
+// Remplacer SCHEMA_ID par l'ID de votre schéma
+const schemaId = 'SCHEMA_ID';
+const schema = document.querySelector(`[data-schema-id="${schemaId}"]`);
+if (schema) {
+  schema.remove();
+  const allData = window.SchemaCalculManager.loadAllData();
+  delete allData[schemaId];
+  window.SchemaCalculManager.saveAllData(allData);
+  console.log('Schéma supprimé');
+}
+
+
+🔍 TROUVER LA "NATURE DE TEST" D'UNE TABLE
+───────────────────────────────────────────────────────────────────────────────
+// Sélectionner une table
+const table = document.querySelector('table');
+// Extraire la nature de test
+const result = window.SchemaCalculManager.extractNatureDeTest(table);
+console.log('Nature de test:', result);
+
+
+📋 LISTER TOUTES LES TABLES AVEC LEUR ID
+───────────────────────────────────────────────────────────────────────────────
+const tables = document.querySelectorAll('table');
+tables.forEach((t, i) => {
+  const id = t.dataset.tableId || 'Pas d\'ID';
+  const isModelized = window.SchemaCalculManager.isModelizedTable(t);
+  console.log(`${i+1}. ID: ${id}, Modelisée: ${isModelized}`);
+});
+
+
+🔧 FORCER LA GÉNÉRATION D'UN ID POUR UNE TABLE
+───────────────────────────────────────────────────────────────────────────────
+// Sélectionner une table
+const table = document.querySelector('table');
+// Générer l'ID
+const id = window.SchemaCalculManager.generateTableId(table);
+console.log('ID généré:', id);
+
+
+💾 EXPORTER TOUTES LES DONNÉES DU LOCALSTORAGE
+───────────────────────────────────────────────────────────────────────────────
+const data = window.SchemaCalculManager.loadAllData();
+const json = JSON.stringify(data, null, 2);
+console.log(json);
+// Copier dans le presse-papiers
+navigator.clipboard.writeText(json).then(() => {
+  console.log('✅ Données copiées dans le presse-papiers');
+});
+
+
+📥 IMPORTER DES DONNÉES DANS LE LOCALSTORAGE
+───────────────────────────────────────────────────────────────────────────────
+// Remplacer DATA_JSON par vos données JSON
+const dataJson = 'DATA_JSON';
+const data = JSON.parse(dataJson);
+window.SchemaCalculManager.saveAllData(data);
+console.log('✅ Données importées');
+
+
+🔄 RÉINITIALISER COMPLÈTEMENT LE SYSTÈME
+───────────────────────────────────────────────────────────────────────────────
+// Effacer le localStorage
+schemaCalculCommands.clearStorage();
+// Supprimer tous les schémas du DOM
+document.querySelectorAll('.claraverse-schema-calcul').forEach(s => s.remove());
+// Réinitialiser les tables traitées
+window.SchemaCalculManager.processedTables = new WeakSet();
+// Retraiter toutes les tables
+schemaCalculCommands.processAll();
+console.log('✅ Système réinitialisé');
+
+
+═══════════════════════════════════════════════════════════════════════════════
+⌨️ RACCOURCIS CLAVIER
+═══════════════════════════════════════════════════════════════════════════════
+
+Ctrl + Shift + K  →  Ajouter un schéma de calcul à la table active
+
+
+═══════════════════════════════════════════════════════════════════════════════
+🔍 DÉBOGAGE AVANCÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+ACTIVER LE MODE DEBUG
+───────────────────────────────────────────────────────────────────────────────
+// Dans papier-travail-schema-calcul.js, la variable CONFIG.debugMode est déjà true
+// Pour vérifier:
+console.log('Debug mode:', window.SchemaCalculManager.debugMode);
+
+
+SURVEILLER LES MUTATIONS
+───────────────────────────────────────────────────────────────────────────────
+// L'observer est déjà actif, pour le vérifier:
+console.log('Observer:', window.SchemaCalculManager.observer);
+
+
+VÉRIFIER LES OBSERVERS DES SCHÉMAS
+───────────────────────────────────────────────────────────────────────────────
+console.log('Schema observers:', window.SchemaCalculManager.schemaObservers);
+
+
+═══════════════════════════════════════════════════════════════════════════════
+📝 NOTES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Toutes ces commandes doivent être exécutées dans la console du navigateur (F12)
+2. Assurez-vous que papier-travail-schema-calcul.js est bien chargé
+3. Les commandes sont disponibles après le chargement complet de la page
+4. Utilisez Ctrl+Shift+K pour un accès rapide depuis l'interface
+
+═══════════════════════════════════════════════════════════════════════════════

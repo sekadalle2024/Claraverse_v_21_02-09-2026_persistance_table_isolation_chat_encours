@@ -1,0 +1,108 @@
+═══════════════════════════════════════════════════════════════════════════
+  ACTION IMMÉDIATE - CORRECTION PLACEHOLDERS CASE 25
+  Date: 29 Mars 2026
+═══════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLÈME ACTUEL
+═══════════════════════════════════════════════════════════════════════════
+
+Le workflow n8n retourne des PLACEHOLDERS LITTÉRAUX au lieu de contenu réel:
+
+❌ Réponse actuelle:
+   [Titre de l'anomalie basé sur le cycle et l'anomalie mentionnés]
+   [Description des travaux effectués et du contexte SPÉCIFIQUE...]
+   [Constat détaillé de l'anomalie SPÉCIFIQUE mentionnée...]
+
+✅ Réponse attendue:
+   Absence de procédure formalisée de recrutement du DAF
+   Lors de nos travaux sur le cycle RH, nous avons constaté...
+   L'absence de procédure expose l'organisation à des risques...
+
+═══════════════════════════════════════════════════════════════════════════
+🎯 SOLUTION EN 3 ÉTAPES
+═══════════════════════════════════════════════════════════════════════════
+
+ÉTAPE 1: OUVRIR N8N
+───────────────────────────────────────────────────────────────────────────
+URL: https://t22wtwxl.rpcld.app
+Workflow: recos_contrôle_interne_comptable
+
+ÉTAPE 2: COPIER LE NOUVEAU PROMPT
+───────────────────────────────────────────────────────────────────────────
+Fichier: PROMPT_SYSTEME_CORRIGE_CASE_25_FINAL.md
+Section: "À Copier dans le Node"
+
+Node à modifier: "Recos controle interne comptable"
+Action: Remplacer COMPLÈTEMENT le prompt système actuel
+
+ÉTAPE 3: TESTER
+───────────────────────────────────────────────────────────────────────────
+Message test:
+[Command] : Recos contrôle interne comptable
+[Cycle] : RH
+[test] : AA010
+[reference] : test sur la validation du process DRH
+[Nature de test] = [Rapprochement]
+[Assertion] = validité
+[Anomalie] = Absence de procedure de recrutement du DAF depuis janvier 2002
+
+Vérifier:
+✅ Réponse contient du contenu RÉEL (pas de placeholders)
+✅ Réponse parle de RH/Recrutement (pas de caisse)
+✅ Toutes les rubriques sont remplies
+
+═══════════════════════════════════════════════════════════════════════════
+📝 POURQUOI ÇA VA FONCTIONNER
+═══════════════════════════════════════════════════════════════════════════
+
+AVANT (problème):
+Le prompt montrait un exemple avec placeholders:
+"Intitule": "[Titre de l'anomalie...]"
+→ Le LLM copiait les placeholders tels quels
+
+APRÈS (solution):
+Le prompt ne montre AUCUN placeholder
++ Instructions explicites: "NE COPIEZ PAS les placeholders"
++ Exemples de ce qu'il FAUT faire vs ce qu'il NE FAUT PAS faire
+→ Le LLM génère du contenu réel
+
+═══════════════════════════════════════════════════════════════════════════
+🚀 COMMANDES RAPIDES
+═══════════════════════════════════════════════════════════════════════════
+
+1. Ouvrir le fichier avec le prompt corrigé:
+   code PROMPT_SYSTEME_CORRIGE_CASE_25_FINAL.md
+
+2. Ouvrir n8n:
+   start https://t22wtwxl.rpcld.app
+
+3. Après correction, redémarrer le serveur:
+   .\start-claraverse.ps1
+
+═══════════════════════════════════════════════════════════════════════════
+📊 CHECKLIST
+═══════════════════════════════════════════════════════════════════════════
+
+[ ] Fichier PROMPT_SYSTEME_CORRIGE_CASE_25_FINAL.md ouvert
+[ ] N8N ouvert (https://t22wtwxl.rpcld.app)
+[ ] Workflow "recos_contrôle_interne_comptable" ouvert
+[ ] Node "Recos controle interne comptable" localisé
+[ ] Nouveau prompt copié et collé
+[ ] Workflow sauvegardé
+[ ] Workflow activé
+[ ] Serveur redémarré
+[ ] Test effectué avec message RH
+[ ] Réponse contient du contenu réel (pas de placeholders)
+[ ] Réponse parle de RH (pas de caisse)
+
+═══════════════════════════════════════════════════════════════════════════
+💡 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════
+
+1. PROMPT_SYSTEME_CORRIGE_CASE_25_FINAL.md
+   → Contient le nouveau prompt système à copier dans n8n
+
+2. 00_ACTION_IMMEDIATE_CASE_25_PLACEHOLDERS.txt (ce fichier)
+   → Guide rapide pour appliquer la correction
+
+═══════════════════════════════════════════════════════════════════════════

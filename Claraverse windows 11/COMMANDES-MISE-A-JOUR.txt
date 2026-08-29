@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════════════════════
+                    COMMANDES DE MISE À JOUR DOCKER
+═══════════════════════════════════════════════════════════════════════════
+
+
+🔄 MISE À JOUR STANDARD
+═══════════════════════════════════════════════════════════════════════════
+
+# Depuis WSL2 (3 commandes)
+docker compose down
+docker compose build
+docker compose up -d
+
+# Depuis Windows (1 ligne)
+wsl bash -c "cd /mnt/d/ClaraVerse-v\ firebase && docker compose down && docker compose build && docker compose up -d"
+
+
+📁 SCRIPTS WINDOWS (Double-clic)
+═══════════════════════════════════════════════════════════════════════════
+
+✅ update-containers.bat      → Mise à jour standard
+✅ rebuild-no-cache.bat        → Rebuild complet sans cache
+
+
+🎯 MISE À JOUR SÉLECTIVE
+═══════════════════════════════════════════════════════════════════════════
+
+# Frontend uniquement
+docker compose down
+docker compose build frontend
+docker compose up -d
+
+# Backend uniquement
+docker compose down
+docker compose build backend
+docker compose up -d
+
+
+⚡ REBUILD SANS CACHE
+═══════════════════════════════════════════════════════════════════════════
+
+# Si les modifications ne sont pas prises en compte
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+
+
+🗑️ NETTOYAGE COMPLET
+═══════════════════════════════════════════════════════════════════════════
+
+# Supprimer tout et recommencer
+docker compose down -v
+docker rmi claraverse-vfirebase-frontend claraverse-vfirebase-backend
+docker compose build --no-cache
+docker compose up -d
+
+
+🔍 VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════
+
+# État des conteneurs
+docker compose ps
+
+# Logs
+docker compose logs -f
+
+# Images
+docker images | grep claraverse
+
+
+═══════════════════════════════════════════════════════════════════════════
+                        COMMANDE RAPIDE
+═══════════════════════════════════════════════════════════════════════════
+
+docker compose down && docker compose build && docker compose up -d

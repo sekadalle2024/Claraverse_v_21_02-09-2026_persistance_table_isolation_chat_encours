@@ -1,0 +1,84 @@
+═══════════════════════════════════════════════════════════════════════════════
+   📋 COMMANDES RAPIDES : DÉPLOIEMENT HUGGING FACE
+═══════════════════════════════════════════════════════════════════════════════
+
+Token : [VOTRE_TOKEN_HUGGING_FACE]
+Space : claraverse-backend
+
+═══════════════════════════════════════════════════════════════════════════════
+   🚀 DÉPLOIEMENT AUTOMATIQUE
+═══════════════════════════════════════════════════════════════════════════════
+
+cd py_backend
+..\Doc backend huggings face\deploy-maintenant.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+   📝 DÉPLOIEMENT MANUEL
+═══════════════════════════════════════════════════════════════════════════════
+
+# Remplacer [USERNAME] par votre nom d'utilisateur Hugging Face
+# Remplacer [TOKEN] par votre token Hugging Face
+
+cd py_backend
+git init
+git remote add hf https://[USERNAME]:[TOKEN]@huggingface.co/spaces/[USERNAME]/claraverse-backend
+git add .
+git commit -m "Initial deployment: Claraverse backend"
+git push hf main --force
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔄 MISE À JOUR
+═══════════════════════════════════════════════════════════════════════════════
+
+cd py_backend
+git add .
+git commit -m "Update: description"
+git push hf main
+
+═══════════════════════════════════════════════════════════════════════════════
+   ✅ VÉRIFICATION
+═══════════════════════════════════════════════════════════════════════════════
+
+# Remplacer [USERNAME]
+
+# Healthcheck
+curl https://[USERNAME]-claraverse-backend.hf.space/health
+
+# Documentation
+start https://[USERNAME]-claraverse-backend.hf.space/docs
+
+# Space
+start https://huggingface.co/spaces/[USERNAME]/claraverse-backend
+
+═══════════════════════════════════════════════════════════════════════════════
+   🔧 DÉPANNAGE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Réinitialiser le remote
+git remote remove hf
+git remote add hf https://[USERNAME]:[TOKEN]@huggingface.co/spaces/[USERNAME]/claraverse-backend
+
+# Forcer le push
+git push hf main --force
+
+# Voir les logs
+git push hf main --verbose
+
+═══════════════════════════════════════════════════════════════════════════════
+   🐳 TEST LOCAL
+═══════════════════════════════════════════════════════════════════════════════
+
+docker build -t claraverse-backend .
+docker run -p 7860:7860 claraverse-backend
+curl http://localhost:7860/health
+
+═══════════════════════════════════════════════════════════════════════════════
+   🌐 URLS IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+Créer un Space : https://huggingface.co/new-space
+Gérer les tokens : https://huggingface.co/settings/tokens
+Documentation : https://huggingface.co/docs/hub/spaces
+Forum : https://discuss.huggingface.co/
+
+═══════════════════════════════════════════════════════════════════════════════

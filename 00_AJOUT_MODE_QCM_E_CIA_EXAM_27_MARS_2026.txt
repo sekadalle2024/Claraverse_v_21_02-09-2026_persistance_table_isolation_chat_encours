@@ -1,0 +1,255 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║          ✅ AJOUT MODE "QUESTION QCM" E-CIA EXAM - TERMINÉ                   ║
+║                                                                              ║
+║                          Date: 27 Mars 2026                                  ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 RÉSUMÉ DES MODIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Mode "Question Qcm" ajouté à ECIA_MODES
+✅ Logique de remplacement automatique ajoutée
+✅ E-CIA Exam affiche 2 modes : Cours + Question Qcm
+✅ Mode QCM génère automatiquement "[Command] = QCM CIA"
+✅ Aucune erreur de compilation
+
+
+🎯 OBJECTIF ATTEINT
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour le logiciel E-CIA Exam Part 1 :
+✅ Mode [Question Qcm] créé
+✅ Formule basée sur le contenu du mode [Cours]
+✅ Remplacement automatique : "Cours CIA" → "QCM CIA"
+
+
+📊 STATISTIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+Fichiers modifiés              : 1 (DemarrerMenu.tsx)
+Modes ajoutés à ECIA_MODES     : 1 (Question Qcm)
+Modes disponibles pour E-CIA   : 2 (Cours + Question Qcm)
+Lignes de code ajoutées        : ~5
+Erreurs de compilation         : 0
+
+
+🔧 MODIFICATIONS TECHNIQUES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. AJOUT DU MODE À ECIA_MODES
+   ───────────────────────────────────────────────────────────────────────
+   const ECIA_MODES: ModeItem[] = [
+     { id: 'cours', label: 'Cours', prefix: '' },
+     { id: 'qcm', label: 'Question Qcm', prefix: '' }  ← NOUVEAU
+   ];
+
+2. LOGIQUE DE REMPLACEMENT AUTOMATIQUE
+   ───────────────────────────────────────────────────────────────────────
+   const finalRawCommand = mode.id === 'qcm' && rawCommand.includes('Cours CIA') 
+     ? rawCommand.replace(/\[Command\] = Cours CIA/g, '[Command] = QCM CIA')
+     : rawCommand;
+
+3. UTILISATION DE finalRawCommand
+   ───────────────────────────────────────────────────────────────────────
+   const finalCommand = formatCommandWithBullets(finalRawCommand);
+
+
+✅ VÉRIFICATIONS EFFECTUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Compilation TypeScript : Aucune erreur
+✅ Diagnostics            : No diagnostics found
+✅ Mode QCM ajouté        : Dans ECIA_MODES
+✅ Logique de remplacement: Ajoutée à handleModeClick
+
+
+🎨 IMPACT SUR L'INTERFACE
+═══════════════════════════════════════════════════════════════════════════════
+
+AVANT
+─────────────────────────────────────────────────────────────────────────────
+E-CIA Exam Part 1 → Objectif quelconque
+  
+  Mode disponible :
+  • Cours
+
+APRÈS
+─────────────────────────────────────────────────────────────────────────────
+E-CIA Exam Part 1 → Objectif quelconque
+  
+  Modes disponibles :
+  • Cours
+  • Question Qcm  ← NOUVEAU
+
+
+💡 COMPORTEMENT DES MODES
+═══════════════════════════════════════════════════════════════════════════════
+
+MODE "COURS"
+─────────────────────────────────────────────────────────────────────────────
+Génère :
+  [Command] = Cours CIA
+  [Partie] = partie 1
+  [Section] = Section A - Fondements de l'audit interne
+  [Objectifs] = Expliquer les objectifs globaux
+  [Points] = Renforcer la capacité de l'organisation
+  
+  [Command QCM] = Simulateur QCM
+  ...
+  
+  [Command Synthèse] = synthèse
+  ...
+
+MODE "QUESTION QCM"
+─────────────────────────────────────────────────────────────────────────────
+Génère :
+  [Command] = QCM CIA  ← DIFFÉRENCE ICI
+  [Partie] = partie 1
+  [Section] = Section A - Fondements de l'audit interne
+  [Objectifs] = Expliquer les objectifs globaux
+  [Points] = Renforcer la capacité de l'organisation
+  
+  [Command QCM] = Simulateur QCM
+  ...
+  
+  [Command Synthèse] = synthèse
+  ...
+
+DIFFÉRENCE : Seule la première ligne change (Cours CIA → QCM CIA)
+
+
+🔍 COMMENT ÇA FONCTIONNE
+═══════════════════════════════════════════════════════════════════════════════
+
+DÉTECTION ET REMPLACEMENT AUTOMATIQUE
+─────────────────────────────────────────────────────────────────────────────
+1. L'utilisateur sélectionne le mode "Question Qcm"
+2. Le système détecte que mode.id === 'qcm'
+3. Le système vérifie si la commande contient "Cours CIA"
+4. Si OUI → Remplace "[Command] = Cours CIA" par "[Command] = QCM CIA"
+5. Si NON → Utilise la commande originale
+
+AVANTAGES :
+  ✓ Remplacement automatique
+  ✓ Pas de duplication des 45 commandes E-CIA
+  ✓ Fonctionne pour tous les objectifs E-CIA
+  ✓ Utilise une regex globale pour remplacer toutes les occurrences
+
+
+🚀 TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TEST MODE "COURS"
+   ─────────────────────────────────────────────────────────────────────────
+   • Ouvrir l'application E-audit
+   • Sélectionner "E-CIA Exam Part 1"
+   • Cliquer sur un objectif
+   
+   VÉRIFIER :
+   ✓ Les modes "Cours" et "Question Qcm" s'affichent
+   ✓ Sélectionner "Cours"
+   ✓ La commande contient "[Command] = Cours CIA"
+
+2. TEST MODE "QUESTION QCM"
+   ─────────────────────────────────────────────────────────────────────────
+   • Sélectionner "E-CIA Exam Part 1"
+   • Cliquer sur un objectif
+   • Sélectionner "Question Qcm"
+   
+   VÉRIFIER :
+   ✓ La commande contient "[Command] = QCM CIA"
+   ✓ Le reste de la commande est identique au mode Cours
+
+3. TEST FONCTIONNEL
+   ─────────────────────────────────────────────────────────────────────────
+   • Insérer une commande QCM dans le chat
+   • Vérifier que le backend traite correctement "[Command] = QCM CIA"
+   • Vérifier que la réponse est cohérente
+
+
+📁 FICHIERS CRÉÉS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Doc menu demarrer/Scripts/add_qcm_mode_ecia_exam.py
+   Script Python pour automatiser les modifications
+
+2. Doc menu demarrer/Documentation/AJOUT_MODE_QCM_E_CIA_EXAM_27_MARS_2026.md
+   Documentation complète des modifications
+
+3. 00_AJOUT_MODE_QCM_E_CIA_EXAM_27_MARS_2026.txt
+   Ce fichier (guide de démarrage rapide)
+
+
+📚 DOCUMENTATION DÉTAILLÉE
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour plus de détails, consulter :
+→ Doc menu demarrer/Documentation/AJOUT_MODE_QCM_E_CIA_EXAM_27_MARS_2026.md
+
+
+⚠️  POINTS D'ATTENTION
+═══════════════════════════════════════════════════════════════════════════════
+
+1. DÉPENDANCE À "COURS CIA"
+   ───────────────────────────────────────────────────────────────────────
+   Le remplacement est basé sur la présence de "Cours CIA" dans la commande.
+   Si cette valeur change, le remplacement ne fonctionnera plus.
+
+2. REGEX GLOBALE
+   ───────────────────────────────────────────────────────────────────────
+   La regex utilise le flag /g pour remplacer toutes les occurrences.
+   Cela garantit que même si "Cours CIA" apparaît plusieurs fois, toutes
+   les occurrences seront remplacées.
+
+3. AUTRES COMMANDES
+   ───────────────────────────────────────────────────────────────────────
+   Les commandes [Command QCM] et [Command Synthèse] ne sont PAS modifiées
+   car elles ne correspondent pas au pattern "[Command] = Cours CIA".
+
+
+🔄 RÉVERSIBILITÉ
+═══════════════════════════════════════════════════════════════════════════════
+
+Pour revenir en arrière :
+1. Supprimer le mode QCM de ECIA_MODES
+2. Supprimer la logique de remplacement dans handleModeClick
+3. Restaurer l'utilisation de rawCommand au lieu de finalRawCommand
+
+
+📖 RÉCAPITULATIF DES 3 TÂCHES E-CIA EXAM
+═══════════════════════════════════════════════════════════════════════════════
+
+TÂCHE 1 : Renommage du mode et de la commande
+─────────────────────────────────────────────────────────────────────────────
+✅ Mode "Normal" renommé en "Cours"
+✅ 45 commandes mises à jour : "cours" → "Cours CIA"
+
+TÂCHE 2 : Suppression des modes Demo, Avancé, Manuel
+─────────────────────────────────────────────────────────────────────────────
+✅ Modes spécifiques E-CIA créés (ECIA_MODES)
+✅ E-CIA Exam affiche uniquement le mode "Cours"
+
+TÂCHE 3 : Ajout du mode "Question Qcm"
+─────────────────────────────────────────────────────────────────────────────
+✅ Mode "Question Qcm" ajouté à ECIA_MODES
+✅ Remplacement automatique : "Cours CIA" → "QCM CIA"
+
+
+🎉 RÉSULTAT FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Les modifications ont été appliquées avec succès !
+
+E-CIA Exam Part 1 dispose maintenant de 2 modes :
+  • Cours (génère "[Command] = Cours CIA")
+  • Question Qcm (génère "[Command] = QCM CIA")
+
+Vous pouvez maintenant tester l'interface pour vérifier que tout fonctionne
+correctement !
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            Modification terminée ✅
+═══════════════════════════════════════════════════════════════════════════════

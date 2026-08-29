@@ -1,0 +1,139 @@
+feat: Intégration Revue Manager Accordéon avec persistance localStorage
+
+## 🎯 Objectif
+
+Intégrer le composant RevueManagerAccordion dans le système de papiers de
+travail avec support complet de la persistance des données via localStorage.
+
+## ✅ Modifications
+
+### Service claraPapierTravailService.ts
+
+- ✅ Ajout méthode `processManagerReview()`
+  - Vérifie localStorage avant traitement
+  - Charge les données sauvegardées si disponibles
+  - Transforme les données brutes sinon
+  - Clé : `clara_revue_manager_${reference}`
+
+- ✅ Ajout méthode `detectStatut()`
+  - Détection automatique basée sur mots-clés
+  - ok : "val", "ok", "satisf"
+  - warn : "suivre", "warn", "attention"
+  - ko : "ajust", "ko", "anomal"
+  - Fallback intelligent si pas de mot-clé
+
+- ✅ Intégration dans `process()`
+  - Appelle `processManagerReview()` pour table 10
+  - Passe reference pour la clé localStorage
+  - Retourne les données dans `papierData.managerReview`
+
+### Composant RevueManagerAccordion.tsx
+
+Composant déjà existant avec toutes les fonctionnalités :
+- ✅ Affichage en accordéon avec animation
+- ✅ Modification des titres
+- ✅ Changement de statut (dropdown)
+- ✅ Modification des commentaires (textarea)
+- ✅ Ajout de nouveaux points
+- ✅ Suppression avec confirmation
+- ✅ Sauvegarde dans localStorage
+- ✅ Indicateur "non enregistré"
+- ✅ Callback onSave optionnel
+
+## 📊 Structure des données
+
+### Entrée (n8n table 10)
+```json
+{
+  "no": "1",
+  "Superviseur": "Commentaire superviseur",
+  "Preparer": "Commentaire préparateur"
+}
+```
+
+### Sortie (RevuePoint)
+```typescript
+{
+  num: 1,
+  titre: "Point de revue",
+  statut: "ok",
+  prep: "Commentaire préparateur",
+  rev: "Commentaire superviseur"
+}
+```
+
+### Clé localStorage
+```
+clara_revue_manager_${reference}
+```
+
+## 🔄 Flux de données
+
+1. Réponse n8n avec table 10
+2. `claraPapierTravailService.process()`
+3. `processManagerReview()` vérifie localStorage
+4. Retourne `__PAPIER_TRAVAIL__` + JSON
+5. Renderer affiche `RevueManagerAccordion`
+
+## 💾 Système de persistance
+
+- Clé unique par référence
+- Sauvegarde au clic "Enregistrer"
+- Chargement automatique au montage
+- Modifications en temps réel
+
+## 🎨 Interface utilisateur
+
+### Statuts
+- ✓ ok → Validé (vert)
+- ⚠ warn → À suivre (ambre)
+- ✗ ko → À ajuster (rouge)
+
+### Fonctionnalités
+- Accordéon avec animation fluide
+- Badges de statut colorés avec icônes
+- Zones de texte redimensionnables
+- Boutons avec états hover/disabled
+- Indicateur de modifications non enregistrées
+
+## 📍 Positionnement
+
+Le composant doit être affiché après le tableau des Légendes (table 9).
+
+## 📚 Documentation
+
+- `Doc papier de travail javascript/INTEGRATION_REVUE_MANAGER_ACCORDEON.md`
+- `QUICK_TEST_REVUE_MANAGER_26_AVRIL_2026.txt`
+- `00_MISSION_ACCOMPLIE_REVUE_MANAGER_26_AVRIL_2026.txt`
+- `00_INDEX_REVUE_MANAGER_26_AVRIL_2026.md`
+- `COMMANDES_RAPIDES_REVUE_MANAGER_26_AVRIL_2026.txt`
+- `SYNTHESE_VISUELLE_REVUE_MANAGER_26_AVRIL_2026.txt`
+- `LISTE_FICHIERS_REVUE_MANAGER_26_AVRIL_2026.md`
+- `00_LIRE_EN_PREMIER_REVUE_MANAGER_26_AVRIL_2026.txt`
+- `START_HERE_REVUE_MANAGER.txt`
+
+## 🚀 Prochaines étapes
+
+- [ ] Intégrer dans le renderer principal
+- [ ] Tester avec données réelles n8n
+- [ ] Valider la persistance en production
+- [ ] Ajouter export PDF/Excel si nécessaire
+
+## 💡 Points clés
+
+✓ Persistance automatique via localStorage
+✓ Détection intelligente du statut
+✓ Interface professionnelle avec animations
+✓ Ajout/suppression de points
+✓ Modifications en temps réel
+✓ Indicateur de sauvegarde
+✓ Confirmation avant suppression
+✓ Clé unique par référence
+
+---
+
+**Date** : 26 avril 2026
+**Auteur** : Kiro AI Assistant
+**Type** : Feature
+**Scope** : Papiers de travail
+**Breaking changes** : Non

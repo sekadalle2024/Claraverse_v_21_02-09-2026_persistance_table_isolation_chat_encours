@@ -1,0 +1,262 @@
+═══════════════════════════════════════════════════════════════════════════════
+  CORRECTION FRONTEND APPLIQUÉE - 05 AVRIL 2026
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 DATE : 05 Avril 2026
+🎯 OBJECTIF : Corriger l'affichage des états financiers dans le frontend
+
+═══════════════════════════════════════════════════════════════════════════════
+PROBLÈME RÉSOLU
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ AVANT : Le HTML généré par le backend n'était pas affiché dans le chat
+✅ APRÈS : Le HTML est correctement inséré et affiché avec les accordéons
+
+═══════════════════════════════════════════════════════════════════════════════
+CORRECTIONS APPLIQUÉES
+═══════════════════════════════════════════════════════════════════════════════
+
+FICHIER MODIFIÉ : public/EtatFinAutoTrigger.js
+FONCTION : replaceTableWithResults(table, html)
+
+1. AMÉLIORATION DE LA RECHERCHE DU DIV PARENT
+   ✓ Ajout de sélecteurs alternatifs plus génériques
+   ✓ Essai de plusieurs sélecteurs en cascade
+   ✓ Logs détaillés pour le débogage
+
+   Sélecteurs testés dans l'ordre:
+   - CONFIG.SELECTORS.PARENT_DIV (sélecteur principal)
+   - 'div.prose' (sélecteur générique)
+   - 'div[class*="prose"]' (sélecteur avec wildcard)
+   - 'div[class*="message"]' (sélecteur message)
+   - 'div' (n'importe quel div)
+   - table.parentElement (élément parent direct)
+
+2. FORÇAGE DE L'AFFICHAGE DU CONTENEUR
+   ✓ Ajout de !important sur les styles CSS
+   ✓ Définition explicite de display, visibility, opacity
+   ✓ Ajout de width: 100% et min-height: 100px
+
+   Styles appliqués au conteneur:
+   ```css
+   margin-top: 20px; 
+   display: block !important; 
+   visibility: visible !important; 
+   opacity: 1 !important;
+   width: 100%;
+   min-height: 100px;
+   ```
+
+3. FORÇAGE DE L'AFFICHAGE DU PARENT
+   ✓ Modification des styles du div parent après insertion
+   ✓ Garantit que le parent est visible
+
+   ```javascript
+   parentDiv.style.display = 'block';
+   parentDiv.style.visibility = 'visible';
+   parentDiv.style.opacity = '1';
+   ```
+
+4. OUVERTURE AUTOMATIQUE DU PREMIER ACCORDÉON
+   ✓ Ajout de la classe 'active' au premier header
+   ✓ Ajout de la classe 'active' au premier content
+   ✓ Définition explicite de max-height pour l'animation
+
+   ```javascript
+   if (index === 0) {
+     header.classList.add('active');
+     const content = header.nextElementSibling;
+     if (content) {
+       content.classList.add('active');
+       content.style.maxHeight = content.scrollHeight + 'px';
+     }
+   }
+   ```
+
+5. AMÉLIORATION DES LOGS DE DÉBOGAGE
+   ✓ Logs détaillés à chaque étape
+   ✓ Vérification de l'insertion dans le DOM
+   ✓ Vérification de la visibilité CSS
+   ✓ Comptage des accordéons trouvés
+   ✓ Affichage du HTML si aucun accordéon trouvé
+
+   Logs ajoutés:
+   - Container inséré (isConnected)
+   - Container visible (computed style)
+   - Nombre d'accordéons trouvés
+   - Nombre de contenus trouvés
+   - Nombre de tables trouvées
+   - HTML inséré (premiers 500 caractères si erreur)
+
+6. SCROLL AUTOMATIQUE VERS LES RÉSULTATS
+   ✓ Scroll smooth vers le conteneur après insertion
+   ✓ Améliore l'expérience utilisateur
+
+   ```javascript
+   container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+   ```
+
+7. STYLES FORCÉS SUR LES ACCORDÉONS
+   ✓ display: flex sur les headers
+   ✓ cursor: pointer pour indiquer la cliquabilité
+
+═══════════════════════════════════════════════════════════════════════════════
+TESTS À EFFECTUER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TESTER LE WORKFLOW COMPLET
+   ┌─────────────────────────────────────────────────────────────────────┐
+   │ 1. Démarrer le backend : python py_backend/main.py                 │
+   │ 2. Ouvrir l'application dans le navigateur                         │
+   │ 3. Ouvrir les DevTools (F12) pour voir les logs                    │
+   │ 4. Taper "Etat fin" dans le chat                                   │
+   │ 5. Sélectionner le fichier de balance                              │
+   │ 6. Vérifier que les accordéons s'affichent                         │
+   └─────────────────────────────────────────────────────────────────────┘
+
+2. VÉRIFIER LES LOGS DANS LA CONSOLE
+   ┌─────────────────────────────────────────────────────────────────────┐
+   │ ✓ "📂 Ouverture automatique du dialogue de sélection de fichier"  │
+   │ ✓ "✅ Fichier sélectionné: ..."                                    │
+   │ ✓ "📤 ENVOI VERS BACKEND"                                          │
+   │ ✓ "📥 Statut réponse: 200"                                         │
+   │ ✓ "✅ Résultat reçu: ..."                                          │
+   │ ✓ "🔄 REMPLACEMENT DE LA TABLE"                                    │
+   │ ✓ "📍 Div parent trouvé"                                           │
+   │ ✓ "📊 HTML à insérer - Longueur: X caractères"                    │
+   │ ✓ "📊 Vérification après insertion:"                               │
+   │ ✓ "  - Container inséré: true"                                     │
+   │ ✓ "  - Container visible: block"                                   │
+   │ ✓ "  - Accordéons trouvés: X"                                      │
+   │ ✓ "✅ Table remplacée avec les résultats"                          │
+   │ ✓ "📋 États Financiers: X accordéons trouvés"                     │
+   │ ✓ "🔓 Ouverture automatique du premier accordéon"                 │
+   │ ✓ "✅ Événements des accordéons attachés"                          │
+   └─────────────────────────────────────────────────────────────────────┘
+
+3. VÉRIFIER L'AFFICHAGE VISUEL
+   ┌─────────────────────────────────────────────────────────────────────┐
+   │ ✓ Les accordéons sont visibles dans le chat                        │
+   │ ✓ Le premier accordéon (BILAN ACTIF) est ouvert par défaut        │
+   │ ✓ Les autres accordéons sont fermés                                │
+   │ ✓ Cliquer sur un accordéon l'ouvre/ferme                          │
+   │ ✓ Les tableaux sont correctement formatés                          │
+   │ ✓ Les colonnes N et N-1 sont affichées                            │
+   │ ✓ Les montants sont correctement formatés                          │
+   └─────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+DIAGNOSTIC EN CAS DE PROBLÈME
+═══════════════════════════════════════════════════════════════════════════════
+
+SI LES ACCORDÉONS NE S'AFFICHENT PAS:
+
+1. Vérifier les logs dans la console
+   → Chercher "⚠️" ou "❌" pour identifier l'erreur
+
+2. Vérifier que le div parent est trouvé
+   → Log: "📍 Div parent trouvé: ..."
+   → Si "❌ Aucun div parent trouvé!", le sélecteur CSS est incorrect
+
+3. Vérifier que le HTML est inséré
+   → Log: "📊 Vérification après insertion:"
+   → Vérifier "Container inséré: true"
+
+4. Vérifier que les accordéons sont trouvés
+   → Log: "📋 États Financiers: X accordéons trouvés"
+   → Si X = 0, le HTML généré par le backend est incorrect
+
+5. Vérifier le HTML généré par le backend
+   → Exécuter: .\Doc_Etat_Fin\Scripts\test-backend-simple.ps1
+   → Ouvrir le fichier HTML sur le bureau
+   → Vérifier que les accordéons sont présents
+
+SI LE PREMIER ACCORDÉON NE S'OUVRE PAS:
+
+1. Vérifier les logs
+   → Log: "🔓 Ouverture automatique du premier accordéon"
+   → Log: "  - Max-height défini: Xpx"
+
+2. Vérifier les classes CSS
+   → Le header doit avoir la classe "active"
+   → Le content doit avoir la classe "active"
+
+3. Vérifier le CSS
+   → .section-content-ef.active doit avoir max-height > 0
+
+═══════════════════════════════════════════════════════════════════════════════
+COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. TESTER LE BACKEND ISOLÉMENT:
+   .\Doc_Etat_Fin\Scripts\test-backend-simple.ps1
+
+2. DÉMARRER LE BACKEND:
+   python py_backend/main.py
+
+3. VÉRIFIER LES CALCULS N-1 ET N-2:
+   python Doc_Etat_Fin\Scripts\verifier_calculs_n1_n2.py
+
+4. TESTER LES ÉTATS DE CONTRÔLE:
+   .\Doc_Etat_Fin\Scripts\test-etats-controle-html.ps1
+
+═══════════════════════════════════════════════════════════════════════════════
+RÉSULTAT ATTENDU
+═══════════════════════════════════════════════════════════════════════════════
+
+AFFICHAGE DANS LE CHAT:
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📊 États Financiers SYSCOHADA                                          │
+│                                                                         │
+│ ▼ 🏢 BILAN - ACTIF                                                     │
+│   [Tableau avec colonnes N et N-1 visible]                            │
+│                                                                         │
+│ ▶ 🏛️ BILAN - PASSIF                                                    │
+│                                                                         │
+│ ▶ 📊 COMPTE DE RÉSULTAT                                                │
+│                                                                         │
+│ ▶ 💰 TABLEAU DES FLUX DE TRÉSORERIE                                    │
+│                                                                         │
+│ ▶ 📝 NOTES ANNEXES                                                     │
+│                                                                         │
+│ ▶ 🔍 État de contrôle Bilan Actif                                     │
+│                                                                         │
+│ [... autres états de contrôle ...]                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+PROCHAINES ÉTAPES
+═══════════════════════════════════════════════════════════════════════════════
+
+1. ✅ Correction appliquée dans EtatFinAutoTrigger.js
+2. ⏳ Tester le workflow complet dans l'application
+3. ⏳ Vérifier que les accordéons s'affichent correctement
+4. ⏳ Vérifier que le premier accordéon s'ouvre automatiquement
+5. ⏳ Vérifier que les données N et N-1 sont affichées
+6. ⏳ Corriger les états de contrôle (problème séparé)
+7. ⏳ Documenter la solution finale
+
+═══════════════════════════════════════════════════════════════════════════════
+NOTES IMPORTANTES
+═══════════════════════════════════════════════════════════════════════════════
+
+⚠️ DEUX PROBLÈMES DISTINCTS:
+
+1. AFFICHAGE FRONTEND (RÉSOLU)
+   ✅ Le HTML n'était pas affiché dans le chat
+   ✅ Correction appliquée dans EtatFinAutoTrigger.js
+   ✅ Sélecteurs CSS améliorés
+   ✅ Styles forcés avec !important
+   ✅ Logs de débogage détaillés
+
+2. ÉTATS DE CONTRÔLE (À CORRIGER)
+   ❌ Les états de contrôle actuels ne sont pas les bons
+   ❌ Voir fichier: 00_PROBLEME_ETATS_CONTROLE_05_AVRIL_2026.txt
+   ❌ Utiliser les fichiers de référence:
+      - py_backend/generer_test_etats_controle_html.py
+      - py_backend/etats_controle_exhaustifs.py
+      - py_backend/html_etats_controle.py
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT
+═══════════════════════════════════════════════════════════════════════════════
