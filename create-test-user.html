@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer Utilisateur de Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+        .info {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+        .copy-btn {
+            background: #28a745;
+            padding: 6px 12px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Créer un Utilisateur de Test</h1>
+        <p class="subtitle">Contournez l'authentification pour accéder rapidement à l'application</p>
+
+        <div class="step warning">
+            <h3>⚠️ Important</h3>
+            <p>Cette méthode est uniquement pour le développement et les tests. Ne l'utilisez pas en production !</p>
+        </div>
+
+        <div class="step">
+            <h3>📋 Méthode 1 : Script Automatique (Recommandé)</h3>
+            <p>Cliquez sur le bouton ci-dessous pour créer automatiquement un utilisateur de test :</p>
+            <button onclick="createTestUser()">✨ Créer Utilisateur de Test</button>
+            <div id="result" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="step">
+            <h3>🖥️ Méthode 2 : Console du Navigateur</h3>
+            <p>Si la méthode automatique ne fonctionne pas :</p>
+            <ol>
+                <li>Ouvrez http://localhost:5173/ dans votre navigateur</li>
+                <li>Appuyez sur F12 pour ouvrir la console</li>
+                <li>Copiez et collez ce code :
+                    <button class="copy-btn" onclick="copyCode()">📋 Copier</button>
+                </li>
+            </ol>
+            <div class="code-block" id="codeBlock">
+// Créer un utilisateur de test
+const testUser = {
+    id: 'test-user-' + Date.now(),
+    name: 'Utilisateur Test',
+    email: 'test@example.com',
+    password: 'test123',
+    createdAt: new Date(),
+    lastLogin: new Date(),
+    personalInfo: {
+        name: 'Utilisateur Test',
+        email: 'test@example.com',
+        company: 'Société Test',
+        role: 'Auditeur',
+        theme_preference: 'system'
+    }
+};
+
+// Sauvegarder dans IndexedDB
+db.users.add(testUser).then(() => {
+    return db.setCurrentUser(testUser.id);
+}).then(() => {
+    console.log('✅ Utilisateur de test créé et connecté');
+    console.log('🔄 Rechargement de la page...');
+    setTimeout(() => location.reload(), 500);
+}).catch(error => {
+    console.error('❌ Erreur:', error);
+});
+            </div>
+        </div>
+
+        <div class="step info">
+            <h3>🔍 Vérifier les Utilisateurs Existants</h3>
+            <p>Pour voir tous les utilisateurs dans la base de données :</p>
+            <button onclick="checkUsers()">👥 Voir les Utilisateurs</button>
+            <div id="usersList" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="step success">
+            <h3>✅ Après la Création</h3>
+            <p>Une fois l'utilisateur créé :</p>
+            <ol>
+                <li>La page se rechargera automatiquement</li>
+                <li>Vous serez connecté automatiquement</li>
+                <li>Vous verrez l'application principale au lieu de la page de connexion</li>
+            </ol>
+            <p><strong>Identifiants de test :</strong></p>
+            <ul>
+                <li>Email : test@example.com</li>
+                <li>Mot de passe : test123</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>🗑️ Supprimer Tous les Utilisateurs</h3>
+            <p>Pour repartir de zéro :</p>
+            <button onclick="clearAllUsers()" style="background: #dc3545;">🗑️ Supprimer Tous les Utilisateurs</button>
+            <div id="clearResult" style="m

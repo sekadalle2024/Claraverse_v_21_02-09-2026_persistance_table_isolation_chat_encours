@@ -1,0 +1,68 @@
+{
+  "name": "Google Drive Scanner V2 - Avec Parents",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "scan-drive-v2",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 340]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "operation": "search",
+        "limit": 1000,
+        "queryString": "trashed=false",
+        "options": {}
+      },
+      "id": "gdrive-001",
+      "name": "Liste Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [480, 340]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// CONSTRUCTION DE L'ARBORESCENCE GOOGLE DRIVE\n// Version sans le champ parents (utilise structure plate)\n// ============================================\n\nconst items = $input.all();\n\n// Séparer dossiers et fichiers\nconst dossiers = [];\nconst fichiers = [];\n\nfor (const item of items) {\n  const data = item.json;\n  \n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    dossiers.push({\n      id: data.id,\n      nom: data.name,\n      type: 'dossier',\n      mimeType: data.mimeType\n    });\n  } else {\n    fichiers.push({\n      id: data.id,\n      nom: data.name,\n      type: 'fichier',\n      mimeType: data.mimeType\n    });\n  }\n}\n\n// Construire la réponse\nconst response = {\n  success: true,\n  timestamp: new Date().toISOString(),\n  statistiques: {\n    totalDossiers: dossiers.length,\n    totalFichiers: fichiers.length,\n    totalElements: items.length\n  },\n  elements: {\n    dossiers: dossiers,\n    fichiers: fichiers\n  }\n};\n\nreturn [{ json: response }];"
+      },
+      "id": "code-001",
+      "name": "Construire Liste",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 340]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [960, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Liste Google Drive", "type": "main", "index": 0}]]
+    },
+    "Liste Google Drive": {
+      "main": [[{"node": "Construire Liste", "type": "main", "index": 0}]]
+    },
+    "Construire Liste": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"}
+}

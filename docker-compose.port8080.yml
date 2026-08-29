@@ -1,0 +1,57 @@
+version: '3.8'
+
+# Configuration alternative avec port 8080 pour éviter le conflit avec Flowise (port 3000)
+
+services:
+  # Service Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: e-audit-frontend
+    ports:
+      - "8080:80"  # Port 8080 au lieu de 3000 pour éviter Flowise
+    environment:
+      - NODE_ENV=production
+    networks:
+      - e-audit-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Service Backend
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: e-audit-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HOST=0.0.0.0
+      - PORT=5000
+    volumes:
+      # Volume pour la persistance des données
+      - backend-data:/root/.clara
+      # Volume pour les logs (optionnel)
+      - ./logs:/app/logs
+    networks:
+      - e-audit-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Réseau pour la communication entre services
+networks:
+  e-audit-network:
+    driver: bridge
+
+# Volumes pour la persistance
+volumes:
+  backend-data:
+    driver: local

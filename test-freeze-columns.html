@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Figer Colonnes - Claraverse</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #380101;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        button {
+            background: #380101;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background: #5a0202;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 12px;
+            text-align: left;
+            min-width: 150px;
+        }
+        
+        th {
+            background: #380101;
+            color: white;
+            font-weight: 600;
+        }
+        
+        td {
+            background: white;
+        }
+        
+        tr:nth-child(even) td {
+            background: #f9fafb;
+        }
+        
+        tr:hover td {
+            background: #e3f2fd;
+        }
+        
+        .selected-cell {
+            outline: 2px solid #2196f3 !important;
+            background: #bbdefb !important;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #1565c0;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #380101;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❄️ Test de Figement de Colonnes</h1>
+        
+        <div class="info-box">
+            <h3>Instructions :</h3>
+            <ol>
+                <li>Cliquez sur une cellule pour la sélectionner</li>
+                <li>Cliquez sur "Figer jusqu'à cette colonne" pour figer toutes les colonnes jusqu'à la sélection</li>
+                <li>Les colonnes figées restent visibles lors du scroll horizontal</li>
+                <li>Utilisez "Annuler figement" pour réinitialiser</li>
+            </ol>
+        </div>
+        
+        <div class="controls">
+            <button onclick="freezeSelectedColumns()">❄️ Figer jusqu'à cette colonne</button>
+            <button onclick="unfreezeColumns()">🔓 Annuler figement</button>
+            <button onclick="resetSelection()">🔄 Réinitialiser sélection</button>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Colonne sélectionnée</div>
+                <div class="stat-value" id="selected-col">Aucune</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Colonnes figées</div>
+                <div class="stat-value" id="frozen-cols">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">État</div>
+                <div class="stat-value" id="status">En attente</div>
+            </div>
+        </div>
+        
+        <div class="table-wrapper" id="tableContainer">
+            <table id="testTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Compte</th>
+                        <th>N</th>
+                        <th>N-1</th>
+                        <th>Variation</th>
+                        <th>Écart</th>
+                        <th>Contrôle</th>
+                        <th>Statut</th>
+                        <th>Risque</th>
+                        <th>Remarque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Dupont</td>
+                        <td>Jean</td>
+                        <td>401000</td>
+                        <td>15 000 €</td>
+                        <td>12 000 €</td>
+                        <td>+25%</td>
+                        <td>3 000 €</td>
+                        <td>OK</td>
+                        <td>Validé</td>
+                        <td>Faible</td>
+                        <td>Conforme</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Martin</td>
+                        <td>Sophie</td>
+                        <td>401100</td>
+                        <td>28 500 €</td>
+                        <td>30 000 €</td>
+                        <td>-5%</td>
+                        <td>-1 500 €</td>
+                        <td>OK</td>
+                        <td>Validé</td>
+                        <td>Faible</td>
+                        <td>RAS</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bernard</td>
+                        <td>Luc</td>
+                        <td>512000</td>
+                        <td>45 200 €</td>
+                        <td>40 000 €</td>
+                        <td>+13%</td>
+                        <td>5 200 €</td>
+                        <td>KO</td>
+                        <td>À vérifier</td>
+                        <td>Moyen</td>
+                        <td>Écart significatif</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Dubois</td>
+                        <td>Marie</td>
+                        <td>512100</td>
+                        <td>18 750 €</td>
+                        <td>20 000 €</td>
+                        <td>-6%</td>
+                        <td>-1 250 €</td>
+                        <td>OK</td>
+                        <td>Validé</td>
+                        <td>Faible</td>
+                        <td>Conforme</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Petit</td>
+                        <td>Pierre</td>
+                        <td>601000</td>
+                        <td>33 000 €</td>
+                        <td>28 500 €</td>
+                        <td>+16%</td>
+                        <td>4 500 €</td>
+                        <td>OK</td>
+                        <td>Validé</td>
+                        <td>Moyen</td>
+                        <td>Augmentation notable</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Robert</td>
+                        <td>Anne</td>
+                        <td>601100</td>
+                        <td>22 400 €</td>
+                        <td>25 000 €</td>
+                        <td>-10%</td>
+                        <td>-2 600 €</td>
+                        <td>OK</td>
+                        <td>Validé</td>
+                        <td>Faible</td>
+                        <td>Diminution normale</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Richard</td>
+                        <td>Thomas</td>
+                        <td>707000</td>
+                        <td>52 800 €</td>
+                        <td>48 000 €</td>
+                        <td>+10%</td>
+                        <td>4 800 €</td>
+                        <td>OK</td>
+                        <td>Validé</td>
+                        <td>Faible</td>
+                        <td>Conforme</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Moreau</td>
+                        <td>Claire</td>
+                        <td>707100</td>
+                        <td>31 200 €</td>
+                        <td>35 000 €</td>
+                        <td>-11%</td>
+                        <td>-3 800 €</td>
+                        <td>KO</td>
+                        <td>En cours</td>
+                        <td>Élevé</td>
+                        <td>À investiguer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        let selectedCell = null;
+        let selectedColIndex = -1;
+        let frozenColumnsCount = 0;
+        const table = document.getElementById('testTable');
+        
+        // Ajouter les event listeners sur les cellules
+        table.addEventListener('click', function(e) {
+            const cell = e.target.closest('th, td');
+            if (!cell) return;
+            
+            // Désélectionner la cellule précédente
+            if (selectedCell) {
+                selectedCell.classList.remove('selected-cell');
+            }
+            
+            // Sélectionner la nouvelle cellule
+            selectedCell = cell;
+            cell.classList.add('selected-cell');
+            
+            // Calculer l'index de la colonne
+            const row = cell.parentElement;
+            const cells = Array.from(row.querySelectorAll('th, td'));
+            selectedColIndex = cells.indexOf(cell);
+            
+            // Mettre à jour l'affichage
+            updateStats();
+        });
+        
+        function freezeSelectedColumns() {
+            if (selectedColIndex === -1) {
+                showNotification('⚠️ Veuillez sélectionner une cellule', 'warning');
+                return;
+            }
+            
+            const numColsToFreeze = selectedColIndex + 1;
+            applyFreezePanes(table, 0, numColsToFreeze);
+            frozenColumnsCount = numColsToFreeze;
+            
+            showNotification(`❄️ ${numColsToFreeze} colonne(s) figée(s)`, 'success');
+            updateStats();
+        }
+        
+        function unfreezeColumns() {
+            applyFreezePanes(table, 0, 0);
+            frozenColumnsCount = 0;
+            
+            showNotification('🔓 Colonnes libérées', 'info');
+            updateStats();
+        }
+        
+        function resetSelection() {
+            if (selectedCell) {
+                selectedCell.classList.remove('selected-cell');
+                selectedCell = null;
+                selectedColIndex = -1;
+            }
+            updateStats();
+            showNotification('🔄 Sélection réinitialisée', 'info');
+        }
+        
+        function applyFreezePanes(table, freezeRows, freezeCols) {
+            console.log(`🔧 Application figement: ${freezeCols} colonnes`);
+            
+            // Configuration du tableau
+            table.style.borderCollapse = 'separate';
+            table.style.borderSpacing = '0';
+            
+            // Configuration du conteneur
+            const container = table.parentElement;
+            if (container) {
+                container.style.overflowX = 'auto';
+                container.style.maxWidth = '100%';
+                container.style.position = 'relative';
+            }
+            
+            const rows = Array.from(table.querySelectorAll('tr'));
+            
+            rows.forEach((row, rowIndex) => {
+                const cells = Array.from(row.querySelectorAll('th, td'));
+                let currentLeft = 0;
+                
+                cells.forEach((cell, colIndex) => {
+                    const isColFrozen = colIndex < freezeCols;
+                    
+                    if (isColFrozen) {
+                        // Appliquer le style sticky
+                        cell.style.position = 'sticky';
+                        cell.style.left = `${currentLeft}px`;
+                        cell.style.zIndex = '10';
+                        
+                        // S'assurer d'un fond opaque
+                        const cellBg = cell.tagName === 'TH' ? '#380101' : 
+                                      (rowIndex % 2 === 0 ? '#f9fafb' : '#ffffff');
+                        cell.style.backgroundColor = cellBg;
+                        
+                        // Ajouter une bordure droite pour marquer la séparation
+                        if (colIndex === freezeCols - 1) {
+                            cell.style.borderRight = '3px solid #380101';
+                        }
+                        
+                        console.log(`✓ Colonne ${colIndex} figée à left=${currentLeft}px`);
+                    } else {
+                        // Réinitialiser les styles
+                        cell.style.position = '';
+                        cell.style.left = '';
+                        cell.style.zIndex = '';
+                        cell.style.borderRight = '';
+                    }
+                    
+                    // Calculer la largeur pour la prochaine colonne
+                    const cellWidth = cell.getBoundingClientRect().width;
+                    currentLeft += cellWidth;
+                });
+            });
+            
+            console.log(`✅ Figement appliqué avec succès`);
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.background = type === 'success' ? '#4caf50' : 
+                                          type === 'warning' ? '#ff9800' : '#2196f3';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        function updateStats() {
+            document.getElementById('selected-col').textContent = 
+                selectedColIndex >= 0 ? `Colonne ${selectedColIndex + 1}` : 'Aucune';
+            document.getElementById('frozen-cols').textContent = frozenColumnsCount;
+            document.getElementById('status').textContent = 
+                frozenColumnsCount > 0 ? 'Figé' : 'Libre';
+        }
+        
+        // Initialisation
+        console.log('✅ Test de figement de colonnes initialisé');
+        updateStats();
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsHuggingFaceInference",
+      "typeVersion": 1,
+      "position": [-720, 448],
+      "id": "a21c19d9-b7a0-45de-9d0a-c9d65bf7f27d",
+      "name": "Embeddings HuggingFace Inference20",
+      "credentials": {
+        "huggingFaceApi": {
+          "id": "uxn8asXukyfHpbW6",
+          "name": "HuggingFaceApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "var-user-message",
+              "name": "user_message",
+              "value": "={{ $json.message || $json.user_message || $json.input || 'Message non fourni' }}",
+              "type": "string"
+            },
+            {
+              "id": "var-cycle",
+              "name": "cycle",
+              "value": "={{ $json.cycle || $json.category || 'Achats' }}",
+              "type": "string"
+            },
+            {
+              "id": "var-constat",
+              "name": "constat",
+              "value": "={{ $json.constat || $json.observation || 'À compléter' }}",
+              "type": "string"
+            },
+            {
+              "id": "var-anomalie",
+              "name": "anomalie",
+              "value": "={{ $json.anomalie || $json.issue || 'À compléter' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-1400, 80],
+      "id": "node-set-variables-rag",
+      "name": "Set Variables RAG"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# PROMPT AGENT RAG CORRIGÉ - AVEC VARIABLES N8N\n\n[ROLE]\nTu es un agent RAG spécialisé dans le référentiel comptable SYSCOHADA Révisé.\nTu as accès à une vector store contenant le plan comptable SYSCOHADA Révisé :\nle contenu, le fonctionnement, le sens (débit/crédit) et les contreparties\nhabituelles de chaque compte.\n\n[OBJECTIF]\nÀ partir du [user_message] ci-dessous, et la tool \"search_audit\" tu dois :\n1. Identifier TOUS les comptes comptables susceptibles d'être mouvementés\n   dans l'opération décrite (compte principal + comptes de contrepartie)\n2. Effectuer autant de recherches RAG que nécessaire — une recherche par\n   compte ou famille de comptes identifiée\n3. Retourner une fiche structurée par compte pour alimenter l'agent\n   de rédaction JSON\n\n[INSTRUCTIONS DE RECHERCHE RAG]\n\nÉTAPE 1 — ANALYSE SÉMANTIQUE DU MESSAGE\nAvant toute recherche, décompose l'opération décrite :\n- Quel est le cycle concerné ? → {{ $json.cycle }}\n- Quelle est la nature de l'opération sous-jacente ?\n  → Analyser le [Constat] pour identifier l'opération\n- Quels sont les flux économiques ?\n  → Déduire des informations du [user_message]\n- Quelle est l'écriture de régularisation probable ?\n  → Analyser le [Constat] et [Anomalie] pour déterminer la régularisation\n\nÉTAPE 2 — RECHERCHES RAG OBLIGATOIRES\nLance les recherches suivantes dans la vector store en fonction du CYCLE identifié :\n\nRECHERCHE 1 - COMPTE PRINCIPAL DU CYCLE :\nQuery → \"compte {{ $json.cycle }} SYSCOHADA fonctionnement débit crédit\"\nObjectif → Identifier le compte principal du cycle, son sens, ses contreparties\n\nRECHERCHE 2 - COMPTES DE CHARGES/PRODUITS :\nQuery → \"compte charges produits {{ $json.cycle }} SYSCOHADA\"\nObjectif → Identifier le(s) compte(s) de charges ou produits mouvementés\n\nRECHERCHE 3 - TVA SI APPLICABLE :\nQuery → \"TVA récupérable déductible {{ $json.cycle }} SYSCOHADA compte 445\"\nObjectif → Identifier le compte de TVA applicable si pertinent\n\nRECHERCHE 4 - ÉCRITURE DE RÉGULARISATION :\nQuery → \"écriture régularisation extourne {{ $json.cycle }} SYSCOHADA ajustement audit\"\nObjectif → Identifier le schéma d'extourne comptable pour corriger l'anomalie\n\nRECHERCHE 5 (si nécessaire) - COMPTES TIERS :\nQuery → \"compte tiers fournisseur client {{ $json.cycle }} SYSCOHADA classe 4\"\nObjectif → Vérifier si un compte tiers (classe 4) doit apparaître\n\n[DONNÉES D'ENTRÉE]\n[user_message] = {{ $json.user_message }}\n[cycle_detecte] = {{ $json.cycle }}\n[constat] = {{ $json.constat }}\n[anomalie] = {{ $json.anomalie }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [-1168, 80],
+      "id": "4823d725-9510-49b8-b938-00ef97315530",
+      "name": "Agent RAG révision des comptes1",
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Code integrate7": {
+      "main": [
+        [
+          {
+            "node": "Alea16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alea16": {
+      "main": [
+        [
+          {
+            "node": "Set Variables RAG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Variables RAG": {
+      "main": [
+        [
+          {
+            "node": "Agent RAG révision des comptes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "name": "Google Drive Scanner HTTP - Arborescence Complete",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "scan-drive-tree",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 340]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "q", "value": "trashed=false"},
+            {"name": "fields", "value": "files(id,name,mimeType,parents)"},
+            {"name": "pageSize", "value": "1000"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-001",
+      "name": "HTTP Google Drive API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 340]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ============================================\n// CONSTRUCTION DE L'ARBORESCENCE NESTED\n// ============================================\n\nconst response = $input.first().json;\nconst allItems = response.files || [];\n\n// Maps pour organiser\nconst foldersMap = new Map();\nconst filesMap = new Map();\nconst childrenMap = new Map();\n\n// Classifier tous les éléments\nfor (const item of allItems) {\n  const parentId = (item.parents && item.parents.length > 0) ? item.parents[0] : 'root';\n  \n  // Ajouter à la liste des enfants du parent\n  if (!childrenMap.has(parentId)) {\n    childrenMap.set(parentId, []);\n  }\n  childrenMap.get(parentId).push(item.id);\n  \n  if (item.mimeType === 'application/vnd.google-apps.folder') {\n    foldersMap.set(item.id, {\n      id: item.id,\n      nom: item.name,\n      parentId: parentId\n    });\n  } else {\n    filesMap.set(item.id, {\n      id: item.id,\n      nom: item.name,\n      mimeType: item.mimeType,\n      parentId: parentId\n    });\n  }\n}\n\n// Fonction récursive pour construire l'arbre\nfunction buildTree(folderId) {\n  const result = { sousDossiers: [], fichiers: [] };\n  const children = childrenMap.get(folderId) || [];\n  \n  for (const childId of children) {\n    if (foldersMap.has(childId)) {\n      const folder = foldersMap.get(childId);\n      const content = buildTree(childId);\n      result.sousDossiers.push({\n        id: folder.id,\n        nom: folder.nom,\n        type: 'dossier',\n        sousDossiers: content.sousDossiers,\n        fichiers: content.fichiers\n      });\n    } else if (filesMap.has(childId)) {\n      const file = filesMap.get(childId);\n      result.fichiers.push({\n        id: file.id,\n        nom: file.nom,\n        type: 'fichier',\n        mimeType: file.mimeType\n      });\n    }\n  }\n  return result;\n}\n\n// Trouver les éléments racine\nconst rootFolders = [];\nconst rootFiles = [];\n\nfor (const [id, folder] of foldersMap) {\n  if (folder.parentId === 'root' || !foldersMap.has(folder.parentId)) {\n    const content = buildTree(id);\n    rootFolders.push({\n      id: folder.id,\n      nom: folder.nom,\n      type: 'dossier',\n      sousDossiers: content.sousDossiers,\n      fichiers: content.fichiers\n    });\n  }\n}\n\nfor (const [id, file] of filesMap) {\n  if (file.parentId === 'root' || !foldersMap.has(file.parentId)) {\n    rootFiles.push({\n      id: file.id,\n      nom: file.nom,\n      type: 'fichier',\n      mimeType: file.mimeType\n    });\n  }\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    statistiques: {\n      totalDossiers: foldersMap.size,\n      totalFichiers: filesMap.size,\n      dossiersRacine: rootFolders.length,\n      fichiersRacine: rootFiles.length\n    },\n    arborescence: {\n      dossiers: rootFolders,\n      fichiers: rootFiles\n    }\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Construire Arborescence",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 340]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [920, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "HTTP Google Drive API", "type": "main", "index": 0}]]
+    },
+    "HTTP Google Drive API": {
+      "main": [[{"node": "Construire Arborescence", "type": "main", "index": 0}]]
+    },
+    "Construire Arborescence": {
+      "main": [[{"node": "Reponse Webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"}
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test React Simple - Diagnostic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .status {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { border-left: 4px solid #4CAF50; }
+        .error { border-left: 4px solid #f44336; }
+        .info { border-left: 4px solid #2196F3; }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test React Simple</h1>
+    
+    <div id="test-results"></div>
+
+    <script type="module">
+        const results = document.getElementById('test-results');
+        
+        function addResult(title, message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `<h3>${title}</h3><p>${message}</p>`;
+            results.appendChild(div);
+        }
+
+        async function runTests() {
+            // Test 1: Vérifier que le serveur Vite répond
+            try {
+                const response = await fetch('http://localhost:5173/');
+                if (response.ok) {
+                    addResult('✅ Test 1: Serveur Vite', 'Le serveur répond correctement', 'success');
+                } else {
+                    addResult('❌ Test 1: Serveur Vite', `Erreur HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Test 1: Serveur Vite', `Erreur: ${error.message}`, 'error');
+            }
+
+            // Test 2: Vérifier que main.tsx est accessible
+            try {
+                const response = await fetch('http://localhost:5173/src/main.tsx');
+                if (response.ok) {
+                    addResult('✅ Test 2: main.tsx', 'Le fichier est accessible', 'success');
+                    const content = await response.text();
+                    if (content.includes('createRoot')) {
+                        addResult('✅ Test 2.1: createRoot', 'La fonction createRoot est présente', 'success');
+                    } else {
+                        addResult('❌ Test 2.1: createRoot', 'La fonction createRoot est absente', 'error');
+                    }
+                } else {
+                    addResult('❌ Test 2: main.tsx', `Erreur HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Test 2: main.tsx', `Erreur: ${error.message}`, 'error');
+            }
+
+            // Test 3: Vérifier App.tsx
+            try {
+                const response = await fetch('http://localhost:5173/src/App.tsx');
+                if (response.ok) {
+                    addResult('✅ Test 3: App.tsx', 'Le fichier est accessible', 'success');
+                } else {
+                    addResult('❌ Test 3: App.tsx', `Erreur HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Test 3: App.tsx', `Erreur: ${error.message}`, 'error');
+            }
+
+            // Test 4: Vérifier ErrorBoundary.tsx
+            try {
+                const response = await fetch('http://localhost:5173/src/components/ErrorBoundary.tsx');
+                if (response.ok) {
+                    addResult('✅ Test 4: ErrorBoundary.tsx', 'Le fichier est accessible', 'success');
+                } else {
+                    addResult('❌ Test 4: ErrorBoundary.tsx', `Erreur HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Test 4: ErrorBoundary.tsx', `Erreur: ${error.message}`, 'error');
+            }
+
+            // Test 5: Vérifier db.ts
+            try {
+                const response = await fetch('http://localhost:5173/src/db.ts');
+                if (response.ok) {
+                    addResult('✅ Test 5: db.ts', 'Le fichier est accessible', 'success');
+                } else {
+                    addResult('❌ Test 5: db.ts', `Erreur HTTP ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Test 5: db.ts', `Erreur: ${error.message}`, 'error');
+            }
+
+            // Instructions finales
+            addResult(
+                '📋 Prochaine étape',
+                `
+                    <strong>Maintenant, ouvrez http://localhost:5173/ et :</strong><br><br>
+                    1. Appuyez sur F12 pour ouvrir la console<br>
+                    2. Regardez l'onglet Console pour les erreurs en rouge<br>
+                    3. Regardez l'onglet Network et rechargez (Ctrl+R)<br>
+                    4. Notez tous les fichiers en rouge (404 ou erreur)<br><br>
+                    <strong>Dans la console, tapez aussi :</strong><br>
+                    <pre>document.getElementById('root')</pre>
+                    <pre>document.getElementById('root').innerHTML</pre>
+                `,
+                'info'
+            );
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

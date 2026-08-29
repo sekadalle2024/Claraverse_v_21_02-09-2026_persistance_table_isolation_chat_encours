@@ -1,0 +1,105 @@
+{
+  "name": "htlm_processor - Minimal",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "htlm_processor",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "htlm-processor-webhook"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extraire les données du webhook\nconst body = $input.item.json.body || $input.item.json;\nconst question = body.question || '';\n\nconsole.log('📥 Données reçues:', {\n  question_length: question.length,\n  has_tables: question.includes('<table>'),\n  timestamp: new Date().toISOString()\n});\n\n// Compter les tables\nconst tableCount = (question.match(/<table/g) || []).length;\n\n// Retourner les données pour traitement\nreturn {\n  json: {\n    question: question,\n    tableCount: tableCount,\n    receivedAt: new Date().toISOString(),\n    size: question.length\n  }\n};"
+      },
+      "id": "function-extract",
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Simuler un traitement\nconst data = $input.item.json;\n\n// Créer une réponse formatée\nconst response = {\n  success: true,\n  message: 'Données reçues et traitées avec succès',\n  data: {\n    tables_received: data.tableCount,\n    size_kb: (data.size / 1024).toFixed(2),\n    processed_at: new Date().toISOString()\n  },\n  // Exemple de réponse HTML (vous pouvez personnaliser)\n  html_response: `<div style=\"padding: 20px; background: #f0f0f0; border-radius: 8px;\">\n    <h2>✅ Traitement Réussi</h2>\n    <p><strong>Tables reçues:</strong> ${data.tableCount}</p>\n    <p><strong>Taille:</strong> ${(data.size / 1024).toFixed(2)} KB</p>\n    <p><strong>Traité à:</strong> ${new Date().toLocaleString('fr-FR')}</p>\n  </div>`\n};\n\nconsole.log('✅ Réponse préparée:', response);\n\nreturn { json: response };"
+      },
+      "id": "function-process",
+      "name": "Process Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Data": {
+      "main": [
+        [
+          {
+            "node": "Process Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "id": "htlm-processor-minimal",
+  "meta": {
+    "instanceId": "local"
+  },
+  "tags": []
+}

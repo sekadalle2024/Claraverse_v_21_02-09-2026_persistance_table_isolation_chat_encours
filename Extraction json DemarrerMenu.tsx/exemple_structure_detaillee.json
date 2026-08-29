@@ -1,0 +1,56 @@
+﻿{
+  "suite": {
+    "nom": "Suite E-Audit",
+    "description": "Suite complète d'outils d'audit et de révision comptable pour professionnels",
+    "version": "1.0.0",
+    "date_extraction": "2026-03-26T11:20:00Z",
+    "source_file": "DemarrerMenu.tsx",
+    "metadata": {
+      "total_logiciels": 6,
+      "total_phases": 18,
+      "total_etapes": 65,
+      "total_modes": 120,
+      "total_tests": 100
+    },
+    "logiciels": [
+      {
+        "id": "e-audit-pro",
+        "label": "E-audit pro",
+        "description": "Logiciel d'audit interne professionnel conforme aux normes IFACI",
+        "ordre": 1,
+        "phases": [
+          {
+            "id": "phase-preparation",
+            "label": "PHASE DE PRÉPARATION",
+            "ordre": 1,
+            "description": "Phase de préparation de la mission d'audit",
+            "etapes": [
+              {
+                "id": "collecte-documentaire",
+                "label": "Collecte documentaire",
+                "ordre": 1,
+                "norme": null,
+                "description": "Collecte des documents nécessaires à la mission",
+                "modes": [
+                  {
+                    "id": "normal",
+                    "label": "Normal",
+                    "description": "Mode standard de génération",
+                    "variables": [
+                      {"nom": "Command", "type": "string", "valeur": "Etape de mission", "obligatoire": true},
+                      {"nom": "Processus", "type": "string", "valeur": "rapprochements bancaires", "obligatoire": true},
+                      {"nom": "Etape précédente", "type": "string", "valeur": "Cartographie des risques", "obligatoire": false},
+                      {"nom": "Etape de mission", "type": "string", "valeur": "Collecte documentaire", "obligatoire": true},
+                      {"nom": "Modele", "type": "string", "valeur": "Processus, document, Direction, operationnel", "obligatoire": true},
+                      {"nom": "Nb de lignes", "type": "number", "valeur": "30", "obligatoire": true}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

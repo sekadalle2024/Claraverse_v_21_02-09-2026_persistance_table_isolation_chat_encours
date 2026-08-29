@@ -1,0 +1,63 @@
+{
+  "description": "Exemple de réponse n8n au FORMAT 4 attendu par claraApiService.ts",
+  "format": "FORMAT 4 - Programme de travail avec structure data",
+  "structure": "[{ data: { 'Etape mission - ...': [...] } }]",
+  "exemple_complet": [
+    {
+      "data": {
+        "Etape mission - Recos revision des comptes": [
+          {
+            "table 1": {
+              "Etape de mission": "Recommendations comptables",
+              "Norme": "Norme ISA",
+              "Méthode": "Méthode de la regularisations des comptes par les assertions",
+              "Reference": "Recos revision-001"
+            }
+          },
+          {
+            "table 2": {
+              "Intitule": "Dépenses de caisse non appuyées par des pièces justificatives probantes"
+            }
+          },
+          {
+            "table 3": {
+              "Description": "Nous avons mis en œuvre une procédure de rapprochement des pièces justificatives de caisse (référence feuille de travail : AA040), consistant à rapprocher exhaustivement chaque écriture enregistrée au journal de caisse avec sa pièce justificative correspondante (facture fournisseur, reçu signé, bon de caisse visé par un responsable habilité) pour l'ensemble des décaissements comptabilisés en charges fournisseurs au cours de l'exercice clos le 31.12.N.\n\n Cette procédure vise à s'assurer que chaque décaissement enregistré au crédit du compte 571 000 — Caisse est adossé à une pièce justificative probante, permettant d'établir la réalité, la nature et le bien-fondé de la charge correspondante, conformément aux exigences du SYSCOHADA Révisé et aux principes de régularité et de sincérité des états financiers."
+            }
+          },
+          {
+            "table 4": {
+              "Observation": "Le rapprochement effectué entre les décaissements enregistrés au crédit du compte 571 000 — Caisse et les pièces justificatives collectées auprès de l'entité fait ressortir un écart de 600 000 FCFA au 31.12.N.\nEn effet, des décaissements d'un montant cumulé de 600 000 FCFA, comptabilisés en charges fournisseurs au débit des comptes 601 XXX, ne sont appuyés d'aucune pièce justificative probante."
+            }
+          },
+          {
+            "table 5": {
+              "Ajustement/Reclassement": "- Nous proposons un ajustement pour sur-évaluation de charges d'un montant de 600 000 FCFA, correspondant à l'extourne des décaissements enregistrés en charges fournisseurs sans pièces justificatives probantes.\nConformément au SYSCOHADA Révisé, une charge ne peut être reconnue dans les états financiers que si elle satisfait simultanément aux critères suivants. En l'absence de pièces justificatives, les charges concernées ne satisfont pas au critère de validité et ne peuvent être maintenues dans les états financiers."
+            }
+          },
+          {
+            "table 6": {
+              "Regularisation comptable": " Nous proposons le débit du compte 571 000 — Caisse pour un montant de 600 000 FCFA TTC, par le crédit du compte 601 XXX — Charges fournisseurs pour le montant HT correspondant, et le crédit du compte 445 660 — TVA récupérable pour le montant de TVA afférent, au 31.12.N."
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "La clé principale peut varier : 'Etape mission - Recos revision des comptes', 'Etape mission - Programme', etc.",
+    "Chaque table est un objet avec une clé unique : 'table 1', 'table 2', etc.",
+    "Le contenu de chaque table peut être un objet simple (table 1-6) ou un array d'objets (pour les tableaux de données)",
+    "Le frontend détecte automatiquement le type de table et applique le formatage Markdown approprié"
+  ],
+  "detection_frontend": {
+    "condition": "Array.isArray(result) && result[0] && 'data' in result[0]",
+    "format_detecte": "programme_travail_data",
+    "conversion": "convertStructuredDataToMarkdown(dataContent)",
+    "types_tables_supportes": [
+      "header (table 1) : objet simple avec 2-5 propriétés",
+      "data_array : array d'objets pour tableaux de données",
+      "download : objets avec URLs de téléchargement",
+      "unknown : conversion générique en fallback"
+    ]
+  }
+}

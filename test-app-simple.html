@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test App Simple - Diagnostic Page Blanche</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic Page Blanche - Test App Simple</h1>
+    
+    <div class="test-section">
+        <h2>Instructions</h2>
+        <ol>
+            <li>Ouvrez cette page dans votre navigateur</li>
+            <li>Ouvrez la console (F12)</li>
+            <li>Cliquez sur "Tester l'import de db"</li>
+            <li>Regardez les messages dans la console ET sur cette page</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Import du module db</h2>
+        <button onclick="testDbImport()">Tester l'import de db</button>
+        <div id="db-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Vérifier React</h2>
+        <button onclick="testReact()">Tester React</button>
+        <div id="react-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Vérifier les erreurs console</h2>
+        <button onclick="checkConsoleErrors()">Vérifier la console</button>
+        <div id="console-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Console en direct</h2>
+        <pre id="live-console"></pre>
+    </div>
+
+    <script type="module">
+        // Capturer toutes les erreurs
+        const consoleLog = [];
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        const originalConsoleLog = console.log;
+
+        console.error = function(...args) {
+            consoleLog.push({ type: 'error', message: args.join(' ') });
+            updateLiveConsole();
+            originalConsoleError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            consoleLog.push({ type: 'warn', message: args.join(' ') });
+            updateLiveConsole();
+            originalConsoleWarn.apply(console, args);
+        };
+
+        console.log = function(...args) {
+            consoleLog.push({ type: 'log', message: args.join(' ') });
+            updateLiveConsole();
+            originalConsoleLog.apply(console, args);
+        };
+
+        function updateLiveConsole() {
+            const liveConsole = document.getElementById('live-console');
+            liveConsole.textContent = consoleLog.map(log => 
+                `[${log.type.toUpperCase()}] ${log.message}`
+            ).join('\n');
+        }
+
+        window.testDbImport = async function() {
+            const resultDiv = document.getElementById('db-result');
+            resultDiv.innerHTML = '<p>⏳ Test en cours...</p>';
+            
+            try {
+                console.log('🔍 Tentative d\'import du module db...');
+                
+                // Essayer d'importer le module db
+                const dbModule = await import('/src/db/index.ts');
+                console.log('✅ Module db importé avec succès:', dbModule);
+                
+                if (dbModule.db) {
+                    console.log('✅ Objet db trouvé:', dbModule.db);
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Import réussi!</p>
+                        <p>Objet db: ${typeof dbModule.db}</p>
+                        <p>Méthodes disponibles: ${Object.keys(dbModule.db).slice(0, 10).join(', ')}...</p>
+                    `;
+                    
+                    // Tester une méthode
+                    try {
+                        const currentUser = await dbModule.db.getCurrentUser();
+                        console.log('👤 Current user:', currentUser);
+                        resultDiv.innerHTML += `<p>Current user: ${currentUser || 'null'}</p>`;
+                    } catch (e) {
+                        console.error('❌ Erreur lors de l\'appel à getCurrentUser:', e);
+                        resultDiv.innerHTML += `<p class="error">Erreur getCurrentUser: ${e.message}</p>`;
+                    }
+                } else {
+                    console.error('❌ Objet db non trouvé dans le module');
+                    resultDiv.innerHTML = '<p class="error">❌ Objet db non trouvé!</p>';
+                }
+            } catch (error) {
+                console.error('❌ Erreur lors de l\'import:', error);
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Erreur d'import!</p>
+                    <pre>${error.message}\n${error.stack}</pre>
+                `;
+            }
+        };
+
+        window.testReact = async function() {
+            const resultDiv = document.getElementById('react-result');
+            resultDiv.innerHTML = '<p>⏳ Test en cours...</p>';
+            
+            try {
+                console.log('🔍 Tentative d\'import de React...');
+                const React = await import('react');
+                const ReactDOM = await import('react-dom/client');
+                
+                console.log('✅ React importé:', React);
+                console.log('✅ ReactDOM importé:', ReactDOM);
+                
+                resultDiv.innerHTML = `
+                    <p class="success">✅ React fonctionne!</p>
+                    <p>React version: ${React.version}</p>
+                `;
+            } catch (error) {
+                console.error('❌ Erreur React:', error);
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Erreur React!</p>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        };
+
+        window.checkConsoleErrors = function() {
+            const resultDiv = document.getElementById('console-result');
+            const errors = consoleLog.filter(log => log.type === 'error');
+            const warnings = consoleLog.filter(log => log.type === 'warn');
+            
+            resultDiv.innerHTML = `
+                <p><strong>Erreurs:</strong> ${errors.length}</p>
+                <p><strong>Avertissements:</strong> ${warnings.length}</p>
+                ${errors.length > 0 ? `<pre>${errors.map(e => e.message).join('\n')}</pre>` : ''}
+            `;
+        };
+
+        // Auto-test au chargement
+        console.log('🚀 Page de diagnostic chargée');
+        console.log('📍 URL actuelle:', window.location.href);
+        console.log('🌐 Vite dev server devrait être sur http://localhost:5173/');
+    </script>
+</body>
+</html>

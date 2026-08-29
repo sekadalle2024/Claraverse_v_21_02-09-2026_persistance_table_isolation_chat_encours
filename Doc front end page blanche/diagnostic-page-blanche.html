@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Page Blanche - Claraverse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .results {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff4444; }
+        .warning { color: #ffaa00; }
+        .info { color: #00aaff; }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.ok { background: #00ff00; color: #000; }
+        .status.fail { background: #ff4444; color: #fff; }
+        .status.pending { background: #ffaa00; color: #000; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Diagnostic Complet - Page Blanche</h1>
+            <p>Outil de diagnostic pour identifier le problème</p>
+        </div>
+        
+        <div class="content">
+            <div class="test-section">
+                <h2>🎯 Tests Automatiques</h2>
+                <button onclick="runAllTests()">▶️ Lancer Tous les Tests</button>
+                <button onclick="clearResults()">🗑️ Effacer</button>
+            </div>
+
+            <div class="test-section">
+                <h2>🔧 Tests Individuels</h2>
+                <button onclick="test1_ServerCheck()">1. Serveur Vite</button>
+                <button onclick="test2_IndexHTML()">2. Index.html</button>
+                <button onclick="test3_MainTSX()">3. Main.tsx</button>
+                <button onclick="test4_AppTSX()">4. App.tsx</button>
+                <button onclick="test5_Dependencies()">5. Dépendances</button>
+                <button onclick="test6_Console()">6. Console Errors</button>
+                <button onclick="test7_Network()">7. Réseau</button>
+            </div>
+
+            <div class="test-section">
+                <h2>📊 Résultats</h2>
+                <div id="results" class="results">En attente des tests...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            const icon = icons[type] || 'ℹ️';
+            const className = type;
+            
+            results.innerHTML += `<span class="${className}">[${timestamp}] ${icon} ${message}</span>\n`;
+            results.scrollTop = results.scrollHeight;
+            
+            testResults.push({ timestamp, type, message });
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = 'Résultats effacés...\n';
+            testResults = [];
+        }
+
+        async function test1_ServerCheck() {
+            log('═══ TEST 1: Vérification du serveur Vite ═══', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/');
+                if (response.ok) {
+                    log('Serveur Vite accessible ✓', 'success');
+                    const html = await response.text();
+                    log(`Taille HTML: ${html.length} caractères`, 'info');
+                    return true;
+                } else {
+                    log(`Erreur HTTP: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`Impossible de se connecter: ${error.message}`, 'error');
+                log('→ Lancez "npm run dev" dans le terminal', 'warning');
+                return false;
+            }
+        }
+
+        async function test2_IndexHTML() {
+            log('═══ TEST 2: Analyse de index.html ═══', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/');
+                const html = await response.text();
+                
+                // Vérifier la balise script
+                if (html.includes('type="module" src="/src/main.tsx"')) {
+                    log('Balise script correcte ✓', 'success');
+                } else if (html.includes('type="module src="/src/main.tsx"')) {
+                    log('ERREUR: Guillemet manquant dans la balise script!', 'error');
+                    return false;
+                } else {
+                    log('Balise script non trouvée ou format différent', 'warning');
+                }
+                
+                // Vérifier le div root
+                if (html.includes('<div id="root">')) {
+                    log('Div #root trouvé ✓', 'success');
+                } else {
+                    log('Div #root manquant!', 'error');
+                    return false;
+                }
+                
+                // Vérifier les autres scripts
+                const scriptCount = (html.match(/<script/g) || []).length;
+                log(`Nombre de balises <script>: ${scriptCount}`, 'info');
+                
+                return true;
+            } catch (error) {
+                log(`Erreur: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function test3_MainTSX() {
+            log('═══ TEST 3: Vérification de main.tsx ═══', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/src/main.tsx');
+                if (response.ok) {
+                    log('Fichier main.tsx accessible ✓', 'success');
+                    const content = await response.text();
+                    
+                    // Vérifier les imports essentiels
+                    const checks = [
+                        { pattern: 'import.*React', name: 'Import React' },
+                        { pattern: 'import.*App', name: 'Import App' },
+                        { pattern: 'createRoot', name: 'createRoot' },
+                        { pattern: 'getElementById.*root', name: 'getElementById root' }
+                    ];
+                    
+                    checks.forEach(check => {
+                        if (new RegExp(check.pattern).test(content)) {
+                            log(`${check.name} trouvé ✓`, 'success');
+                        } else {
+                            log(`${check.name} manquant`, 'warning');
+                        }
+                    });
+                    
+                    return true;
+                } else {
+                    log(`Erreur HTTP: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`Erreur: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function test4_AppTSX() {
+            log('═══ TEST 4: Vérification de App.tsx ═══', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/src/App.tsx');
+                if (response.ok) {
+                    log('Fichier App.tsx accessible ✓', 'success');
+                    return true;
+                } else {
+                    log(`Erreur HTTP: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`Erreur: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        async function test5_Dependencies() {
+            log('═══ TEST 5: Vérification des dépendances ═══', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/@vite/client');
+                if (response.ok) {
+                    log('Client Vite chargé ✓', 'success');
+                } else {
+                    log('Client Vite non accessible', 'warning');
+                }
+                
+                // Vérifier React
+                const reactResponse = await fetch('http://localhost:5173/node_modules/react/index.js');
+                if (reactResponse.ok) {
+                    log('React accessible ✓', 'success');
+                } else {
+                    log('React non trouvé (normal avec Vite)', 'info');
+                }
+                
+                return true;
+            } catch (error) {
+                log(`Erreur: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function test6_Console() {
+            log('═══ TEST 6: Erreurs de console ═══', 'info');
+            log('→ Ouvrez la console (F12) sur http://localhost:5173/', 'info');
+            log('→ Cherchez des erreurs en rouge', 'info');
+            log('→ Erreurs courantes:', 'info');
+            log('  • Failed to fetch module', 'warning');
+            log('  • Unexpected token', 'warning');
+            log('  • Cannot find module', 'warning');
+            log('  • SyntaxError', 'warning');
+            return true;
+        }
+
+        function test7_Network() {
+            log('═══ TEST 7: Analyse réseau ═══', 'info');
+            log('→ Ouvrez l\'onglet Network (F12)', 'info');
+            log('→ Rechargez http://localhost:5173/', 'info');
+            log('→ Vérifiez les fichiers en erreur (rouge)', 'info');
+            log('→ Notez les codes HTTP (404, 500, etc.)', 'info');
+            return true;
+        }
+
+        async function runAllTests() {
+            clearResults();
+            log('🚀 DÉMARRAGE DU DIAGNOSTIC COMPLET', 'info');
+            log('═══════════════════════════════════════\n', 'info');
+            
+            const tests = [
+                test1_ServerCheck,
+                test2_IndexHTML,
+                test3_MainTSX,
+                test4_AppTSX,
+                test5_Dependencies,
+                test6_Console,
+                test7_Network
+            ];
+            
+            let passed = 0;
+            let failed = 0;
+            
+            for (const test of tests) {
+                try {
+                    const result = await test();
+                    if (result) passed++;
+                    else failed++;
+                    log('', 'info'); // Ligne vide
+                } catch (error) {
+                    failed++;
+                    log(`Erreur dans le test: ${error.message}`, 'error');
+                }
+            }
+            
+            log('═══════════════════════════════════════', 'info');
+            log(`📊 RÉSUMÉ: ${passed} tests réussis, ${failed} tests échoués`, 'info');
+            
+            if (failed === 0) {
+                log('✅ Tous les tests sont passés!', 'success');
+                log('→ Le problème est probablement dans le code React', 'warning');
+                log('→ Vérifiez la console sur http://localhost:5173/', 'warning');
+            } else {
+                log('❌ Des problèmes ont été détectés', 'error');
+                log('→ Consultez les erreurs ci-dessus', 'warning');
+            }
+        }
+
+        // Lancer automatiquement au chargement
+        window.addEventListener('load', () => {
+            log('Page de diagnostic chargée', 'success');
+            log('Cliquez sur "Lancer Tous les Tests" pour commencer\n', 'info');
+        });
+    </script>
+</body>
+</html>

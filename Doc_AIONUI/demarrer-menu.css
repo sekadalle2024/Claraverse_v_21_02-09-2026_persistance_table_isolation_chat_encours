@@ -1,0 +1,709 @@
+/**
+ * DemarrerMenu.css - Styles CSS pour le composant Menu Démarrer
+ * 
+ * Ce fichier contient tous les styles nécessaires pour reproduire
+ * l'apparence du composant DemarrerMenu.tsx dans un autre projet.
+ * 
+ * Design inspiré du menu Claude/ChatGPT avec deux panneaux côte à côte
+ * Couleur principale: #6b1102 (rouge bordeaux)
+ */
+
+/* ============================================================
+   VARIABLES CSS
+   ============================================================ */
+:root {
+  --demarrer-primary: #6b1102;
+  --demarrer-primary-light: #8b2112;
+  --demarrer-primary-hover: rgba(107, 17, 2, 0.1);
+  --demarrer-primary-hover-dark: rgba(107, 17, 2, 0.2);
+  --demarrer-accent: #ff6b5b;
+  --demarrer-shadow: rgba(107, 17, 2, 0.3);
+  
+  --demarrer-bg-light: #ffffff;
+  --demarrer-bg-dark: #1f2937;
+  --demarrer-bg-gray-50: #f9fafb;
+  --demarrer-bg-gray-100: #f3f4f6;
+  --demarrer-bg-gray-800: rgba(31, 41, 55, 0.8);
+  --demarrer-bg-gray-900: rgba(17, 24, 39, 0.5);
+  
+  --demarrer-border-light: #e5e7eb;
+  --demarrer-border-dark: #374151;
+  --demarrer-border-gray-100: #f3f4f6;
+  --demarrer-border-gray-700: rgba(55, 65, 81, 0.5);
+  
+  --demarrer-text-primary: #1f2937;
+  --demarrer-text-secondary: #6b7280;
+  --demarrer-text-light: #9ca3af;
+  --demarrer-text-white: #ffffff;
+  --demarrer-text-dark-primary: #f9fafb;
+  --demarrer-text-dark-secondary: #d1d5db;
+  --demarrer-text-dark-light: #9ca3af;
+}
+
+/* ============================================================
+   BOUTON PRINCIPAL "DÉMARRER"
+   ============================================================ */
+.demarrer-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  background-color: rgba(243, 244, 246, 0.8);
+  color: #374151;
+}
+
+.demarrer-button:hover:not(:disabled) {
+  background-color: var(--demarrer-primary-hover);
+  color: var(--demarrer-primary);
+}
+
+.demarrer-button.active {
+  background-color: var(--demarrer-primary);
+  color: var(--demarrer-text-white);
+  box-shadow: 0 10px 15px -3px var(--demarrer-shadow);
+}
+
+.demarrer-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.demarrer-button-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.demarrer-button.active .demarrer-button-icon {
+  fill: white;
+}
+
+/* Mode sombre */
+.dark .demarrer-button {
+  background-color: var(--demarrer-bg-gray-800);
+  color: var(--demarrer-text-dark-secondary);
+}
+
+.dark .demarrer-button:hover:not(:disabled) {
+  background-color: var(--demarrer-primary-hover-dark);
+  color: var(--demarrer-accent);
+}
+
+/* ============================================================
+   MENU PRINCIPAL (DROPDOWN)
+   ============================================================ */
+.demarrer-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 0.5rem;
+  min-width: 280px;
+  background-color: var(--demarrer-bg-light);
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--demarrer-border-light);
+  overflow: hidden;
+  z-index: 50;
+  max-height: 70vh;
+}
+
+.dark .demarrer-menu {
+  background-color: var(--demarrer-bg-dark);
+  border-color: var(--demarrer-border-dark);
+}
+
+/* ============================================================
+   EN-TÊTE DU MENU
+   ============================================================ */
+.demarrer-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--demarrer-border-light);
+  background: linear-gradient(to right, var(--demarrer-primary), var(--demarrer-primary-light));
+}
+
+.dark .demarrer-menu-header {
+  border-bottom-color: var(--demarrer-border-dark);
+}
+
+.demarrer-menu-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--demarrer-text-white);
+}
+
+.demarrer-menu-title-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: white;
+}
+
+.demarrer-menu-title-text {
+  font-weight: 600;
+}
+
+.demarrer-menu-close {
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: none;
+  color: var(--demarrer-text-white);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.demarrer-menu-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.demarrer-menu-close-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ============================================================
+   CONTENU DU MENU (SCROLLABLE)
+   ============================================================ */
+.demarrer-menu-content {
+  padding: 0.25rem 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Scrollbar personnalisée */
+.demarrer-menu-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.demarrer-menu-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.demarrer-menu-content::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+.demarrer-menu-content::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.dark .demarrer-menu-content::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark .demarrer-menu-content::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* ============================================================
+   BOUTONS LOGICIEL (NIVEAU 1)
+   ============================================================ */
+.demarrer-logiciel-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  border-bottom: 1px solid var(--demarrer-border-gray-100);
+  background-color: transparent;
+  color: var(--demarrer-text-primary);
+  cursor: pointer;
+}
+
+.demarrer-logiciel-button:hover {
+  background-color: var(--demarrer-bg-gray-50);
+}
+
+.demarrer-logiciel-button.active {
+  background-color: var(--demarrer-primary-hover);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-logiciel-button {
+  color: var(--demarrer-text-dark-primary);
+  border-bottom-color: rgba(55, 65, 81, 0.5);
+}
+
+.dark .demarrer-logiciel-button:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+}
+
+.dark .demarrer-logiciel-button.active {
+  background-color: var(--demarrer-primary-hover-dark);
+  color: var(--demarrer-accent);
+}
+
+.demarrer-logiciel-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-secondary);
+}
+
+.demarrer-logiciel-button.active .demarrer-logiciel-icon {
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-logiciel-icon {
+  color: var(--demarrer-text-dark-light);
+}
+
+.dark .demarrer-logiciel-button.active .demarrer-logiciel-icon {
+  color: var(--demarrer-accent);
+}
+
+.demarrer-logiciel-label {
+  flex: 1;
+}
+
+.demarrer-logiciel-chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-light);
+  transition: transform 0.2s ease;
+}
+
+.demarrer-logiciel-button.active .demarrer-logiciel-chevron {
+  transform: rotate(90deg);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-logiciel-button.active .demarrer-logiciel-chevron {
+  color: var(--demarrer-accent);
+}
+
+/* ============================================================
+   CONTENU PHASES (NIVEAU 2)
+   ============================================================ */
+.demarrer-phases-container {
+  background-color: var(--demarrer-bg-gray-50);
+}
+
+.dark .demarrer-phases-container {
+  background-color: var(--demarrer-bg-gray-900);
+}
+
+/* ============================================================
+   EN-TÊTE DE PHASE
+   ============================================================ */
+.demarrer-phase-header {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--demarrer-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--demarrer-bg-gray-100);
+}
+
+.dark .demarrer-phase-header {
+  color: var(--demarrer-text-dark-light);
+  background-color: rgba(31, 41, 55, 0.5);
+}
+
+/* ============================================================
+   BOUTONS ÉTAPE (NIVEAU 3)
+   ============================================================ */
+.demarrer-etape-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem 0.625rem 1.5rem;
+  text-align: left;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border: none;
+  background-color: transparent;
+  color: #374151;
+  cursor: pointer;
+}
+
+.demarrer-etape-button:hover {
+  background-color: var(--demarrer-bg-gray-100);
+}
+
+.demarrer-etape-button.active {
+  background-color: var(--demarrer-primary-hover);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-etape-button {
+  color: var(--demarrer-text-dark-secondary);
+}
+
+.dark .demarrer-etape-button:hover {
+  background-color: #374151;
+}
+
+.dark .demarrer-etape-button.active {
+  background-color: var(--demarrer-primary-hover-dark);
+  color: var(--demarrer-accent);
+}
+
+.demarrer-etape-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-light);
+}
+
+.demarrer-etape-button.active .demarrer-etape-icon {
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-etape-icon {
+  color: var(--demarrer-text-dark-light);
+}
+
+.dark .demarrer-etape-button.active .demarrer-etape-icon {
+  color: var(--demarrer-accent);
+}
+
+.demarrer-etape-label {
+  flex: 1;
+}
+
+.demarrer-etape-chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-light);
+}
+
+.demarrer-etape-button.active .demarrer-etape-chevron {
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-etape-button.active .demarrer-etape-chevron {
+  color: var(--demarrer-accent);
+}
+
+/* ============================================================
+   BOUTONS CYCLE (NIVEAU 3 - ALTERNATIVE)
+   ============================================================ */
+.demarrer-cycle-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem 0.625rem 1.5rem;
+  text-align: left;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border: none;
+  background-color: transparent;
+  color: #374151;
+  cursor: pointer;
+}
+
+.demarrer-cycle-button:hover {
+  background-color: var(--demarrer-bg-gray-100);
+}
+
+.demarrer-cycle-button.active {
+  background-color: var(--demarrer-primary-hover);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-cycle-button {
+  color: var(--demarrer-text-dark-secondary);
+}
+
+.dark .demarrer-cycle-button:hover {
+  background-color: #374151;
+}
+
+.dark .demarrer-cycle-button.active {
+  background-color: var(--demarrer-primary-hover-dark);
+  color: var(--demarrer-accent);
+}
+
+.demarrer-cycle-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-light);
+}
+
+.demarrer-cycle-button.active .demarrer-cycle-icon {
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-cycle-icon {
+  color: var(--demarrer-text-dark-light);
+}
+
+.dark .demarrer-cycle-button.active .demarrer-cycle-icon {
+  color: var(--demarrer-accent);
+}
+
+.demarrer-cycle-label {
+  flex: 1;
+}
+
+.demarrer-cycle-chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-light);
+  transition: transform 0.2s ease;
+}
+
+.demarrer-cycle-button.active .demarrer-cycle-chevron {
+  transform: rotate(90deg);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-cycle-button.active .demarrer-cycle-chevron {
+  color: var(--demarrer-accent);
+}
+
+/* ============================================================
+   CONTENU TESTS (NIVEAU 4)
+   ============================================================ */
+.demarrer-tests-container {
+  background-color: var(--demarrer-bg-gray-100);
+}
+
+.dark .demarrer-tests-container {
+  background-color: rgba(31, 41, 55, 0.3);
+}
+
+/* ============================================================
+   BOUTONS TEST (NIVEAU 4)
+   ============================================================ */
+.demarrer-test-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem 0.5rem 3rem;
+  text-align: left;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border: none;
+  background-color: transparent;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.demarrer-test-button:hover {
+  background-color: #e5e7eb;
+}
+
+.demarrer-test-button.active {
+  background-color: var(--demarrer-primary-hover);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-test-button {
+  color: var(--demarrer-text-dark-secondary);
+}
+
+.dark .demarrer-test-button:hover {
+  background-color: #374151;
+}
+
+.dark .demarrer-test-button.active {
+  background-color: var(--demarrer-primary-hover-dark);
+  color: var(--demarrer-accent);
+}
+
+.demarrer-test-reference {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--demarrer-text-secondary);
+  min-width: 3rem;
+}
+
+.dark .demarrer-test-reference {
+  color: var(--demarrer-text-dark-light);
+}
+
+.demarrer-test-label {
+  flex: 1;
+}
+
+.demarrer-test-chevron {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--demarrer-text-light);
+}
+
+.demarrer-test-button.active .demarrer-test-chevron {
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-test-button.active .demarrer-test-chevron {
+  color: var(--demarrer-accent);
+}
+
+/* ============================================================
+   SOUS-MENU (PORTAIL) - MODES
+   ============================================================ */
+.demarrer-submenu {
+  position: fixed;
+  z-index: 9999;
+  min-width: 220px;
+  max-width: 320px;
+  background-color: var(--demarrer-bg-light);
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--demarrer-border-light);
+  padding: 0.25rem 0;
+  animation: fadeInZoom 0.15s ease-out;
+}
+
+.dark .demarrer-submenu {
+  background-color: var(--demarrer-bg-dark);
+  border-color: var(--demarrer-border-dark);
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   EN-TÊTE DU SOUS-MENU
+   ============================================================ */
+.demarrer-submenu-header {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--demarrer-border-gray-100);
+}
+
+.dark .demarrer-submenu-header {
+  border-bottom-color: var(--demarrer-border-dark);
+}
+
+.demarrer-submenu-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-submenu-title {
+  color: var(--demarrer-accent);
+}
+
+.demarrer-submenu-norme {
+  font-size: 0.625rem;
+  color: var(--demarrer-text-secondary);
+  margin-top: 0.25rem;
+  line-height: 1.2;
+}
+
+.dark .demarrer-submenu-norme {
+  color: var(--demarrer-text-dark-light);
+}
+
+/* ============================================================
+   BOUTONS MODE (DANS LE SOUS-MENU)
+   ============================================================ */
+.demarrer-mode-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  border: none;
+  background-color: transparent;
+  color: #374151;
+  cursor: pointer;
+}
+
+.demarrer-mode-button:hover {
+  background-color: var(--demarrer-primary-hover);
+  color: var(--demarrer-primary);
+}
+
+.dark .demarrer-mode-button {
+  color: var(--demarrer-text-dark-secondary);
+}
+
+.dark .demarrer-mode-button:hover {
+  background-color: var(--demarrer-primary-hover-dark);
+  color: var(--demarrer-accent);
+}
+
+.demarrer-mode-icon {
+  color: var(--demarrer-text-light);
+}
+
+.dark .demarrer-mode-icon {
+  color: var(--demarrer-text-dark-light);
+}
+
+/* ============================================================
+   UTILITAIRES
+   ============================================================ */
+.demarrer-relative {
+  position: relative;
+}
+
+.demarrer-hidden {
+  display: none;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .demarrer-menu {
+    min-width: 260px;
+    max-width: 90vw;
+  }
+  
+  .demarrer-submenu {
+    min-width: 200px;
+    max-width: 280px;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITÉ
+   ============================================================ */
+.demarrer-button:focus-visible,
+.demarrer-logiciel-button:focus-visible,
+.demarrer-etape-button:focus-visible,
+.demarrer-cycle-button:focus-visible,
+.demarrer-test-button:focus-visible,
+.demarrer-mode-button:focus-visible {
+  outline: 2px solid var(--demarrer-primary);
+  outline-offset: 2px;
+}
+
+.dark .demarrer-button:focus-visible,
+.dark .demarrer-logiciel-button:focus-visible,
+.dark .demarrer-etape-button:focus-visible,
+.dark .demarrer-cycle-button:focus-visible,
+.dark .demarrer-test-button:focus-visible,
+.dark .demarrer-mode-button:focus-visible {
+  outline-color: var(--demarrer-accent);
+}

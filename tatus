@@ -1,0 +1,42 @@
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex 9de92e1..e417ab3 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -18,11 +18,31 @@[m [mtemp/[m
+ *.tmp[m
+ *.temp[m
+ [m
+[31m-# Debug screenshots et images de test[m
+[31m-*.jpg[m
+[31m-*.JPG[m
+[31m-*.png[m
+[31m-*.PNG[m
+[32m+[m[32m# Debug screenshots et images de test (mais pas les assets du projet)[m
+[32m+[m[32m# Exclure les images de debug à la racine uniquement[m
+[32m+[m[32m/*.jpg[m
+[32m+[m[32m/*.JPG[m
+[32m+[m[32m/*.png[m
+[32m+[m[32m/*.PNG[m
+[32m+[m
+[32m+[m[32m# Exclure les images de debug dans les dossiers de documentation[m
+[32m+[m[32mdocs/**/*.jpg[m
+[32m+[m[32mdocs/**/*.JPG[m
+[32m+[m[32mdocs/**/*.png[m
+[32m+[m[32mdocs/**/*.PNG[m
+[32m+[m[32mdocumentation/**/*.jpg[m
+[32m+[m[32mdocumentation/**/*.JPG[m
+[32m+[m[32mdocumentation/**/*.png[m
+[32m+[m[32mdocumentation/**/*.PNG[m
+[32m+[m
+[32m+[m[32m# IMPORTANT: Garder les assets nécessaires au projet[m
+[32m+[m[32m!src/assets/**/*.png[m
+[32m+[m[32m!src/assets/**/*.jpg[m
+[32m+[m[32m!public/**/*.png[m
+[32m+[m[32m!public/**/*.jpg[m
+[32m+[m[32m!assets/icons/**/*.png[m
+[32m+[m[32m!assets/icons/**/*.icns[m
+[32m+[m[32m!assets/icons/**/*.ico[m
+ [m
+ # Fichiers problématiques[m
+ nul[m

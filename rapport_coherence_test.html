@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Cohérence - Notes Annexes SYSCOHADA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+        .taux-global {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .taux-valeur {
+            font-size: 48px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .taux-label {
+            font-size: 18px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .coherent {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .incoherent {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .alerte {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+        .alerte-warning {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .alerte-critical {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .metadata {
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        .montant {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Rapport de Cohérence - Notes Annexes SYSCOHADA</h1>
+        
+        <div class="taux-global">
+            <div class="taux-valeur">100.0%</div>
+            <div class="taux-label">Taux de Cohérence Global</div>
+        </div>
+
+        <h2>🏢 Total des Immobilisations</h2>
+        <table>
+            <tr>
+                <th>Validation</th>
+                <th>Total Notes</th>
+                <th>Total Bilan</th>
+                <th>Écart</th>
+                <th>Écart %</th>
+                <th>Statut</th>
+            </tr>
+            <tr>
+                <td>Notes 3A-3E vs Bilan Actif</td>
+                <td class="montant">6,320,000.00</td>
+                <td class="montant">6,320,000.00</td>
+                <td class="montant">0.00</td>
+                <td class="montant">0.00%</td>
+                <td class="coherent">✓ Cohérent</td>
+            </tr>
+        </table>
+        
+        <h3>Détail par Note</h3>
+        <table>
+            <tr>
+                <th>Note</th>
+                <th>Montant</th>
+            </tr>
+
+            <tr>
+                <td>NOTE_3A</td>
+                <td class="montant">1,570,000.00</td>
+            </tr>
+
+            <tr>
+                <td>NOTE_3B</td>
+                <td class="montant">4,750,000.00</td>
+            </tr>
+
+        </table>
+
+        <h2>📉 Dotations aux Amortissements</h2>
+        <table>
+            <tr>
+                <th>Validation</th>
+                <th>Total Notes</th>
+                <th>Compte de Résultat</th>
+                <th>Écart</th>
+                <th>Écart %</th>
+                <th>Statut</th>
+            </tr>
+            <tr>
+                <td>Notes 3A-3E vs Compte Résultat</td>
+                <td class="montant">330,000.00</td>
+                <td class="montant">330,000.00</td>
+                <td class="montant">0.00</td>
+                <td class="montant">0.00%</td>
+                <td class="coherent">✓ Cohérent</td>
+            </tr>
+        </table>
+        
+        <h3>Détail par Note</h3>
+        <table>
+            <tr>
+                <th>Note</th>
+                <th>Dotations</th>
+            </tr>
+
+            <tr>
+                <td>NOTE_3A</td>
+                <td class="montant">180,000.00</td>
+            </tr>
+
+            <tr>
+                <td>NOTE_3B</td>
+                <td class="montant">150,000.00</td>
+            </tr>
+
+        </table>
+
+        <h2>📅 Continuité Temporelle</h2>
+        <table>
+            <tr>
+                <th>Note</th>
+                <th>Écart</th>
+                <th>Statut</th>
+            </tr>
+
+        </table>
+
+        <div class="metadata">
+            <p><strong>Date de validation:</strong> 23/04/2026 10:46:02</p>
+            <p><strong>Nombre de notes analysées:</strong> 2</p>
+            <p><strong>Nombre d'alertes:</strong> 0</p>
+        </div>
+    </div>
+</body>
+</html>

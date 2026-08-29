@@ -1,0 +1,281 @@
+/**
+ * ========================================
+ * STYLES CSS DES TABLES CLARAVERSE
+ * ========================================
+ * 
+ * Ce fichier contient uniquement les styles CSS des tables
+ * utilisées dans le chat du projet Claraverse.
+ * 
+ * Sélecteur CSS de base:
+ * div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.border.border-gray-200.dark\:border-gray-700.rounded-lg
+ * 
+ * Utilisation dans un autre projet (AIONUI):
+ * 1. Importer ce fichier CSS dans votre projet
+ * 2. Appliquer les classes appropriées à vos tables
+ * 3. Adapter les sélecteurs si nécessaire selon votre structure HTML
+ */
+
+/* ========================================
+   STYLES POUR TABLES CLARAVERSE
+   Version complète - Mode clair et sombre
+   ======================================== */
+
+/* --- Tables dans le contenu prose --- */
+.prose table.min-w-full,
+div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.rounded-lg {
+  box-shadow:
+    0 12px 24px 0 rgba(0, 0, 0, 0.25),      /* Ombre bas principale - plus prononcée */
+    0 8px 16px 0 rgba(0, 0, 0, 0.2),        /* Ombre bas secondaire */
+    0 4px 8px 0 rgba(0, 0, 0, 0.15) !important; /* Ombre bas douce */
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: calc(100% - 40px) !important; /* Réduit pour laisser place aux ombres */
+  table-layout: auto !important;
+}
+
+/* --- En-têtes de tables (th) - ROUGE BORDEAUX #6b1102 --- */
+.prose table.min-w-full th,
+div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.rounded-lg th {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  text-align: left !important;
+  background-color: #6b1102 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.5 !important;
+  vertical-align: top !important;
+}
+
+/* Dernier th sans bordure droite */
+.prose table.min-w-full th:last-child {
+  border-right: none !important;
+}
+
+/* Mode sombre pour les en-têtes - ROUGE BORDEAUX */
+.dark .prose table.min-w-full th {
+  background-color: #6b1102 !important;
+  color: white !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* --- En-tête sticky pour scroll vertical --- */
+.prose table.min-w-full thead,
+div.prose.prose-base.dark\:prose-invert.max-w-none table.min-w-full.rounded-lg thead {
+  position: sticky !important;
+  top: 0px !important;
+  left: 0px !important;
+  z-index: 10 !important;
+}
+
+/* --- Conteneur parent de la table - SCROLL HORIZONTAL ACTIVÉ --- */
+.prose > div:has(> table.min-w-full),
+.prose div:has(> table.min-w-full) {
+  max-width: 100% !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 15px !important;
+}
+
+/* --- Cellules du corps de table (td) --- */
+.prose table.min-w-full td {
+  padding: 10px 16px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.5 !important;
+  vertical-align: top !important;
+}
+
+/* Mode sombre pour les cellules */
+.dark .prose table.min-w-full td {
+  border-bottom: 1px solid #374151 !important;
+}
+
+/* --- Lignes du corps de table (tbody tr) --- */
+.prose table.min-w-full tbody tr {
+  transition: background-color 0.2s ease !important;
+}
+
+/* Effet hover sur les lignes */
+.prose table.min-w-full tbody tr:hover {
+  background-color: #f9fafb !important;
+}
+
+.dark .prose table.min-w-full tbody tr:hover {
+  background-color: #1f2937 !important;
+}
+
+/* --- Bordures de la table --- */
+.prose table.min-w-full {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+.dark .prose table.min-w-full {
+  border: 1px solid #374151 !important;
+}
+
+/* --- Conteneur div wrapper pour les tables --- */
+div.w-full {
+  max-height: 700px;
+  padding: 10px 45px 3px 1px;
+}
+
+/* ========================================
+   STYLES POUR THÈME GRIS UNIFORME
+   ======================================== */
+
+/* TABLEAUX EN GRIS UNIFORME - Surcharge des en-têtes bordeaux */
+.theme-gray .prose table.min-w-full th {
+  background-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+.dark.theme-gray .prose table.min-w-full th {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+.theme-gray .prose table.min-w-full {
+  border-color: #d1d5db !important;
+}
+
+.dark.theme-gray .prose table.min-w-full {
+  border-color: #374151 !important;
+}
+
+.theme-gray .prose table.min-w-full tbody tr:hover {
+  background-color: #e5e7eb !important;
+}
+
+.dark.theme-gray .prose table.min-w-full tbody tr:hover {
+  background-color: #1f2937 !important;
+}
+
+/* ========================================
+   STYLES POUR THÈME BLANC
+   ======================================== */
+
+/* Thème blanc - Tables */
+.theme-white .prose table.min-w-full th {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.theme-white .prose table.min-w-full {
+  border-color: #e5e7eb !important;
+}
+
+.theme-white .prose table.min-w-full tbody tr:hover {
+  background-color: #f9fafb !important;
+}
+
+/* Thème blanc - Mode sombre */
+.dark.theme-white .prose table.min-w-full th {
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+.dark.theme-white .prose table.min-w-full {
+  border-color: #374151 !important;
+}
+
+.dark.theme-white .prose table.min-w-full tbody tr:hover {
+  background-color: #374151 !important;
+}
+
+/* ========================================
+   STYLES GÉNÉRAUX POUR TABLES PROSE
+   ======================================== */
+
+/* Table styling de base */
+.prose table {
+  border-collapse: collapse !important;
+  border: 1px solid #d1d5db !important;
+}
+
+.dark .prose table {
+  border-color: #374151 !important;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #d1d5db !important;
+  padding: 12px 16px !important;
+}
+
+.dark .prose th,
+.dark .prose td {
+  border-color: #374151 !important;
+}
+
+.prose th {
+  background-color: #f3f4f6 !important;
+  font-weight: 600 !important;
+}
+
+.dark .prose th {
+  background-color: #1f2937 !important;
+}
+
+.dark .prose thead {
+  color: #f9fafb !important;
+  border-bottom-color: #4b5563 !important;
+}
+
+.dark .prose tbody tr {
+  border-bottom-color: #374151 !important;
+}
+
+/* ========================================
+   NOTES D'UTILISATION
+   ======================================== */
+
+/*
+ * SÉLECTEUR CSS JAVASCRIPT POUR CIBLER LES TABLES:
+ * 
+ * const chatTables = document.querySelectorAll(
+ *   'div.prose.prose-base.dark\\:prose-invert.max-w-none table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg'
+ * );
+ * 
+ * CLASSES TAILWIND UTILISÉES:
+ * - min-w-full: largeur minimale 100%
+ * - border: bordure
+ * - border-gray-200: couleur bordure mode clair
+ * - dark:border-gray-700: couleur bordure mode sombre
+ * - rounded-lg: coins arrondis
+ * 
+ * STRUCTURE HTML RECOMMANDÉE:
+ * <div class="prose prose-base dark:prose-invert max-w-none">
+ *   <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+ *     <thead>
+ *       <tr>
+ *         <th>Colonne 1</th>
+ *         <th>Colonne 2</th>
+ *       </tr>
+ *     </thead>
+ *     <tbody>
+ *       <tr>
+ *         <td>Donnée 1</td>
+ *         <td>Donnée 2</td>
+ *       </tr>
+ *     </tbody>
+ *   </table>
+ * </div>
+ */

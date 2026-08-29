@@ -1,0 +1,3219 @@
+// Menu contextuel avancé pour les tables ClaraVerse
+// Version optimisée avec nouvelles fonctionnalités et synchronisation dev.js
+
+(function () {
+  "use strict";
+
+  class ContextualMenuManager {
+    constructor() {
+      this.menuElement = null;
+      this.isMenuVisible = false;
+      this.targetTable = null;
+      this.activeCellPosition = { row: -1, col: -1 };
+      this.activeCell = null;
+      this.initialized = false;
+      this.hoverTimeout = null;
+      this.hideTimeout = null;
+      this.isHoveringTable = false;
+      this.isHoveringMenu = false;
+
+      // Cache pour optimiser les performances
+      this.tableCache = new WeakMap();
+      this.eventListeners = [];
+
+      // Configuration
+      this.config = {
+        hoverDelay: 300,
+        hideDelay: 500,
+        maxFileSize: 10 * 1024 * 1024, // 10MB
+        supportedFormats: [".xlsx", ".xls", ".csv"],
+      };
+    }
+
+    // Initialise le gestionnaire de menu contextuel
+    init() {
+      if (this.initialized) return;
+
+      console.log("🎯 Initialisation du menu contextuel avancé ClaraVerse");
+      this.createMenuElement();
+      this.attachEventListeners();
+      this.observeNewTables();
+      this.processExistingTables();
+      this.initSyncWithDev();
+      this.ensureDataPersistence();
+      this.initialized = true;
+
+      console.log("✅ Menu contextuel avancé initialisé avec succès");
+    }
+
+    // Crée l'élément HTML du menu contextuel avec design amélioré
+    createMenuElement() {
+      this.menuElement = document.createElement("div");
+      this.menuElement.id = "contextual-table-menu-advanced";
+      this.menuElement.className = "contextual-menu-advanced";
+      this.menuElement.style.cssText = `
+        position: fixed;
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border: 1px solid #e1e5e9;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 8px 0;
+        z-index: 15000;
+        display: none;
+        min-width: 250px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 14px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      `;
+
+      // Menu items avec icônes et organisation améliorée
+      const menuItems = [
+        // Actions de test existantes (conservées)
+        {
+          text: "🇫🇷 Hello France",
+          action: () => this.showAlert("Hello France 🇫🇷"),
+          category: "test",
+        },
+        {
+          text: "🇮🇹 Hello Italie",
+          action: () => this.showAlert("Hello Italie 🇮🇹"),
+          category: "test",
+        },
+        {
+          text: "🇬🇭 Hello Ghana",
+          action: () => this.showAlert("Hello Ghana 🇬🇭"),
+          category: "test",
+        },
+
+        { text: "---", action: null }, // Séparateur
+
+        // Actions de modification de structure
+        {
+          text: "➕ Insérer ligne en dessous",
+          action: () => this.insertRowBelow(),
+          category: "structure",
+          shortcut: "Ctrl+Shift+↓",
+        },
+        {
+          text: "📊 Insérer colonne à droite",
+          action: () => this.insertColumnRight(),
+          category: "structure",
+          shortcut: "Ctrl+Shift+→",
+        },
+        {
+          text: "🗑️ Supprimer ligne sélectionnée",
+          action: () => this.deleteSelectedRow(),
+          category: "structure",
+        },
+        {
+          text: "❌ Supprimer colonne sélectionnée",
+          action: () => this.deleteSelectedColumn(),
+          category: "structure",
+        },
+
+        { text: "---", action: null }, // Séparateur
+
+        // Actions de calcul
+        {
+          text: "🧮 Rapprochement (A - B = Ecart)",
+          action: () => this.performRapprochement(),
+          category: "calculation",
+        },
+        {
+          text: "➕ Somme colonnes sélectionnées",
+          action: () => this.calculateSum(),
+          category: "calculation",
+        },
+        {
+          text: "📈 Statistiques colonne",
+          action: () => this.showColumnStats(),
+          category: "calculation",
+        },
+
+        { text: "---", action: null }, // Séparateur
+
+        // Actions d'import/export avancées
+        {
+          text: "📥 Import Excel Standard",
+          action: () => this.importExcel(),
+          category: "data",
+        },
+        {
+          text: "🔬 Import Excel avec colonnes test",
+          action: () => this.importExcelSheetTest(),
+          category: "data",
+        },
+        {
+          text: "📤 Export vers Excel",
+          action: () => this.exportExcel(),
+          category: "data",
+        },
+        {
+          text: "💾 Sauvegarder état table",
+          action: () => this.saveTableState(),
+          category: "data",
+        },
+
+        { text: "---", action: null }, // Séparateur
+
+        // Actions utilitaires
+        {
+          text: "🔧 Optimiser table",
+          action: () => this.optimizeTable(),
+          category: "utility",
+        },
+        {
+          text: "📋 Copier structure",
+          action: () => this.copyTableStructure(),
+          category: "utility",
+        },
+        {
+          text: "🎯 Test synchronisation",
+          action: () => this.testSync(),
+          category: "utility",
+        },
+      ];
+
+      this.renderMenuItems(menuItems);
+      this.setupMenuEventHandlers();
+      document.body.appendChild(this.menuElement);
+    }
+
+    // Rendu optimisé des éléments de menu
+    renderMenuItems(menuItems) {
+      const fragment = document.createDocumentFragment();
+
+      menuItems.forEach((item, index) => {
+        if (item.text === "---") {
+          const separator = document.createElement("div");
+          separator.className = "menu-separator";
+          separator.style.cssText = `
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+            margin: 8px 12px;
+          `;
+          fragment.appendChild(separator);
+          return;
+        }
+
+        const button = document.createElement("button");
+        button.className = `contextual-menu-item ${item.category || ""}`;
+        button.innerHTML = `
+          <span class="menu-item-text">${item.text}</span>
+          ${item.shortcut ? `<span class="menu-item-shortcut" style="font-size:11px;color:#999;margin-left:auto;">${item.shortcut}</span>` : ""}
+        `;
+
+        button.style.cssText = `
+          width: 100%;
+          background: none;
+          border: none;
+          padding: 12px 16px;
+          text-align: left;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-size: 14px;
+          color: #2c3e50;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+        `;
+
+        // Gestion des événements optimisée
+        this.addEventListenerWithCleanup(button, "mouseenter", () => {
+          button.style.background = "linear-gradient(135deg, #e3f2fd, #f0f8ff)";
+          button.style.color = "#1976d2";
+          button.style.transform = "translateX(4px)";
+        });
+
+        this.addEventListenerWithCleanup(button, "mouseleave", () => {
+          button.style.background = "none";
+          button.style.color = "#2c3e50";
+          button.style.transform = "none";
+        });
+
+        this.addEventListenerWithCleanup(button, "click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (item.action) {
+            try {
+              item.action();
+              console.log(`✅ Action exécutée: ${item.text}`);
+            } catch (error) {
+              console.error(`❌ Erreur action ${item.text}:`, error);
+              this.showAlert(`❌ Erreur: ${error.message}`);
+            }
+          }
+          this.hideMenu();
+        });
+
+        fragment.appendChild(button);
+      });
+
+      this.menuElement.appendChild(fragment);
+    }
+
+    // Configuration des gestionnaires d'événements du menu
+    setupMenuEventHandlers() {
+      this.addEventListenerWithCleanup(this.menuElement, "mouseenter", () => {
+        this.isHoveringMenu = true;
+        this.clearHideTimeout();
+      });
+
+      this.addEventListenerWithCleanup(this.menuElement, "mouseleave", () => {
+        this.isHoveringMenu = false;
+        this.scheduleHideMenu();
+      });
+    }
+
+    // Gestionnaire d'événements optimisé avec nettoyage automatique
+    addEventListenerWithCleanup(element, event, handler) {
+      element.addEventListener(event, handler);
+      this.eventListeners.push({ element, event, handler });
+    }
+
+    // Attache les événements principaux avec delegation optimisée
+    attachEventListeners() {
+      // Event delegation pour les tables
+      this.addEventListenerWithCleanup(document, "mouseover", (e) => {
+        const table = e.target.closest("table");
+        if (table && this.isTableInChat(table)) {
+          this.handleTableHover(e, table);
+        }
+      });
+
+      this.addEventListenerWithCleanup(document, "mouseout", (e) => {
+        const table = e.target.closest("table");
+        if (table && this.isTableInChat(table)) {
+          this.handleTableLeave(e, table);
+        }
+      });
+
+      // Menu contextuel avec clic droit
+      this.addEventListenerWithCleanup(document, "contextmenu", (e) => {
+        const table = e.target.closest("table");
+        if (table && this.isTableInChat(table)) {
+          e.preventDefault();
+          this.clearHoverTimeout();
+          this.showMenu(e.pageX, e.pageY, table);
+          console.log("📋 Menu contextuel affiché via clic droit");
+        }
+      });
+
+      // Gestion des clics sur cellules
+      this.addEventListenerWithCleanup(document, "click", (e) => {
+        const cell = e.target.closest("td, th");
+        const table = e.target.closest("table");
+
+        if (cell && table && this.isTableInChat(table)) {
+          this.handleCellClick(e, cell, table);
+        } else if (this.isMenuVisible && !this.menuElement.contains(e.target)) {
+          this.hideMenu();
+        }
+      });
+
+      // Raccourcis clavier
+      this.addEventListenerWithCleanup(document, "keydown", (e) => {
+        if (e.key === "Escape" && this.isMenuVisible) {
+          this.hideMenu();
+        }
+
+        // Raccourcis avec Ctrl+Shift
+        if (e.ctrlKey && e.shiftKey && this.targetTable) {
+          switch (e.key) {
+            case "ArrowDown":
+              e.preventDefault();
+              this.insertRowBelow();
+              break;
+            case "ArrowRight":
+              e.preventDefault();
+              this.insertColumnRight();
+              break;
+          }
+        }
+      });
+    }
+
+    // Gestion optimisée du clic sur cellule
+    handleCellClick(e, cell, table) {
+      // Nettoyer l'ancienne sélection
+      if (this.activeCell) {
+        this.activeCell.classList.remove("contextual-active-cell");
+      }
+
+      // Nouvelle sélection
+      this.activeCell = cell;
+      this.targetTable = table;
+      cell.classList.add("contextual-active-cell");
+
+      // Injecter les styles si nécessaire
+      this.injectActiveStyles();
+
+      // Calculer position
+      this.calculateCellPosition(cell, table);
+
+      console.log(
+        `📍 Cellule active: ligne ${this.activeCellPosition.row}, colonne ${this.activeCellPosition.col}`,
+      );
+    }
+
+    // Injection optimisée des styles CSS
+    injectActiveStyles() {
+      if (!document.getElementById("contextual-cell-styles-advanced")) {
+        const style = document.createElement("style");
+        style.id = "contextual-cell-styles-advanced";
+        style.textContent = `
+          .contextual-active-cell {
+            background: linear-gradient(135deg, #e3f2fd, #f0f8ff) !important;
+            outline: 2px solid #2196f3 !important;
+            outline-offset: -2px !important;
+            box-shadow: inset 0 0 0 1px rgba(33, 150, 243, 0.3) !important;
+            position: relative !important;
+          }
+
+          .contextual-active-cell::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent, rgba(33, 150, 243, 0.1), transparent);
+            pointer-events: none;
+            border-radius: 4px;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    // Calcul optimisé de la position de cellule
+    calculateCellPosition(cell, table) {
+      const row = cell.parentNode;
+      const rows = Array.from(table.querySelectorAll("tr"));
+      const rowIndex = rows.indexOf(row);
+      const cells = Array.from(row.querySelectorAll("td, th"));
+      const colIndex = cells.indexOf(cell);
+
+      this.activeCellPosition = { row: rowIndex, col: colIndex };
+    }
+
+    // Validation de cellule active
+    validateActiveCell() {
+      if (!this.targetTable || this.activeCellPosition.row === -1) {
+        this.showAlert(
+          "⚠️ Aucune cellule sélectionnée. Cliquez d'abord sur une cellule de la table.",
+        );
+        return false;
+      }
+      return true;
+    }
+
+    // Insertion de ligne améliorée
+    async insertRowBelow() {
+      if (!this.validateActiveCell()) return;
+
+      try {
+        const rows = this.targetTable.querySelectorAll("tr");
+        const targetRowIndex = this.activeCellPosition.row;
+        const targetRow = rows[targetRowIndex];
+
+        if (!targetRow) {
+          this.showAlert("⚠️ Ligne cible introuvable.");
+          return;
+        }
+
+        // Analyser la structure de la ligne
+        const cellsInTargetRow = targetRow.querySelectorAll("td, th");
+        const numberOfColumns = cellsInTargetRow.length;
+
+        // Créer nouvelle ligne
+        const newRow = document.createElement("tr");
+
+        for (let i = 0; i < numberOfColumns; i++) {
+          const newCell = document.createElement("td");
+          newCell.textContent = "";
+          newCell.style.cssText = `
+            border: 1px solid #d1d5db;
+            padding: 8px 12px;
+            min-height: 20px;
+            background: #fafafa;
+            transition: background-color 0.3s ease;
+          `;
+
+          this.makeCellEditable(newCell);
+          newRow.appendChild(newCell);
+        }
+
+        // Insertion optimisée
+        if (targetRowIndex < rows.length - 1) {
+          rows[targetRowIndex + 1].parentNode.insertBefore(
+            newRow,
+            rows[targetRowIndex + 1],
+          );
+        } else {
+          targetRow.parentNode.appendChild(newRow);
+        }
+
+        console.log(`✅ Ligne insérée après ligne ${targetRowIndex}`);
+        this.showQuickNotification("✅ Ligne ajoutée avec succès");
+
+        // Sauvegarde immédiate de la structure
+        await this.saveTableStructureImmediate("row_added", {
+          rowIndex: targetRowIndex + 1,
+          columnCount: numberOfColumns,
+        });
+
+        // Synchronisation et notifications
+        this.notifyTableStructureChange("row_added", {
+          rowIndex: targetRowIndex + 1,
+          columnCount: numberOfColumns,
+        });
+
+        // Notification de changement de structure
+        this.notifyTableStructureChange("row_inserted", {
+          rowIndex: targetRowIndex + 1,
+          columnCount: numberOfColumns,
+        });
+
+        // Force immediate structure save after row insertion
+        setTimeout(() => {
+          this.ensureStructurePersistence(this.targetTable, "row_inserted", {
+            rowIndex: targetRowIndex + 1,
+            columnCount: numberOfColumns,
+          });
+        }, 100);
+
+        // Synchronisation garantie
+        await this.ensureSync("row_added", {
+          rowIndex: targetRowIndex + 1,
+          columnCount: numberOfColumns,
+        });
+
+        // Déclencher la sauvegarde HTML complète après modification de structure
+        const tableId = this.generateTableId(this.targetTable);
+        if (window.saveCompleteTableHTML) {
+          setTimeout(() => {
+            window
+              .saveCompleteTableHTML(this.targetTable, tableId)
+              .then(() => {
+                console.log("✅ Sauvegarde HTML après insertion ligne réussie");
+              })
+              .catch((error) => {
+                console.error(
+                  "❌ Erreur sauvegarde HTML insertion ligne:",
+                  error,
+                );
+              });
+          }, 300);
+        }
+      } catch (error) {
+        console.error("❌ Erreur insertion ligne:", error);
+        this.showAlert("❌ Erreur lors de l'insertion de la ligne");
+      }
+    }
+
+    // Insertion de colonne améliorée
+    async insertColumnRight() {
+      if (!this.validateActiveCell()) return;
+
+      try {
+        const targetColIndex = this.activeCellPosition.col;
+        const rows = Array.from(this.targetTable.querySelectorAll("tr"));
+
+        rows.forEach((row, rowIndex) => {
+          const cells = Array.from(row.querySelectorAll("td, th"));
+          const newCell = document.createElement(rowIndex === 0 ? "th" : "td");
+
+          newCell.textContent = rowIndex === 0 ? "Nouvelle colonne" : "";
+          newCell.style.cssText = `
+            border: 1px solid #d1d5db;
+            padding: 8px 12px;
+            min-height: 20px;
+            background: ${rowIndex === 0 ? "#f9fafb" : "#fafafa"};
+            font-weight: ${rowIndex === 0 ? "bold" : "normal"};
+          `;
+
+          if (rowIndex > 0) {
+            this.makeCellEditable(newCell);
+          }
+
+          // Insertion à la position correcte
+          if (targetColIndex < cells.length - 1) {
+            row.insertBefore(newCell, cells[targetColIndex + 1]);
+          } else {
+            row.appendChild(newCell);
+          }
+        });
+
+        console.log(`✅ Colonne insérée après colonne ${targetColIndex}`);
+        this.showQuickNotification("✅ Colonne ajoutée avec succès");
+
+        // Sauvegarde immédiate de la structure
+        await this.saveTableStructureImmediate("column_added", {
+          columnIndex: targetColIndex + 1,
+        });
+
+        this.notifyTableStructureChange("column_added", {
+          columnIndex: targetColIndex + 1,
+        });
+
+        // Force immediate structure save after column insertion
+        setTimeout(() => {
+          this.ensureStructurePersistence(this.targetTable, "column_inserted", {
+            columnIndex: targetColIndex + 1,
+          });
+        }, 100);
+
+        // Synchronisation garantie
+        await this.ensureSync("column_added", {
+          columnIndex: targetColIndex + 1,
+        });
+
+        // Déclencher la sauvegarde HTML complète après modification de structure
+        const tableId = this.generateTableId(this.targetTable);
+        if (window.saveCompleteTableHTML) {
+          setTimeout(() => {
+            window
+              .saveCompleteTableHTML(this.targetTable, tableId)
+              .then(() => {
+                console.log(
+                  "✅ Sauvegarde HTML après insertion colonne réussie",
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  "❌ Erreur sauvegarde HTML insertion colonne:",
+                  error,
+                );
+              });
+          }, 300);
+        }
+      } catch (error) {
+        console.error("❌ Erreur insertion colonne:", error);
+        this.showAlert("❌ Erreur lors de l'insertion de la colonne");
+      }
+    }
+
+    // Nouvelle fonction: Supprimer ligne sélectionnée
+    async deleteSelectedRow() {
+      if (!this.validateActiveCell()) return;
+
+      const rows = this.targetTable.querySelectorAll("tr");
+      if (rows.length <= 1) {
+        this.showAlert(
+          "⚠️ Impossible de supprimer - la table doit avoir au moins une ligne.",
+        );
+        return;
+      }
+
+      const targetRowIndex = this.activeCellPosition.row;
+      const targetRow = rows[targetRowIndex];
+
+      if (!targetRow) {
+        this.showAlert("⚠️ Ligne à supprimer introuvable.");
+        return;
+      }
+
+      if (confirm("Êtes-vous sûr de vouloir supprimer cette ligne ?")) {
+        targetRow.remove();
+        this.activeCell = null;
+        this.activeCellPosition = { row: -1, col: -1 };
+
+        console.log(`✅ Ligne ${targetRowIndex} supprimée`);
+        this.showQuickNotification("✅ Ligne supprimée");
+
+        this.notifyTableStructureChange("row_deleted", {
+          rowIndex: targetRowIndex,
+        });
+
+        // Force immediate structure save after row deletion
+        setTimeout(() => {
+          this.ensureStructurePersistence(this.targetTable, "row_deleted", {
+            rowIndex: targetRowIndex,
+          });
+        }, 100);
+
+        // Synchronisation garantie
+        await this.ensureSync("row_deleted", {
+          rowIndex: targetRowIndex,
+        });
+
+        // Déclencher la sauvegarde HTML complète après suppression de ligne
+        const tableId = this.generateTableId(this.targetTable);
+        if (window.saveCompleteTableHTML) {
+          setTimeout(() => {
+            window
+              .saveCompleteTableHTML(this.targetTable, tableId)
+              .then(() => {
+                console.log(
+                  "✅ Sauvegarde HTML après suppression ligne réussie",
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  "❌ Erreur sauvegarde HTML suppression ligne:",
+                  error,
+                );
+              });
+          }, 300);
+        }
+      }
+    }
+
+    // Nouvelle fonction: Supprimer colonne sélectionnée
+    async deleteSelectedColumn() {
+      if (!this.validateActiveCell()) return;
+
+      const headerRow = this.targetTable.querySelector("tr");
+      const headerCells = headerRow ? headerRow.querySelectorAll("td, th") : [];
+
+      if (headerCells.length <= 1) {
+        this.showAlert(
+          "⚠️ Impossible de supprimer - la table doit avoir au moins une colonne.",
+        );
+        return;
+      }
+
+      const targetColIndex = this.activeCellPosition.col;
+
+      if (confirm("Êtes-vous sûr de vouloir supprimer cette colonne ?")) {
+        const rows = Array.from(this.targetTable.querySelectorAll("tr"));
+
+        rows.forEach((row) => {
+          const cells = Array.from(row.querySelectorAll("td, th"));
+          if (cells[targetColIndex]) {
+            cells[targetColIndex].remove();
+          }
+        });
+
+        this.activeCell = null;
+        this.activeCellPosition = { row: -1, col: -1 };
+
+        console.log(`✅ Colonne ${targetColIndex} supprimée`);
+        this.showQuickNotification("✅ Colonne supprimée");
+
+        this.notifyTableStructureChange("column_deleted", {
+          columnIndex: targetColIndex,
+        });
+
+        // Force immediate structure save after column deletion
+        setTimeout(() => {
+          this.ensureStructurePersistence(this.targetTable, "column_deleted", {
+            columnIndex: targetColIndex,
+          });
+        }, 100);
+
+        // Synchronisation garantie
+        await this.ensureSync("column_deleted", {
+          columnIndex: targetColIndex,
+        });
+
+        // Déclencher la sauvegarde HTML complète après suppression de colonne
+        const tableId = this.generateTableId(this.targetTable);
+        if (window.saveCompleteTableHTML) {
+          setTimeout(() => {
+            window
+              .saveCompleteTableHTML(this.targetTable, tableId)
+              .then(() => {
+                console.log(
+                  "✅ Sauvegarde HTML après suppression colonne réussie",
+                );
+              })
+              .catch((error) => {
+                console.error(
+                  "❌ Erreur sauvegarde HTML suppression colonne:",
+                  error,
+                );
+              });
+          }, 300);
+        }
+      }
+    }
+
+    // Nouvelle fonction: Calculer la somme de colonnes
+    calculateSum() {
+      if (!this.validateActiveCell()) return;
+
+      try {
+        const targetColIndex = this.activeCellPosition.col;
+        const rows = Array.from(this.targetTable.querySelectorAll("tr")).slice(
+          1,
+        ); // Skip header
+
+        let sum = 0;
+        let validCells = 0;
+
+        rows.forEach((row) => {
+          const cells = Array.from(row.querySelectorAll("td, th"));
+          if (cells[targetColIndex]) {
+            const value = this.extractNumericValue(
+              cells[targetColIndex].textContent,
+            );
+            if (
+              value !== 0 ||
+              cells[targetColIndex].textContent.trim() === "0"
+            ) {
+              sum += value;
+              validCells++;
+            }
+          }
+        });
+
+        const message = `Somme colonne ${targetColIndex + 1}: ${this.formatNumericResult(sum)} (${validCells} cellules)`;
+        this.showAlert(message);
+        console.log(`📊 ${message}`);
+      } catch (error) {
+        console.error("❌ Erreur calcul somme:", error);
+        this.showAlert("❌ Erreur lors du calcul de la somme");
+      }
+    }
+
+    // Nouvelle fonction: Afficher statistiques de colonne
+    showColumnStats() {
+      if (!this.validateActiveCell()) return;
+
+      try {
+        const targetColIndex = this.activeCellPosition.col;
+        const rows = Array.from(this.targetTable.querySelectorAll("tr"));
+
+        // Obtenir le nom de la colonne
+        const headerCell = rows[0]?.querySelectorAll("td, th")[targetColIndex];
+        const columnName =
+          headerCell?.textContent || `Colonne ${targetColIndex + 1}`;
+
+        const dataRows = rows.slice(1); // Skip header
+        const values = [];
+
+        dataRows.forEach((row) => {
+          const cells = Array.from(row.querySelectorAll("td, th"));
+          if (cells[targetColIndex]) {
+            const value = this.extractNumericValue(
+              cells[targetColIndex].textContent,
+            );
+            if (
+              value !== 0 ||
+              cells[targetColIndex].textContent.trim() === "0"
+            ) {
+              values.push(value);
+            }
+          }
+        });
+
+        if (values.length === 0) {
+          this.showAlert(
+            "⚠️ Aucune donnée numérique trouvée dans cette colonne.",
+          );
+          return;
+        }
+
+        // Calculs statistiques
+        const sum = values.reduce((a, b) => a + b, 0);
+        const avg = sum / values.length;
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const sortedValues = [...values].sort((a, b) => a - b);
+        const median =
+          sortedValues.length % 2 === 0
+            ? (sortedValues[sortedValues.length / 2 - 1] +
+                sortedValues[sortedValues.length / 2]) /
+              2
+            : sortedValues[Math.floor(sortedValues.length / 2)];
+
+        const stats = `Statistiques - ${columnName}:
+• Nombre de valeurs: ${values.length}
+• Somme: ${this.formatNumericResult(sum)}
+• Moyenne: ${this.formatNumericResult(avg)}
+• Médiane: ${this.formatNumericResult(median)}
+• Minimum: ${this.formatNumericResult(min)}
+• Maximum: ${this.formatNumericResult(max)}`;
+
+        this.showAlert(stats);
+        console.log(`📊 Statistiques calculées pour ${columnName}`);
+      } catch (error) {
+        console.error("❌ Erreur calcul statistiques:", error);
+        this.showAlert("❌ Erreur lors du calcul des statistiques");
+      }
+    }
+
+    // Effectue le rapprochement (calcul C = A - B sur colonne Ecart)
+    async performRapprochement() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table active. Survolez d'abord une table.");
+        return;
+      }
+
+      try {
+        // Rechercher la colonne "Ecart"
+        const headerRow = this.targetTable.querySelector("tr");
+        if (!headerRow) {
+          this.showAlert("⚠️ Aucune ligne d'en-tête trouvée.");
+          return;
+        }
+
+        const headers = Array.from(headerRow.querySelectorAll("td, th"));
+        let ecartColumnIndex = -1;
+
+        // Trouver l'index de la colonne "Ecart"
+        headers.forEach((header, index) => {
+          if (header.textContent.trim().toLowerCase().includes("ecart")) {
+            ecartColumnIndex = index;
+          }
+        });
+
+        if (ecartColumnIndex === -1) {
+          this.showAlert("⚠️ Colonne 'Ecart' introuvable dans la table.");
+          return;
+        }
+
+        if (ecartColumnIndex < 2) {
+          this.showAlert(
+            "⚠️ Pas assez de colonnes à gauche de la colonne 'Ecart' pour effectuer le calcul.",
+          );
+          return;
+        }
+
+        // Index des colonnes A et B (les deux colonnes à gauche d'Ecart)
+        const columnAIndex = ecartColumnIndex - 2; // Première colonne avant Ecart
+        const columnBIndex = ecartColumnIndex - 1; // Deuxième colonne avant Ecart
+
+        console.log(
+          `📊 Rapprochement: A(${columnAIndex}) - B(${columnBIndex}) = C(${ecartColumnIndex})`,
+        );
+
+        // Traiter toutes les lignes de données (ignorer l'en-tête)
+        const dataRows = Array.from(
+          this.targetTable.querySelectorAll("tr"),
+        ).slice(1);
+        let calculatedRows = 0;
+
+        dataRows.forEach((row, rowIndex) => {
+          const cells = Array.from(row.querySelectorAll("td, th"));
+
+          if (cells.length <= ecartColumnIndex) {
+            return; // Pas assez de cellules dans cette ligne
+          }
+
+          // Récupérer les valeurs des colonnes A et B
+          const cellA = cells[columnAIndex];
+          const cellB = cells[columnBIndex];
+          const cellC = cells[ecartColumnIndex]; // Colonne Ecart
+
+          if (!cellA || !cellB || !cellC) {
+            return; // Cellules manquantes
+          }
+
+          // Extraire les valeurs numériques (gérer les cellules vides comme 0)
+          const valueA = this.extractNumericValue(cellA.textContent);
+          const valueB = this.extractNumericValue(cellB.textContent);
+
+          // Calculer C = A - B
+          const result = valueA - valueB;
+
+          // Mettre à jour la cellule Ecart
+          const formattedResult = this.formatNumericResult(result);
+          cellC.textContent = formattedResult;
+
+          // Rendre la cellule éditable
+          this.makeCellEditable(cellC);
+
+          // Marquer la cellule comme modifiée
+          cellC.style.backgroundColor = "#e8f5e8";
+          cellC.setAttribute("data-calculated", "true");
+
+          calculatedRows++;
+        });
+
+        console.log(`✅ Rapprochement effectué sur ${calculatedRows} ligne(s)`);
+        this.showQuickNotification(
+          `Rapprochement calculé sur ${calculatedRows} ligne(s)`,
+        );
+
+        // Notifier le rapprochement terminé
+        this.notifyRapprochementComplete(calculatedRows);
+
+        // Synchronisation garantie
+        await this.ensureSync("rapprochement", {
+          calculatedRows: calculatedRows,
+          operation: "calculation",
+        });
+      } catch (error) {
+        console.error("❌ Erreur lors du rapprochement:", error);
+        this.showAlert("❌ Erreur lors du calcul de rapprochement");
+      }
+    }
+
+    // Import Excel amélioré
+    async importExcel() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table sélectionnée.");
+        return;
+      }
+
+      try {
+        const file = await this.openFileDialog();
+        if (!file) return;
+
+        if (!this.validateFile(file)) return;
+
+        this.showQuickNotification("📄 Lecture du fichier Excel...");
+
+        await this.ensureSheetJSLoaded();
+
+        const workbook = await this.parseExcelFile(file);
+        const { headers, data } = this.extractExcelData(workbook);
+
+        this.replaceTableContentAdvanced(headers, data);
+
+        this.showQuickNotification("✅ Import Excel terminé!");
+
+        this.notifyTableStructureChange("excel_import", {
+          rowCount: data.length,
+          columnCount: headers.length,
+          fileName: file.name,
+        });
+
+        // Synchronisation garantie après import
+        await this.ensureSync("excel_import", {
+          rowCount: data.length,
+          columnCount: headers.length,
+          fileName: file.name,
+        });
+      } catch (error) {
+        console.error("❌ Erreur import Excel:", error);
+        this.showAlert(`❌ Erreur lors de l'import: ${error.message}`);
+      }
+    }
+
+    // Import Excel avec colonnes de test
+    async importExcelSheetTest() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table sélectionnée.");
+        return;
+      }
+
+      try {
+        const file = await this.openFileDialog();
+        if (!file) return;
+
+        if (!this.validateFile(file)) return;
+
+        this.showQuickNotification(
+          "📄 Lecture du fichier Excel avec colonnes test...",
+        );
+
+        await this.ensureSheetJSLoaded();
+
+        const workbook = await this.parseExcelFile(file);
+        const { headers, data } = this.extractExcelData(workbook);
+
+        // Ajouter colonnes de test spécifiques
+        const testColumns = [
+          "Ecart",
+          "Assertion",
+          "CTR 1",
+          "CTR 2",
+          "CTR 3",
+          "Conclusion",
+        ];
+        const enhancedHeaders = [...headers, ...testColumns];
+        const enhancedData = data.map((row) => [
+          ...row,
+          ...new Array(testColumns.length).fill(""),
+        ]);
+
+        this.replaceTableContentAdvanced(enhancedHeaders, enhancedData, true);
+
+        this.showQuickNotification(
+          "✅ Import Excel avec colonnes test terminé!",
+        );
+
+        this.notifyTableStructureChange("excel_import_test", {
+          rowCount: enhancedData.length,
+          columnCount: enhancedHeaders.length,
+          fileName: file.name,
+          testColumns: testColumns.length,
+        });
+
+        // Synchronisation garantie après import test
+        await this.ensureSync("excel_import_test", {
+          rowCount: enhancedData.length,
+          columnCount: enhancedHeaders.length,
+          fileName: file.name,
+          testColumns: testColumns.length,
+        });
+      } catch (error) {
+        console.error("❌ Erreur import Excel test:", error);
+        this.showAlert(`❌ Erreur lors de l'import test: ${error.message}`);
+      }
+    }
+
+    // Export Excel amélioré
+    async exportExcel() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table sélectionnée.");
+        return;
+      }
+
+      try {
+        this.showQuickNotification("📊 Préparation de l'export Excel...");
+
+        await this.ensureSheetJSLoaded();
+
+        const tableData = this.extractTableData();
+
+        if (!tableData || tableData.length === 0) {
+          this.showAlert("⚠️ La table est vide, rien à exporter.");
+          return;
+        }
+
+        const workbook = XLSX.utils.book_new();
+        const worksheet = XLSX.utils.aoa_to_sheet(tableData);
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Export ClaraVerse");
+
+        const now = new Date();
+        const timestamp = now.toISOString().slice(0, 19).replace(/[:]/g, "-");
+        const fileName = `claraverse_export_${timestamp}.xlsx`;
+
+        XLSX.writeFile(workbook, fileName);
+
+        this.showQuickNotification("✅ Export Excel terminé avec succès!");
+        console.log(`✅ Table exportée vers: ${fileName}`);
+      } catch (error) {
+        console.error("❌ Erreur export Excel:", error);
+        this.showAlert("❌ Erreur lors de l'export Excel: " + error.message);
+      }
+    }
+
+    // Nouvelle fonction: Sauvegarder état de table
+    saveTableState() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table sélectionnée.");
+        return;
+      }
+
+      try {
+        const tableId = this.generateTableId(this.targetTable);
+        const tableData = this.extractTableData();
+
+        const state = {
+          id: tableId,
+          data: tableData,
+          timestamp: new Date().toISOString(),
+          rows: tableData.length,
+          columns: tableData[0] ? tableData[0].length : 0,
+        };
+
+        // Sauvegarder dans localStorage
+        const savedStates = JSON.parse(
+          localStorage.getItem("claraverse_table_states") || "{}",
+        );
+        savedStates[tableId] = state;
+        localStorage.setItem(
+          "claraverse_table_states",
+          JSON.stringify(savedStates),
+        );
+
+        this.showQuickNotification("✅ État de la table sauvegardé!");
+        console.log(`💾 État table sauvegardé: ${tableId}`);
+      } catch (error) {
+        console.error("❌ Erreur sauvegarde état:", error);
+        this.showAlert("❌ Erreur lors de la sauvegarde de l'état");
+      }
+    }
+
+    // Nouvelle fonction: Optimiser table
+    optimizeTable() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table sélectionnée.");
+        return;
+      }
+
+      try {
+        let optimizations = 0;
+
+        // Supprimer les lignes complètement vides
+        const rows = Array.from(this.targetTable.querySelectorAll("tr"));
+        rows.slice(1).forEach((row) => {
+          const cells = Array.from(row.querySelectorAll("td, th"));
+          const isEmpty = cells.every((cell) => !cell.textContent.trim());
+
+          if (isEmpty) {
+            row.remove();
+            optimizations++;
+          }
+        });
+
+        // Normaliser les espaces
+        const allCells = this.targetTable.querySelectorAll("td, th");
+        allCells.forEach((cell) => {
+          const originalText = cell.textContent;
+          const normalizedText = originalText.trim().replace(/\s+/g, " ");
+          if (originalText !== normalizedText) {
+            cell.textContent = normalizedText;
+            optimizations++;
+          }
+        });
+
+        this.showQuickNotification(
+          `✅ Table optimisée (${optimizations} améliorations)`,
+        );
+        console.log(`🔧 Table optimisée avec ${optimizations} améliorations`);
+
+        if (optimizations > 0) {
+          this.syncWithDev();
+        }
+      } catch (error) {
+        console.error("❌ Erreur optimisation table:", error);
+        this.showAlert("❌ Erreur lors de l'optimisation de la table");
+      }
+    }
+
+    // Nouvelle fonction: Copier structure de table
+    copyTableStructure() {
+      if (!this.targetTable) {
+        this.showAlert("⚠️ Aucune table sélectionnée.");
+        return;
+      }
+
+      try {
+        const tableData = this.extractTableData();
+        const structure = {
+          headers: tableData[0] || [],
+          rowCount: tableData.length - 1,
+          columnCount: tableData[0] ? tableData[0].length : 0,
+          structure: tableData.map((row) => row.map(() => "")),
+        };
+
+        // Copier dans le presse-papiers si possible
+        if (navigator.clipboard && window.isSecureContext) {
+          const structureText = JSON.stringify(structure, null, 2);
+          navigator.clipboard
+            .writeText(structureText)
+            .then(() => {
+              this.showQuickNotification(
+                "✅ Structure copiée dans le presse-papiers!",
+              );
+            })
+            .catch(() => {
+              this.fallbackCopyStructure(structure);
+            });
+        } else {
+          this.fallbackCopyStructure(structure);
+        }
+
+        console.log("📋 Structure de table copiée:", structure);
+      } catch (error) {
+        console.error("❌ Erreur copie structure:", error);
+        this.showAlert("❌ Erreur lors de la copie de la structure");
+      }
+    }
+
+    // Fallback pour copier structure
+    fallbackCopyStructure(structure) {
+      const textArea = document.createElement("textarea");
+      textArea.value = JSON.stringify(structure, null, 2);
+      document.body.appendChild(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+        this.showQuickNotification("✅ Structure copiée (fallback)!");
+      } catch (err) {
+        this.showAlert(
+          "⚠️ Impossible de copier. Structure affichée dans la console.",
+        );
+        console.log("Structure à copier:", structure);
+      } finally {
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // Fonctions utilitaires pour import/export
+
+    // Validation de fichier avancée
+    validateFile(file) {
+      if (file.size > this.config.maxFileSize) {
+        this.showAlert(
+          `⚠️ Fichier trop volumineux (max ${this.config.maxFileSize / 1024 / 1024}MB)`,
+        );
+        return false;
+      }
+
+      const extension = "." + file.name.split(".").pop().toLowerCase();
+      if (!this.config.supportedFormats.includes(extension)) {
+        this.showAlert(
+          `⚠️ Format non supporté. Formats acceptés: ${this.config.supportedFormats.join(", ")}`,
+        );
+        return false;
+      }
+
+      return true;
+    }
+
+    // Ouverture de dialogue fichier moderne
+    openFileDialog() {
+      return new Promise((resolve) => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = this.config.supportedFormats.join(",");
+        input.style.display = "none";
+
+        input.onchange = (event) => {
+          const file = event.target.files[0];
+          document.body.removeChild(input);
+          resolve(file || null);
+        };
+
+        input.oncancel = () => {
+          document.body.removeChild(input);
+          resolve(null);
+        };
+
+        document.body.appendChild(input);
+        input.click();
+      });
+    }
+
+    // S'assurer que SheetJS est chargé
+    async ensureSheetJSLoaded() {
+      if (typeof XLSX !== "undefined") {
+        return;
+      }
+
+      return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src =
+          "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+        script.onload = resolve;
+        script.onerror = () =>
+          reject(new Error("Impossible de charger SheetJS"));
+        document.head.appendChild(script);
+      });
+    }
+
+    // Parsing Excel amélioré
+    async parseExcelFile(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      return XLSX.read(arrayBuffer, {
+        type: "array",
+        cellDates: true,
+        cellNF: false,
+        cellText: false,
+      });
+    }
+
+    // Extraction de données Excel avec détection automatique
+    extractExcelData(workbook) {
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+
+      const rawData = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: "",
+        blankrows: false,
+      });
+
+      if (rawData.length === 0) {
+        return { headers: [], data: [] };
+      }
+
+      // Détecter automatiquement la ligne d'en-tête
+      let headerRowIndex = 0;
+      for (let i = 0; i < Math.min(rawData.length, 3); i++) {
+        if (
+          rawData[i] &&
+          rawData[i].some((cell) => cell && cell.toString().trim())
+        ) {
+          headerRowIndex = i;
+          break;
+        }
+      }
+
+      const headers = rawData[headerRowIndex] || [];
+      const data = rawData
+        .slice(headerRowIndex + 1)
+        .filter(
+          (row) =>
+            row &&
+            row.some(
+              (cell) =>
+                cell !== null && cell !== undefined && cell.toString().trim(),
+            ),
+        );
+
+      // Normaliser la longueur des lignes
+      const maxColumns = Math.max(
+        headers.length,
+        ...data.map((row) => row.length),
+      );
+
+      const normalizedHeaders = this.normalizeRowLength(headers, maxColumns);
+      const normalizedData = data.map((row) =>
+        this.normalizeRowLength(row, maxColumns),
+      );
+
+      return {
+        headers: normalizedHeaders,
+        data: normalizedData,
+      };
+    }
+
+    // Normalisation de la longueur des lignes
+    normalizeRowLength(row, targetLength) {
+      const normalized = [...row];
+      while (normalized.length < targetLength) {
+        normalized.push("");
+      }
+      return normalized.slice(0, targetLength);
+    }
+
+    // Remplacement de contenu de table avancé
+    async replaceTableContentAdvanced(headers, data, isTestMode = false) {
+      if (!this.targetTable) return;
+
+      try {
+        // Sauvegarder les attributs de la table
+        const tableClasses = this.targetTable.className;
+        const tableStyles = this.targetTable.style.cssText;
+
+        // Vider la table
+        this.targetTable.innerHTML = "";
+
+        // Créer l'en-tête
+        if (headers.length > 0) {
+          const thead = this.createTableHeader(headers, isTestMode);
+          this.targetTable.appendChild(thead);
+        }
+
+        // Créer le corps
+        if (data.length > 0) {
+          const tbody = this.createTableBody(data, isTestMode);
+          this.targetTable.appendChild(tbody);
+        }
+
+        // Restaurer les attributs
+        this.targetTable.className = tableClasses;
+        if (tableStyles) {
+          this.targetTable.style.cssText = tableStyles;
+        }
+
+        console.log(
+          `✅ Table remplacée: ${data.length} lignes, ${headers.length} colonnes`,
+        );
+
+        // Synchronisation garantie après remplacement complet
+        await this.ensureSync("table_replacement", {
+          rowCount: data.length,
+          columnCount: headers.length,
+        });
+      } catch (error) {
+        console.error("❌ Erreur remplacement table:", error);
+        throw error;
+      }
+    }
+
+    // Création d'en-tête de table optimisée
+    createTableHeader(headers, isTestMode = false) {
+      const thead = document.createElement("thead");
+      const headerRow = document.createElement("tr");
+
+      headers.forEach((headerText, index) => {
+        const th = document.createElement("th");
+        th.textContent = headerText || "";
+
+        // Style spécial pour les colonnes de test
+        const isTestColumn = isTestMode && index >= headers.length - 6;
+
+        th.style.cssText = `
+          border: 1px solid #d1d5db;
+          padding: 12px 16px;
+          background: ${isTestColumn ? "linear-gradient(135deg, #f0f8ff, #e3f2fd)" : "linear-gradient(135deg, #f8f9fa, #e9ecef)"};
+          font-weight: 600;
+          color: ${isTestColumn ? "#1976d2" : "#495057"};
+          text-align: left;
+          position: sticky;
+          top: 0;
+          z-index: 10;
+        `;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      return thead;
+    }
+
+    // Création du corps de table optimisée
+    createTableBody(data, isTestMode = false) {
+      const tbody = document.createElement("tbody");
+
+      data.forEach((rowData) => {
+        const tr = document.createElement("tr");
+
+        rowData.forEach((cellData, colIndex) => {
+          const td = document.createElement("td");
+          td.textContent =
+            cellData !== undefined && cellData !== null ? String(cellData) : "";
+
+          const isTestColumn = isTestMode && colIndex >= rowData.length - 6;
+
+          td.style.cssText = `
+            border: 1px solid #d1d5db;
+            padding: 8px 12px;
+            min-height: 20px;
+            background: ${isTestColumn ? "#fafafa" : "white"};
+            transition: background-color 0.3s ease;
+          `;
+
+          this.makeCellEditable(td);
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      return tbody;
+    }
+
+    // Extraction des données de table
+    extractTableData() {
+      if (!this.targetTable) {
+        return null;
+      }
+
+      const data = [];
+      const rows = this.targetTable.querySelectorAll("tr");
+
+      rows.forEach((row) => {
+        const rowData = [];
+        const cells = row.querySelectorAll("td, th");
+
+        cells.forEach((cell) => {
+          const cellText = cell.textContent || cell.innerText || "";
+          rowData.push(cellText.trim());
+        });
+
+        if (rowData.length > 0) {
+          data.push(rowData);
+        }
+      });
+
+      return data;
+    }
+
+    // Extraction de valeur numérique
+    extractNumericValue(text) {
+      if (!text || text.trim() === "") {
+        return 0;
+      }
+
+      const cleanText = text.replace(/[^\d.,\-+]/g, "");
+      const normalizedText = cleanText.replace(/,/g, ".");
+      const numValue = parseFloat(normalizedText);
+
+      return isNaN(numValue) ? 0 : numValue;
+    }
+
+    // Formatage de résultat numérique
+    formatNumericResult(value) {
+      const rounded = Math.round(value * 100) / 100;
+
+      if (rounded % 1 === 0) {
+        return rounded.toString();
+      } else {
+        return rounded.toFixed(2);
+      }
+    }
+
+    // Rendre une cellule éditable
+    makeCellEditable(cell) {
+      cell.contentEditable = true;
+      cell.setAttribute("data-editable", "true");
+
+      this.addEventListenerWithCleanup(cell, "blur", () => {
+        this.saveCellData(cell);
+      });
+
+      this.addEventListenerWithCleanup(cell, "keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          cell.blur();
+        }
+      });
+    }
+
+    // Sauvegarde des données de cellule
+    saveCellData(cell) {
+      try {
+        const table = cell.closest("table");
+        if (table) {
+          const tableId = this.generateTableId(table);
+
+          // Sauvegarder via l'API de dev.js si disponible
+          if (
+            window.claraverseSyncAPI &&
+            window.claraverseSyncAPI.forceSaveTable
+          ) {
+            window.claraverseSyncAPI.forceSaveTable(table);
+          }
+
+          // Notifier la modification
+          if (
+            window.claraverseSyncAPI &&
+            window.claraverseSyncAPI.notifyTableUpdate
+          ) {
+            window.claraverseSyncAPI.notifyTableUpdate(tableId, table, "menu");
+          }
+
+          // Déclencher un événement personnalisé
+          const event = new CustomEvent("claraverse:table:updated", {
+            detail: {
+              tableId: tableId,
+              table: table,
+              cell: cell,
+              source: "menu",
+              action: "cell_edit",
+              timestamp: Date.now(),
+            },
+          });
+          document.dispatchEvent(event);
+        }
+      } catch (error) {
+        console.error("Erreur sauvegarde cellule:", error);
+      }
+    }
+
+    // Synchronisation avec dev.js
+    syncWithDev() {
+      try {
+        if (this.targetTable) {
+          const tableId = this.generateTableId(this.targetTable);
+
+          // Marquer la table comme modifiée pour suivi
+          this.targetTable.setAttribute("data-modified-time", Date.now());
+          this.targetTable.setAttribute("data-modified-by", "menu");
+
+          // Utiliser l'API de synchronisation si disponible
+          if (
+            window.claraverseSyncAPI &&
+            window.claraverseSyncAPI.forceSaveTable
+          ) {
+            window.claraverseSyncAPI
+              .forceSaveTable(this.targetTable)
+              .then(() => {
+                console.log("✅ Synchronisation API dev.js réussie");
+                this.showQuickNotification("💾 Données sauvegardées");
+
+                // Déclencher également la sauvegarde HTML complète
+                if (window.saveCompleteTableHTML) {
+                  window
+                    .saveCompleteTableHTML(this.targetTable, tableId)
+                    .then(() => {
+                      console.log("✅ Sauvegarde HTML complète réussie");
+                    })
+                    .catch((error) => {
+                      console.error("❌ Erreur sauvegarde HTML:", error);
+                    });
+                }
+              })
+              .catch((error) => {
+                console.error("❌ Erreur sync API:", error);
+                this.fallbackSync();
+              });
+          } else if (typeof window.saveTableNow === "function") {
+            window.saveTableNow(this.targetTable);
+            console.log("🔄 Synchronisation avec dev.js effectuée (fallback)");
+
+            // Essayer aussi la sauvegarde HTML en fallback
+            if (window.saveCompleteTableHTML) {
+              window
+                .saveCompleteTableHTML(this.targetTable, tableId)
+                .then(() => {
+                  console.log("✅ Sauvegarde HTML fallback réussie");
+                })
+                .catch((error) => {
+                  console.error("❌ Erreur sauvegarde HTML fallback:", error);
+                });
+            }
+          } else {
+            console.warn(
+              "⚠️ Aucune API de sync disponible, utilisation localStorage",
+            );
+            this.fallbackSync();
+          }
+
+          // Notifier la modification avec plus de détails
+          if (
+            window.claraverseSyncAPI &&
+            window.claraverseSyncAPI.notifyTableUpdate
+          ) {
+            window.claraverseSyncAPI.notifyTableUpdate(
+              tableId,
+              this.targetTable,
+              "menu",
+            );
+          }
+
+          // Déclencher un événement personnalisé avec plus d'informations
+          const event = new CustomEvent("claraverse:table:updated", {
+            detail: {
+              tableId: tableId,
+              table: this.targetTable,
+              source: "menu",
+              action: "table_modified",
+              timestamp: Date.now(),
+              cellCount: this.targetTable.querySelectorAll("td, th").length,
+              rowCount: this.targetTable.querySelectorAll("tr").length,
+            },
+          });
+          document.dispatchEvent(event);
+
+          // Planifier une sauvegarde de sécurité différée
+          this.scheduleBackupSave();
+        }
+      } catch (error) {
+        console.error("Erreur synchronisation dev.js:", error);
+        this.fallbackSync();
+      }
+    }
+
+    // Génération d'ID de table
+    // Générer le contexte de chat pour une table
+    generateChatContext(table) {
+      try {
+        // Rechercher les indicateurs de contexte de chat
+        let chatContext = {
+          userId: "default_user",
+          chatId: null,
+          divContext: null,
+          conversationId: null,
+          sessionId: null,
+          pageContext: null,
+          timestamp: Date.now(),
+        };
+
+        // 1. Chercher l'ID de conversation dans l'URL ou les données
+        const url = window.location.href;
+        const conversationMatch = url.match(/conversations?\/([^\/\?]+)/i);
+        if (conversationMatch) {
+          chatContext.conversationId = conversationMatch[1].substring(0, 12);
+        }
+
+        // 2. Chercher le conteneur de chat parent avec sélecteurs étendus
+        const chatContainer = table.closest(
+          '[data-conversation-id], [id*="chat"], [class*="chat"], [class*="conversation"], .prose, .message-content, [role="main"], .chat-container',
+        );
+
+        if (chatContainer) {
+          // Essayer de récupérer l'ID du conteneur
+          if (chatContainer.dataset.conversationId) {
+            chatContext.chatId = chatContainer.dataset.conversationId.substring(
+              0,
+              12,
+            );
+          } else if (chatContainer.id) {
+            chatContext.chatId = chatContainer.id.substring(0, 12);
+          }
+
+          // Générer un contexte de div plus robuste
+          const siblings = Array.from(
+            chatContainer.parentElement?.children || [],
+          );
+          const siblingIndex = siblings.indexOf(chatContainer);
+          const containerClasses = Array.from(chatContainer.classList)
+            .slice(0, 2)
+            .join("-");
+          const parentClasses = chatContainer.parentElement
+            ? Array.from(chatContainer.parentElement.classList)
+                .slice(0, 2)
+                .join("-")
+            : "no-parent";
+
+          chatContext.divContext = `div_${siblingIndex}_${chatContainer.tagName.toLowerCase()}_${containerClasses}_${parentClasses}`;
+        }
+
+        // 3. Générer un ID de session basé sur l'onglet/fenêtre actuel
+        if (!sessionStorage.getItem("claraverse_session_id")) {
+          const sessionId = `ses_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 8)}`;
+          sessionStorage.setItem("claraverse_session_id", sessionId);
+        }
+        chatContext.sessionId = sessionStorage.getItem("claraverse_session_id");
+
+        // 4. Contexte de page plus détaillé
+        const pageTitle = document.title
+          .substring(0, 20)
+          .replace(/[^a-zA-Z0-9]/g, "_");
+        const pathParts = window.location.pathname
+          .split("/")
+          .filter((p) => p.length > 0)
+          .slice(-2);
+        chatContext.pageContext = `${pageTitle}_${pathParts.join("_")}`;
+
+        // 5. Chercher des métadonnées utilisateur étendues
+        const userMeta = document.querySelector(
+          '[data-user-id], [data-user], meta[name="user-id"], [data-auth-user], .user-info, [class*="user"]',
+        );
+        if (userMeta) {
+          chatContext.userId =
+            userMeta.dataset.userId ||
+            userMeta.dataset.user ||
+            userMeta.dataset.authUser ||
+            userMeta.content ||
+            userMeta.textContent
+              ?.substring(0, 16)
+              .replace(/[^a-zA-Z0-9]/g, "_") ||
+            chatContext.userId;
+        }
+
+        // 6. Générer un ID de chat unique renforcé si aucun trouvé
+        if (!chatContext.chatId && !chatContext.conversationId) {
+          // Utiliser plusieurs facteurs pour générer un ID unique
+          const bodyContent =
+            document.body.textContent?.substring(0, 1000) || "";
+          const contentHash = Math.abs(
+            bodyContent.split("").reduce((a, b) => {
+              a = (a << 5) - a + b.charCodeAt(0);
+              return a & a;
+            }, 0),
+          ).toString(36);
+
+          const timeHash = Date.now().toString(36).slice(-6);
+          const randomHash = Math.random().toString(36).substring(2, 8);
+
+          chatContext.chatId = `gen_${contentHash}_${timeHash}_${randomHash}`;
+        }
+
+        // 7. Générer un hash unique pour ce contexte
+        const contextString = JSON.stringify({
+          userId: chatContext.userId,
+          conversationId: chatContext.conversationId,
+          chatId: chatContext.chatId,
+          divContext: chatContext.divContext,
+          sessionId: chatContext.sessionId,
+          pageContext: chatContext.pageContext,
+        });
+
+        const contextHash = Math.abs(
+          contextString.split("").reduce((a, b) => {
+            a = (a << 5) - a + b.charCodeAt(0);
+            return a & a;
+          }, 0),
+        ).toString(36);
+
+        chatContext.uniqueHash = contextHash;
+
+        console.log(
+          `🏷️ Menu - Contexte généré - Hash: ${contextHash}, Chat: ${chatContext.chatId}`,
+        );
+        return chatContext;
+      } catch (error) {
+        console.error(
+          `⚠️ Menu - Erreur génération contexte chat: ${error.message}`,
+        );
+        const fallbackHash = Math.random().toString(36).substring(2, 10);
+        return {
+          userId: "default_user",
+          chatId: `fallback_${Date.now().toString(36)}`,
+          divContext: "unknown_div",
+          conversationId: null,
+          sessionId:
+            sessionStorage.getItem("claraverse_session_id") ||
+            `fallback_session_${Date.now()}`,
+          pageContext: "error_page",
+          timestamp: Date.now(),
+          uniqueHash: fallbackHash,
+        };
+      }
+    }
+
+    getUserId() {
+      // Cette fonction est maintenant intégrée dans generateChatContext
+      // Maintenue pour compatibilité mais utilise la logique étendue
+      const userMeta = document.querySelector(
+        '[data-user-id], [data-user], meta[name="user-id"], [data-auth-user], .user-info, [class*="user"]',
+      );
+      if (userMeta) {
+        return (
+          userMeta.dataset.userId ||
+          userMeta.dataset.user ||
+          userMeta.dataset.authUser ||
+          userMeta.content ||
+          userMeta.textContent
+            ?.substring(0, 16)
+            .replace(/[^a-zA-Z0-9]/g, "_") ||
+          "default_user"
+        ).substring(0, 16);
+      }
+      return "default_user";
+    }
+
+    getChatId(element) {
+      // Cette fonction est maintenant intégrée dans generateChatContext
+      // Maintenue pour compatibilité
+      const chatContainer = element.closest(
+        '[data-conversation-id], [id*="chat"], [class*="chat"], [class*="conversation"], .prose, .message-content, [role="main"], .chat-container',
+      );
+      if (chatContainer) {
+        if (chatContainer.dataset.conversationId) {
+          return chatContainer.dataset.conversationId.substring(0, 12);
+        }
+        if (chatContainer.id) {
+          return chatContainer.id.substring(0, 12);
+        }
+      }
+
+      const url = window.location.href;
+      const conversationMatch = url.match(/conversations?\/([^\/\?]+)/i);
+      if (conversationMatch) {
+        return conversationMatch[1].substring(0, 12);
+      }
+
+      return `gen_${Date.now().toString(36).slice(-6)}_${Math.random().toString(36).substring(2, 6)}`;
+    }
+
+    getConversationId() {
+      const url = window.location.href;
+      const match = url.match(/conversations?\/([^\/\?]+)/i);
+      return match ? match[1] : null;
+    }
+
+    getDivContext(element) {
+      // Cette fonction est maintenant intégrée dans generateChatContext avec plus de détails
+      // Maintenue pour compatibilité
+      const container = element.closest(
+        '.prose, [class*="chat"], [class*="conversation"], .message-content, [role="main"], .chat-container',
+      );
+      if (container) {
+        const siblings = Array.from(container.parentElement?.children || []);
+        const index = siblings.indexOf(container);
+        const containerClasses = Array.from(container.classList)
+          .slice(0, 2)
+          .join("-");
+        return `div_${index}_${container.tagName.toLowerCase()}_${containerClasses}`;
+      }
+      return "unknown_div";
+    }
+
+    getFallbackContext() {
+      const fallbackHash = Math.random().toString(36).substring(2, 10);
+      return {
+        userId: "fallback_user",
+        chatId: `fallback_${Date.now().toString(36)}`,
+        conversationId: null,
+        divContext: "fallback_div",
+        sessionId:
+          sessionStorage.getItem("claraverse_session_id") ||
+          `fallback_session_${Date.now()}`,
+        pageContext: "error_page",
+        timestamp: Date.now(),
+        uniqueHash: fallbackHash,
+      };
+    }
+
+    generateTableId(table, index = 0) {
+      try {
+        // Vérifier s'il y a déjà un ID complet et valide
+        if (
+          table.dataset.claraverseId &&
+          table.dataset.claraverseId.includes("||") &&
+          table.dataset.chatContext
+        ) {
+          // Vérifier que le contexte est encore valide
+          try {
+            const storedContext = JSON.parse(table.dataset.chatContext);
+            const currentContext = this.generateChatContext(table);
+
+            // Si le hash unique correspond, l'ID est encore valide
+            if (storedContext.uniqueHash === currentContext.uniqueHash) {
+              return table.dataset.claraverseId;
+            }
+          } catch (e) {
+            // Contexte corrompu, continuer avec la régénération
+          }
+        }
+
+        // Générer le contexte de chat
+        const chatContext = this.generateChatContext(table);
+
+        // Générer l'ID basé sur la structure de la table
+        const headers = Array.from(table.querySelectorAll("th, td"))
+          .slice(0, 3)
+          .map((cell) => cell.textContent.trim().substring(0, 8))
+          .filter((text) => text.length > 0)
+          .join("_");
+
+        const position = {
+          rows: table.rows.length,
+          cols: table.rows[0]?.cells.length || 0,
+        };
+
+        // Créer l'ID de base de la table plus détaillé
+        const tableSignature = Array.from(table.querySelectorAll("th, td"))
+          .slice(0, 5)
+          .map((cell) => cell.textContent.trim().substring(0, 4))
+          .filter((text) => text.length > 0)
+          .join("")
+          .replace(/[^a-zA-Z0-9]/g, "");
+
+        const tableBaseId = headers
+          ? `tbl_${headers.replace(/[^a-zA-Z0-9_]/g, "")}_${position.rows}x${position.cols}_${tableSignature.substring(0, 10)}`
+          : `tbl_generic_${position.rows}x${position.cols}_${index}_${tableSignature.substring(0, 10)}`;
+
+        // Créer l'ID contextuel complet avec timestamp pour garantir l'unicité
+        const contextualId = [
+          chatContext.userId.substring(0, 8),
+          chatContext.sessionId.substring(-8),
+          chatContext.conversationId || chatContext.chatId.substring(0, 12),
+          chatContext.divContext.substring(0, 15) || "main",
+          tableBaseId,
+          chatContext.uniqueHash.substring(0, 6),
+        ].join("||");
+
+        // Limiter la longueur totale et s'assurer de l'unicité
+        const finalId = contextualId.substring(0, 120);
+
+        // Vérifier l'unicité dans le DOM
+        const existingTable = document.querySelector(
+          `[data-claraverse-id="${finalId}"]`,
+        );
+        let uniqueId = finalId;
+        let counter = 1;
+
+        while (existingTable && existingTable !== table) {
+          uniqueId = `${finalId}_dup${counter}`;
+          counter++;
+          if (counter > 10) break; // Éviter les boucles infinies
+        }
+
+        // Sauvegarder l'ID et le contexte sur la table
+        table.dataset.claraverseId = uniqueId;
+        table.dataset.chatContext = JSON.stringify(chatContext);
+        table.dataset.tableIndex = index.toString();
+        table.dataset.createdAt = Date.now().toString();
+
+        console.log(`🆔 Menu - ID généré: ${uniqueId}`);
+        console.log(
+          `📊 Menu - Contexte: ${JSON.stringify(chatContext, null, 2)}`,
+        );
+
+        return uniqueId;
+      } catch (error) {
+        console.error("Erreur génération ID table:", error);
+        const fallbackId = `table_fallback_${index}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+        table.dataset.claraverseId = fallbackId;
+        return fallbackId;
+      }
+    }
+
+    // Hash code pour l'ID de table
+    hashCode(str) {
+      let hash = 0;
+      if (str.length === 0) return hash;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+      }
+      return hash;
+    }
+
+    // Notification de changement de structure avec contexte
+    notifyTableStructureChange(action, details = {}) {
+      try {
+        if (!this.targetTable) return;
+
+        const tableId = this.generateTableId(this.targetTable);
+        const chatContext = this.generateChatContext(this.targetTable);
+
+        console.log(
+          `🔄 Notification structure ${action} pour table: ${tableId}`,
+        );
+
+        // Force immediate structure save before notification
+        if (window.forceTableStructureSave) {
+          window
+            .forceTableStructureSave(this.targetTable, `menu_${action}`)
+            .then((success) => {
+              console.log(`💾 Sauvegarde immédiate structure: ${success}`);
+            })
+            .catch((error) => {
+              console.warn(`⚠️ Erreur sauvegarde immédiate:`, error);
+            });
+        }
+
+        const event = new CustomEvent("claraverse:table:structure:changed", {
+          detail: {
+            tableId: tableId,
+            table: this.targetTable,
+            action: action,
+            details: details,
+            source: "menu",
+            timestamp: Date.now(),
+            // Nouvelles données contextuelles
+            chatContext: chatContext,
+            contextualId: tableId,
+            isContextual: tableId.includes("||"),
+          },
+        });
+
+        document.dispatchEvent(event);
+
+        // Notification spécifique pour le système contextuel
+        if (tableId.includes("||")) {
+          const contextualEvent = new CustomEvent(
+            "claraverse:contextual:structure:changed",
+            {
+              detail: {
+                tableId: tableId,
+                context: chatContext,
+                action: action,
+                details: details,
+                source: "menu",
+                timestamp: Date.now(),
+              },
+            },
+          );
+          document.dispatchEvent(contextualEvent);
+        }
+
+        // Additional immediate persistence call
+        setTimeout(() => {
+          this.ensureStructurePersistence(this.targetTable, action, details);
+        }, 200);
+
+        console.log(
+          `🎯 Notification rapprochement (${affectedRows} lignes) envoyée à dev.js (contextuel: ${tableId.includes("||")})`,
+        );
+
+        // Ensure persistence for rapprochement
+        setTimeout(() => {
+          this.ensureStructurePersistence(
+            this.targetTable,
+            "rapprochement_complete",
+            { affectedRows },
+          );
+        }, 300);
+      } catch (error) {
+        console.error("Erreur notification rapprochement:", error);
+      }
+    }
+
+    // Assurer la persistance des structures après modifications
+    ensureStructurePersistence(table, action, details = {}) {
+      try {
+        if (!table || table.tagName !== "TABLE") {
+          console.warn("❌ Table invalide pour persistance");
+          return;
+        }
+
+        const tableId = this.generateTableId(table);
+        console.log(`🔒 Assurance persistance: ${action} sur ${tableId}`);
+
+        // Multiple persistence strategies
+        const persistenceStrategies = [
+          // Strategy 1: Direct structure save via dev.js
+          () => {
+            if (window.forceTableStructureSave) {
+              return window.forceTableStructureSave(
+                table,
+                `persistence_${action}`,
+              );
+            }
+            return Promise.resolve(false);
+          },
+
+          // Strategy 2: Storage manager save
+          () => {
+            if (
+              window.storageManager &&
+              window.storageManager.saveTableStructure
+            ) {
+              return window.storageManager.saveTableStructure(tableId, table, {
+                source: "menu_persistence",
+                action: action,
+                details: details,
+                forced: true,
+              });
+            }
+            return Promise.resolve(false);
+          },
+
+          // Strategy 3: ClaraVerse API save
+          () => {
+            if (
+              window.claraverseSyncAPI &&
+              window.claraverseSyncAPI.saveTableStructure
+            ) {
+              return window.claraverseSyncAPI.saveTableStructure(table, {
+                source: "menu_api",
+                action: action,
+                immediate: true,
+              });
+            }
+            return Promise.resolve(false);
+          },
+
+          // Strategy 4: Manual localStorage save
+          () => {
+            try {
+              const structureKey = `claraverse_struct_${tableId}`;
+              const structureData = {
+                outerHTML: table.outerHTML,
+                innerHTML: table.innerHTML,
+                contextualId: tableId,
+                action: action,
+                details: details,
+                savedAt: Date.now(),
+                source: "menu_manual",
+                isManualSave: true,
+              };
+
+              localStorage.setItem(structureKey, JSON.stringify(structureData));
+              console.log(`💾 Sauvegarde manuelle structure: ${tableId}`);
+              return Promise.resolve(true);
+            } catch (error) {
+              console.error("❌ Erreur sauvegarde manuelle:", error);
+              return Promise.resolve(false);
+            }
+          },
+        ];
+
+        // Execute strategies sequentially
+        const executeStrategies = async () => {
+          let successCount = 0;
+
+          for (let i = 0; i < persistenceStrategies.length; i++) {
+            try {
+              const strategy = persistenceStrategies[i];
+              const success = await strategy();
+
+              if (success) {
+                successCount++;
+                console.log(`✅ Stratégie ${i + 1} réussie pour ${tableId}`);
+              } else {
+                console.warn(`⚠️ Stratégie ${i + 1} échouée pour ${tableId}`);
+              }
+            } catch (error) {
+              console.error(`❌ Erreur stratégie ${i + 1}:`, error);
+            }
+          }
+
+          console.log(
+            `📊 Persistance ${tableId}: ${successCount}/${persistenceStrategies.length} stratégies réussies`,
+          );
+
+          // If no strategies worked, emit a warning event
+          if (successCount === 0) {
+            document.dispatchEvent(
+              new CustomEvent("claraverse:persistence:failed", {
+                detail: { tableId, action, details, timestamp: Date.now() },
+              }),
+            );
+          } else {
+            // Emit success event
+            document.dispatchEvent(
+              new CustomEvent("claraverse:persistence:success", {
+                detail: {
+                  tableId,
+                  action,
+                  details,
+                  strategies: successCount,
+                  timestamp: Date.now(),
+                },
+              }),
+            );
+          }
+
+          return successCount;
+        };
+
+        // Execute with a slight delay to ensure DOM stability
+        setTimeout(executeStrategies, 100);
+      } catch (error) {
+        console.error("❌ Erreur assurance persistance:", error);
+      }
+    }
+
+    // Notification fin de rapprochement avec contexte
+    notifyRapprochementComplete(affectedRows) {
+      try {
+        if (!this.targetTable) return;
+
+        const tableId = this.generateTableId(this.targetTable);
+        const chatContext = this.generateChatContext(this.targetTable);
+
+        const event = new CustomEvent("claraverse:rapprochement:complete", {
+          detail: {
+            tableId: tableId,
+            table: this.targetTable,
+            affectedRows: affectedRows,
+            source: "menu",
+            timestamp: Date.now(),
+            // Nouvelles données contextuelles
+            chatContext: chatContext,
+            contextualId: tableId,
+            isContextual: tableId.includes("||"),
+          },
+        });
+
+        document.dispatchEvent(event);
+
+        // Notification spécifique contextuelle
+        if (tableId.includes("||")) {
+          const contextualEvent = new CustomEvent(
+            "claraverse:contextual:rapprochement:complete",
+            {
+              detail: {
+                tableId: tableId,
+                context: chatContext,
+                affectedRows: affectedRows,
+                source: "menu",
+                timestamp: Date.now(),
+              },
+            },
+          );
+          document.dispatchEvent(contextualEvent);
+        }
+
+        console.log(
+          `🎯 Notification rapprochement (${affectedRows} lignes) envoyée à dev.js (contextuel: ${tableId.includes("||")})`,
+        );
+
+        // Forcer la sauvegarde contextuelle
+        if (
+          window.claraverseSyncAPI &&
+          window.claraverseSyncAPI.saveAllTables
+        ) {
+          setTimeout(() => {
+            window.claraverseSyncAPI.saveAllTables();
+            console.log("💾 Sauvegarde forcée après rapprochement");
+          }, 100);
+        }
+      } catch (error) {
+        console.error("Erreur notification rapprochement:", error);
+      }
+    }
+
+    // Affichage de notification rapide
+    showQuickNotification(message) {
+      const notification = document.createElement("div");
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 20000;
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        max-width: 300px;
+      `;
+      notification.textContent = message;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.style.opacity = "1";
+        notification.style.transform = "translateY(0)";
+      }, 10);
+
+      setTimeout(() => {
+        notification.style.opacity = "0";
+        notification.style.transform = "translateY(-20px)";
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 3000);
+    }
+
+    // Gestion du survol de table
+    handleTableHover(e, table) {
+      this.isHoveringTable = true;
+      this.clearHideTimeout();
+
+      if (this.targetTable !== table && !this.isMenuVisible) {
+        this.hoverTimeout = setTimeout(() => {
+          if (this.isHoveringTable && !this.isMenuVisible) {
+            this.showMenu(e.pageX + 10, e.pageY + 10, table);
+          }
+        }, this.config.hoverDelay);
+      }
+    }
+
+    // Gestion de la sortie du survol
+    handleTableLeave(e, table) {
+      this.isHoveringTable = false;
+      this.clearHoverTimeout();
+      this.scheduleHideMenu();
+    }
+
+    // Programmer le masquage du menu
+    scheduleHideMenu() {
+      this.hideTimeout = setTimeout(() => {
+        if (!this.isHoveringTable && !this.isHoveringMenu) {
+          this.hideMenu();
+        }
+      }, this.config.hideDelay);
+    }
+
+    // Annuler le timeout de survol
+    clearHoverTimeout() {
+      if (this.hoverTimeout) {
+        clearTimeout(this.hoverTimeout);
+        this.hoverTimeout = null;
+      }
+    }
+
+    // Annuler le timeout de masquage
+    clearHideTimeout() {
+      if (this.hideTimeout) {
+        clearTimeout(this.hideTimeout);
+        this.hideTimeout = null;
+      }
+      this.clearHoverTimeout();
+    }
+
+    // Vérifier si la table est dans le chat
+    isTableInChat(table) {
+      const claraVerseTableSelector =
+        "table.min-w-full.border.border-gray-200.dark\\:border-gray-700.rounded-lg";
+      if (table.matches(claraVerseTableSelector)) {
+        return true;
+      }
+
+      const chatSelectors = [
+        "div.prose.prose-base.dark\\:prose-invert.max-w-none",
+        '[class*="chat"]',
+        '[class*="message"]',
+        '[class*="conversation"]',
+        '[id*="chat"]',
+        '[data-testid*="chat"]',
+        ".prose",
+        ".prose-base",
+        ".markdown-body",
+        '[class*="assistant"]',
+        "[data-editable-processed]",
+      ];
+
+      for (const selector of chatSelectors) {
+        if (table.closest(selector)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Afficher le menu contextuel
+    showMenu(x, y, table) {
+      this.targetTable = table;
+      this.menuElement.style.left = `${x}px`;
+      this.menuElement.style.top = `${y}px`;
+      this.menuElement.style.display = "block";
+
+      setTimeout(() => {
+        this.menuElement.style.opacity = "1";
+        this.menuElement.style.transform = "translateY(0)";
+      }, 10);
+
+      this.isMenuVisible = true;
+
+      console.log(
+        "📋 Menu contextuel affiché pour la table:",
+        table.getAttribute("data-table-index") || "sans index",
+      );
+
+      // Ajustement si le menu dépasse les bords de l'écran
+      setTimeout(() => {
+        const rect = this.menuElement.getBoundingClientRect();
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        if (rect.right > windowWidth) {
+          this.menuElement.style.left = `${windowWidth - rect.width - 10}px`;
+        }
+
+        if (rect.bottom > windowHeight) {
+          this.menuElement.style.top = `${windowHeight - rect.height - 10}px`;
+        }
+      }, 0);
+    }
+
+    // Masquer le menu contextuel
+    hideMenu() {
+      if (!this.isMenuVisible) return;
+
+      this.menuElement.style.opacity = "0";
+      this.menuElement.style.transform = "translateY(-10px)";
+
+      setTimeout(() => {
+        this.menuElement.style.display = "none";
+        this.isMenuVisible = false;
+        this.isHoveringTable = false;
+        this.isHoveringMenu = false;
+      }, 300);
+
+      this.clearHoverTimeout();
+      this.clearHideTimeout();
+    }
+
+    // Afficher une alerte
+    showAlert(message) {
+      alert(message);
+      console.log(`🔔 Alerte affichée: ${message}`);
+    }
+
+    // Observer l'ajout de nouvelles tables
+    observeNewTables() {
+      let observerThrottle = 0;
+      let pendingProcessing = false;
+      const MIN_OBSERVER_INTERVAL = 3000; // 3 secondes minimum entre traitements
+
+      const processTableMutations = (mutations) => {
+        const now = Date.now();
+
+        // Throttle pour éviter surcharge
+        if (
+          now - observerThrottle < MIN_OBSERVER_INTERVAL ||
+          pendingProcessing
+        ) {
+          return;
+        }
+
+        observerThrottle = now;
+        pendingProcessing = true;
+
+        let newTablesFound = 0;
+
+        try {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.tagName === "TABLE" && this.isTableInChat(node)) {
+                  newTablesFound++;
+                }
+
+                if (node.querySelectorAll) {
+                  const tables = node.querySelectorAll("table");
+                  tables.forEach((table) => {
+                    if (this.isTableInChat(table)) {
+                      newTablesFound++;
+                    }
+                  });
+                }
+              }
+            });
+          });
+
+          if (newTablesFound > 0) {
+            console.log(
+              `📊 ${newTablesFound} nouvelle(s) table(s) détectée(s) dans le chat`,
+            );
+          }
+        } catch (error) {
+          console.error("❌ Erreur traitement mutations menu:", error);
+        } finally {
+          pendingProcessing = false;
+        }
+      };
+
+      const observer = new MutationObserver((mutations) => {
+        // Debounce : traiter après un délai
+        setTimeout(() => {
+          processTableMutations(mutations);
+        }, 500);
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+
+      console.log("👁️ Observer menu contextuel optimisé activé");
+    }
+
+    // Traiter les tables existantes
+    processExistingTables() {
+      const tables = document.querySelectorAll("table");
+      let chatTablesCount = 0;
+
+      tables.forEach((table) => {
+        if (this.isTableInChat(table)) {
+          chatTablesCount++;
+        }
+      });
+
+      console.log(
+        `📊 ${chatTablesCount} table(s) de chat prêtes pour le menu contextuel`,
+      );
+    }
+
+    // Forcer l'initialisation
+    forceInit() {
+      console.log("🔧 Initialisation forcée du menu contextuel");
+      this.init();
+    }
+
+    // Test de synchronisation avec dev.js
+    async testSync() {
+      console.log("🧪 Test de synchronisation menu.js <-> dev.js");
+
+      if (!this.targetTable) {
+        this.showAlert(
+          "⚠️ Aucune table active pour le test. Survolez d'abord une table.",
+        );
+        return;
+      }
+
+      try {
+        const tableId = this.generateTableId(this.targetTable);
+        console.log(`📊 Test sur table: ${tableId}`);
+
+        // Test 1: Vérifier API disponible
+        if (window.claraverseSyncAPI) {
+          console.log("✅ API claraverseSyncAPI disponible");
+          console.log(
+            "📋 Méthodes disponibles:",
+            Object.keys(window.claraverseSyncAPI),
+          );
+
+          // Test version de l'API
+          console.log(
+            `🔖 Version API: ${window.claraverseSyncAPI.version || "inconnue"}`,
+          );
+
+          // Test stats de stockage
+          const stats = window.claraverseSyncAPI.getStorageStats();
+          console.log("📊 Stats de stockage:", stats);
+        } else {
+          console.log("❌ API claraverseSyncAPI non disponible");
+        }
+
+        // Test 2: Vérifier l'état de synchronisation
+        const syncStatus = this.checkSyncStatus();
+        console.log("📈 État de synchronisation:", syncStatus);
+
+        // Test 3: Test de sauvegarde forcée
+        if (
+          window.claraverseSyncAPI &&
+          window.claraverseSyncAPI.forceSaveTable
+        ) {
+          console.log("🔄 Test sauvegarde forcée...");
+          const savedCells = await window.claraverseSyncAPI.forceSaveTable(
+            this.targetTable,
+          );
+          console.log(`💾 ${savedCells} cellules sauvegardées`);
+        }
+
+        // Test 4: Test événement personnalisé
+        const testEvent = new CustomEvent("claraverse:test:menu", {
+          detail: {
+            tableId: tableId,
+            table: this.targetTable,
+            timestamp: Date.now(),
+            source: "menu_test",
+          },
+        });
+        document.dispatchEvent(testEvent);
+        console.log("📡 Événement test envoyé");
+
+        // Test 5: Test synchronisation complète
+        console.log("🔄 Test synchronisation complète...");
+        this.syncWithDev();
+
+        // Test 6: Vérifier persistence
+        console.log("🛡️ Vérification persistance...");
+        await this.ensureDataPersistence();
+
+        // Test 7: Test fallback
+        console.log("💾 Test fallback sync...");
+        this.fallbackSync();
+
+        // Résumé du test
+        console.log("✅ Test de synchronisation terminé");
+        this.showQuickNotification(
+          "🧪 Test de synchronisation terminé - voir console",
+        );
+
+        // Retourner les résultats
+        return {
+          apiAvailable: !!window.claraverseSyncAPI,
+          tableId: tableId,
+          syncStatus: syncStatus,
+          testCompleted: true,
+          timestamp: Date.now(),
+        };
+      } catch (error) {
+        console.error("❌ Erreur test synchronisation:", error);
+        this.showAlert("❌ Erreur lors du test de synchronisation");
+      }
+    }
+
+    // Initialiser la synchronisation avec dev.js
+    initSyncWithDev() {
+      try {
+        console.log("🔗 Initialisation synchronisation menu.js <-> dev.js");
+
+        const waitForDevJS = (attempts = 0) => {
+          if (window.claraverseSyncAPI) {
+            console.log("✅ API de synchronisation dev.js détectée");
+            this.setupDevJSListeners();
+          } else if (attempts < 50) {
+            setTimeout(() => waitForDevJS(attempts + 1), 100);
+          } else {
+            console.log(
+              "⚠️ API dev.js non détectée, utilisation mode fallback",
+            );
+          }
+        };
+
+        waitForDevJS();
+      } catch (error) {
+        console.error("Erreur initialisation sync dev.js:", error);
+      }
+    }
+
+    // Configurer les écouteurs pour dev.js
+    setupDevJSListeners() {
+      try {
+        // Écouter les événements de sauvegarde de dev.js
+        this.addEventListenerWithCleanup(
+          document,
+          "claraverse:save:complete",
+          (event) => {
+            console.log("💾 Sauvegarde dev.js terminée:", event.detail);
+          },
+        );
+
+        // Écouter les demandes de rescan
+        this.addEventListenerWithCleanup(
+          document,
+          "claraverse:request:rescan",
+          () => {
+            console.log("🔄 Rescan demandé par dev.js");
+            this.processExistingTables();
+          },
+        );
+
+        console.log("👂 Écouteurs dev.js configurés");
+      } catch (error) {
+        console.error("Erreur configuration écouteurs dev.js:", error);
+      }
+    }
+
+    // Synchronisation de secours
+    fallbackSync() {
+      try {
+        if (!this.targetTable) return;
+
+        const tableId = this.generateTableId(this.targetTable);
+        const tableData = this.extractTableData();
+
+        // Sauvegarder dans localStorage comme fallback
+        const backupKey = `claraverse_table_backup_${tableId}`;
+        const backupData = {
+          tableId: tableId,
+          data: tableData,
+          timestamp: Date.now(),
+          source: "menu_fallback",
+          outerHTML: this.targetTable.outerHTML,
+        };
+
+        localStorage.setItem(backupKey, JSON.stringify(backupData));
+        console.log(`💾 Sauvegarde fallback effectuée: ${backupKey}`);
+
+        // Déclencher un événement pour notifier dev.js
+        const event = new CustomEvent("claraverse:fallback:sync", {
+          detail: {
+            tableId: tableId,
+            backupKey: backupKey,
+            timestamp: Date.now(),
+          },
+        });
+        document.dispatchEvent(event);
+      } catch (error) {
+        console.error("❌ Erreur synchronisation fallback:", error);
+      }
+    }
+
+    // Planifier une sauvegarde de sécurité différée
+    scheduleBackupSave() {
+      if (this.backupTimeout) {
+        clearTimeout(this.backupTimeout);
+      }
+
+      this.backupTimeout = setTimeout(() => {
+        this.performBackupSave();
+      }, 2000); // Attendre 2 secondes après la dernière modification
+    }
+
+    // Effectuer une sauvegarde de sécurité
+    async performBackupSave() {
+      try {
+        if (!this.targetTable) return;
+
+        console.log("🛡️ Sauvegarde de sécurité en cours...");
+
+        // Essayer d'abord l'API principale
+        if (
+          window.claraverseSyncAPI &&
+          window.claraverseSyncAPI.forceSaveTable
+        ) {
+          await window.claraverseSyncAPI.forceSaveTable(this.targetTable);
+          console.log("✅ Sauvegarde de sécurité via API réussie");
+        } else {
+          // Utiliser le fallback
+          this.fallbackSync();
+          console.log("✅ Sauvegarde de sécurité via fallback réussie");
+        }
+
+        // Marquer la table comme sauvegardée
+        this.targetTable.setAttribute("data-last-backup", Date.now());
+      } catch (error) {
+        console.error("❌ Erreur sauvegarde de sécurité:", error);
+        // En dernier recours, utiliser localStorage
+        this.fallbackSync();
+      }
+    }
+
+    // S'assurer de la persistance des données
+    async ensureDataPersistence() {
+      try {
+        if (!this.targetTable) return;
+
+        const tableId = this.generateTableId(this.targetTable);
+        let persistenceOk = false;
+
+        // Vérifier si dev.js a bien sauvegardé
+        if (
+          window.claraverseSyncAPI &&
+          window.claraverseSyncAPI.getStorageStats
+        ) {
+          const stats = window.claraverseSyncAPI.getStorageStats();
+          console.log("📊 Stats de stockage:", stats);
+          persistenceOk = stats.totalKeys > 0;
+        }
+
+        // Si pas de persistence confirmée, forcer la sauvegarde
+        if (!persistenceOk) {
+          console.log("⚠️ Persistance non confirmée, forçage sauvegarde...");
+          await this.performBackupSave();
+
+          // Double vérification
+          setTimeout(() => {
+            this.fallbackSync();
+          }, 1000);
+        }
+
+        // Planifier une vérification périodique
+        if (this.persistenceCheckInterval) {
+          clearInterval(this.persistenceCheckInterval);
+        }
+
+        this.persistenceCheckInterval = setInterval(() => {
+          const modifiedTables = document.querySelectorAll(
+            'table[data-modified-by="menu"]',
+          );
+          if (modifiedTables.length > 0) {
+            console.log(
+              `🔍 Vérification persistance pour ${modifiedTables.length} table(s) modifiée(s)`,
+            );
+            modifiedTables.forEach((table) => {
+              const lastModified = table.getAttribute("data-modified-time");
+              const lastBackup = table.getAttribute("data-last-backup");
+
+              if (!lastBackup || (lastModified && lastModified > lastBackup)) {
+                console.log("💾 Table nécessite une sauvegarde");
+                if (window.claraverseSyncAPI) {
+                  window.claraverseSyncAPI.forceSaveTable(table);
+                }
+              }
+            });
+          }
+        }, 30000); // Vérifier toutes les 30 secondes
+      } catch (error) {
+        console.error("❌ Erreur vérification persistance:", error);
+      }
+    }
+
+    // Synchroniser toutes les tables modifiées
+    async syncAllModifiedTables() {
+      try {
+        const modifiedTables = document.querySelectorAll(
+          'table[data-modified-by="menu"]',
+        );
+        console.log(
+          `🔄 Synchronisation de ${modifiedTables.length} table(s) modifiée(s)`,
+        );
+
+        for (const table of modifiedTables) {
+          this.targetTable = table;
+          await this.performBackupSave();
+        }
+
+        this.showQuickNotification(
+          `💾 ${modifiedTables.length} table(s) synchronisée(s)`,
+        );
+      } catch (error) {
+        console.error("❌ Erreur sync toutes tables:", error);
+      }
+    }
+
+    // Vérifier l'état de synchronisation avec dev.js
+    checkSyncStatus() {
+      const status = {
+        devJSDetected: !!window.claraverseSyncAPI,
+        apiVersion: window.claraverseSyncAPI?.version || "non détectée",
+        fallbackAvailable: true,
+        modifiedTables: document.querySelectorAll(
+          'table[data-modified-by="menu"]',
+        ).length,
+        lastSync:
+          this.targetTable?.getAttribute("data-last-backup") || "jamais",
+      };
+
+      console.log("📊 État de synchronisation:", status);
+      return status;
+    }
+
+    // Garantir la synchronisation pour toutes les opérations
+    async saveTableStructureImmediate(operation, details = {}) {
+      try {
+        if (!this.targetTable) {
+          console.warn("⚠️ Aucune table cible pour sauvegarde de structure");
+          return false;
+        }
+
+        const tableId = this.generateTableId(this.targetTable);
+        console.log(
+          `🏗️ Sauvegarde immédiate structure: ${operation} sur table ${tableId}`,
+        );
+
+        // Marquer la table avec l'opération
+        this.targetTable.setAttribute("data-structure-operation", operation);
+        this.targetTable.setAttribute("data-structure-modified", Date.now());
+
+        // Sauvegarder la structure via l'API
+        if (
+          window.claraverseSyncAPI &&
+          window.claraverseSyncAPI.saveTableStructure
+        ) {
+          try {
+            const success = await window.claraverseSyncAPI.saveTableStructure(
+              this.targetTable,
+              {
+                source: "menu",
+                operation: operation,
+                details: details,
+                timestamp: Date.now(),
+                immediate: true,
+              },
+            );
+
+            if (success) {
+              console.log(
+                `✅ Structure sauvegardée immédiatement pour ${operation}`,
+              );
+              this.targetTable.setAttribute("data-structure-saved", Date.now());
+              return true;
+            }
+          } catch (error) {
+            console.error(
+              `❌ Erreur sauvegarde structure immédiate: ${error.message}`,
+            );
+          }
+        }
+
+        // Fallback: sauvegarder dans localStorage directement
+        try {
+          const structureData = {
+            outerHTML: this.targetTable.outerHTML,
+            operation: operation,
+            details: details,
+            timestamp: Date.now(),
+            tableId: tableId,
+          };
+
+          localStorage.setItem(
+            `claraverse_structure_${tableId}`,
+            JSON.stringify(structureData),
+          );
+          console.log(`🛡️ Structure sauvegardée en fallback pour ${tableId}`);
+          return true;
+        } catch (fallbackError) {
+          console.error(
+            `❌ Échec fallback structure: ${fallbackError.message}`,
+          );
+          return false;
+        }
+      } catch (error) {
+        console.error(
+          `❌ Erreur sauvegarde structure immédiate: ${error.message}`,
+        );
+        return false;
+      }
+    }
+
+    async ensureSync(operation = "modification", details = {}) {
+      try {
+        if (!this.targetTable) {
+          console.warn("⚠️ Aucune table cible pour synchronisation");
+          return false;
+        }
+
+        const tableId = this.generateTableId(this.targetTable);
+        console.log(
+          `🔄 Synchronisation garantie: ${operation} sur table ${tableId}`,
+        );
+
+        // Marquer la table avec horodatage
+        this.targetTable.setAttribute("data-last-operation", operation);
+        this.targetTable.setAttribute("data-last-operation-time", Date.now());
+        this.targetTable.setAttribute("data-modified-by", "menu");
+
+        let syncSuccess = false;
+
+        // Tentative 1: Sauvegarde de structure pour les opérations structurelles
+        if (
+          [
+            "row_added",
+            "row_deleted",
+            "column_added",
+            "column_deleted",
+            "excel_import",
+          ].includes(operation)
+        ) {
+          try {
+            if (
+              window.claraverseSyncAPI &&
+              window.claraverseSyncAPI.saveTableStructure
+            ) {
+              const structureSaved =
+                await window.claraverseSyncAPI.saveTableStructure(
+                  this.targetTable,
+                  { source: "menu", operation: operation, details: details },
+                );
+              if (structureSaved) {
+                console.log(`🏗️ Structure sauvegardée pour ${operation}`);
+                syncSuccess = true;
+              }
+            }
+          } catch (error) {
+            console.warn(`⚠️ Échec sauvegarde structure: ${error.message}`);
+          }
+        }
+
+        // Tentative 2: API principale dev.js
+        if (
+          window.claraverseSyncAPI &&
+          window.claraverseSyncAPI.forceSaveTable
+        ) {
+          try {
+            const savedCells = await window.claraverseSyncAPI.forceSaveTable(
+              this.targetTable,
+            );
+            if (savedCells >= 0) {
+              // Accepter 0 cellules pour les tables vides
+              syncSuccess = true;
+              console.log(
+                `✅ Sync API réussie: ${savedCells} cellules + structure sauvegardées`,
+              );
+              this.targetTable.setAttribute("data-last-sync", Date.now());
+            }
+          } catch (error) {
+            console.warn(`⚠️ Échec sync API: ${error.message}`);
+          }
+        }
+
+        // Tentative 3: Fallback localStorage si API échoue
+        if (!syncSuccess) {
+          console.log("🛡️ Utilisation synchronisation fallback...");
+          this.fallbackSync();
+          syncSuccess = true; // Considérer comme réussi si fallback fonctionne
+        }
+
+        // Tentative 4: Événement de notification
+        const syncEvent = new CustomEvent("claraverse:sync:guaranteed", {
+          detail: {
+            tableId: tableId,
+            table: this.targetTable,
+            operation: operation,
+            details: details,
+            timestamp: Date.now(),
+            source: "menu-guaranteed",
+          },
+        });
+        document.dispatchEvent(syncEvent);
+
+        // Planifier une vérification différée
+        setTimeout(() => {
+          this.verifySyncSuccess(tableId, operation);
+        }, 2000);
+
+        return syncSuccess;
+      } catch (error) {
+        console.error(`❌ Erreur synchronisation garantie: ${error.message}`);
+        // En dernier recours, essayer quand même le fallback
+        try {
+          this.fallbackSync();
+          return true;
+        } catch (fallbackError) {
+          console.error(`❌ Échec fallback: ${fallbackError.message}`);
+          return false;
+        }
+      }
+    }
+
+    // Vérifier le succès de la synchronisation
+    verifySyncSuccess(tableId, operation) {
+      try {
+        const table =
+          document.querySelector(`[data-table-id="${tableId}"]`) ||
+          this.targetTable;
+        if (!table) {
+          console.warn(`⚠️ Table ${tableId} introuvable pour vérification`);
+          return;
+        }
+
+        const lastSync = table.getAttribute("data-last-sync");
+        const lastModification = table.getAttribute("data-last-operation-time");
+
+        if (
+          !lastSync ||
+          (lastModification && parseInt(lastSync) < parseInt(lastModification))
+        ) {
+          console.log(`🔄 Re-synchronisation nécessaire pour table ${tableId}`);
+
+          // Nouvelle tentative de synchronisation
+          if (window.claraverseSyncAPI) {
+            window.claraverseSyncAPI.forceSaveTable(table);
+          } else {
+            // Sauvegarder les données de la table dans localStorage
+            this.emergencyBackup(table, tableId);
+          }
+        } else {
+          console.log(`✅ Synchronisation confirmée pour table ${tableId}`);
+        }
+      } catch (error) {
+        console.error(`❌ Erreur vérification sync: ${error.message}`);
+      }
+    }
+
+    // Sauvegarde d'urgence dans localStorage
+    emergencyBackup(table, tableId) {
+      try {
+        const backupData = {
+          tableId: tableId,
+          outerHTML: table.outerHTML,
+          cellData: [],
+          timestamp: Date.now(),
+          source: "emergency-backup",
+        };
+
+        // Collecter les données des cellules
+        const cells = table.querySelectorAll("td, th");
+        cells.forEach((cell, index) => {
+          backupData.cellData.push({
+            index: index,
+            content: cell.textContent,
+            html: cell.innerHTML,
+            attributes: Array.from(cell.attributes).map((attr) => ({
+              name: attr.name,
+              value: attr.value,
+            })),
+          });
+        });
+
+        const backupKey = `claraverse_emergency_${tableId}_${Date.now()}`;
+        localStorage.setItem(backupKey, JSON.stringify(backupData));
+        console.log(`🆘 Sauvegarde d'urgence: ${backupKey}`);
+
+        return backupKey;
+      } catch (error) {
+        console.error(`❌ Erreur sauvegarde d'urgence: ${error.message}`);
+        return null;
+      }
+    }
+
+    // Nettoyage des événements
+    cleanup() {
+      this.eventListeners.forEach(({ element, event, handler }) => {
+        element.removeEventListener(event, handler);
+      });
+      this.eventListeners = [];
+
+      if (this.menuElement && this.menuElement.parentNode) {
+        this.menuElement.parentNode.removeChild(this.menuElement);
+      }
+
+      console.log("🧹 Menu contextuel nettoyé");
+    }
+  }
+
+  // Instance globale du gestionnaire de menu
+  const contextualMenuManager = new ContextualMenuManager();
+
+  // Fonctions globales pour l'intégration
+  window.initContextualMenu = function () {
+    contextualMenuManager.init();
+  };
+
+  window.forceContextualMenu = function () {
+    contextualMenuManager.forceInit();
+  };
+
+  window.testContextualMenuSync = function () {
+    contextualMenuManager.testSync();
+  };
+
+  window.cleanupContextualMenu = function () {
+    contextualMenuManager.cleanup();
+  };
+
+  // Auto-initialisation avec délai pour compatibilité
+  const initializeMenu = () => {
+    try {
+      contextualMenuManager.init();
+    } catch (error) {
+      console.error("❌ Erreur initialisation menu contextuel:", error);
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(initializeMenu, 2000);
+    });
+  } else {
+    setTimeout(initializeMenu, 2000);
+  }
+
+  // Nettoyage automatique lors du déchargement de la page
+  window.addEventListener("beforeunload", () => {
+    contextualMenuManager.cleanup();
+  });
+
+  console.log("✅ Menu contextuel avancé ClaraVerse chargé avec succès");
+  console.log("🚀 Nouvelles fonctionnalités disponibles:");
+  console.log("   • Actions existantes conservées (Hello France/Italie/Ghana)");
+  console.log("   • Insertion/suppression lignes et colonnes");
+  console.log("   • Rapprochement automatique (A - B = Ecart)");
+  console.log("   • Calculs statistiques avancés");
+  console.log("   • Import/Export Excel optimisé");
+  console.log("   • Sauvegarde état des tables");
+  console.log("   • Optimisation et copie de structure");
+  console.log("   • Synchronisation complète avec dev.js");
+})();

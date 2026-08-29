@@ -1,0 +1,75 @@
+{
+  "name": "Google Drive - DEBUG",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "debug-drive",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-200, 320],
+      "webhookId": "debug-drive"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 500,
+        "filter": {},
+        "options": {}
+      },
+      "id": "gd-001",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [20, 320],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// DEBUG: Voir exactement ce que retourne Google Drive\nconst items = $input.all();\n\n// Log brut\nconst rawData = items.map(i => i.json);\n\n// Compter les types\nlet dossiers = 0;\nlet fichiers = 0;\nlet autres = 0;\nconst nomsElements = [];\n\nfor (const item of items) {\n  const data = item.json;\n  if (!data || !data.id) {\n    autres++;\n    continue;\n  }\n  \n  nomsElements.push({\n    nom: data.name || '(sans nom)',\n    type: data.mimeType === 'application/vnd.google-apps.folder' ? 'DOSSIER' : 'fichier',\n    id: data.id\n  });\n  \n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    dossiers++;\n  } else {\n    fichiers++;\n  }\n}\n\nreturn [{\n  json: {\n    debug: true,\n    timestamp: new Date().toISOString(),\n    statistiques: {\n      totalItems: items.length,\n      dossiers: dossiers,\n      fichiers: fichiers,\n      itemsVides: autres\n    },\n    premierItem: items.length > 0 ? items[0].json : null,\n    tousLesElements: nomsElements.slice(0, 50),\n    message: items.length === 0 \n      ? 'PROBLEME: Aucun élément retourné par Google Drive. Vérifiez le credential OAuth2.'\n      : `OK: ${items.length} éléments trouvés (${dossiers} dossiers, ${fichiers} fichiers)`\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Debug",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [460, 320]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Google Drive", "type": "main", "index": 0}]]
+    },
+    "Google Drive": {
+      "main": [[{"node": "Debug", "type": "main", "index": 0}]]
+    },
+    "Debug": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "pinData": {},
+  "meta": {"templateCredsSetupCompleted": true}
+}

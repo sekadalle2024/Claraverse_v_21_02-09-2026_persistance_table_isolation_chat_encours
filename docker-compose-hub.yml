@@ -1,0 +1,64 @@
+version: '3.8'
+
+# Configuration pour déployer E-Audit depuis Docker Hub
+# Usage: docker-compose -f docker-compose-hub.yml up -d
+
+services:
+  # Service Frontend depuis Docker Hub
+  frontend:
+    image: sekadalle/mes_images_docker:e-audit-frontend
+    container_name: e-audit-frontend-hub
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - e-audit-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+    labels:
+      - "com.e-audit.service=frontend"
+      - "com.e-audit.version=latest"
+
+  # Service Backend depuis Docker Hub
+  backend:
+    image: sekadalle/mes_images_docker:e-audit-backend
+    container_name: e-audit-backend-hub
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HOST=0.0.0.0
+      - PORT=5000
+    volumes:
+      # Volume pour la persistance des données
+      - backend-data:/root/.clara
+      # Volume pour les logs (optionnel)
+      - ./logs:/app/logs
+    networks:
+      - e-audit-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.e-audit.service=backend"
+      - "com.e-audit.version=latest"
+
+# Réseau pour la communication entre services
+networks:
+  e-audit-network:
+    driver: bridge
+    labels:
+      - "com.e-audit.network=main"
+
+# Volumes pour la persistance
+volumes:
+  backend-data:
+    driver: local
+    labels:
+      - "com.e-audit.volume=backend-data"

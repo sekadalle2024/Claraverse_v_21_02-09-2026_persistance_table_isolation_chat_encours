@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forcer le rafraichissement</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Instructions pour forcer le rafraîchissement</h1>
+    
+    <h2>Méthode 1: Vider le cache du navigateur</h2>
+    <ol>
+        <li>Ouvrez http://localhost:5173</li>
+        <li>Appuyez sur <strong>Ctrl + Shift + Delete</strong></li>
+        <li>Cochez "Images et fichiers en cache"</li>
+        <li>Cliquez sur "Effacer les données"</li>
+        <li>Rafraîchissez la page avec <strong>Ctrl + F5</strong></li>
+    </ol>
+    
+    <h2>Méthode 2: Mode navigation privée</h2>
+    <ol>
+        <li>Ouvrez une fenêtre de navigation privée (<strong>Ctrl + Shift + N</strong> sur Chrome)</li>
+        <li>Allez sur http://localhost:5173</li>
+        <li>Testez le menu Démarrer</li>
+    </ol>
+    
+    <h2>Méthode 3: Forcer la recompilation</h2>
+    <p>Dans PowerShell, exécutez:</p>
+    <pre>
+# Arrêter l'application
+.\stop-claraverse.ps1
+
+# Supprimer le cache de build
+Remove-Item -Recurse -Force node_modules\.vite -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue
+
+# Redémarrer
+.\start-claraverse.ps1
+    </pre>
+    
+    <h2>Vérification</h2>
+    <p>Une fois l'application redémarrée:</p>
+    <ol>
+        <li>Ouvrez http://localhost:5173</li>
+        <li>Cliquez sur le bouton "Menu Démarrer"</li>
+        <li>Naviguez vers <strong>E-revision > Phase de conclusion</strong></li>
+        <li>Vous devriez voir:
+            <ul>
+                <li>✅ Recos revision des comptes</li>
+                <li>✅ Recos contrôle interne comptable</li>
+                <li>✅ Rapport de synthèse CAC</li>
+            </ul>
+        </li>
+    </ol>
+</body>
+</html>

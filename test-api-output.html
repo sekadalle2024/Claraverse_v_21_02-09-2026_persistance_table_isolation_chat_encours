@@ -1,0 +1,2266 @@
+﻿
+    <style>
+    /* Container principal */
+    .etats-fin-container {
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        max-width: 100%;
+        margin: 16px 0;
+    }
+    
+    .etats-fin-header {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: white;
+        padding: 20px;
+        border-radius: 12px 12px 0 0;
+        text-align: center;
+    }
+    
+    .etats-fin-header h2 { 
+        margin: 0 0 8px 0; 
+        font-size: 22px; 
+    }
+    
+    .etats-fin-header p { 
+        margin: 0; 
+        opacity: 0.9; 
+        font-size: 16px; 
+    }
+    
+    /* Sections accordÃ©on */
+    .etats-fin-section {
+        margin: 16px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .section-header-ef {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        background: #f8f9fa;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 17px;
+        transition: background 0.2s;
+    }
+    
+    .section-header-ef:hover { 
+        background: #e9ecef; 
+    }
+    
+    .section-header-ef.active { 
+        background: #dee2e6; 
+    }
+    
+    .section-header-ef .arrow {
+        transition: transform 0.3s;
+        font-size: 18px;
+    }
+    
+    .section-header-ef.active .arrow { 
+        transform: rotate(90deg); 
+    }
+    
+    .section-content-ef {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background: white;
+    }
+    
+    .section-content-ef.active { 
+        max-height: 10000px; 
+    }
+    
+    /* Tables liasse */
+    .liasse-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        font-size: 13px;
+    }
+    
+    .liasse-table thead {
+        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        color: white;
+    }
+    
+    .liasse-table th {
+        padding: 12px 8px;
+        text-align: left;
+        font-weight: 600;
+        border: 1px solid #2563eb;
+    }
+    
+    .liasse-table tbody tr {
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .liasse-table tbody tr:hover {
+        background: #f9fafb;
+    }
+    
+    .liasse-table tbody tr.total-row {
+        background: #f0f9ff;
+        font-weight: 700;
+        border-top: 2px solid #3b82f6;
+        border-bottom: 2px solid #3b82f6;
+    }
+    
+    .liasse-table td {
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+    }
+    
+    .liasse-table .ref-cell {
+        font-weight: 600;
+        color: #1e3a8a;
+        text-align: center;
+    }
+    
+    .liasse-table .libelle-cell {
+        color: #374151;
+    }
+    
+    .liasse-table .note-cell {
+        text-align: center;
+        color: #6b7280;
+        font-size: 11px;
+    }
+    
+    .liasse-table .montant-cell {
+        text-align: right;
+        font-family: 'Consolas', 'Courier New', monospace;
+        color: #059669;
+        font-weight: 500;
+    }
+    
+    .liasse-table .total-row .montant-cell {
+        color: #1e3a8a;
+        font-weight: 700;
+    }
+    </style>
+    <div class='etats-fin-container'><div class='etats-fin-header'><h2>ð Ãtats Financiers SYSCOHADA RÃ©visÃ©</h2><p>Format Liasse Officielle</p></div>
+    <div class="etats-fin-section" data-section="bilan_actif">
+        <div class="section-header-ef">
+            <span>ð¢ BILAN - ACTIF</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 60px;">NOTE</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="total-row">
+                        <td class="ref-cell">AA</td>
+                        <td class="libelle-cell">CHARGES IMMOBILISÃES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AB</td>
+                        <td class="libelle-cell">Frais d'Ã©tablissement et charges Ã  rÃ©partir</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AC</td>
+                        <td class="libelle-cell">Primes de remboursement des obligations</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">AD</td>
+                        <td class="libelle-cell">IMMOBILISATIONS INCORPORELLES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AE</td>
+                        <td class="libelle-cell">Frais de recherche et de dÃ©veloppement</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AF</td>
+                        <td class="libelle-cell">Brevets, licences, logiciels</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">1</td>
+                        <td class="montant-cell">1</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AG</td>
+                        <td class="libelle-cell">Fonds commercial</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AH</td>
+                        <td class="libelle-cell">Autres immobilisations incorporelles</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">AI</td>
+                        <td class="libelle-cell">IMMOBILISATIONS CORPORELLES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AJ</td>
+                        <td class="libelle-cell">Terrains</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AK</td>
+                        <td class="libelle-cell">BÃ¢timents</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AL</td>
+                        <td class="libelle-cell">Installations et agencements</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">26 020 175</td>
+                        <td class="montant-cell">26 020 175</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AM</td>
+                        <td class="libelle-cell">MatÃ©riel</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">71 991 956</td>
+                        <td class="montant-cell">71 991 956</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AN</td>
+                        <td class="libelle-cell">MatÃ©riel de transport</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">22 858 208</td>
+                        <td class="montant-cell">22 858 208</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">AP</td>
+                        <td class="libelle-cell">AVANCES ET ACOMPTES VERSES SUR IMMOBILISATIONS</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">AQ</td>
+                        <td class="libelle-cell">IMMOBILISATIONS FINANCIÃRES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AR</td>
+                        <td class="libelle-cell">Titres de participation</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">AS</td>
+                        <td class="libelle-cell">Autres immobilisations financiÃ¨res</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">143 030 200</td>
+                        <td class="montant-cell">143 030 200</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">AZ</td>
+                        <td class="libelle-cell">TOTAL ACTIF IMMOBILISÃ</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">BA</td>
+                        <td class="libelle-cell">ACTIF CIRCULANT HAO</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">BB</td>
+                        <td class="libelle-cell">STOCKS ET ENCOURS</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BG</td>
+                        <td class="libelle-cell">Marchandises</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BH</td>
+                        <td class="libelle-cell">MatiÃ¨res premiÃ¨res et autres approvisionnements</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BI</td>
+                        <td class="libelle-cell">En-cours</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BJ</td>
+                        <td class="libelle-cell">Produits fabriquÃ©s</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">BK</td>
+                        <td class="libelle-cell">CRÃANCES ET EMPLOIS ASSIMILÃS</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BL</td>
+                        <td class="libelle-cell">Fournisseurs, avances versÃ©es</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BM</td>
+                        <td class="libelle-cell">Clients</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">2 420 668 353</td>
+                        <td class="montant-cell">2 420 668 353</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BN</td>
+                        <td class="libelle-cell">Autres crÃ©ances</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">420 660 416</td>
+                        <td class="montant-cell">420 660 416</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">BP</td>
+                        <td class="libelle-cell">TOTAL ACTIF CIRCULANT</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BQ</td>
+                        <td class="libelle-cell">Titres de placement</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BR</td>
+                        <td class="libelle-cell">Valeurs Ã  encaisser</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BS</td>
+                        <td class="libelle-cell">Banques, chÃ¨ques postaux, caisse</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-480 540 218</td>
+                        <td class="montant-cell">-480 540 218</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">BT</td>
+                        <td class="libelle-cell">TOTAL TRÃSORERIE-ACTIF</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">BU</td>
+                        <td class="libelle-cell">Ãcarts de conversion-Actif</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">BZ</td>
+                        <td class="libelle-cell">TOTAL GÃNÃRAL</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="bilan_passif">
+        <div class="section-header-ef">
+            <span>ðï¸ BILAN - PASSIF</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 60px;">NOTE</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="">
+                        <td class="ref-cell">CA</td>
+                        <td class="libelle-cell">Capital</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-100 000 000</td>
+                        <td class="montant-cell">-100 000 000</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CB</td>
+                        <td class="libelle-cell">Apporteurs, capital non appelÃ©</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CD</td>
+                        <td class="libelle-cell">Primes liÃ©es au capital social</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CE</td>
+                        <td class="libelle-cell">Ãcarts de rÃ©Ã©valuation</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CF</td>
+                        <td class="libelle-cell">RÃ©serves indisponibles</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-20 000 000</td>
+                        <td class="montant-cell">-20 000 000</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CG</td>
+                        <td class="libelle-cell">RÃ©serves libres</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-625 269 236</td>
+                        <td class="montant-cell">-625 269 236</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CH</td>
+                        <td class="libelle-cell">Report Ã  nouveau</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">670 703 269</td>
+                        <td class="montant-cell">670 703 269</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CI</td>
+                        <td class="libelle-cell">RÃ©sultat net de l'exercice</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CJ</td>
+                        <td class="libelle-cell">Subventions d'investissement</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CK</td>
+                        <td class="libelle-cell">Provisions rÃ©glementÃ©es</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">CP</td>
+                        <td class="libelle-cell">TOTAL CAPITAUX PROPRES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DA</td>
+                        <td class="libelle-cell">Emprunts et dettes financiÃ¨res diverses</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-203 178 477</td>
+                        <td class="montant-cell">-203 178 477</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DB</td>
+                        <td class="libelle-cell">Dettes de location-acquisition</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DC</td>
+                        <td class="libelle-cell">Provisions pour risques et charges</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-92 958 586</td>
+                        <td class="montant-cell">-92 958 586</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">DD</td>
+                        <td class="libelle-cell">TOTAL DETTES FINANCIÃRES ET RESSOURCES ASSIMILÃES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">DF</td>
+                        <td class="libelle-cell">TOTAL RESSOURCES STABLES</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">DH</td>
+                        <td class="libelle-cell">PASSIF CIRCULANT HAO</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DI</td>
+                        <td class="libelle-cell">Clients, avances reÃ§ues</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-24 249 359</td>
+                        <td class="montant-cell">-24 249 359</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DJ</td>
+                        <td class="libelle-cell">Fournisseurs d'exploitation</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-1 704 219 954</td>
+                        <td class="montant-cell">-1 704 219 954</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DK</td>
+                        <td class="libelle-cell">Dettes fiscales et sociales</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">89 800 356</td>
+                        <td class="montant-cell">89 800 356</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DM</td>
+                        <td class="libelle-cell">Autres dettes</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">420 660 416</td>
+                        <td class="montant-cell">420 660 416</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DN</td>
+                        <td class="libelle-cell">Provisions pour risques Ã  court terme</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">DP</td>
+                        <td class="libelle-cell">TOTAL PASSIF CIRCULANT</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DQ</td>
+                        <td class="libelle-cell">Banques, crÃ©dits d'escompte</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DR</td>
+                        <td class="libelle-cell">Banques, Ã©tablissements financiers et crÃ©dits de trÃ©sorerie</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-524 048 587</td>
+                        <td class="montant-cell">-524 048 587</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">DT</td>
+                        <td class="libelle-cell">TOTAL TRÃSORERIE-PASSIF</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">DU</td>
+                        <td class="libelle-cell">Ãcarts de conversion-Passif</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">DZ</td>
+                        <td class="libelle-cell">TOTAL GÃNÃRAL</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="compte_resultat">
+        <div class="section-header-ef">
+            <span>ð COMPTE DE RÃSULTAT</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 60px;">NOTE</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="">
+                        <td class="ref-cell">TA</td>
+                        <td class="libelle-cell">Ventes de marchandises</td>
+                        <td class="note-cell">21</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RA</td>
+                        <td class="libelle-cell">Achats de marchandises</td>
+                        <td class="note-cell">22</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RB</td>
+                        <td class="libelle-cell">Variation de stocks de marchandises</td>
+                        <td class="note-cell">6</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XA</td>
+                        <td class="libelle-cell">MARGE COMMERCIALE (TA - RA - RB)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TB</td>
+                        <td class="libelle-cell">Ventes de produits fabriquÃ©s</td>
+                        <td class="note-cell">21</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TC</td>
+                        <td class="libelle-cell">Travaux, services vendus</td>
+                        <td class="note-cell">21</td>
+                        <td class="montant-cell">413 504 318</td>
+                        <td class="montant-cell">413 504 318</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TD</td>
+                        <td class="libelle-cell">Produits accessoires</td>
+                        <td class="note-cell">21</td>
+                        <td class="montant-cell">460 147 026</td>
+                        <td class="montant-cell">460 147 026</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">TE</td>
+                        <td class="libelle-cell">CHIFFRE D'AFFAIRES (TB + TC + TD)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">873 651 344</td>
+                        <td class="montant-cell">873 651 344</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TF</td>
+                        <td class="libelle-cell">Production stockÃ©e (ou dÃ©stockage)</td>
+                        <td class="note-cell">6</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TG</td>
+                        <td class="libelle-cell">Production immobilisÃ©e</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TH</td>
+                        <td class="libelle-cell">Subventions d'exploitation</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TI</td>
+                        <td class="libelle-cell">Autres produits</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">4 650 288</td>
+                        <td class="montant-cell">4 650 288</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TJ</td>
+                        <td class="libelle-cell">Transferts de charges d'exploitation</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">24 974 688</td>
+                        <td class="montant-cell">24 974 688</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RC</td>
+                        <td class="libelle-cell">Achats de matiÃ¨res premiÃ¨res et fournitures liÃ©es</td>
+                        <td class="note-cell">22</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RD</td>
+                        <td class="libelle-cell">Variation de stocks de matiÃ¨res premiÃ¨res</td>
+                        <td class="note-cell">6</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RE</td>
+                        <td class="libelle-cell">Autres achats</td>
+                        <td class="note-cell">22</td>
+                        <td class="montant-cell">26 833 563</td>
+                        <td class="montant-cell">26 833 563</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RF</td>
+                        <td class="libelle-cell">Variation de stocks d'autres approvisionnements</td>
+                        <td class="note-cell">6</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RG</td>
+                        <td class="libelle-cell">Transports</td>
+                        <td class="note-cell">23</td>
+                        <td class="montant-cell">14 383 240</td>
+                        <td class="montant-cell">14 383 240</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RH</td>
+                        <td class="libelle-cell">Services extÃ©rieurs A</td>
+                        <td class="note-cell">24</td>
+                        <td class="montant-cell">372 196 015</td>
+                        <td class="montant-cell">372 196 015</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RI</td>
+                        <td class="libelle-cell">Services extÃ©rieurs B</td>
+                        <td class="note-cell">24</td>
+                        <td class="montant-cell">104 988 690</td>
+                        <td class="montant-cell">104 988 690</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RJ</td>
+                        <td class="libelle-cell">ImpÃ´ts et taxes</td>
+                        <td class="note-cell">26</td>
+                        <td class="montant-cell">22 468 571</td>
+                        <td class="montant-cell">22 468 571</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RK</td>
+                        <td class="libelle-cell">Autres charges</td>
+                        <td class="note-cell">27</td>
+                        <td class="montant-cell">467 293</td>
+                        <td class="montant-cell">467 293</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XB</td>
+                        <td class="libelle-cell">VALEUR AJOUTÃE (XA + TE + TF + TG + TH + TI + TJ - RC - RD - RE - RF - RG - RH - RI - RJ - RK)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">361 938 948</td>
+                        <td class="montant-cell">361 938 948</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RL</td>
+                        <td class="libelle-cell">Charges de personnel</td>
+                        <td class="note-cell">25</td>
+                        <td class="montant-cell">383 363 675</td>
+                        <td class="montant-cell">383 363 675</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XC</td>
+                        <td class="libelle-cell">EXCÃDENT BRUT D'EXPLOITATION (XB - RL)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-21 424 727</td>
+                        <td class="montant-cell">-21 424 727</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TK</td>
+                        <td class="libelle-cell">Reprises d'amortissements, provisions et dÃ©prÃ©ciations</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">36 765 365</td>
+                        <td class="montant-cell">36 765 365</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RM</td>
+                        <td class="libelle-cell">Dotations aux amortissements, aux provisions et dÃ©prÃ©ciations</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">113 145 202</td>
+                        <td class="montant-cell">113 145 202</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XD</td>
+                        <td class="libelle-cell">RÃSULTAT D'EXPLOITATION (XC + TK - RM)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-97 804 564</td>
+                        <td class="montant-cell">-97 804 564</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TL</td>
+                        <td class="libelle-cell">Revenus financiers et assimilÃ©s</td>
+                        <td class="note-cell">28</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TM</td>
+                        <td class="libelle-cell">Reprises de provisions et dÃ©prÃ©ciations financiÃ¨res</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TN</td>
+                        <td class="libelle-cell">Transferts de charges financiÃ¨res</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RN</td>
+                        <td class="libelle-cell">Frais financiers et charges assimilÃ©es</td>
+                        <td class="note-cell">29</td>
+                        <td class="montant-cell">88 275 049</td>
+                        <td class="montant-cell">88 275 049</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RO</td>
+                        <td class="libelle-cell">Dotations aux provisions et dÃ©prÃ©ciations financiÃ¨res</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XE</td>
+                        <td class="libelle-cell">RÃSULTAT FINANCIER (TL + TM + TN - RN - RO)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-88 275 049</td>
+                        <td class="montant-cell">-88 275 049</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XF</td>
+                        <td class="libelle-cell">RÃSULTAT DES ACTIVITÃS ORDINAIRES (XD + XE)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-186 079 613</td>
+                        <td class="montant-cell">-186 079 613</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TO</td>
+                        <td class="libelle-cell">Produits des cessions d'immobilisations</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">3 150 000</td>
+                        <td class="montant-cell">3 150 000</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TP</td>
+                        <td class="libelle-cell">Autres produits HAO</td>
+                        <td class="note-cell">30</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RQ</td>
+                        <td class="libelle-cell">Valeurs comptables des cessions d'immobilisations</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RR</td>
+                        <td class="libelle-cell">Autres charges HAO</td>
+                        <td class="note-cell">31</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XG</td>
+                        <td class="libelle-cell">RÃSULTAT HORS ACTIVITÃS ORDINAIRES (TO + TP - RQ - RR)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">3 150 000</td>
+                        <td class="montant-cell">3 150 000</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RS</td>
+                        <td class="libelle-cell">Participation des travailleurs</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RT</td>
+                        <td class="libelle-cell">ImpÃ´ts sur le rÃ©sultat</td>
+                        <td class="note-cell">32</td>
+                        <td class="montant-cell">6 610 887</td>
+                        <td class="montant-cell">6 610 887</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">XI</td>
+                        <td class="libelle-cell">RÃSULTAT NET (XF + XG - RS - RT)</td>
+                        <td class="note-cell"></td>
+                        <td class="montant-cell">-189 540 500</td>
+                        <td class="montant-cell">-189 540 500</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="tft">
+        <div class="section-header-ef">
+            <span>ð§ TABLEAU DES FLUX DE TRÃSORERIE (TFT)</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="total-row">
+                        <td class="ref-cell">ZA</td>
+                        <td class="libelle-cell">TrÃ©sorerie nette au 1er janvier</td>
+                        <td class="montant-cell">-480 540 218</td>
+                        <td class="montant-cell">-480 540 218</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FA</td>
+                        <td class="libelle-cell">CapacitÃ© d'Autofinancement Globale (CAFG)</td>
+                        <td class="montant-cell">-141 285 351</td>
+                        <td class="montant-cell">-141 285 351</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FB</td>
+                        <td class="libelle-cell">Variation actif circulant HAO</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FC</td>
+                        <td class="libelle-cell">Variation des stocks</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FD</td>
+                        <td class="libelle-cell">Variation des crÃ©ances</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FE</td>
+                        <td class="libelle-cell">Variation du passif circulant</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">ZB</td>
+                        <td class="libelle-cell">FLUX OPÃRATIONNELS</td>
+                        <td class="montant-cell">-141 285 351</td>
+                        <td class="montant-cell">-141 285 351</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FF</td>
+                        <td class="libelle-cell">DÃ©caissements acquisitions immobilisations incorporelles</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FG</td>
+                        <td class="libelle-cell">DÃ©caissements acquisitions immobilisations corporelles</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FH</td>
+                        <td class="libelle-cell">DÃ©caissements acquisitions immobilisations financiÃ¨res</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FI</td>
+                        <td class="libelle-cell">Encaissements cessions immobilisations</td>
+                        <td class="montant-cell">3 150 000</td>
+                        <td class="montant-cell">3 150 000</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">ZC</td>
+                        <td class="libelle-cell">FLUX D'INVESTISSEMENT</td>
+                        <td class="montant-cell">3 150 000</td>
+                        <td class="montant-cell">3 150 000</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FJ</td>
+                        <td class="libelle-cell">Augmentation de capital</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FK</td>
+                        <td class="libelle-cell">Dividendes versÃ©s</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FL</td>
+                        <td class="libelle-cell">Nouveaux emprunts</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">FM</td>
+                        <td class="libelle-cell">Remboursements emprunts</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">ZD</td>
+                        <td class="libelle-cell">FLUX DE FINANCEMENT</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">ZE</td>
+                        <td class="libelle-cell">VARIATION DE TRÃSORERIE</td>
+                        <td class="montant-cell">-138 135 351</td>
+                        <td class="montant-cell">-138 135 351</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">ZF</td>
+                        <td class="libelle-cell">TrÃ©sorerie nette au 31 dÃ©cembre</td>
+                        <td class="montant-cell">-480 540 218</td>
+                        <td class="montant-cell">-480 540 218</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="annexes">
+        <div class="section-header-ef">
+            <span>ð NOTES ANNEXES</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+    
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 3A - Immobilisations incorporelles
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">AD</td>
+                            <td class="libelle-cell">IMMOBILISATIONS INCORPORELLES</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AE</td>
+                            <td class="libelle-cell">Frais de recherche et de dÃ©veloppement</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AF</td>
+                            <td class="libelle-cell">Brevets, licences, logiciels</td>
+                            <td class="montant-cell">1</td>
+                            <td class="montant-cell">1</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AG</td>
+                            <td class="libelle-cell">Fonds commercial</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AH</td>
+                            <td class="libelle-cell">Autres immobilisations incorporelles</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 3B - Immobilisations corporelles
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">AI</td>
+                            <td class="libelle-cell">IMMOBILISATIONS CORPORELLES</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AJ</td>
+                            <td class="libelle-cell">Terrains</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AK</td>
+                            <td class="libelle-cell">BÃ¢timents</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AL</td>
+                            <td class="libelle-cell">Installations et agencements</td>
+                            <td class="montant-cell">26 020 175</td>
+                            <td class="montant-cell">26 020 175</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AM</td>
+                            <td class="libelle-cell">MatÃ©riel</td>
+                            <td class="montant-cell">71 991 956</td>
+                            <td class="montant-cell">71 991 956</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AN</td>
+                            <td class="libelle-cell">MatÃ©riel de transport</td>
+                            <td class="montant-cell">22 858 208</td>
+                            <td class="montant-cell">22 858 208</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 4 - Immobilisations financiÃ¨res
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">AQ</td>
+                            <td class="libelle-cell">IMMOBILISATIONS FINANCIÃRES</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AR</td>
+                            <td class="libelle-cell">Titres de participation</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">AS</td>
+                            <td class="libelle-cell">Autres immobilisations financiÃ¨res</td>
+                            <td class="montant-cell">143 030 200</td>
+                            <td class="montant-cell">143 030 200</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 6 - Ãtat des stocks
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">BB</td>
+                            <td class="libelle-cell">STOCKS ET ENCOURS</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BG</td>
+                            <td class="libelle-cell">Marchandises</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BH</td>
+                            <td class="libelle-cell">MatiÃ¨res premiÃ¨res et autres approvisionnements</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BI</td>
+                            <td class="libelle-cell">En-cours</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BJ</td>
+                            <td class="libelle-cell">Produits fabriquÃ©s</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 7 - Ãtat des crÃ©ances
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">BK</td>
+                            <td class="libelle-cell">CRÃANCES ET EMPLOIS ASSIMILÃS</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BM</td>
+                            <td class="libelle-cell">Clients</td>
+                            <td class="montant-cell">2 420 668 353</td>
+                            <td class="montant-cell">2 420 668 353</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BN</td>
+                            <td class="libelle-cell">Autres crÃ©ances</td>
+                            <td class="montant-cell">420 660 416</td>
+                            <td class="montant-cell">420 660 416</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 8 - TrÃ©sorerie-Actif
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">BQ</td>
+                            <td class="libelle-cell">TRÃSORERIE-ACTIF</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">BR</td>
+                            <td class="libelle-cell">Banques, chÃ¨ques postaux, caisse</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 10 - Capital social
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="">
+                            <td class="ref-cell">CA</td>
+                            <td class="libelle-cell">Capital</td>
+                            <td class="montant-cell">-100 000 000</td>
+                            <td class="montant-cell">-100 000 000</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">CB</td>
+                            <td class="libelle-cell">Apporteurs, capital non appelÃ©</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 11 - RÃ©serves et report Ã  nouveau
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="">
+                            <td class="ref-cell">CC</td>
+                            <td class="libelle-cell">Primes liÃ©es au capital social</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">CD</td>
+                            <td class="libelle-cell">Ãcarts de rÃ©Ã©valuation</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">CE</td>
+                            <td class="libelle-cell">RÃ©serves indisponibles</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">CF</td>
+                            <td class="libelle-cell">RÃ©serves libres</td>
+                            <td class="montant-cell">-20 000 000</td>
+                            <td class="montant-cell">-20 000 000</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">CG</td>
+                            <td class="libelle-cell">Report Ã  nouveau</td>
+                            <td class="montant-cell">-625 269 236</td>
+                            <td class="montant-cell">-625 269 236</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 13 - RÃ©sultat net de l'exercice
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">XI</td>
+                            <td class="libelle-cell">RÃSULTAT NET</td>
+                            <td class="montant-cell">-189 540 500</td>
+                            <td class="montant-cell">-189 540 500</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 14 - Emprunts et dettes financiÃ¨res
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="">
+                            <td class="ref-cell">DA</td>
+                            <td class="libelle-cell">Emprunts</td>
+                            <td class="montant-cell">-203 178 477</td>
+                            <td class="montant-cell">-203 178 477</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DB</td>
+                            <td class="libelle-cell">Dettes de crÃ©dit-bail et contrats assimilÃ©s</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DC</td>
+                            <td class="libelle-cell">Dettes financiÃ¨res diverses</td>
+                            <td class="montant-cell">-92 958 586</td>
+                            <td class="montant-cell">-92 958 586</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 16 - Dettes circulantes et ressources assimilÃ©es
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="total-row">
+                            <td class="ref-cell">DH</td>
+                            <td class="libelle-cell">DETTES CIRCULANTES ET RESSOURCES ASSIMILÃES</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DI</td>
+                            <td class="libelle-cell">Clients, avances reÃ§ues</td>
+                            <td class="montant-cell">-24 249 359</td>
+                            <td class="montant-cell">-24 249 359</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DJ</td>
+                            <td class="libelle-cell">Fournisseurs d'exploitation</td>
+                            <td class="montant-cell">-1 704 219 954</td>
+                            <td class="montant-cell">-1 704 219 954</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DK</td>
+                            <td class="libelle-cell">Dettes fiscales</td>
+                            <td class="montant-cell">89 800 356</td>
+                            <td class="montant-cell">89 800 356</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DL</td>
+                            <td class="libelle-cell">Dettes sociales</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">DM</td>
+                            <td class="libelle-cell">Autres dettes</td>
+                            <td class="montant-cell">420 660 416</td>
+                            <td class="montant-cell">420 660 416</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 21 - Chiffre d'affaires
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="">
+                            <td class="ref-cell">TA</td>
+                            <td class="libelle-cell">Ventes de marchandises</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">TB</td>
+                            <td class="libelle-cell">Ventes de produits fabriquÃ©s</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">TC</td>
+                            <td class="libelle-cell">Travaux, services vendus</td>
+                            <td class="montant-cell">413 504 318</td>
+                            <td class="montant-cell">413 504 318</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 22 - Achats consommÃ©s
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="">
+                            <td class="ref-cell">RA</td>
+                            <td class="libelle-cell">Achats de marchandises</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">RB</td>
+                            <td class="libelle-cell">Variation de stocks de marchandises</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">RC</td>
+                            <td class="libelle-cell">Achats de matiÃ¨res premiÃ¨res</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">RD</td>
+                            <td class="libelle-cell">Variation de stocks de matiÃ¨res</td>
+                            <td class="montant-cell">-</td>
+                            <td class="montant-cell">-</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+            <div style="margin: 16px 0; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 12px 16px; font-weight: 600;">
+                    NOTE 24 - Charges de personnel
+                </div>
+                <table class="liasse-table" style="margin: 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">REF</th>
+                            <th style="width: auto;">LIBELLÃS</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                            <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        
+                        <tr class="">
+                            <td class="ref-cell">RK</td>
+                            <td class="libelle-cell">Salaires et traitements</td>
+                            <td class="montant-cell">467 293</td>
+                            <td class="montant-cell">467 293</td>
+                        </tr>
+            
+                        <tr class="">
+                            <td class="ref-cell">RL</td>
+                            <td class="libelle-cell">Charges sociales</td>
+                            <td class="montant-cell">383 363 675</td>
+                            <td class="montant-cell">383 363 675</td>
+                        </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="etat_controle_bilan_actif">
+        <div class="section-header-ef">
+            <span>ð Etat de contrÃ´le Bilan Actif</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="total-row">
+                        <td class="ref-cell">CA</td>
+                        <td class="libelle-cell">Total Actif</td>
+                        <td class="montant-cell">2 624 689 091</td>
+                        <td class="montant-cell">2 624 689 091</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CB</td>
+                        <td class="libelle-cell">Nombre de postes (N)</td>
+                        <td class="montant-cell">8</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">CC</td>
+                        <td class="libelle-cell">Nombre de postes (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">8</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">CD</td>
+                        <td class="libelle-cell">Variation Total</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="etat_controle_bilan_passif">
+        <div class="section-header-ef">
+            <span>ð Etat de contrÃ´le Bilan Passif</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="total-row">
+                        <td class="ref-cell">PA</td>
+                        <td class="libelle-cell">Total Passif</td>
+                        <td class="montant-cell">-2 112 760 158</td>
+                        <td class="montant-cell">-2 112 760 158</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">PB</td>
+                        <td class="libelle-cell">Nombre de postes (N)</td>
+                        <td class="montant-cell">11</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">PC</td>
+                        <td class="libelle-cell">Nombre de postes (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">11</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">PD</td>
+                        <td class="libelle-cell">Variation Total</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="etat_controle_compte_resultat">
+        <div class="section-header-ef">
+            <span>ð Etat de contrÃ´le Compte de RÃ©sultat</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="">
+                        <td class="ref-cell">RA</td>
+                        <td class="libelle-cell">RÃ©sultat Net (N)</td>
+                        <td class="montant-cell">-189 540 500</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RB</td>
+                        <td class="libelle-cell">RÃ©sultat Net (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-189 540 500</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RC</td>
+                        <td class="libelle-cell">Nombre de postes (N)</td>
+                        <td class="montant-cell">24</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">RD</td>
+                        <td class="libelle-cell">Nombre de postes (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">24</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">RE</td>
+                        <td class="libelle-cell">Variation RÃ©sultat</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="etat_controle_tft">
+        <div class="section-header-ef">
+            <span>ð Etat de contrÃ´le Tableau des Flux de TrÃ©sorerie</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="">
+                        <td class="ref-cell">TA</td>
+                        <td class="libelle-cell">TrÃ©sorerie finale (N)</td>
+                        <td class="montant-cell">-480 540 218</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TB</td>
+                        <td class="libelle-cell">TrÃ©sorerie finale (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-480 540 218</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">TC</td>
+                        <td class="libelle-cell">Variation trÃ©sorerie (N)</td>
+                        <td class="montant-cell">-138 135 351</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">TD</td>
+                        <td class="libelle-cell">Variation trÃ©sorerie (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-138 135 351</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TE</td>
+                        <td class="libelle-cell">Flux opÃ©rationnels (N)</td>
+                        <td class="montant-cell">-141 285 351</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">TF</td>
+                        <td class="libelle-cell">Flux opÃ©rationnels (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-141 285 351</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="etat_controle_sens_comptes">
+        <div class="section-header-ef">
+            <span>ð Etat de contrÃ´le Sens des Comptes</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="">
+                        <td class="ref-cell">SA</td>
+                        <td class="libelle-cell">Comptes en dÃ©bit (N)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">SB</td>
+                        <td class="libelle-cell">Comptes en crÃ©dit (N)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">SC</td>
+                        <td class="libelle-cell">Comptes en dÃ©bit (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">SD</td>
+                        <td class="libelle-cell">Comptes en crÃ©dit (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">SE</td>
+                        <td class="libelle-cell">Total dÃ©bit (N)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">SF</td>
+                        <td class="libelle-cell">Total crÃ©dit (N)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">SG</td>
+                        <td class="libelle-cell">Total dÃ©bit (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">SH</td>
+                        <td class="libelle-cell">Total crÃ©dit (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">SI</td>
+                        <td class="libelle-cell">Ãquilibre (N)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">SJ</td>
+                        <td class="libelle-cell">Ãquilibre (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="etats-fin-section" data-section="etat_equilibre_bilan">
+        <div class="section-header-ef">
+            <span>ð Etat d'Ã©quilibre Bilan</span>
+            <span class="arrow">âº</span>
+        </div>
+        <div class="section-content-ef">
+            <table class="liasse-table">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">REF</th>
+                        <th style="width: auto;">LIBELLÃS</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                        <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                    <tr class="total-row">
+                        <td class="ref-cell">EA</td>
+                        <td class="libelle-cell">Total Actif (N)</td>
+                        <td class="montant-cell">2 624 689 091</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">EB</td>
+                        <td class="libelle-cell">Total Passif (N)</td>
+                        <td class="montant-cell">-2 112 760 158</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">EC</td>
+                        <td class="libelle-cell">RÃ©sultat Net (N)</td>
+                        <td class="montant-cell">-189 540 500</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">ED</td>
+                        <td class="libelle-cell">Passif + RÃ©sultat (N)</td>
+                        <td class="montant-cell">-2 302 300 658</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">EE</td>
+                        <td class="libelle-cell">Ãquilibre (N)</td>
+                        <td class="montant-cell">4 926 989 749</td>
+                        <td class="montant-cell">-</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">EF</td>
+                        <td class="libelle-cell">Total Actif (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">2 624 689 091</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">EG</td>
+                        <td class="libelle-cell">Total Passif (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-2 112 760 158</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">EH</td>
+                        <td class="libelle-cell">RÃ©sultat Net (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-189 540 500</td>
+                    </tr>
+        
+                    <tr class="">
+                        <td class="ref-cell">EI</td>
+                        <td class="libelle-cell">Passif + RÃ©sultat (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">-2 302 300 658</td>
+                    </tr>
+        
+                    <tr class="total-row">
+                        <td class="ref-cell">EJ</td>
+                        <td class="libelle-cell">Ãquilibre (N-1)</td>
+                        <td class="montant-cell">-</td>
+                        <td class="montant-cell">4 926 989 749</td>
+                    </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+            <script>
+            document.querySelectorAll('.section-header-ef').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    content.classList.toggle('active');
+                });
+            });
+            </script>
+            

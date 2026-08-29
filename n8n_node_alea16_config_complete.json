@@ -1,0 +1,54 @@
+{
+  "name": "Alea16",
+  "type": "n8n-nodes-base.set",
+  "typeVersion": 3.3,
+  "position": [1200, 300],
+  "parameters": {
+    "mode": "manual",
+    "duplicateItem": false,
+    "assignments": {
+      "assignments": [
+        {
+          "name": "alea",
+          "value": "={{ Math.floor(Math.random() * 4) + 1 }}",
+          "type": "number"
+        },
+        {
+          "name": "command",
+          "value": "={{ $json.command }}",
+          "type": "string"
+        },
+        {
+          "name": "cycle",
+          "value": "={{ $json.cycle }}",
+          "type": "string"
+        },
+        {
+          "name": "test",
+          "value": "={{ $json.test }}",
+          "type": "string"
+        },
+        {
+          "name": "reference",
+          "value": "={{ $json.reference }}",
+          "type": "string"
+        },
+        {
+          "name": "nature_test",
+          "value": "={{ $json.nature_test }}",
+          "type": "string"
+        },
+        {
+          "name": "assertion",
+          "value": "={{ $json.assertion }}",
+          "type": "string"
+        },
+        {
+          "name": "anomalie",
+          "value": "={{ $json.anomalie }}",
+          "type": "string"
+        }
+      ]
+    }
+  }
+}

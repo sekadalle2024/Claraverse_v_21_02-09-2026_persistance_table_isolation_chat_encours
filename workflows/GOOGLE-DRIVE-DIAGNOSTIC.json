@@ -1,0 +1,68 @@
+{
+  "name": "Google Drive - DIAGNOSTIC Simple",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "diagnostic-drive",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-diag",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 340],
+      "webhookId": "diagnostic-drive"
+    },
+    {
+      "parameters": {
+        "resource": "drive",
+        "operation": "list",
+        "options": {}
+      },
+      "id": "gd-diag-1",
+      "name": "Liste Drives",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [420, 340],
+      "alwaysOutputData": true,
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "jsCode": "// Diagnostic de la connexion Google Drive\nconst items = $input.all();\n\nreturn [{\n  json: {\n    diagnostic: true,\n    timestamp: new Date().toISOString(),\n    connexion: items.length > 0 ? 'OK' : 'ECHEC - Aucun drive trouvé',\n    nombreDrives: items.length,\n    drives: items.map(i => ({\n      id: i.json.id,\n      name: i.json.name,\n      kind: i.json.kind\n    })),\n    conseil: items.length === 0 \n      ? 'Vérifiez: 1) Credential Google Drive configuré sur le node, 2) OAuth2 avec scope drive ou drive.readonly, 3) Compte a accès à des fichiers'\n      : 'Connexion OK - Passez au test des fichiers'\n  }\n}];"
+      },
+      "id": "code-diag",
+      "name": "Diagnostic",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-diag",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [860, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Liste Drives", "type": "main", "index": 0}]]
+    },
+    "Liste Drives": {
+      "main": [[{"node": "Diagnostic", "type": "main", "index": 0}]]
+    },
+    "Diagnostic": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"}
+}

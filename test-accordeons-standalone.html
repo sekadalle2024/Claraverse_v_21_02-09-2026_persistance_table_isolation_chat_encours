@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Accordéons - Standalone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .section-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.5em;
+        }
+        
+        .section.active .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .section.active .section-content {
+            max-height: 2000px;
+        }
+        
+        .section-body {
+            padding: 20px;
+        }
+        
+        .test-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .error {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Accordéons - Standalone</h1>
+        
+        <div class="test-info">
+            <h3>Instructions de test:</h3>
+            <ol>
+                <li>Ouvrir la console du navigateur (F12)</li>
+                <li>Cliquer sur les sections ci-dessous</li>
+                <li>Vérifier les logs dans la console</li>
+                <li>Vérifier que les sections s'ouvrent et se ferment</li>
+            </ol>
+        </div>
+        
+        <!-- Section 1 -->
+        <div class="section">
+            <div class="section-header">
+                <span>📊 Section 1 - Test Accordéon</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="section-content">
+                <div class="section-body">
+                    <div class="success">
+                        <h4>✅ Section 1 ouverte!</h4>
+                        <p>Si vous voyez ce texte, l'accordéon fonctionne correctement.</p>
+                    </div>
+                    <p>Contenu de la section 1...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 2 -->
+        <div class="section">
+            <div class="section-header">
+                <span>⚖️ Section 2 - Test Accordéon</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="section-content">
+                <div class="section-body">
+                    <div class="success">
+                        <h4>✅ Section 2 ouverte!</h4>
+                        <p>Si vous voyez ce texte, l'accordéon fonctionne correctement.</p>
+                    </div>
+                    <p>Contenu de la section 2...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 3 -->
+        <div class="section">
+            <div class="section-header">
+                <span>💰 Section 3 - Test Accordéon</span>
+                <span class="arrow">›</span>
+            </div>
+            <div class="section-content">
+                <div class="section-body">
+                    <div class="success">
+                        <h4>✅ Section 3 ouverte!</h4>
+                        <p>Si vous voyez ce texte, l'accordéon fonctionne correctement.</p>
+                    </div>
+                    <p>Contenu de la section 3...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="test-results" style="margin-top: 30px;"></div>
+    </div>
+    
+    <script>
+        // Script de test identique à EtatsControleAccordeonHandler.js
+        (function() {
+            'use strict';
+            
+            console.log('🔧 Test Accordéons: Initialisation...');
+            
+            function toggleSection(header) {
+                if (!header) return;
+                
+                const section = header.parentElement;
+                if (!section) return;
+                
+                section.classList.toggle('active');
+                
+                const isOpen = section.classList.contains('active');
+                console.log('✅ Section toggled:', isOpen ? 'Ouvert' : 'Fermé');
+                
+                // Afficher le résultat
+                showTestResult(isOpen);
+            }
+            
+            // Exposer globalement
+            window.toggleSection = toggleSection;
+            
+            function initializeAccordeons() {
+                const headers = document.querySelectorAll('.section-header');
+                
+                console.log(`📊 Nombre de sections trouvées: ${headers.length}`);
+                
+                if (headers.length === 0) {
+                    console.warn('⚠️ Aucune section .section-header trouvée');
+                    return;
+                }
+                
+                headers.forEach((header, index) => {
+                    // Supprimer onclick si existe
+                    if (header.hasAttribute('onclick')) {
+                        header.removeAttribute('onclick');
+                        console.log(`🔧 Attribut onclick supprimé de la section ${index + 1}`);
+                    }
+                    
+                    // Vérifier si déjà attaché
+                    if (header.dataset.listenerAttached === 'true') {
+                        console.log(`⏭️ Listener déjà attaché sur section ${index + 1}`);
+                        return;
+                    }
+                    
+                    // Ajouter listener
+                    header.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log(`🖱️ Clic détecté sur section ${index + 1}`);
+                        toggleSection(this);
+                    });
+                    
+                    header.dataset.listenerAttached = 'true';
+                    
+                    console.log(`✅ Listener ajouté sur section ${index + 1}`);
+                });
+                
+                console.log('🎉 Tous les accordéons sont initialisés!');
+            }
+            
+            function showTestResult(isOpen) {
+                const resultsDiv = document.getElementById('test-results');
+                const timestamp = new Date().toLocaleTimeString();
+                const resultClass = isOpen ? 'success' : 'error';
+                const resultText = isOpen ? 'Section ouverte' : 'Section fermée';
+                
+                resultsDiv.innerHTML = `
+                    <div class="${resultClass}">
+                        <strong>${timestamp}</strong>: ${resultText}
+                    </div>
+                ` + resultsDiv.innerHTML;
+            }
+            
+            // Initialiser
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeAccordeons);
+            } else {
+                initializeAccordeons();
+            }
+            
+            window.reinitializeAccordeons = initializeAccordeons;
+            
+            console.log('✅ Test Accordéons: Prêt!');
+        })();
+    </script>
+</body>
+</html>

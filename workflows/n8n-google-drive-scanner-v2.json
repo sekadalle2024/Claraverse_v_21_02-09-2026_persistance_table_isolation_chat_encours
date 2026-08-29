@@ -1,0 +1,117 @@
+{
+  "name": "Google Drive Scanner V2 - Structure Complète",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "scan-drive-v2",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1b2c3d4-1111-2222-3333-444455556666",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "limit": 1000,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "root"
+          },
+          "whatToList": "all",
+          "trashed": false
+        },
+        "options": {
+          "fields": ["id", "name", "mimeType", "parents"]
+        }
+      },
+      "id": "a1b2c3d4-2222-3333-4444-555566667777",
+      "name": "Google Drive - List All",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [400, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REMPLACER_PAR_VOTRE_CREDENTIAL_ID",
+          "name": "Google Cloud novembre"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer tous les éléments\nconst items = $input.all();\n\n// Maps pour organiser les données\nconst foldersMap = new Map();\nconst filesMap = new Map();\nconst childrenMap = new Map(); // parentId -> [childIds]\n\n// Première passe : classifier tous les éléments\nfor (const item of items) {\n  const data = item.json;\n  const id = data.id;\n  const name = data.name;\n  const mimeType = data.mimeType;\n  const parentId = data.parents && data.parents.length > 0 ? data.parents[0] : 'root';\n  \n  // Initialiser la liste des enfants pour ce parent\n  if (!childrenMap.has(parentId)) {\n    childrenMap.set(parentId, []);\n  }\n  childrenMap.get(parentId).push(id);\n  \n  if (mimeType === 'application/vnd.google-apps.folder') {\n    foldersMap.set(id, {\n      id: id,\n      nom: name,\n      type: 'dossier',\n      parentId: parentId\n    });\n  } else {\n    filesMap.set(id, {\n      id: id,\n      nom: name,\n      type: 'fichier',\n      mimeType: mimeType,\n      parentId: parentId\n    });\n  }\n}\n\n// Fonction récursive pour construire l'arborescence d'un dossier\nfunction buildFolderContent(folderId) {\n  const result = {\n    sousDossiers: [],\n    fichiers: []\n  };\n  \n  const children = childrenMap.get(folderId) || [];\n  \n  for (const childId of children) {\n    if (foldersMap.has(childId)) {\n      const folder = foldersMap.get(childId);\n      const content = buildFolderContent(childId);\n      result.sousDossiers.push({\n        id: folder.id,\n        nom: folder.nom,\n        type: 'dossier',\n        sousDossiers: content.sousDossiers,\n        fichiers: content.fichiers\n      });\n    } else if (filesMap.has(childId)) {\n      const file = filesMap.get(childId);\n      result.fichiers.push({\n        id: file.id,\n        nom: file.nom,\n        type: 'fichier',\n        mimeType: file.mimeType\n      });\n    }\n  }\n  \n  return result;\n}\n\n// Trouver les éléments racine (parent = 'root' ou parent non trouvé)\nconst rootFolders = [];\nconst rootFiles = [];\n\nfor (const [id, folder] of foldersMap) {\n  if (folder.parentId === 'root' || !foldersMap.has(folder.parentId)) {\n    const content = buildFolderContent(id);\n    rootFolders.push({\n      id: folder.id,\n      nom: folder.nom,\n      type: 'dossier',\n      sousDossiers: content.sousDossiers,\n      fichiers: content.fichiers\n    });\n  }\n}\n\nfor (const [id, file] of filesMap) {\n  if (file.parentId === 'root' || !foldersMap.has(file.parentId)) {\n    rootFiles.push({\n      id: file.id,\n      nom: file.nom,\n      type: 'fichier',\n      mimeType: file.mimeType\n    });\n  }\n}\n\n// Construire la réponse finale\nconst response = {\n  success: true,\n  timestamp: new Date().toISOString(),\n  statistiques: {\n    totalDossiers: foldersMap.size,\n    totalFichiers: filesMap.size,\n    dossiersRacine: rootFolders.length,\n    fichiersRacine: rootFiles.length\n  },\n  arborescence: {\n    dossiers: rootFolders,\n    fichiers: rootFiles\n  }\n};\n\nreturn [{ json: response }];"
+      },
+      "id": "a1b2c3d4-3333-4444-5555-666677778888",
+      "name": "Build Tree Structure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "a1b2c3d4-4444-5555-6666-777788889999",
+      "name": "Respond Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [840, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Drive - List All",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive - List All": {
+      "main": [
+        [
+          {
+            "node": "Build Tree Structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Tree Structure": {
+      "main": [
+        [
+          {
+            "node": "Respond Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vérification Console - Page Blanche</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .instruction {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+        .important {
+            background: #fff3cd;
+            border-left-color: #ff9800;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .error-example {
+            background: #ffebee;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #f44336;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic Page Blanche - Vérification Console</h1>
+    
+    <div class="instruction">
+        <h2>📋 Instructions pour vérifier la console</h2>
+        
+        <div class="step">
+            <h3>Étape 1 : Ouvrir la console</h3>
+            <p>Sur http://localhost:5173/, appuyez sur <code>F12</code> ou <code>Ctrl+Shift+I</code></p>
+            <p>Cliquez sur l'onglet <strong>Console</strong></p>
+        </div>
+
+        <div class="step">
+            <h3>Étape 2 : Chercher les erreurs</h3>
+            <p>Regardez s'il y a des messages en <span style="color: red;">rouge</span></p>
+            <p>Les erreurs courantes pour une page blanche :</p>
+            
+            <div class="error-example">
+                ❌ Uncaught SyntaxError: Unexpected token
+            </div>
+            <div class="error-example">
+                ❌ Failed to resolve module specifier
+            </div>
+            <div class="error-example">
+                ❌ Uncaught ReferenceError: React is not defined
+            </div>
+            <div class="error-example">
+                ❌ Uncaught TypeError: Cannot read properties of null
+            </div>
+            <div class="error-example">
+                ❌ Error: A component suspended while responding to synchronous input
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>Étape 3 : Vérifier l'onglet Network</h3>
+            <p>Cliquez sur l'onglet <strong>Network</strong></p>
+            <p>Rechargez la page (<code>Ctrl+R</code>)</p>
+            <p>Cherchez des fichiers en <span style="color: red;">rouge</span> (erreur 404 ou 500)</p>
+        </div>
+    </div>
+
+    <div class="important">
+        <h2>⚠️ IMPORTANT</h2>
+        <p>Pendant que vous faites cela, je vais vérifier le fichier <code>src/main.tsx</code> qui est le point d'entrée de l'application.</p>
+        <p>Le problème est probablement là - une erreur empêche React de démarrer.</p>
+    </div>
+
+    <div class="instruction">
+        <h2>🔧 Test rapide dans la console</h2>
+        <p>Dans la console, tapez ces commandes une par une :</p>
+        
+        <div class="error-example" style="background: #e8f5e9; border-left-color: #4caf50;">
+document.getElementById('root')
+        </div>
+        <p>→ Devrait retourner un élément div</p>
+
+        <div class="error-example" style="background: #e8f5e9; border-left-color: #4caf50;">
+document.getElementById('root').innerHTML
+        </div>
+        <p>→ Devrait montrer ce qu'il y a dans le div (probablement vide)</p>
+
+        <div class="error-example" style="background: #e8f5e9; border-left-color: #4caf50;">
+window.React
+        </div>
+        <p>→ Vérifie si React est chargé</p>
+    </div>
+
+    <script>
+        console.log('📋 Page de diagnostic chargée');
+        console.log('👉 Maintenant, allez sur http://localhost:5173/ et ouvrez la console (F12)');
+    </script>
+</body>
+</html>

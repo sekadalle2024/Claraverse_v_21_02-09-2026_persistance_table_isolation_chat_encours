@@ -1,0 +1,628 @@
+- [Modification]
+    - Les nouvelles [Modification] a integrer, en gardant les anciennes modifications deja presentes dans le menu contextuel
+        - [Endpoint  - Etape x]
+            - - [Description]
+                - Permet d'envoyer sous format json le contenu outerHtlm de l’ensemble des tables qui se trouvent dans la même div que la table concernée , sous forme de [Json format] vers [endpoint n8n], et ensuite de remplacer le contenu de la table par les données Json retourner de [endpoint n8n] sous forme de Htlm a intégrer dans le  innerhtlm de la table concernée
+                - La table cible est la derniere table survolee ou dans laquelle un click a ete effectuee dans une cellule
+            - - [Action]
+                - - L’action est effectuée lorsque un click est effectué sur la rubrique du menu contectuel [Etape x]
+            - [Json format]
+                - Description
+                    - Le format json dans lequel collecter et transformer le outerhtlm des tables qui se trouvent dans la meme div que la table cible, avant de l’envoyer vers [Endpoint n8n]
+                - Exemple
+                    - [
+                    {
+                    "data": {
+                    "Etape mission - Programme": [
+                    {
+                    "table 1": {
+                    "Etape": "Programme de travail",
+                    "reference": "Prg-001"
+                    }
+                    },
+                    {
+                    "table 2": [
+                    {
+                    "Point de controle": "Existence d'un comptage contradictoire et d'une supervision formalisée de l'arrêté de caisse.",
+                    "risque": "Écarts de caisse récurrents non justifiés et non documentés.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "M",
+                    "controle audit": "Sélectionner un échantillon de PV d'arrêté de caisse et vérifier la présence systématique de la double signature (caissier + superviseur) ainsi que l'analyse et la justification des écarts.",
+                    "objectif de controle": "Assurer la fiabilité et l'exactitude du solde de caisse quotidien.",
+                    "document": "Procès-verbal d'arrêté de caisse, Fiche de justification des écarts."
+                    },
+                    {
+                    "Point de controle": "Réalisation effective et périodique de contrôles de caisse inopinés par un tiers indépendant.",
+                    "risque": "Dissimulation d'un détournement par l'absence de contrôles inopinés.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Obtenir les PV des contrôles inopinés sur les 12 derniers mois et vérifier leur fréquence (au moins trimestrielle), leur caractère contradictoire et le suivi des actions correctives.",
+                    "objectif de controle": "Prévenir et détecter la fraude par un effet dissuasif.",
+                    "document": "Procès-verbaux de contrôle de caisse inopiné, Plan d'action."
+                    },
+                    {
+                    "Point de controle": "Existence et application d'une procédure de double comptage systématique des espèces.",
+                    "risque": "Erreur de comptage des espèces lors de l'arrêté de caisse.",
+                    "évaluation risque": "F",
+                    "probabilité": "M",
+                    "impact": "F",
+                    "controle audit": "Observer un arrêté de caisse pour confirmer la procédure de double comptage. Interroger le caissier et le superviseur sur la méthode appliquée.",
+                    "objectif de controle": "Garantir l'exactitude du comptage physique des fonds.",
+                    "document": "Procédure de gestion de caisse, Observation physique."
+                    },
+                    {
+                    "Point de controle": "Formalisation systématique de l'arrêté de caisse via un document standardisé, daté et signé.",
+                    "risque": "Non-formalisation de l'arrêté de caisse par un PV daté et signé.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Vérifier sur un échantillon de journées que chaque arrêté de caisse a donné lieu à un PV en bonne et due forme, archivé avec le brouillard de caisse.",
+                    "objectif de controle": "Assurer la traçabilité et la piste d'audit des arrêtés de caisse.",
+                    "document": "Procès-verbal d'arrêté de caisse, Journal de caisse."
+                    },
+                    {
+                    "Point de controle": "Qualité de la tenue du brouillard de caisse (sans rature, chronologique, exhaustif).",
+                    "risque": "Brouillard de caisse mal tenu, raturé ou incomplet.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "M",
+                    "controle audit": "Examiner la tenue des brouillards de caisse sur une semaine. S'assurer que chaque ligne est justifiée par une pièce et que les corrections sont validées par le superviseur.",
+                    "objectif de controle": "Garantir l'intégrité et la fiabilité du document de suivi des mouvements de caisse.",
+                    "document": "Brouillard de caisse, Pièces justificatives (encaissement/décaissement)."
+                    },
+                    {
+                    "Point de controle": "Rapprochement périodique entre les journaux de caisse, les pièces justificatives et les remises en banque.",
+                    "risque": "Non-enregistrement volontaire ou involontaire d'une recette en espèces.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Sélectionner un échantillon de remises en banque et tracer les montants jusqu'aux journaux de caisse et aux souches de factures correspondantes pour vérifier l'exhaustivité.",
+                    "objectif de controle": "Assurer l'exhaustivité de l'enregistrement des recettes.",
+                    "document": "Journaux de caisse, Souches de factures, Bordereaux de remise en banque."
+                    },
+                    {
+                    "Point de controle": "Arrêté de caisse contradictoire quotidien pour justifier le solde.",
+                    "risque": "Erreur dans le rendu de monnaie au client.",
+                    "évaluation risque": "F",
+                    "probabilité": "M",
+                    "impact": "F",
+                    "controle audit": "Analyser les PV d'arrêté de caisse sur un mois et identifier la fréquence et le traitement des écarts de caisse (profits ou pertes).",
+                    "objectif de controle": "Détecter et corriger rapidement les erreurs de manipulation d'espèces.",
+                    "document": "Procès-verbal d'arrêté de caisse, Compte comptable des écarts de caisse."
+                    },
+                    {
+                    "Point de controle": "Vérification systématique de la pièce d'identité et des mentions obligatoires pour les paiements par chèque.",
+                    "risque": "Acceptation de chèques sans provision, volés ou falsifiés.",
+                    "évaluation risque": "F",
+                    "probabilité": "F",
+                    "impact": "M",
+                    "controle audit": "Interroger la caissière sur la procédure de vérification des chèques. Vérifier si la procédure est formalisée et connue.",
+                    "objectif de controle": "Minimiser le risque d'impayés sur les chèques.",
+                    "document": "Procédure d'encaissement, Entretien avec la caissière."
+                    },
+                    {
+                    "Point de controle": "Conservation des chèques en lieu sûr (coffre) et établissement quotidien des bordereaux de remise.",
+                    "risque": "Perte ou vol de chèques clients conservés en caisse avant leur remise en banque.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Vérifier physiquement le lieu de stockage des chèques en attente de remise. Rapprocher la date de réception des chèques avec leur date de remise effective en banque.",
+                    "objectif de controle": "Sécuriser les moyens de paiement et accélérer leur encaissement.",
+                    "document": "Bordereaux de remise, Relevés bancaires."
+                    },
+                    {
+                    "Point de controle": "Transmission et saisie comptable des opérations de caisse dans un délai défini (ex: 24h).",
+                    "risque": "Retard dans l'enregistrement comptable des recettes, faussant la position de trésorerie.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Pour un échantillon de brouillards de caisse, comparer la date de l'arrêté avec la date de saisie comptable pour mesurer le délai de traitement.",
+                    "objectif de controle": "Assurer une information comptable et de trésorerie à jour.",
+                    "document": "Brouillard de caisse, Journal comptable de caisse."
+                    },
+                    {
+                    "Point de controle": "Validation systématique par signature d'un responsable autorisé sur toutes les pièces de dépenses.",
+                    "risque": "Paiement de dépenses non autorisées, fictives ou à caractère personnel.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Sélectionner un échantillon de dépenses de caisse et vérifier la présence d'une signature d'approbation conforme à la délégation de pouvoir en vigueur.",
+                    "objectif de controle": "Garantir que toutes les dépenses de caisse sont légitimes et autorisées.",
+                    "document": "Pièces justificatives de dépenses, Matrice des délégations de signature."
+                    },
+                    {
+                    "Point de controle": "Exigence d'une pièce justificative originale et valide pour toute sortie de fonds.",
+                    "risque": "Absence de pièce justificative (facture, reçu) pour une sortie de fonds.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Tester l'exhaustivité des pièces justificatives en rapprochant le brouillard de caisse (sorties) avec les pièces archivées sur une période donnée.",
+                    "objectif de controle": "Assurer la justification de toutes les sorties de fonds.",
+                    "document": "Brouillard de caisse, Pièces justificatives de dépenses."
+                    },
+                    {
+                    "Point de controle": "Apposition d'un tampon acquitté (\"PAYÉ CAISSE + date\") sur chaque pièce après règlement.",
+                    "risque": "Double paiement d'une même facture via la caisse.",
+                    "évaluation risque": "F",
+                    "probabilité": "F",
+                    "impact": "M",
+                    "controle audit": "Examiner un échantillon de pièces justificatives payées par la caisse pour vérifier la présence systématique du tampon acquitté.",
+                    "objectif de controle": "Prévenir les doubles paiements.",
+                    "document": "Pièces justificatives de dépenses."
+                    },
+                    {
+                    "Point de controle": "Contrôle a posteriori du respect des seuils de paiement par le Chef Comptable.",
+                    "risque": "Dépenses de caisse dépassant le seuil autorisé par la procédure.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Analyser le journal des décaissements sur un mois et identifier toute dépense unitaire dépassant le seuil fixé. Vérifier si une dérogation a été accordée.",
+                    "objectif de controle": "Assurer le respect de la politique de décaissement.",
+                    "document": "Procédure de caisse, Journal de caisse."
+                    },
+                    {
+                    "Point de controle": "Archivage quotidien des pièces de caisse avec le brouillard correspondant.",
+                    "risque": "Perte de pièces justificatives après paiement, avant archivage comptable.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Vérifier que les liasses de pièces de caisse sont complètes et correctement archivées par journée avec leur brouillard de référence.",
+                    "objectif de controle": "Garantir la conservation et la piste d'audit des pièces justificatives.",
+                    "document": "Archives comptables (pièces de caisse)."
+                    },
+                    {
+                    "Point de controle": "Utilisation systématique d'un coffre-fort scellé pour la conservation des fonds hors heures de service.",
+                    "risque": "Vol de la caisse par effraction en dehors des heures de service.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Inspecter physiquement l'existence et l'état du coffre-fort. S'assurer par entretien que son utilisation est systématique.",
+                    "objectif de controle": "Sécuriser physiquement les actifs monétaires.",
+                    "document": "Observation physique, Entretien avec le responsable."
+                    },
+                    {
+                    "Point de controle": "Gestion formalisée et restrictive des clés ou codes d'accès au coffre/tiroir-caisse.",
+                    "risque": "Accès non autorisé à la caisse (tiroir, coffre) par du personnel interne.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Obtenir la liste des personnes habilitées à accéder à la caisse et vérifier sa mise à jour et sa cohérence avec les fonctions occupées.",
+                    "objectif de controle": "Limiter l'accès aux fonds aux seules personnes autorisées.",
+                    "document": "Liste des personnes habilitées, Procédure de gestion des accès."
+                    },
+                    {
+                    "Point de controle": "Contrôle quotidien du solde de caisse par rapport au plafond autorisé et déclenchement de remises en banque.",
+                    "risque": "Dépassement systématique du plafond d'encaisse autorisé.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "M",
+                    "controle audit": "Analyser les soldes de fin de journée sur un mois. Identifier les dépassements du plafond et vérifier s'ils ont été justifiés et suivis d'une remise en banque rapide.",
+                    "objectif de controle": "Minimiser l'exposition au risque de vol ou de sinistre.",
+                    "document": "Procédure de trésorerie, Journaux de caisse."
+                    },
+                    {
+                    "Point de controle": "Existence de procédures de sécurité pour la manipulation et le transport de fonds.",
+                    "risque": "Agression du personnel lors de la manipulation ou du transport de fonds.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Vérifier l'existence d'une procédure de transport de fonds et s'assurer qu'elle est appliquée (ex: recours à un transporteur au-delà d'un certain seuil).",
+                    "objectif de controle": "Assurer la sécurité physique du personnel.",
+                    "document": "Procédure de sécurité, Contrat avec le transporteur de fonds."
+                    },
+                    {
+                    "Point de controle": "Consigne de verrouillage systématique du tiroir-caisse lors de toute absence du poste.",
+                    "risque": "Laisser la caisse sans surveillance et non verrouillée pendant les heures de service.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Effectuer des observations inopinées du poste de caisse pour vérifier si la consigne de verrouillage est respectée lors des absences, même courtes.",
+                    "objectif de controle": "Prévenir le vol opportuniste interne ou externe.",
+                    "document": "Observation physique, Note de service."
+                    },
+                    {
+                    "Point de controle": "Attribution des droits dans le système d'information empêchant le cumul des fonctions de tenue de caisse et de comptabilisation.",
+                    "risque": "Absence de séparation des tâches entre la tenue de caisse et la comptabilisation.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "E",
+                    "controle audit": "Examiner la matrice des droits du système comptable et vérifier que le profil 'Caissier' ne permet pas de valider des écritures dans le journal de caisse.",
+                    "objectif de controle": "Prévenir la dissimulation de fraude par manipulation des écritures comptables.",
+                    "document": "Matrice des habilitations du SI, Description de fonction."
+                    },
+                    {
+                    "Point de controle": "Rapprochement mensuel formel entre le solde du compte 530 et les inventaires de caisse.",
+                    "risque": "Non-rapprochement entre le solde comptable du compte 530 et le solde physique.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Obtenir les rapprochements de caisse mensuels. Vérifier qu'ils sont effectués, validés par le Chef Comptable et que les écarts sont analysés et apurés.",
+                    "objectif de controle": "Assurer la cohérence entre la comptabilité et la réalité physique des fonds.",
+                    "document": "États de rapprochement de caisse, Grand-livre du compte 530."
+                    },
+                    {
+                    "Point de controle": "Vérification de la nature de la dépense sur la pièce avant imputation comptable.",
+                    "risque": "Erreur d'imputation comptable d'une dépense payée par la caisse.",
+                    "évaluation risque": "F",
+                    "probabilité": "M",
+                    "impact": "F",
+                    "controle audit": "Sélectionner un échantillon d'écritures passées au débit du compte 530 et vérifier la correcte imputation au compte de charge approprié en fonction de la pièce justificative.",
+                    "objectif de controle": "Garantir la correcte classification des charges.",
+                    "document": "Pièces justificatives, Journal comptable de caisse."
+                    },
+                    {
+                    "Point de controle": "Report systématique du numéro de la pièce de caisse dans le libellé de l'écriture comptable.",
+                    "risque": "Perte de la piste d'audit entre la pièce justificative et l'écriture comptable.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Partir du grand-livre du compte 530 et vérifier, pour un échantillon d'écritures, que le libellé permet de retrouver facilement la pièce justificative correspondante.",
+                    "objectif de controle": "Assurer une piste d'audit fiable et efficace.",
+                    "document": "Grand-livre du compte 530, Libellés des écritures."
+                    },
+                    {
+                    "Point de controle": "Analyse et validation des opérations annulées par un responsable hiérarchique.",
+                    "risque": "Annulation d'opérations de caisse sans justification ni autorisation.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Demander l'état des transactions de caisse annulées sur la période et vérifier pour un échantillon qu'elles sont supportées par un justificatif et une autorisation du superviseur.",
+                    "objectif de controle": "Prévenir l'utilisation des annulations pour masquer des fraudes.",
+                    "document": "Journal des transactions annulées, Notes de justification."
+                    }
+                    ]
+                    },
+                    {
+                    "table template": [
+                    {
+                    "no": 1,
+                    "principales operations": "Réception des fonds et encaissement",
+                    "Acteurs": "Caissière, Client"
+                    },
+                    {
+                    "no": 2,
+                    "principales operations": "Arrêté de caisse quotidien et comptage contradictoire",
+                    "Acteurs": "Caissière, Superviseur (N+1)"
+                    },
+                    {
+                    "no": 3,
+                    "principales operations": "Validation des dépenses et décaissement",
+                    "Acteurs": "Demandeur, Manager, Caissière"
+                    },
+                    {
+                    "no": 4,
+                    "principales operations": "Préparation et réalisation des remises en banque",
+                    "Acteurs": "Caissière, Trésorier, Comptable"
+                    },
+                    {
+                    "no": 5,
+                    "principales operations": "Comptabilisation, rapprochement et contrôles inopinés",
+                    "Acteurs": "Comptable, Chef Comptable, Auditeur Interne"
+                    }
+                    ]
+                    },
+                    {
+                    "table 3": {
+                    "Télécharger": "https://www.notion.so/Projet-arc-narratif-templates-1f1913f0159380968c0bf66dec42d350?pvs=21"
+                    }
+                    }
+                    ]
+                    }
+                    }
+                    ]
+            - [Endpoint n8n]
+                - Description
+                    - Le  webhook n8n Vers lequel envoye en json le contenu des tables  de la div dans laquelle se trouve la table cible, sous forme de json egalement
+                - Curl
+                    - curl -X POST "https://o1rc5pps.rcld.app/webhook/json" \
+                    -H "Content-Type: application/json" \
+                    -d '{"question":"[Command] = /Programme de travail - [Processus] = facturation des ventes          "}'
+                - exemple de [Réponse endpoint n8n]
+
+
+                    -
+
+                    [
+                    {
+                    "data": {
+                    "Etape mission - Programme": [
+                    {
+                    "table 1": {
+                    "Etape": "Programme de travail",
+                    "reference": "Prg-001"
+                    }
+                    },
+                    {
+                    "table 2": [
+                    {
+                    "Point de controle": "Existence d'un comptage contradictoire et d'une supervision formalisée de l'arrêté de caisse.",
+                    "risque": "Écarts de caisse récurrents non justifiés et non documentés.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "M",
+                    "controle audit": "Sélectionner un échantillon de PV d'arrêté de caisse et vérifier la présence systématique de la double signature (caissier + superviseur) ainsi que l'analyse et la justification des écarts.",
+                    "objectif de controle": "Assurer la fiabilité et l'exactitude du solde de caisse quotidien.",
+                    "document": "Procès-verbal d'arrêté de caisse, Fiche de justification des écarts."
+                    },
+                    {
+                    "Point de controle": "Réalisation effective et périodique de contrôles de caisse inopinés par un tiers indépendant.",
+                    "risque": "Dissimulation d'un détournement par l'absence de contrôles inopinés.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Obtenir les PV des contrôles inopinés sur les 12 derniers mois et vérifier leur fréquence (au moins trimestrielle), leur caractère contradictoire et le suivi des actions correctives.",
+                    "objectif de controle": "Prévenir et détecter la fraude par un effet dissuasif.",
+                    "document": "Procès-verbaux de contrôle de caisse inopiné, Plan d'action."
+                    },
+                    {
+                    "Point de controle": "Existence et application d'une procédure de double comptage systématique des espèces.",
+                    "risque": "Erreur de comptage des espèces lors de l'arrêté de caisse.",
+                    "évaluation risque": "F",
+                    "probabilité": "M",
+                    "impact": "F",
+                    "controle audit": "Observer un arrêté de caisse pour confirmer la procédure de double comptage. Interroger le caissier et le superviseur sur la méthode appliquée.",
+                    "objectif de controle": "Garantir l'exactitude du comptage physique des fonds.",
+                    "document": "Procédure de gestion de caisse, Observation physique."
+                    },
+                    {
+                    "Point de controle": "Formalisation systématique de l'arrêté de caisse via un document standardisé, daté et signé.",
+                    "risque": "Non-formalisation de l'arrêté de caisse par un PV daté et signé.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Vérifier sur un échantillon de journées que chaque arrêté de caisse a donné lieu à un PV en bonne et due forme, archivé avec le brouillard de caisse.",
+                    "objectif de controle": "Assurer la traçabilité et la piste d'audit des arrêtés de caisse.",
+                    "document": "Procès-verbal d'arrêté de caisse, Journal de caisse."
+                    },
+                    {
+                    "Point de controle": "Qualité de la tenue du brouillard de caisse (sans rature, chronologique, exhaustif).",
+                    "risque": "Brouillard de caisse mal tenu, raturé ou incomplet.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "M",
+                    "controle audit": "Examiner la tenue des brouillards de caisse sur une semaine. S'assurer que chaque ligne est justifiée par une pièce et que les corrections sont validées par le superviseur.",
+                    "objectif de controle": "Garantir l'intégrité et la fiabilité du document de suivi des mouvements de caisse.",
+                    "document": "Brouillard de caisse, Pièces justificatives (encaissement/décaissement)."
+                    },
+                    {
+                    "Point de controle": "Rapprochement périodique entre les journaux de caisse, les pièces justificatives et les remises en banque.",
+                    "risque": "Non-enregistrement volontaire ou involontaire d'une recette en espèces.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Sélectionner un échantillon de remises en banque et tracer les montants jusqu'aux journaux de caisse et aux souches de factures correspondantes pour vérifier l'exhaustivité.",
+                    "objectif de controle": "Assurer l'exhaustivité de l'enregistrement des recettes.",
+                    "document": "Journaux de caisse, Souches de factures, Bordereaux de remise en banque."
+                    },
+                    {
+                    "Point de controle": "Arrêté de caisse contradictoire quotidien pour justifier le solde.",
+                    "risque": "Erreur dans le rendu de monnaie au client.",
+                    "évaluation risque": "F",
+                    "probabilité": "M",
+                    "impact": "F",
+                    "controle audit": "Analyser les PV d'arrêté de caisse sur un mois et identifier la fréquence et le traitement des écarts de caisse (profits ou pertes).",
+                    "objectif de controle": "Détecter et corriger rapidement les erreurs de manipulation d'espèces.",
+                    "document": "Procès-verbal d'arrêté de caisse, Compte comptable des écarts de caisse."
+                    },
+                    {
+                    "Point de controle": "Vérification systématique de la pièce d'identité et des mentions obligatoires pour les paiements par chèque.",
+                    "risque": "Acceptation de chèques sans provision, volés ou falsifiés.",
+                    "évaluation risque": "F",
+                    "probabilité": "F",
+                    "impact": "M",
+                    "controle audit": "Interroger la caissière sur la procédure de vérification des chèques. Vérifier si la procédure est formalisée et connue.",
+                    "objectif de controle": "Minimiser le risque d'impayés sur les chèques.",
+                    "document": "Procédure d'encaissement, Entretien avec la caissière."
+                    },
+                    {
+                    "Point de controle": "Conservation des chèques en lieu sûr (coffre) et établissement quotidien des bordereaux de remise.",
+                    "risque": "Perte ou vol de chèques clients conservés en caisse avant leur remise en banque.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Vérifier physiquement le lieu de stockage des chèques en attente de remise. Rapprocher la date de réception des chèques avec leur date de remise effective en banque.",
+                    "objectif de controle": "Sécuriser les moyens de paiement et accélérer leur encaissement.",
+                    "document": "Bordereaux de remise, Relevés bancaires."
+                    },
+                    {
+                    "Point de controle": "Transmission et saisie comptable des opérations de caisse dans un délai défini (ex: 24h).",
+                    "risque": "Retard dans l'enregistrement comptable des recettes, faussant la position de trésorerie.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Pour un échantillon de brouillards de caisse, comparer la date de l'arrêté avec la date de saisie comptable pour mesurer le délai de traitement.",
+                    "objectif de controle": "Assurer une information comptable et de trésorerie à jour.",
+                    "document": "Brouillard de caisse, Journal comptable de caisse."
+                    },
+                    {
+                    "Point de controle": "Validation systématique par signature d'un responsable autorisé sur toutes les pièces de dépenses.",
+                    "risque": "Paiement de dépenses non autorisées, fictives ou à caractère personnel.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Sélectionner un échantillon de dépenses de caisse et vérifier la présence d'une signature d'approbation conforme à la délégation de pouvoir en vigueur.",
+                    "objectif de controle": "Garantir que toutes les dépenses de caisse sont légitimes et autorisées.",
+                    "document": "Pièces justificatives de dépenses, Matrice des délégations de signature."
+                    },
+                    {
+                    "Point de controle": "Exigence d'une pièce justificative originale et valide pour toute sortie de fonds.",
+                    "risque": "Absence de pièce justificative (facture, reçu) pour une sortie de fonds.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Tester l'exhaustivité des pièces justificatives en rapprochant le brouillard de caisse (sorties) avec les pièces archivées sur une période donnée.",
+                    "objectif de controle": "Assurer la justification de toutes les sorties de fonds.",
+                    "document": "Brouillard de caisse, Pièces justificatives de dépenses."
+                    },
+                    {
+                    "Point de controle": "Apposition d'un tampon acquitté (\"PAYÉ CAISSE + date\") sur chaque pièce après règlement.",
+                    "risque": "Double paiement d'une même facture via la caisse.",
+                    "évaluation risque": "F",
+                    "probabilité": "F",
+                    "impact": "M",
+                    "controle audit": "Examiner un échantillon de pièces justificatives payées par la caisse pour vérifier la présence systématique du tampon acquitté.",
+                    "objectif de controle": "Prévenir les doubles paiements.",
+                    "document": "Pièces justificatives de dépenses."
+                    },
+                    {
+                    "Point de controle": "Contrôle a posteriori du respect des seuils de paiement par le Chef Comptable.",
+                    "risque": "Dépenses de caisse dépassant le seuil autorisé par la procédure.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Analyser le journal des décaissements sur un mois et identifier toute dépense unitaire dépassant le seuil fixé. Vérifier si une dérogation a été accordée.",
+                    "objectif de controle": "Assurer le respect de la politique de décaissement.",
+                    "document": "Procédure de caisse, Journal de caisse."
+                    },
+                    {
+                    "Point de controle": "Archivage quotidien des pièces de caisse avec le brouillard correspondant.",
+                    "risque": "Perte de pièces justificatives après paiement, avant archivage comptable.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Vérifier que les liasses de pièces de caisse sont complètes et correctement archivées par journée avec leur brouillard de référence.",
+                    "objectif de controle": "Garantir la conservation et la piste d'audit des pièces justificatives.",
+                    "document": "Archives comptables (pièces de caisse)."
+                    },
+                    {
+                    "Point de controle": "Utilisation systématique d'un coffre-fort scellé pour la conservation des fonds hors heures de service.",
+                    "risque": "Vol de la caisse par effraction en dehors des heures de service.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Inspecter physiquement l'existence et l'état du coffre-fort. S'assurer par entretien que son utilisation est systématique.",
+                    "objectif de controle": "Sécuriser physiquement les actifs monétaires.",
+                    "document": "Observation physique, Entretien avec le responsable."
+                    },
+                    {
+                    "Point de controle": "Gestion formalisée et restrictive des clés ou codes d'accès au coffre/tiroir-caisse.",
+                    "risque": "Accès non autorisé à la caisse (tiroir, coffre) par du personnel interne.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Obtenir la liste des personnes habilitées à accéder à la caisse et vérifier sa mise à jour et sa cohérence avec les fonctions occupées.",
+                    "objectif de controle": "Limiter l'accès aux fonds aux seules personnes autorisées.",
+                    "document": "Liste des personnes habilitées, Procédure de gestion des accès."
+                    },
+                    {
+                    "Point de controle": "Contrôle quotidien du solde de caisse par rapport au plafond autorisé et déclenchement de remises en banque.",
+                    "risque": "Dépassement systématique du plafond d'encaisse autorisé.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "M",
+                    "controle audit": "Analyser les soldes de fin de journée sur un mois. Identifier les dépassements du plafond et vérifier s'ils ont été justifiés et suivis d'une remise en banque rapide.",
+                    "objectif de controle": "Minimiser l'exposition au risque de vol ou de sinistre.",
+                    "document": "Procédure de trésorerie, Journaux de caisse."
+                    },
+                    {
+                    "Point de controle": "Existence de procédures de sécurité pour la manipulation et le transport de fonds.",
+                    "risque": "Agression du personnel lors de la manipulation ou du transport de fonds.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Vérifier l'existence d'une procédure de transport de fonds et s'assurer qu'elle est appliquée (ex: recours à un transporteur au-delà d'un certain seuil).",
+                    "objectif de controle": "Assurer la sécurité physique du personnel.",
+                    "document": "Procédure de sécurité, Contrat avec le transporteur de fonds."
+                    },
+                    {
+                    "Point de controle": "Consigne de verrouillage systématique du tiroir-caisse lors de toute absence du poste.",
+                    "risque": "Laisser la caisse sans surveillance et non verrouillée pendant les heures de service.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Effectuer des observations inopinées du poste de caisse pour vérifier si la consigne de verrouillage est respectée lors des absences, même courtes.",
+                    "objectif de controle": "Prévenir le vol opportuniste interne ou externe.",
+                    "document": "Observation physique, Note de service."
+                    },
+                    {
+                    "Point de controle": "Attribution des droits dans le système d'information empêchant le cumul des fonctions de tenue de caisse et de comptabilisation.",
+                    "risque": "Absence de séparation des tâches entre la tenue de caisse et la comptabilisation.",
+                    "évaluation risque": "E",
+                    "probabilité": "E",
+                    "impact": "E",
+                    "controle audit": "Examiner la matrice des droits du système comptable et vérifier que le profil 'Caissier' ne permet pas de valider des écritures dans le journal de caisse.",
+                    "objectif de controle": "Prévenir la dissimulation de fraude par manipulation des écritures comptables.",
+                    "document": "Matrice des habilitations du SI, Description de fonction."
+                    },
+                    {
+                    "Point de controle": "Rapprochement mensuel formel entre le solde du compte 530 et les inventaires de caisse.",
+                    "risque": "Non-rapprochement entre le solde comptable du compte 530 et le solde physique.",
+                    "évaluation risque": "E",
+                    "probabilité": "M",
+                    "impact": "E",
+                    "controle audit": "Obtenir les rapprochements de caisse mensuels. Vérifier qu'ils sont effectués, validés par le Chef Comptable et que les écarts sont analysés et apurés.",
+                    "objectif de controle": "Assurer la cohérence entre la comptabilité et la réalité physique des fonds.",
+                    "document": "États de rapprochement de caisse, Grand-livre du compte 530."
+                    },
+                    {
+                    "Point de controle": "Vérification de la nature de la dépense sur la pièce avant imputation comptable.",
+                    "risque": "Erreur d'imputation comptable d'une dépense payée par la caisse.",
+                    "évaluation risque": "F",
+                    "probabilité": "M",
+                    "impact": "F",
+                    "controle audit": "Sélectionner un échantillon d'écritures passées au débit du compte 530 et vérifier la correcte imputation au compte de charge approprié en fonction de la pièce justificative.",
+                    "objectif de controle": "Garantir la correcte classification des charges.",
+                    "document": "Pièces justificatives, Journal comptable de caisse."
+                    },
+                    {
+                    "Point de controle": "Report systématique du numéro de la pièce de caisse dans le libellé de l'écriture comptable.",
+                    "risque": "Perte de la piste d'audit entre la pièce justificative et l'écriture comptable.",
+                    "évaluation risque": "M",
+                    "probabilité": "M",
+                    "impact": "M",
+                    "controle audit": "Partir du grand-livre du compte 530 et vérifier, pour un échantillon d'écritures, que le libellé permet de retrouver facilement la pièce justificative correspondante.",
+                    "objectif de controle": "Assurer une piste d'audit fiable et efficace.",
+                    "document": "Grand-livre du compte 530, Libellés des écritures."
+                    },
+                    {
+                    "Point de controle": "Analyse et validation des opérations annulées par un responsable hiérarchique.",
+                    "risque": "Annulation d'opérations de caisse sans justification ni autorisation.",
+                    "évaluation risque": "M",
+                    "probabilité": "F",
+                    "impact": "E",
+                    "controle audit": "Demander l'état des transactions de caisse annulées sur la période et vérifier pour un échantillon qu'elles sont supportées par un justificatif et une autorisation du superviseur.",
+                    "objectif de controle": "Prévenir l'utilisation des annulations pour masquer des fraudes.",
+                    "document": "Journal des transactions annulées, Notes de justification."
+                    }
+                    ]
+                    },
+                    {
+                    "table template": [
+                    {
+                    "no": 1,
+                    "principales operations": "Réception des fonds et encaissement",
+                    "Acteurs": "Caissière, Client"
+                    },
+                    {
+                    "no": 2,
+                    "principales operations": "Arrêté de caisse quotidien et comptage contradictoire",
+                    "Acteurs": "Caissière, Superviseur (N+1)"
+                    },
+                    {
+                    "no": 3,
+                    "principales operations": "Validation des dépenses et décaissement",
+                    "Acteurs": "Demandeur, Manager, Caissière"
+                    },
+                    {
+                    "no": 4,
+                    "principales operations": "Préparation et réalisation des remises en banque",
+                    "Acteurs": "Caissière, Trésorier, Comptable"
+                    },
+                    {
+                    "no": 5,
+                    "principales operations": "Comptabilisation, rapprochement et contrôles inopinés",
+                    "Acteurs": "Comptable, Chef Comptable, Auditeur Interne"
+                    }
+                    ]
+                    },
+                    {
+                    "table 3": {
+                    "Télécharger": "https://www.notion.so/Projet-arc-narratif-templates-1f1913f0159380968c0bf66dec42d350?pvs=21"
+                    }
+                    }
+                    ]
+                    }
+                    }
+                    ]

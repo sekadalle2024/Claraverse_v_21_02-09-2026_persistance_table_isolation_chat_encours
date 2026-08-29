@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Schéma JSON Complet - 6 Tables Case 25",
+  "description": "Schéma JSON pour forcer le LLM à générer EXACTEMENT 6 tables pour les recommandations de contrôle interne",
+  "type": "object",
+  "properties": {
+    "Etape mission - Recos contrôle interne comptable": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "description": "Array contenant EXACTEMENT 6 tables (table 1 à table 6)",
+      "items": [
+        {
+          "type": "object",
+          "description": "Table 1: En-tête avec métadonnées de la mission",
+          "properties": {
+            "table 1": {
+              "type": "object",
+              "properties": {
+                "Etape de mission": {
+                  "type": "string",
+                  "description": "Nom de l'étape de mission (ex: Frap, Recos contrôle interne comptable)"
+                },
+                "Norme": {
+                  "type": "string",
+                  "description": "Norme CRIPP applicable (ex: Norme 14.3 Évaluation des constats)"
+                },
+                "Méthode": {
+                  "type": "string",
+                  "description": "Méthodologie utilisée (ex: Méthode des risques par les tâches clés)"
+                },
+                "Reference": {
+                  "type": "string",
+                  "description": "Référence du document (ex: Frap-001)"
+                }
+              },
+              "required": ["Etape de mission", "Norme", "Méthode", "Reference"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["table 1"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Table 2: Intitulé de l'anomalie",
+          "properties": {
+            "table 2": {
+              "type": "object",
+              "properties": {
+                "Intitule": {
+                  "type": "string",
+                  "description": "Titre spécifique de l'anomalie constatée",
+                  "minLength": 10
+                }
+              },
+              "required": ["Intitule"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["table 2"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Table 3: Observation des travaux effectués",
+          "properties": {
+            "table 3": {
+              "type": "object",
+              "properties": {
+                "Observation": {
+                  "type": "string",
+                  "description": "Description détaillée des travaux d'audit effectués et du contexte",
+                  "minLength": 50
+                }
+              },
+              "required": ["Observation"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["table 3"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Table 4: Constat de l'anomalie",
+          "properties": {
+            "table 4": {
+              "type": "object",
+              "properties": {
+                "Constat": {
+                  "type": "string",
+                  "description": "Constat détaillé de l'anomalie avec preuves et écarts identifiés",
+                  "minLength": 50
+                }
+              },
+              "required": ["Constat"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["table 4"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Table 5: Risques associés",
+          "properties": {
+            "table 5": {
+              "type": "object",
+              "properties": {
+                "Risque": {
+                  "type": "string",
+                  "description": "Liste des risques opérationnels, financiers et de conformité associés à l'anomalie",
+                  "minLength": 50
+                }
+              },
+              "required": ["Risque"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["table 5"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Table 6: Recommandations de contrôle interne",
+          "properties": {
+            "table 6": {
+              "type": "object",
+              "properties": {
+                "Recommendation": {
+                  "type": "string",
+                  "description": "Recommandations détaillées pour corriger l'anomalie et renforcer le contrôle interne",
+                  "minLength": 100
+                }
+              },
+              "required": ["Recommendation"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["table 6"],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "required": ["Etape mission - Recos contrôle interne comptable"],
+  "additionalProperties": false
+}

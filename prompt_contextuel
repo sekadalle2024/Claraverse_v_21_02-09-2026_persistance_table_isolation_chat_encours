@@ -1,0 +1,7 @@
+- [Contexte] = Les script conso.js et menu js permettent de generer des donnes textuelles ou Htlm a partir des modifications du DOm. Les donnes enregistrés sont sauvegardes par par dev.js dans le local storage , et charger a l actualisation de la page ou a l’ouverture de la page du chat
+- [Probleme] 1 de base = le systeme d identification des tables ne semble pas prendre en comptes les id des user et des chat id. Tu dois corriger
+- [Probleme 3] =
+    - - Les tables de même nature qui représentent un même ensemble de tables de test d’ audit interne ( I200- caisse, C100- mouvement des immobilisatioins etc.) se retrouve dans des chat différents ,.mais avec les mêmes données identiques .
+    - les anciennes tables sauvegardees dans le local storage et le dom ont tendance a remplacer le contenu des nouvelles tables generees dans des chat differents
+    - [Hypothèses] = il faut un système d'identification par chat, div  en plus de l’identificatin sur les tables, peut être des id unqiue pour  les tables d’une même div et un meme chat uniques
+    - Un chat peut comprendre les tables en lien avec un même test d’audit interne. Les identifiants dans le local storage doit donc être plus robuste afin d' éviter les doublons par utilisateur, chat id, div, tables. ou eviter que les tables sauvegardees dans le local storage ne remplacent le contenu des nouvelles tables generees par appel api

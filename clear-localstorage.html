@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nettoyer le localStorage - E-audit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(to bottom right, #f3f4f6, #e5e7eb);
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ec4899;
+            margin-bottom: 20px;
+        }
+        button {
+            background: linear-gradient(to right, #ec4899, #db2777);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(to right, #db2777, #be185d);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(236, 72, 153, 0.3);
+        }
+        .info {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .current-values {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .current-values div {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Nettoyer le localStorage E-audit</h1>
+        
+        <div class="info">
+            <strong>⚠️ Information :</strong> Ce script va nettoyer les paramètres de thème sauvegardés dans votre navigateur pour E-audit. Cela permettra de réinitialiser le thème au gris clair par défaut.
+        </div>
+
+        <div class="current-values" id="currentValues">
+            <strong>Valeurs actuelles :</strong>
+            <div id="themeValue">Chargement...</div>
+            <div id="darkModeValue">Chargement...</div>
+        </div>
+
+        <button onclick="clearThemeOnly()">
+            🎨 Nettoyer uniquement le thème
+        </button>
+
+        <button onclick="clearDarkModeOnly()">
+            🌙 Nettoyer uniquement le mode sombre
+        </button>
+
+        <button onclick="clearAll()">
+            🗑️ Tout nettoyer (localStorage complet)
+        </button>
+
+        <button onclick="refreshValues()" style="background: #6b7280;">
+            🔄 Actualiser les valeurs
+        </button>
+
+        <div class="success" id="successMessage">
+            ✅ <strong>Succès !</strong> Le localStorage a été nettoyé. Vous pouvez maintenant fermer cette page et recharger votre application E-audit.
+        </div>
+    </div>
+
+    <script>
+        function refreshValues() {
+            const theme = localStorage.getItem('e-audit-theme');
+            const darkMode = localStorage.getItem('e-audit-dark-mode');
+            
+            document.getElementById('themeValue').innerHTML = 
+                `<strong>e-audit-theme:</strong> ${theme || '<em>non défini</em>'}`;
+            document.getElementById('darkModeValue').innerHTML = 
+                `<strong>e-audit-dark-mode:</strong> ${darkMode || '<em>non défini</em>'}`;
+        }
+
+        function clearThemeOnly() {
+            localStorage.removeItem('e-audit-theme');
+            showSuccess('Le thème a été réinitialisé');
+            refreshValues();
+        }
+
+        function clearDarkModeOnly() {
+            localStorage.removeItem('e-audit-dark-mode');
+            showSuccess('Le mode sombre a été réinitialisé');
+            refreshValues();
+        }
+
+        function clearAll() {
+            if (confirm('Êtes-vous sûr de vouloir nettoyer TOUT le localStorage ? Cela supprimera tous les paramètres sauvegardés.')) {
+                localStorage.clear();
+                showSuccess('Tout le localStorage a été nettoyé');
+                refreshValues();
+            }
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.innerHTML = `✅ <strong>Succès !</strong> ${message}. Rechargez votre application E-audit.`;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Charger les valeurs au démarrage
+        refreshValues();
+    </script>
+</body>
+</html>

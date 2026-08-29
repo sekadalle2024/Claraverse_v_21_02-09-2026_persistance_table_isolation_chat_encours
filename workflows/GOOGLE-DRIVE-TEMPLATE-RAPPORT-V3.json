@@ -1,0 +1,153 @@
+{
+  "name": "Google Drive - Template Rapport V3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "scan-template-rapport",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 340]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "operation": "search",
+        "limit": 1000,
+        "queryString": "",
+        "options": {}
+      },
+      "id": "gd-001",
+      "name": "Liste Tous Fichiers",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [420, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer tous les éléments\nconst items = $input.all();\n\n// Chercher le dossier 'template rapport' (insensible à la casse)\nlet templateFolderId = null;\nlet templateFolderName = null;\n\nfor (const item of items) {\n  const data = item.json;\n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    const name = (data.name || '').toLowerCase().trim();\n    if (name === 'template rapport' || name === 'template_rapport' || name === 'templaterapport') {\n      templateFolderId = data.id;\n      templateFolderName = data.name;\n      break;\n    }\n  }\n}\n\n// Si dossier non trouvé\nif (!templateFolderId) {\n  return [{\n    json: {\n      success: false,\n      timestamp: new Date().toISOString(),\n      message: \"Dossier 'template rapport' non trouvé\",\n      dossiersDisponibles: items\n        .filter(i => i.json.mimeType === 'application/vnd.google-apps.folder')\n        .map(i => i.json.name)\n        .slice(0, 20),\n      contenu: { sousDossiers: [], fichiers: [] }\n    }\n  }];\n}\n\n// Filtrer le contenu du dossier (éléments dont le parent est templateFolderId)\n// Note: Sans le champ 'parents', on ne peut pas faire ce filtrage\n// On retourne donc juste l'info du dossier trouvé\n\nreturn [{\n  json: {\n    success: true,\n    found: true,\n    folderId: templateFolderId,\n    folderName: templateFolderName,\n    message: \"Dossier trouvé - utilisez l'ID pour lister son contenu\"\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Trouver Dossier Template",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json.found }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-001",
+      "name": "Dossier Trouve?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [860, 340]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "limit": 500,
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.folderId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "gd-002",
+      "name": "Contenu Dossier",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1080, 240],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Construire la réponse avec le contenu du dossier\nconst items = $input.all();\n\nconst sousDossiers = [];\nconst fichiers = [];\n\nfor (const item of items) {\n  const data = item.json;\n  if (!data || !data.id) continue;\n  \n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    sousDossiers.push({\n      id: data.id,\n      nom: data.name || 'Sans nom',\n      type: 'dossier'\n    });\n  } else {\n    fichiers.push({\n      id: data.id,\n      nom: data.name || 'Sans nom',\n      type: 'fichier',\n      mimeType: data.mimeType || 'unknown'\n    });\n  }\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    dossier: 'template rapport',\n    statistiques: {\n      totalSousDossiers: sousDossiers.length,\n      totalFichiers: fichiers.length\n    },\n    contenu: {\n      sousDossiers: sousDossiers,\n      fichiers: fichiers\n    }\n  }\n}];"
+      },
+      "id": "code-002",
+      "name": "Formater Reponse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 240],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dossier non trouvé - passer les données\nreturn $input.all();"
+      },
+      "id": "code-003",
+      "name": "Passer Erreur",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 440],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1520, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Liste Tous Fichiers", "type": "main", "index": 0}]]
+    },
+    "Liste Tous Fichiers": {
+      "main": [[{"node": "Trouver Dossier Template", "type": "main", "index": 0}]]
+    },
+    "Trouver Dossier Template": {
+      "main": [[{"node": "Dossier Trouve?", "type": "main", "index": 0}]]
+    },
+    "Dossier Trouve?": {
+      "main": [
+        [{"node": "Contenu Dossier", "type": "main", "index": 0}],
+        [{"node": "Passer Erreur", "type": "main", "index": 0}]
+      ]
+    },
+    "Contenu Dossier": {
+      "main": [[{"node": "Formater Reponse", "type": "main", "index": 0}]]
+    },
+    "Formater Reponse": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    },
+    "Passer Erreur": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"}
+}

@@ -1,0 +1,123 @@
+{
+  "name": "Google Drive Scanner - Template Rapport",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "scan-template-rapport",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-tr-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 340]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "operation": "search",
+        "limit": 500,
+        "queryString": "'template rapport' in name or name = 'template rapport'",
+        "options": {}
+      },
+      "id": "gd-tr-001",
+      "name": "Trouver Dossier Template",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [420, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "template rapport",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-tr-001",
+      "name": "Filtre Template Rapport",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [640, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "operation": "search",
+        "limit": 500,
+        "queryString": "='{{ $json.id }}' in parents",
+        "options": {}
+      },
+      "id": "gd-tr-002",
+      "name": "Contenu Dossier",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [860, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer les items du dossier template rapport\nconst items = $input.all();\n\n// Si aucun item\nif (!items || items.length === 0 || !items[0].json || Object.keys(items[0].json).length === 0) {\n  return [{\n    json: {\n      success: true,\n      timestamp: new Date().toISOString(),\n      dossier: \"template rapport\",\n      message: \"Dossier vide ou non trouvé\",\n      statistiques: {\n        totalDossiers: 0,\n        totalFichiers: 0\n      },\n      contenu: {\n        sousDossiers: [],\n        fichiers: []\n      }\n    }\n  }];\n}\n\n// Séparer dossiers et fichiers\nconst sousDossiers = [];\nconst fichiers = [];\n\nfor (const item of items) {\n  const data = item.json;\n  if (!data || !data.id) continue;\n  \n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    sousDossiers.push({\n      id: data.id,\n      nom: data.name || 'Sans nom',\n      type: 'dossier',\n      mimeType: data.mimeType\n    });\n  } else {\n    fichiers.push({\n      id: data.id,\n      nom: data.name || 'Sans nom',\n      type: 'fichier',\n      mimeType: data.mimeType || 'unknown'\n    });\n  }\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    dossier: \"template rapport\",\n    statistiques: {\n      totalSousDossiers: sousDossiers.length,\n      totalFichiers: fichiers.length,\n      totalElements: sousDossiers.length + fichiers.length\n    },\n    contenu: {\n      sousDossiers: sousDossiers,\n      fichiers: fichiers\n    }\n  }\n}];"
+      },
+      "id": "code-tr-001",
+      "name": "Construire Reponse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "resp-tr-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1300, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Trouver Dossier Template", "type": "main", "index": 0}]]
+    },
+    "Trouver Dossier Template": {
+      "main": [[{"node": "Filtre Template Rapport", "type": "main", "index": 0}]]
+    },
+    "Filtre Template Rapport": {
+      "main": [[{"node": "Contenu Dossier", "type": "main", "index": 0}]]
+    },
+    "Contenu Dossier": {
+      "main": [[{"node": "Construire Reponse", "type": "main", "index": 0}]]
+    },
+    "Construire Reponse": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

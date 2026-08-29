@@ -1,0 +1,113 @@
+{
+  "name": "Google Drive - Filtre Dossier Cible",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "scan-drive-filtre",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-200, 320],
+      "webhookId": "scan-drive-filtre"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 500,
+        "filter": {},
+        "options": {}
+      },
+      "id": "gd-001",
+      "name": "Liste Tous Elements",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [20, 320],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ÉTAPE 1: Construire un index des dossiers (id -> nom)\nconst items = $input.all();\n\n// Créer un map des dossiers: id -> {nom, id}\nconst dossiersMap = {};\nfor (const item of items) {\n  const data = item.json;\n  if (data && data.id && data.mimeType === 'application/vnd.google-apps.folder') {\n    dossiersMap[data.id] = {\n      id: data.id,\n      nom: data.name || 'Sans nom'\n    };\n  }\n}\n\n// Passer les données et le map au node suivant\nreturn [{\n  json: {\n    dossiersMap: dossiersMap,\n    totalDossiers: Object.keys(dossiersMap).length,\n    items: items.map(i => i.json)\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Index Dossiers",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "limit": 500,
+        "options": {
+          "fields": ["id", "name", "mimeType", "parents"]
+        }
+      },
+      "id": "gd-002",
+      "name": "Liste Avec Parents",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [460, 320],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// CONFIGURATION: Nom du dossier cible (insensible à la casse)\nconst DOSSIER_CIBLE = 'template rapport';\n\n// Récupérer les données\nconst prevData = $('Index Dossiers').first().json;\nconst dossiersMap = prevData.dossiersMap || {};\nconst filesWithParents = $input.all();\n\n// Trouver l'ID du dossier cible\nlet dossierCibleId = null;\nlet dossierCibleNom = null;\n\nfor (const [id, info] of Object.entries(dossiersMap)) {\n  const nomLower = info.nom.toLowerCase().trim();\n  const cibleLower = DOSSIER_CIBLE.toLowerCase().trim();\n  if (nomLower === cibleLower || \n      nomLower === cibleLower.replace(/ /g, '_') ||\n      nomLower === cibleLower.replace(/ /g, '')) {\n    dossierCibleId = id;\n    dossierCibleNom = info.nom;\n    break;\n  }\n}\n\n// Si dossier cible non trouvé\nif (!dossierCibleId) {\n  return [{\n    json: {\n      success: false,\n      timestamp: new Date().toISOString(),\n      message: `Dossier '${DOSSIER_CIBLE}' non trouvé`,\n      dossierRecherche: DOSSIER_CIBLE,\n      dossiersDisponibles: Object.values(dossiersMap).map(d => d.nom).slice(0, 30),\n      contenu: []\n    }\n  }];\n}\n\n// Filtrer les fichiers qui sont dans le dossier cible\nconst contenuDossier = [];\n\nfor (const item of filesWithParents) {\n  const data = item.json;\n  if (!data || !data.id) continue;\n  \n  // Vérifier si le fichier est dans le dossier cible\n  const parents = data.parents || [];\n  if (parents.includes(dossierCibleId)) {\n    contenuDossier.push({\n      fichier_id: data.id,\n      fichier_nom: data.name || 'Sans nom',\n      fichier_type: data.mimeType === 'application/vnd.google-apps.folder' ? 'dossier' : 'fichier',\n      fichier_mimeType: data.mimeType || 'unknown',\n      dossier_parent_id: dossierCibleId,\n      dossier_parent_nom: dossierCibleNom\n    });\n  }\n}\n\n// Construire la réponse\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    dossierCible: {\n      id: dossierCibleId,\n      nom: dossierCibleNom\n    },\n    statistiques: {\n      totalElements: contenuDossier.length,\n      sousDossiers: contenuDossier.filter(e => e.fichier_type === 'dossier').length,\n      fichiers: contenuDossier.filter(e => e.fichier_type === 'fichier').length\n    },\n    contenu: contenuDossier\n  }\n}];"
+      },
+      "id": "code-002",
+      "name": "Filtrer Dossier Cible",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 320],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 320]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Liste Tous Elements", "type": "main", "index": 0}]]
+    },
+    "Liste Tous Elements": {
+      "main": [[{"node": "Index Dossiers", "type": "main", "index": 0}]]
+    },
+    "Index Dossiers": {
+      "main": [[{"node": "Liste Avec Parents", "type": "main", "index": 0}]]
+    },
+    "Liste Avec Parents": {
+      "main": [[{"node": "Filtrer Dossier Cible", "type": "main", "index": 0}]]
+    },
+    "Filtrer Dossier Cible": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "meta": {"templateCredsSetupCompleted": true}
+}

@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "FullScreen Pro",
+  "version": "8.0.0",
+  "description": "Plein écran + captures d'écran via popup et menu contextuel",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "downloads",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "commands": {
+    "screenshot-region": {
+      "suggested_key": { "default": "Ctrl+Shift+S" },
+      "description": "Capture avec sélection de zone"
+    },
+    "screenshot-full": {
+      "suggested_key": { "default": "Ctrl+Shift+F" },
+      "description": "Capture pleine page"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page de test - Table Detector</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #6366f1;
+      padding-bottom: 10px;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background: #6366f1;
+      color: white;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .prose table {
+      border: 2px solid #22c55e;
+    }
+    .message-content table {
+      border: 2px solid #f59e0b;
+    }
+    .instructions {
+      background: #e0e7ff;
+      border-left: 4px solid #6366f1;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .instructions h3 {
+      margin-top: 0;
+      color: #4338ca;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Page de test - Table Selector Detective</h1>
+  
+  <div class="instructions">
+    <h3>📋 Instructions de test</h3>
+    <ol>
+      <li>Cliquez sur l'icône de l'extension dans la barre d'outils Chrome</li>
+      <li>Cliquez sur le bouton <strong>Scanner</strong></li>
+      <li>Explorez les résultats : 3 tables devraient être détectées</li>
+      <li>Testez la copie des sélecteurs en cliquant dessus</li>
+      <li>Cliquez sur <strong>Export</strong> et testez chaque format</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Table 1 : Données financières (classe standard)</h2>
+    <table class="min-w-full border border-gray-200">
+      <thead>
+        <tr>
+          <th>Compte</th>
+          <th>Libellé</th>
+          <th>Débit</th>
+          <th>Crédit</th>
+          <th>Solde</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>512000</td>
+          <td>Banque</td>
+          <td>150 000</td>
+          <td>75 000</td>
+          <td>75 000</td>
+        </tr>
+        <tr>
+          <td>411000</td>
+          <td>Clients</td>
+          <td>200 000</td>
+          <td>180 000</td>
+          <td>20 000</td>
+        </tr>
+        <tr>
+          <td>401000</td>
+          <td>Fournisseurs</td>
+          <td>50 000</td>
+          <td>100 000</td>
+          <td>-50 000</td>
+        </tr>
+        <tr>
+          <td>701000</td>
+          <td>Ventes</td>
+          <td>0</td>
+          <td>500 000</td>
+          <td>-500 000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section prose">
+    <h2>Table 2 : Inventaire (dans conteneur .prose)</h2>
+    <div class="overflow-x-auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Référence</th>
+            <th>Produit</th>
+            <th>Quantité</th>
+            <th>Prix unitaire</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>REF001</td>
+            <td>Ordinateur portable</td>
+            <td>15</td>
+            <td>800 €</td>
+            <td>12 000 €</td>
+          </tr>
+          <tr>
+            <td>REF002</td>
+            <td>Souris sans fil</td>
+            <td>50</td>
+            <td>25 €</td>
+            <td>1 250 €</td>
+          </tr>
+          <tr>
+            <td>REF003</td>
+            <td>Clavier mécanique</td>
+            <td>30</td>
+            <td>120 €</td>
+            <td>3 600 €</td>
+          </tr>
+          <tr>
+            <td>REF004</td>
+            <td>Écran 27"</td>
+            <td>20</td>
+            <td>350 €</td>
+            <td>7 000 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Table 3 : Statistiques (dans conteneur .message-content)</h2>
+    <div class="message-content">
+      <table class="rounded-lg">
+        <thead>
+          <tr>
+            <th>Mois</th>
+            <th>Visiteurs</th>
+            <th>Conversions</th>
+            <th>Taux</th>
+            <th>CA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Janvier</td>
+            <td>12 500</td>
+            <td>375</td>
+            <td>3.0%</td>
+            <td>45 000 €</td>
+          </tr>
+          <tr>
+            <td>Février</td>
+            <td>15 200</td>
+            <td>532</td>
+            <td>3.5%</td>
+            <td>63 840 €</td>
+          </tr>
+          <tr>
+            <td>Mars</td>
+            <td>18 900</td>
+            <td>756</td>
+            <td>4.0%</td>
+            <td>90 720 €</td>
+          </tr>
+          <tr>
+            <td>Avril</td>
+            <td>21 300</td>
+            <td>1 065</td>
+            <td>5.0%</td>
+            <td>127 800 €</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>✅ Résultats attendus</h3>
+    <ul>
+      <li><strong>Total tables :</strong> 3 tables détectées</li>
+      <li><strong>Sélecteurs :</strong> Plusieurs catégories devraient matcher</li>
+      <li><strong>En-têtes :</strong> Chaque table a 5 colonnes</li>
+      <li><strong>Export :</strong> Tous les formats doivent fonctionner</li>
+    </ul>
+    
+    <h3>🎯 Points à vérifier</h3>
+    <ul>
+      <li>Les sélecteurs <code>.prose table</code> et <code>.message-content table</code> sont détectés</li>
+      <li>Les classes Tailwind (<code>.min-w-full</code>, <code>.rounded-lg</code>) sont identifiées</li>
+      <li>Le sélecteur court et précis sont différents</li>
+      <li>La copie des sélecteurs fonctionne au clic</li>
+      <li>L'export HTML conserve tous les styles</li>
+      <li>L'export JSON contient toutes les données structurées</li>
+    </ul>
+  </div>
+
+  <footer style="text-align: center; margin-top: 40px; padding: 20px; color: #666; border-top: 1px solid #ddd;">
+    <p>Page de test pour <strong>Table Selector Detective v1.0.0</strong></p>
+    <p>Extension Chrome Manifest V3 - Compatible Claraverse / Flowise</p>
+  </footer>
+</body>
+</html>

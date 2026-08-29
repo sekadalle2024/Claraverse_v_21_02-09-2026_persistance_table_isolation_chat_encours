@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemple Tables Claraverse - AIONUI</title>
+    
+    <!-- Tailwind CSS CDN (optionnel si vous avez déjà Tailwind) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CSS des tables Claraverse -->
+    <link rel="stylesheet" href="claraverse-tables.css">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            padding: 20px;
+            background-color: #f9fafb;
+        }
+        .dark body {
+            background-color: #111827;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto max-w-4xl">
+        <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+            Exemple de Tables Claraverse pour AIONUI
+        </h1>
+        
+        <!-- Bouton pour basculer le mode sombre -->
+        <button onclick="toggleDarkMode()" class="mb-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Basculer Mode Sombre
+        </button>
+        
+        <!-- Exemple de table avec le style Claraverse -->
+        <div class="prose prose-base dark:prose-invert max-w-none">
+            <h2>Exemple 1: Table de données financières</h2>
+            <table class="min-w-full border border-gray-200 dark:border-gray-700 rounded-lg">
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Libellé</th>
+                        <th>Débit</th>
+                        <th>Crédit</th>
+                        <th>Solde</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>512000</td>
+                        <td>Banque</td>
+                        <td>15 000,00 €</td>
+                        <td>-</td>
+                        <td>15 000,00 €</td>
+                    </tr>
+                    <tr>
+                        <td>401000</td>
+                        <td>Fournisseurs</td>
+                        <td>-</td>
+                        <td>8 500,00 €</td>
+                        <td>-8 500,00 €</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>

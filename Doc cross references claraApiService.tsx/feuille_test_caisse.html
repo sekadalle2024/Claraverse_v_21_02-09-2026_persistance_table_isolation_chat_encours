@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Test-Caisse-001 — FILTRACI 2023</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Arial,sans-serif;font-size:11px;color:#1e293b;background:#fff;padding:16px;}
+  h1{font-size:14px;font-weight:700;color:#1855A3;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #1855A3;}
+  table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:10.5px;}
+  th,td{border:0.5px solid #94a3b8;padding:3px 6px;vertical-align:middle;}
+  th{background:#e2e8f0;font-weight:600;text-align:center;font-size:10px;color:#1e3a8a;}
+  td.lbl{background:#f1f5f9;font-weight:600;white-space:nowrap;color:#1e3a8a;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  td.ctr{text-align:center;}
+  .ok{color:#16a34a;}
+  .ko{color:#dc2626;}
+  .warn{color:#d97706;}
+  .totrow td{background:#dcfce7;font-weight:700;}
+  .idx{color:#1855A3;font-size:9px;}
+  .ltr{font-weight:700;color:#1855A3;text-align:center;border:0.5px solid #94a3b8;padding:3px 6px;background:#EFF6FF;}
+  .ltr-e{font-weight:700;color:#9a3412;text-align:center;border:0.5px solid #94a3b8;padding:3px 6px;background:#FFF7ED;}
+  .nb{border:none!important;background:transparent!important;}
+  .cross{font-weight:700;color:#1855A3;}
+  .section-bar{background:#1855A3;color:#fff;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;margin-bottom:6px;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<h1>Papier de Travail — Test-Caisse-001</h1>
+
+<!-- Signature worksheet -->
+<div class="section-bar">Signature Worksheet</div>
+<table style="width:360px;">
+  <tr><td class="lbl">Client</td><td>FILTRACI</td></tr>
+  <tr><td class="lbl">Exercice</td><td>2023</td></tr>
+  <tr><td class="lbl">Date</td><td>15/03/2026</td></tr>
+  <tr><td class="lbl">Référence</td><td>Test-Caisse-001</td></tr>
+  <tr><td class="lbl">Preparer</td><td>KMP</td></tr>
+  <tr><td class="lbl">Reviewer</td><td>JFK</td></tr>
+</table>
+
+<!-- Table 1 -->
+<div class="section-bar">Feuille de couverture</div>
+<table>
+  <tr><td class="lbl">Étape de mission</td><td>Feuille de couverture (Test d'audit)</td></tr>
+  <tr><td class="lbl">Norme</td><td>Norme 14.2 — Analyses et constats potentiels de la mission</td></tr>
+  <tr><td class="lbl">Méthode</td><td>Méthode de la conclusion par la date d'inventaire</td></tr>
+  <tr><td class="lbl">Référence</td><td>Test-Caisse-001</td></tr>
+  <tr><td class="lbl">Nature de test</td><td><strong>Rapprochement</strong></td></tr>
+</table>
+
+<!-- Table 2 -->
+<div class="section-bar">Objectifs du test</div>
+<table><tr><td>S'assurer de la réalité physique des fonds en caisse et de la conformité du solde comptable par le rapprochement entre les existants physiques inventoriés et le solde théorique du brouillard de caisse.</td></tr></table>
+
+<!-- Table 3 -->
+<div class="section-bar">Procédures / Travaux à effectuer</div>
+<table>
+  <tr><th style="width:30px;">N°</th><th>Description des travaux</th></tr>
+  <tr><td class="ctr">1</td><td>Sélectionner un échantillon représentatif de PV d'inventaire de caisse sur la période auditée.</td></tr>
+  <tr><td class="ctr">2</td><td>Rapprocher le montant du "Solde Physique" (billets et pièces comptés) avec le "Solde Théorique" issu du logiciel de caisse ou du brouillard manuel.</td></tr>
+  <tr><td class="ctr">3</td><td>Recalculer l'écart éventuel (Physique − Théorique) et vérifier les justifications apportées pour tout écart identifié.</td></tr>
+  <tr><td class="ctr">4</td><td>Vérifier la présence des signatures conjointes du caissier (décharge) et du contrôleur sur le PV d'inventaire.</td></tr>
+  <tr><td class="ctr">5</td><td>S'assurer que les inventaires sont réalisés de manière inopinée conformément à la procédure.</td></tr>
+</table>
+
+<!-- Schéma de calcul + Table de test -->
+<div class="section-bar">Schéma de calcul &amp; Table de test principale</div>
+<div style="overflow-x:auto;">
+  <!-- Schéma de calcul : 1 ligne alignée sur les colonnes A, B, C de la table -->
+  <table style="table-layout:fixed;margin-bottom:0;border:none;">
+    <tbody><tr>
+      <td class="nb" style="width:28px;"></td>
+      <td class="nb" style="width:76px;"></td>
+      <td class="nb" style="width:86px;"></td>
+      <td class="nb" style="width:86px;"></td>
+      <td class="ltr" style="width:96px;">(A)</td>
+      <td class="ltr" style="width:96px;">(B)</td>
+      <td class="ltr-e" style="width:96px;">(C) = (A) − (B)</td>
+      <td class="nb" style="width:114px;"></td>
+      <td class="nb" style="width:46px;"></td>
+      <td class="nb" style="width:38px;"></td>
+      <td class="nb" style="width:72px;"></td>
+      <td class="nb" style="width:36px;"></td>
+      <td class="nb" style="width:36px;"></td>
+      <td class="nb" style="width:36px;"></td>
+      <td class="nb" style="width:134px;"></td>
+      <td class="nb" style="width:76px;"></td>
+    </tr></tbody>
+  </table>
+
+  <!-- Table de test -->
+  <table style="table-layout:fixed;">
+    <thead>
+      <tr>
+        <th style="width:28px;">N°</th>
+        <th style="width:76px;">Date inventaire</th>
+        <th style="width:86px;">Réf. PV</th>
+        <th style="width:86px;">Caissier</th>
+        <th style="width:96px;">Solde Théorique (FCFA)</th>
+        <th style="width:96px;">Solde Physique (FCFA)</th>
+        <th style="width:96px;">Écart calculé (FCFA)</th>
+        <th style="width:114px;">Justification écart</th>
+        <th style="width:46px;">Sig. conformes</th>
+        <th style="width:38px;">Écart</th>
+        <th style="width:72px;">Assertion</th>
+        <th style="width:36px;">CTR 1</th>
+        <th style="width:36px;">CTR 2</th>
+        <th style="width:36px;">CTR 3</th>
+        <th style="width:134px;">Description</th>
+        <th style="width:76px;">Conclusion</th>
+      </tr>
+    </thead>
+    <tbody id="tbody-test"></tbody>
+    <tfoot>
+      <tr class="totrow">
+        <td colspan="4" class="ctr">Total</td>
+        <td class="num" id="tot-a"></td>
+        <td class="num" id="tot-b"></td>
+        <td class="num" id="tot-c"></td>
+        <td colspan="9"></td>
+      </tr>
+      <tr>
+        <td colspan="4"></td>
+        <td class="ctr idx">[A01]</td>
+        <td class="ctr idx">[A02]</td>
+        <td class="ctr idx">[A03]</td>
+        <td colspan="9"></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Cross-références -->
+<div class="section-bar">Cross-références documentaires</div>
+<table style="width:520px;">
+  <tr><th style="width:30px;">N°</th><th style="width:80px;">Cross-référence</th><th>Document lié</th></tr>
+  <tr><td class="ctr">1</td><td class="cross">[A01]</td><td>Lead Sheet Trésorerie — Compte 571 (Grand-Livre)</td></tr>
+  <tr><td class="ctr">2</td><td class="cross">[A02]</td><td>Procès-verbaux d'inventaire de caisse (dossier physique)</td></tr>
+  <tr><td class="ctr">3</td><td class="cross">[A03]</td><td>Balance Générale au 31/12/2023 — Compte 571</td></tr>
+  <tr><td class="ctr">4</td><td class="cross">[I150]</td><td>Balance générale complète (toutes classes)</td></tr>
+  <tr><td class="ctr">5</td><td class="cross">[I20]</td><td>PV inventaire de caisse inopinés — période auditée</td></tr>
+</table>
+
+<!-- Légendes -->
+<div class="section-bar">Légendes</div>
+<table style="width:340px;">
+  <tr><th>Légende</th><th>Symbole</th></tr>
+  <tr><td>Contrôle positif (sans anomalie)</td><td class="ctr ok"><strong>+</strong></td></tr>
+  <tr><td>Contrôle négatif (anomalie relevée)</td><td class="ctr ko"><strong>−</strong></td></tr>
+  <tr><td>Non applicable</td><td class="ctr">x / N/A</td></tr>
+</table>
+
+<script>
+const rows=[
+  {d:"31/01/2023",pv:"PV-C-23-001",c:"KOFFI Alain",a:500000,b:500000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"15/02/2023",pv:"PV-C-23-002",c:"DIOP Moussa",a:250000,b:248000,j:"Billet abîmé rejeté par la banque",s:"O",ass:"Évaluation",c1:"+",c2:"+",c3:"+",desc:"Écart mineur documenté par PV de destruction.",conc:"Satisfaisant"},
+  {d:"28/02/2023",pv:"PV-C-23-003",c:"TRAORE Seydou",a:1000000,b:1000000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"10/03/2023",pv:"PV-C-23-004",c:"KOFFI Alain",a:450000,b:450000,j:"N/A",s:"N",ass:"Existence",c1:"-",c2:"+",c3:"+",desc:"PV non signé par le contrôleur financier.",conc:"Faiblesse CI"},
+  {d:"31/03/2023",pv:"PV-C-23-005",c:"BAMBA Fatou",a:750000,b:750000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"14/04/2023",pv:"PV-C-23-006",c:"DIOP Moussa",a:300000,b:300000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"30/04/2023",pv:"PV-C-23-007",c:"TRAORE Seydou",a:1200000,b:1200000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"12/05/2023",pv:"PV-C-23-008",c:"KOFFI Alain",a:550000,b:550000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"31/05/2023",pv:"PV-C-23-009",c:"BAMBA Fatou",a:800000,b:650000,j:"Avance sur salaire DG non comptabilisée",s:"O",ass:"Existence / Évaluation",c1:"+",c2:"-",c3:"+",desc:"Bon de caisse volant. Risque de fraude (ISA 240).",conc:"Anomalie à ajuster"},
+  {d:"15/06/2023",pv:"PV-C-23-010",c:"DIOP Moussa",a:200000,b:200000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"30/06/2023",pv:"PV-C-23-011",c:"TRAORE Seydou",a:1500000,b:1500000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"18/07/2023",pv:"PV-C-23-012",c:"KOFFI Alain",a:400000,b:400000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"31/07/2023",pv:"PV-C-23-013",c:"BAMBA Fatou",a:900000,b:900000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"14/08/2023",pv:"PV-C-23-014",c:"DIOP Moussa",a:280000,b:280000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"31/08/2023",pv:"PV-C-23-015",c:"TRAORE Seydou",a:1100000,b:1100000,j:"N/A",s:"N",ass:"Existence",c1:"-",c2:"+",c3:"+",desc:"Signature du caissier manquante sur le PV.",conc:"Faiblesse CI"},
+  {d:"15/09/2023",pv:"PV-C-23-016",c:"KOFFI Alain",a:600000,b:600000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"30/09/2023",pv:"PV-C-23-017",c:"BAMBA Fatou",a:850000,b:850000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"12/10/2023",pv:"PV-C-23-018",c:"DIOP Moussa",a:320000,b:325000,j:"Excédent de versement client (non réclamé)",s:"O",ass:"Exhaustivité",c1:"+",c2:"+",c3:"+",desc:"Excédent mineur, comptabilisé en profit divers (77).",conc:"Satisfaisant"},
+  {d:"31/10/2023",pv:"PV-C-23-019",c:"TRAORE Seydou",a:1300000,b:1300000,j:"N/A",s:"O",ass:"Existence",c1:"+",c2:"+",c3:"+",desc:"Rapprochement sans écart, solde conforme au GL.",conc:"Satisfaisant"},
+  {d:"31/12/2023",pv:"PV-C-23-020",c:"KOFFI Alain",a:500000,b:500000,j:"N/A",s:"O",ass:"Existence / Cut-off",c1:"+",c2:"+",c3:"+",desc:"Inventaire de clôture (ISA 501) assisté par l'auditeur.",conc:"Satisfaisant"},
+];
+
+let tA=0,tB=0;
+const tbody=document.getElementById('tbody-test');
+rows.forEach((r,i)=>{
+  const e=r.a-r.b; tA+=r.a; tB+=r.b;
+  const cc=r.conc==='Satisfaisant'?'ok':r.conc==='Faiblesse CI'?'warn':'ko';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td class="ctr">${i+1}</td>
+    <td>${r.d}</td>
+    <td>${r.pv}</td>
+    <td>${r.c}</td>
+    <td class="num">${r.a.toLocaleString('fr-FR')}</td>
+    <td class="num">${r.b.toLocaleString('fr-FR')}</td>
+    <td class="num ${e?'ko':''}">${e?e.toLocaleString('fr-FR'):'—'}</td>
+    <td style="font-size:9.5px;">${r.j}</td>
+    <td class="ctr ${r.s==='N'?'ko':'ok'}">${r.s}</td>
+    <td class="ctr ${e?'ko':''}">${e?'Oui':'Non'}</td>
+    <td style="font-size:9px;">${r.ass}</td>
+    <td class="ctr ${r.c1==='-'?'ko':'ok'}">${r.c1}</td>
+    <td class="ctr ${r.c2==='-'?'ko':'ok'}">${r.c2}</td>
+    <td class="ctr ok">${r.c3}</td>
+    <td style="font-size:9px;">${r.desc}</td>
+    <td class="ctr ${cc}" style="font-size:9px;font-weight:600;">${r.conc}</td>`;
+  tbody.appendChild(tr);
+});
+const tC=tA-tB;
+document.getElementById('tot-a').textContent=tA.toLocaleString('fr-FR');
+document.getElementById('tot-b').textContent=tB.toLocaleString('fr-FR');
+document.getElementById('tot-c').textContent=tC?tC.toLocaleString('fr-FR'):'—';
+</script>
+</body>
+</html>

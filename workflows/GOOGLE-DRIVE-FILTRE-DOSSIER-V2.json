@@ -1,0 +1,151 @@
+{
+  "name": "Google Drive - Filtre Dossier V2",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "scan-dossier-cible",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-200, 320],
+      "webhookId": "scan-dossier-cible"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 500,
+        "filter": {},
+        "options": {}
+      },
+      "id": "gd-001",
+      "name": "Liste Tous Elements",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [20, 320],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// CONFIGURATION: Nom du dossier cible\nconst DOSSIER_CIBLE = 'template rapport';\n\nconst items = $input.all();\n\n// Chercher le dossier cible\nlet dossierCible = null;\nconst tousLesDossiers = [];\n\nfor (const item of items) {\n  const data = item.json;\n  if (!data || !data.id) continue;\n  \n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    tousLesDossiers.push({ id: data.id, nom: data.name });\n    \n    const nomLower = (data.name || '').toLowerCase().trim();\n    const cibleLower = DOSSIER_CIBLE.toLowerCase().trim();\n    \n    if (nomLower === cibleLower || \n        nomLower === cibleLower.replace(/ /g, '_') ||\n        nomLower === cibleLower.replace(/ /g, '')) {\n      dossierCible = { id: data.id, nom: data.name };\n    }\n  }\n}\n\nif (!dossierCible) {\n  return [{\n    json: {\n      found: false,\n      dossierRecherche: DOSSIER_CIBLE,\n      dossiersDisponibles: tousLesDossiers.map(d => d.nom)\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    found: true,\n    dossierCible: dossierCible\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Trouver Dossier",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [{ "id": "c1", "leftValue": "={{ $json.found }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true" }}],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-001",
+      "name": "Dossier Trouve?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "limit": 500,
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.dossierCible.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "gd-002",
+      "name": "Contenu Dossier",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [680, 220],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer les infos du dossier parent depuis le node précédent\nconst dossierInfo = $('Trouver Dossier').first().json.dossierCible;\nconst items = $input.all();\n\nconst contenu = [];\n\nfor (const item of items) {\n  const data = item.json;\n  if (!data || !data.id) continue;\n  \n  contenu.push({\n    fichier_id: data.id,\n    fichier_nom: data.name || 'Sans nom',\n    fichier_type: data.mimeType === 'application/vnd.google-apps.folder' ? 'dossier' : 'fichier',\n    fichier_mimeType: data.mimeType || 'unknown',\n    dossier_parent_id: dossierInfo.id,\n    dossier_parent_nom: dossierInfo.nom\n  });\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    dossierCible: dossierInfo,\n    statistiques: {\n      totalElements: contenu.length,\n      sousDossiers: contenu.filter(e => e.fichier_type === 'dossier').length,\n      fichiers: contenu.filter(e => e.fichier_type === 'fichier').length\n    },\n    contenu: contenu\n  }\n}];"
+      },
+      "id": "code-002",
+      "name": "Formater Resultat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 220],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dossier non trouvé\nconst data = $input.first().json;\n\nreturn [{\n  json: {\n    success: false,\n    timestamp: new Date().toISOString(),\n    message: `Dossier '${data.dossierRecherche}' non trouvé`,\n    dossiersDisponibles: data.dossiersDisponibles || [],\n    contenu: []\n  }\n}];"
+      },
+      "id": "code-003",
+      "name": "Erreur Non Trouve",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 420],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1120, 320]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Liste Tous Elements", "type": "main", "index": 0}]]
+    },
+    "Liste Tous Elements": {
+      "main": [[{"node": "Trouver Dossier", "type": "main", "index": 0}]]
+    },
+    "Trouver Dossier": {
+      "main": [[{"node": "Dossier Trouve?", "type": "main", "index": 0}]]
+    },
+    "Dossier Trouve?": {
+      "main": [
+        [{"node": "Contenu Dossier", "type": "main", "index": 0}],
+        [{"node": "Erreur Non Trouve", "type": "main", "index": 0}]
+      ]
+    },
+    "Contenu Dossier": {
+      "main": [[{"node": "Formater Resultat", "type": "main", "index": 0}]]
+    },
+    "Formater Resultat": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    },
+    "Erreur Non Trouve": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "meta": {"templateCredsSetupCompleted": true}
+}

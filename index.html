@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="favicon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-audit</title>
+
+  <!-- ⚡ BACKEND CONFIGURATION - DOIT ÊTRE CHARGÉ EN PREMIER ⚡ -->
+  <script src="/backendConfig.js"></script>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Monaco Editor CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js" crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- ========================================== -->
+  <!-- SYSTÈME DE RESTAURATION UNIQUE -->
+  <!-- ========================================== -->
+
+  <!-- 1. Gestionnaire de verrouillage - DOIT être chargé EN PREMIER -->
+  <script src="/restore-lock-manager.js"></script>
+
+  <!-- 2. Restauration unique au chargement -->
+  <script src="/single-restore-on-load.js"></script>
+
+  <!-- ========================================== -->
+  <!-- SCRIPTS PRINCIPAUX -->
+  <!-- ========================================== -->
+
+  <!-- Wrapper automatique de tables -->
+  <script src="/wrap-tables-auto.js"></script>
+
+  <!-- Fix pour charger Mammoth.js sans conflit AMD/RequireJS -->
+  <script src="/mammoth-loader-fix.js"></script>
+
+
+  <!-- Version 1 (désactivée) -->
+  <!-- <script src="/Modelisation_template.js"></script> --></script>
+
+  <!-- Diagnostic Modelisation (décommenter pour debug) -->
+  <!-- <script src="/diagnostic-modelisation.js"></script> -->
+
+  <script src="/Flowise.js"></script>
+  <script src="/Data.js"></script>
+
+  <!-- Diagnostic des tables Claraverse -->
+  <!-- Script d'alerte automatique DÉSACTIVÉ (28 Mars 2026) -->
+  <!-- Pour réactiver le diagnostic, décommenter le script ci-dessous -->
+  <!--
+  <script>
+    // Attendre le chargement complet du DOM + 1 minute
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log("🔍 [Diagnostic Auto] DOM chargé, attente de 1 minute...");
+      
+      setTimeout(() => {
+        console.log("🔍 [Diagnostic Auto] Démarrage du diagnostic des tables...");
+        
+        // Sélecteurs à tester
+        const selectors = [
+          'table',
+          '.claraverse-table',
+          '[data-claraverse-table]',
+          'div[class*="table"] table',
+          'div[class*="chat"] table'
+        ];
+        
+        let diagnosticInfo = "📊 DIAGNOSTIC DES TABLES\n\n";
+        
+        // Test 1: Compter toutes les tables
+        const allTables = document.querySelectorAll('table');
+        diagnosticInfo += `✅ Nombre total de tables: ${allTables.length}\n\n`;
+        
+        if (allTables.length > 0) {
+          diagnosticInfo += "🎯 Classes CSS des 3 premières tables:\n";
+          for (let i = 0; i < Math.min(3, allTables.length); i++) {
+            const table = allTables[i];
+            const classes = table.className || '(aucune classe)';
+            const parent = table.parentElement;
+            const parentClasses = parent ? parent.className || '(aucune classe)' : 'N/A';
+            diagnosticInfo += `\nTable ${i + 1}:\n`;
+            diagnosticInfo += `  - Classes: ${classes}\n`;
+            diagnosticInfo += `  - Parent: ${parent ? parent.tagName : 'N/A'}\n`;
+            diagnosticInfo += `  - Classes parent: ${parentClasses}\n`;
+          }
+        }
+        
+        // Afficher la première alerte
+        alert(diagnosticInfo);
+        
+        // Test 2: Tester différents sélecteurs
+        let selectorResults = "🔍 RÉSULTATS DES SÉLECTEURS\n\n";
+        
+        selectors.forEach(selector => {
+          try {
+            const elements = document.querySelectorAll(selector);
+            selectorResults += `${selector}\n`;
+            selectorResults += `  → ${elements.length} élément(s) trouvé(s)\n\n`;
+          } catch (error) {
+            selectorResults += `${selector}\n`;
+            selectorResults += `  → ERREUR: ${error.message}\n\n`;
+          }
+        });
+        
+        // Afficher la deuxième alerte
+        alert(selectorResults);
+        
+        console.log("✅ [Diagnostic Auto] Diagnostic terminé");
+        console.log(diagnosticInfo);
+        console.log(selectorResults);
+        
+      }, 60000); // 60 secondes (1 minute) après le chargement du DOM
+    });
+  </script>
+  -->
+
+  <!-- LocalStorage Cleanup Manager - DOIT être chargé EN PREMIER -->
+  <script src="/localstorage-cleanup.js"></script>
+
+  <!-- Pont de persistance - DOIT être chargé AVANT menu.js et conso.js -->
+  <script src="/menu-perssistence-bridge.js"></script>
+s
+  <!-- Scripts utsilisant le système de persistance -->
+  <script src="/menu.js"></script>
+  <script src="/conso.js"></script>
+  
+  <!-- ⭐ INTÉGRATION DIRECTE DANS INDEX.HTML -->
+  <script>
+    (function() {
+      'use strict';
+      
+      console.log("🔗 [INLINE] Chargement intégration conso → IndexedDB");
+
+      let checkCount = 0;
+      const maxChecks = 200; // 20 secondes au lieu de 5
+      
+      function waitAndIntegrate() {
+        checkCount++;
+        
+        if (window.claraverseProcessor) {
+          console.log("✅ [INLINE] claraverseProcessor trouvé après " + (checkCount * 100) + "ms");
+          doIntegration();
+          return;
+        }
+        
+        if (checkCount < maxChecks) {
+          setTimeout(waitAndIntegrate, 100);
+        } else {
+          console.error("❌ [INLINE] claraverseProcessor non trouvé après 20 secondes");
+          console.error("❌ [INLINE] window.claraverseProcessor =", window.claraverseProcessor);
+          console.error("❌ [INLINE] Toutes les propriétés window:", Object.keys(window).filter(k => k.toLowerCase().includes('clara')));
+        }
+      }
+      
+      function doIntegration() {
+        const processor = window.claraverseProcessor;
+        
+        // Éviter double intégration
+        if (processor.__integrated) {
+          console.log("ℹ️ [INLINE] Déjà intégré, skip");
+          return;
+        }
+        
+        const originalSaveTableDataNow = processor.saveTableDataNow;
+        const originalSaveAllData = processor.saveAllData;
+        
+        console.log("🔧 [INLINE] Remplacement de saveTableDataNow...");
+        
+        processor.saveTableDataNow = function(table) {
+          if (!table) {
+            console.warn("⚠️ [INLINE] Table null");
+            return;
+          }
+          
+          console.log("💾 [INLINE] Interception sauvegarde table");
+          
+          try {
+            originalSaveTableDataNow.call(this, table);
+          } catch (e) {
+            console.warn("⚠️ [INLINE] Erreur méthode originale:", e);
+          }
+          
+          try {
+            emitSaveEvent(table);
+          } catch (e) {
+            console.error("❌ [INLINE] Erreur émission événement:", e);
+          }
+        };
+        
+        processor.saveAllData = function(data) {
+          console.log("ℹ️ [INLINE] saveAllData intercepté (ne fait rien)");
+          // Ne plus sauvegarder dans localStorage du tout
+        };
+        
+        // FORCER le vidage de localStorage pour éviter les conflits
+        processor.loadAllData = function() {
+          console.log("ℹ️ [INLINE] loadAllData intercepté (retourne vide)");
+          return {}; // Toujours retourner vide - forcer utilisation IndexedDB
+        };
+        
+        // Désactiver la restauration localStorage
+        processor.restoreAllTablesData = function() {
+          console.log("ℹ️ [INLINE] restoreAllTablesData intercepté");
+          console.log("   La restauration se fera depuis IndexedDB uniquement");
+          // Ne rien faire - laisser flowiseTableBridge restaurer depuis IndexedDB
+        };
+        
+        // Marquer comme intégré
+        processor.__integrated = true;
+        
+        // NETTOYER localStorage pour éviter conflits avec IndexedDB
+        try {
+          const oldData = localStorage.getItem('claraverse_tables_data');
+          if (oldData) {
+            console.log("🧹 [INLINE] Nettoyage localStorage (ancien système)");
+            const parsed = JSON.parse(oldData);
+            const count = Object.keys(parsed).length;
+            console.log(`   ${count} table(s) dans localStorage - SUPPRESSION`);
+            
+            // SUPPRIMER les anciennes données localStorage
+            localStorage.removeItem('claraverse_tables_data');
+            console.log("   ✅ localStorage vidé - utilisation IndexedDB uniquement");
+          }
+        } catch (e) {
+          console.warn("⚠️ [INLINE] Erreur nettoyage localStorage:", e);
+        }
+        
+        console.log("✅ [INLINE] Intégration terminée");
+        
+        // TEST AUTOMATIQUE après 3 secondes
+        setTimeout(() => {
+          console.log("\n" + "=".repeat(60));
+          console.log("🤖 TEST AUTOMATIQUE DE SAUVEGARDE");
+          console.log("=".repeat(60));
+          
+          // 1. Installer écouteur d'événements
+          let eventReceived = false;
+          document.addEventListener('flowise:table:save:request', (e) => {
+            eventReceived = true;
+            console.log("✅ [TEST] Événement flowise:table:save:request REÇU");
+            console.log("   Keyword:", e.detail.keyword);
+            console.log("   SessionId:", e.detail.sessionId?.substring(0, 30) + "...");
+            console.log("   Source:", e.detail.source);
+          });
+          
+          // 2. Afficher le sessionId utilisé
+          const currentSessionId = getSessionId();
+          console.log("📍 [TEST] SessionId actuel:", currentSessionId);
+          console.log("   Ce sessionId sera utilisé pour sauvegarder ET restaurer");
+          
+          // 3. Forcer la restauration avec ce sessionId APRÈS que les tables soient dans le DOM
+          if (window.flowiseTableBridge && window.flowiseTableBridge.restoreTablesForSession) {
+            // Attendre que des tables apparaissent dans le DOM
+            const waitForTables = () => {
+              const tablesInDOM = document.querySelectorAll('table').length;
+              if (tablesInDOM > 0) {
+                console.log(`🔄 [TEST] ${tablesInDOM} table(s) détectées, lancement restauration...`);
+                window.flowiseTableBridge.restoreTablesForSession(currentSessionId)
+                  .then(() => {
+                    console.log("✅ [TEST] Restauration forcée terminée");
+                  })
+                  .catch(err => {
+                    console.warn("⚠️ [TEST] Erreur restauration:", err.message);
+                  });
+              } else {
+                console.log("⏳ [TEST] Attente des tables dans le DOM...");
+                setTimeout(waitForTables, 1000); // Réessayer après 1 seconde
+              }
+            };
+            
+            setTimeout(waitForTables, 500); // Commencer après 0.5 seconde
+          }
+          
+          // 4. Trouver une table
+          const allTables = document.querySelectorAll('table');
+          console.log(`📊 [TEST] ${allTables.length} table(s) trouvée(s) dans le DOM`);
+          
+          if (allTables.length > 0) {
+            const testTable = allTables[0];
+            console.log("🎯 [TEST] Test de sauvegarde sur la première table...");
+            
+            // 5. Appeler saveTableDataNow
+            try {
+              processor.saveTableDataNow(testTable);
+              
+              // 6. Vérifier après 1 seconde si l'événement a été reçu
+              setTimeout(() => {
+                console.log("\n📋 [TEST] RÉSULTAT:");
+                if (eventReceived) {
+                  console.log("✅ Événement émis ET reçu - LA SAUVEGARDE FONCTIONNE");
+                  console.log("💡 Actualisez la page (F5) pour tester la restauration");
+                } else {
+                  console.error("❌ Événement NON reçu - menuIntegration ne répond pas");
+                }
+                console.log("=".repeat(60) + "\n");
+              }, 1000);
+              
+            } catch (e) {
+              console.error("❌ [TEST] Erreur lors de l'appel saveTableDataNow:", e);
+            }
+          } else {
+            console.warn("⚠️ [TEST] Aucune table dans le DOM, impossible de tester");
+            console.log("   Attendez que des tables apparaissent, puis actualisez");
+            console.log("=".repeat(60) + "\n");
+          }
+        }, 3000);
+        
+        window.consoIndexedDBIntegration = {
+          version: '3.0-inline',
+          test: testIntegration
+        };
+        
+        console.log("💡 [INLINE] Tapez: consoIndexedDBIntegration.test()");
+      }
+      
+      function emitSaveEvent(table) {
+        const keyword = extractKeyword(table);
+        console.log("🔑 [INLINE] Keyword:", keyword);
+        
+        const sessionId = getSessionId();
+        console.log("📍 [INLINE] SessionId:", sessionId.substring(0, 30) + "...");
+        
+        const event = new CustomEvent('flowise:table:save:request', {
+          detail: {
+            table: table,
+            sessionId: sessionId,
+            keyword: keyword,
+            source: 'conso'
+          },
+          bubbles: true
+        });
+        
+        document.dispatchEvent(event);
+        console.log("✅ [INLINE] Événement émis pour:", keyword);
+      }
+      
+      function extractKeyword(table) {
+        if (table.dataset && table.dataset.keyword) {
+          return table.dataset.keyword;
+        }
+        
+        const wrapper = table.closest('[data-n8n-keyword]');
+        if (wrapper && wrapper.dataset.n8nKeyword) {
+          return wrapper.dataset.n8nKeyword;
+        }
+        
+        const firstHeader = table.querySelector('th');
+        if (firstHeader && firstHeader.textContent.trim()) {
+          const text = firstHeader.textContent.trim();
+          
+          if (text.toLowerCase().includes('consolidation') || text.includes('📊')) {
+            return 'Table_Consolidation';
+          }
+          
+          return text.substring(0, 50);
+        }
+        
+        if (table.classList.contains('claraverse-conso-table')) {
+          return 'Table_Consolidation';
+        }
+        if (table.classList.contains('claraverse-resultat-table')) {
+          return 'Table_Resultat';
+        }
+        
+        const headers = Array.from(table.querySelectorAll('th'))
+          .map(th => th.textContent.trim().toLowerCase());
+        
+        const headerText = headers.join(' ');
+        
+        if (headerText.includes('conclusion') || headerText.includes('assertion')) {
+          return 'Table_Consolidation';
+        }
+        if (headerText.includes('resultat') || headerText.includes('résultat')) {
+          return 'Table_Resultat';
+        }
+        
+        return `Table_${Date.now()}`;
+      }
+      
+      function getSessionId() {
+        // FORCER utilisation d'un sessionId VRAIMENT stable
+        const STABLE_KEY = 'claraverse_stable_session';
+        
+        // 1. Vérifier sessionStorage en priorité
+        try {
+          let stored = sessionStorage.getItem(STABLE_KEY);
+          if (stored) {
+            console.log("📍 [INLINE] SessionId réutilisé depuis sessionStorage");
+            return stored;
+          }
+        } catch (e) {
+          console.warn("⚠️ [INLINE] sessionStorage non accessible");
+        }
+        
+        // 2. Créer UN SEUL sessionId pour TOUTE la session du navigateur
+        const newSession = `stable_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        
+        try {
+          sessionStorage.setItem(STABLE_KEY, newSession);
+          console.log("📍 [INLINE] Nouveau sessionId créé et stocké:", newSession.substring(0, 40) + "...");
+        } catch (e) {
+          console.warn("⚠️ [INLINE] Impossible de stocker sessionId");
+        }
+        
+        return newSession;
+      }
+      
+      function testIntegration() {
+        console.log("\n🧪 [INLINE] TEST D'INTÉGRATION");
+        console.log("═══════════════════════════════");
+        
+        if (window.claraverseProcessor) {
+          console.log("✅ claraverseProcessor disponible");
+          
+          // Vérifier si la méthode a été remplacée
+          const fnString = window.claraverseProcessor.saveTableDataNow.toString();
+          console.log("📝 Fonction saveTableDataNow:");
+          console.log(fnString.substring(0, 200) + "...");
+          
+          if (fnString.includes('INLINE')) {
+            console.log("✅ saveTableDataNow REMPLACÉE (contient INLINE)");
+          } else {
+            console.error("❌ saveTableDataNow NON REMPLACÉE");
+            console.error("   La fonction n'a pas été modifiée !");
+          }
+          
+          // Vérifier le flag d'intégration
+          if (window.claraverseProcessor.__integrated) {
+            console.log("✅ Flag __integrated présent");
+          } else {
+            console.warn("⚠️ Flag __integrated absent");
+          }
+          
+        } else {
+          console.error("❌ claraverseProcessor NON disponible");
+          return;
+        }
+        
+        if (window.flowiseTableBridge) {
+          console.log("✅ flowiseTableBridge disponible");
+        } else {
+          console.warn("⚠️ flowiseTableBridge NON disponible");
+        }
+        
+        if (window.flowiseTableService) {
+          console.log("✅ flowiseTableService disponible");
+        } else {
+          console.warn("⚠️ flowiseTableService NON disponible");
+        }
+        
+        const tables = document.querySelectorAll('table');
+        console.log(`✅ ${tables.length} table(s) dans le DOM`);
+        
+        const consoTable = document.querySelector('.claraverse-conso-table');
+        if (consoTable) {
+          console.log("✅ Table_conso trouvée");
+          const keyword = extractKeyword(consoTable);
+          console.log("   Keyword:", keyword);
+        } else {
+          console.warn("⚠️ Table_conso non trouvée");
+        }
+        
+        const sessionId = getSessionId();
+        console.log("✅ SessionId:", sessionId.substring(0, 40) + "...");
+        
+        console.log("═══════════════════════════════");
+        console.log("✅ Test terminé\n");
+        
+        console.log("💡 Pour tester la sauvegarde manuellement:");
+        console.log("   1. Trouvez une table dans la page");
+        console.log("   2. const table = document.querySelector('table')");
+        console.log("   3. window.claraverseProcessor.saveTableDataNow(table)");
+        console.log("   4. Observez les logs [INLINE]\n");
+      }
+      
+      console.log("⏳ [INLINE] Attente de claraverseProcessor...");
+      
+      // Méthode 1: Polling avec délai augmenté
+      waitAndIntegrate();
+      
+      // Méthode 2: Écouter l'initialisation de conso.js
+      const originalInit = window.initClaraverseProcessor;
+      if (originalInit) {
+        window.initClaraverseProcessor = function() {
+          console.log("🎯 [INLINE] Détection initialisation conso.js");
+          originalInit.apply(this, arguments);
+          // Attendre un peu que l'instance soit exposée
+          setTimeout(() => {
+            if (window.claraverseProcessor && !window.claraverseProcessor.__integrated) {
+              console.log("✅ [INLINE] Intégration via hook d'initialisation");
+              doIntegration();
+            }
+          }, 100);
+        };
+      }
+      
+      // Méthode 3: Surveiller les réinitialisations
+      setInterval(() => {
+        if (window.claraverseProcessor && !window.claraverseProcessor.__integrated) {
+          console.warn("⚠️ [INLINE] Réinitialisation détectée, ré-intégration...");
+          doIntegration();
+        }
+      }, 2000);
+      
+    })();
+    
+    console.log("✅ [INLINE] Script chargé");
+  </script>
+  
+  <script src="/papier-travail-schema-calcul.js"></script>
+
+  <script src="/papier-travail-cross-ref-horizontale.js"></script>
+  
+  <script src="/papier-travail-totalisation.js"></script>
+
+  <!-- Lead SYSCOHADA - Sections comptables pour audit -->
+  <script src="/lead-syscohada.js"></script>
+
+  <!-- Lead Balance Auto Trigger - Détection automatique et traitement -->
+  <script src="/LeadBalanceAutoTrigger.js"></script>
+
+  <!-- États Financiers SYSCOHADA Auto Trigger - Détection automatique et traitement -->
+  <script src="/EtatFinAutoTrigger.js"></script>
+
+  <!-- Notes Annexes SYSCOHADA Auto Trigger - Calcul automatique des 33 notes annexes -->
+  <script src="/NotesAnnexesAutoTrigger.js"></script>
+
+  <!-- Editeur Auto Trigger - Test de switch backend -->
+  <script src="/EditeurAutoTrigger.js"></script>
+
+  <!-- Échantillonnage Audit Auto Trigger - Data analyst Aléatoire simple -->
+  <script src="/EchantillonnageAutoTrigger.js"></script>
+
+  <!-- États de Contrôle Renderer - Affichage des états de contrôle en React -->
+  <script src="/EtatsControleRenderer.js"></script>
+
+  <!-- États de Contrôle Accordéon Handler - Gestion des clics sur les accordéons -->
+  <script src="/EtatsControleAccordeonHandler.js"></script>
+
+  <!-- Export Liasse Officielle Handler -->
+  <script src="/ExportLiasseHandler.js"></script>
+
+  <!-- Menu Dossier - Barre latérale accordéon pour les tables -->
+  <script src="/dossier-menu.js"></script>
+
+  <!-- Gestion Dossier Google Drive V3 - Chargement automatique -->
+  <script src="/gestion-dossier-v3.js"></script>
+
+  <!-- Gestion Dossier Google Drive via N8N - Menu coulissant avec téléchargement CORS -->
+  <script src="/gestion-dossier-n8n.js"></script>
+
+  <!-- Gestion Électronique - Menu coulissant dans la sidebar -->
+  <script src="/gestion-electro-menu.js"></script>
+
+  <!-- Script Examen CIA - Questionnaires avec persistance -->
+  <script src="/examen_cia.js"></script>
+
+  <!-- Script Auto-Fix Examen CIA - Force fusion et restauration -->
+  <script src="/examen-cia-auto-fix.js"></script>
+
+  <!-- Script de modélisation ULTRA COMPACT - Réduction 75% -->
+  <script src="/modelisation-ultra-compact.js"></script>
+
+  <!-- Diagnostic espacement (console: diagnosticEspacement()) -->
+  <script src="/diagnostic-espacement.js"></script>
+  <script src="/diagnostic-espacement-complet.js"></script>
+
+
+
+  <!-- Restauration automatique au changement de chat -->
+  <script type="module" src="/auto-restore-chat-change.js"></script>
+
+  <!-- ========================================== -->
+  <!-- SCRIPTS DE DIAGNOSTIC (TOUS DÉSACTIVÉS) -->
+  <!-- ========================================== -->
+
+  <!-- Debug restaurations multiples -->
+  <!-- <script src="/debug-restaurations-multiples.js"></script> -->
+
+  <!-- Autres diagnostics -->
+  <!-- <script src="/diagnostic-chat-change.js"></script> -->
+  <!-- <script src="/diagnostic-restauration-detaille.js"></script> -->
+  <!-- <script src="/test-restore-force.js"></script> -->
+
+  <!-- 2. Puis le Patch (nouveau) -->
+
+
+
+  <!-- ClaraVerse Synchronization System v3.0 -->
+  <!-- CRITICAL: Load scripts in this exact order for proper synchronization -->
+
+  <!-- 3. Conso.js - Consolidation and calculations -->
+
+
+
+  <!-- 2. Dev.js v3.0 - Enhanced persistence system -->
+
+  <!-- Initialization Script -->
+  <script>
+    // Wait for all scripts to load and initialize coordination
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("🚀 ClaraVerse v3.0 - Synchronization System Loading...");
+
+      // Monitor coordinator readiness
+      document.addEventListener(
+        "claraverse:coordinator:ready",
+        function (event) {
+          console.log("✅ ClaraVerse Coordination System Ready!");
+          console.log(
+            "📊 Registered Scripts:",
+            event.detail.registeredScripts,
+          );
+
+          // Optional: Display status notification
+          if (window.claraverseSyncAPI) {
+            const notification = document.createElement("div");
+            notification.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: linear-gradient(45deg, #10b981, #059669);
+              color: white;
+              padding: 12px 20px;
+              border-radius: 8px;
+              font-family: system-ui;
+              font-size: 14px;
+              font-weight: 600;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+              z-index: 10000;
+              transition: transform 0.3s ease;
+            `;
+            notification.innerHTML = "🎯 ClaraVerse v3.0 Ready!";
+
+            document.body.appendChild(notification);
+
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+              notification.style.transform = "translateX(100%)";
+              setTimeout(() => notification.remove(), 300);
+            }, 3000);
+          }
+        },
+      );
+
+      // Error handling for script loading issues
+      window.addEventListener("error", function (event) {
+        if (event.filename && event.filename.includes("claraverse")) {
+          console.error("❌ ClaraVerse Script Error:", event.message);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

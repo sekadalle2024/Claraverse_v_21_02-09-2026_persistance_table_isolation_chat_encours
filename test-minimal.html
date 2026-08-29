@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Minimal</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .test-result {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: left;
+        }
+        .success { color: #00aa00; font-weight: bold; }
+        .error { color: #ff0000; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🧪 Test Minimal React</h1>
+        <p>Si vous voyez cette page, le HTML fonctionne.</p>
+        
+        <div id="root"></div>
+        <div id="test-results"></div>
+        
+        <script type="module">
+            // Test 1: Vérifier que le script module fonctionne
+            console.log('✅ Script module chargé');
+            document.getElementById('test-results').innerHTML += '<div class="test-result"><span class="success">✅ Script module fonctionne</span></div>';
+            
+            // Test 2: Vérifier l'import de React
+            try {
+                const reactModule = await import('react');
+                console.log('✅ React importé:', reactModule);
+                document.getElementById('test-results').innerHTML += '<div class="test-result"><span class="success">✅ React importé avec succès</span></div>';
+                
+                // Test 3: Vérifier react-dom
+                const reactDomModule = await import('react-dom/client');
+                console.log('✅ ReactDOM importé:', reactDomModule);
+                document.getElementById('test-results').innerHTML += '<div class="test-result"><span class="success">✅ ReactDOM importé avec succès</span></div>';
+                
+                // Test 4: Créer un composant simple
+                const { createElement } = reactModule.default || reactModule;
+                const { createRoot } = reactDomModule;
+                
+                const root = createRoot(document.getElementById('root'));
+                root.render(
+                    createElement('div', { style: { padding: '20px', background: '#e0ffe0', borderRadius: '8px', margin: '20px 0' } },
+                        createElement('h2', null, '🎉 React fonctionne!'),
+                        createElement('p', null, 'Si vous voyez ce message, React est correctement chargé et rendu.')
+                    )
+                );
+                
+                document.getElementById('test-results').innerHTML += '<div class="test-result"><span class="success">✅ Composant React rendu avec succès</span></div>';
+                
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                document.getElementById('test-results').innerHTML += `<div class="test-result"><span class="error">❌ Erreur: ${error.message}</span></div>`;
+            }
+        </script>
+    </div>
+</body>
+</html>

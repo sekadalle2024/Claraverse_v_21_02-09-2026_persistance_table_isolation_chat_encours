@@ -1,0 +1,130 @@
+{
+  "name": "Google Drive Recursive Scanner - Full Structure",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "scan-drive-full",
+        "responseMode": "responseNode",
+        "options": {
+          "responseData": "allEntries"
+        }
+      },
+      "id": "webhook-start",
+      "name": "Webhook Start",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "oAuth2",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "files(id,name,mimeType,parents),nextPageToken"
+            },
+            {
+              "name": "pageSize",
+              "value": "1000"
+            },
+            {
+              "name": "q",
+              "value": "trashed=false"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-get-all-files",
+      "name": "Get All Drive Items",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 300],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "google-oauth2",
+          "name": "Google Cloud novembre"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer tous les fichiers de la réponse\nconst response = $input.first().json;\nconst allItems = response.files || [];\n\n// Séparer dossiers et fichiers\nconst folders = new Map();\nconst files = [];\n\nfor (const item of allItems) {\n  const entry = {\n    id: item.id,\n    name: item.name,\n    mimeType: item.mimeType,\n    parentId: item.parents && item.parents.length > 0 ? item.parents[0] : 'root'\n  };\n  \n  if (item.mimeType === 'application/vnd.google-apps.folder') {\n    folders.set(item.id, {\n      ...entry,\n      type: 'dossier',\n      sousDossiers: [],\n      fichiers: []\n    });\n  } else {\n    files.push({\n      ...entry,\n      type: 'fichier'\n    });\n  }\n}\n\n// Associer les fichiers à leurs dossiers parents\nfor (const file of files) {\n  const parentFolder = folders.get(file.parentId);\n  if (parentFolder) {\n    parentFolder.fichiers.push({\n      id: file.id,\n      nom: file.name,\n      type: 'fichier',\n      mimeType: file.mimeType\n    });\n  }\n}\n\n// Associer les sous-dossiers à leurs parents\nfor (const [folderId, folder] of folders) {\n  const parentFolder = folders.get(folder.parentId);\n  if (parentFolder) {\n    parentFolder.sousDossiers.push(folderId);\n  }\n}\n\n// Fonction récursive pour construire l'arbre\nfunction buildFolderTree(folderId) {\n  const folder = folders.get(folderId);\n  if (!folder) return null;\n  \n  const result = {\n    id: folder.id,\n    nom: folder.name,\n    type: 'dossier',\n    sousDossiers: [],\n    fichiers: folder.fichiers\n  };\n  \n  for (const subFolderId of folder.sousDossiers) {\n    const subTree = buildFolderTree(subFolderId);\n    if (subTree) {\n      result.sousDossiers.push(subTree);\n    }\n  }\n  \n  return result;\n}\n\n// Trouver les dossiers racine (ceux dont le parent n'est pas dans notre liste)\nconst rootFolders = [];\nconst rootFiles = [];\n\nfor (const [folderId, folder] of folders) {\n  if (!folders.has(folder.parentId)) {\n    rootFolders.push(folderId);\n  }\n}\n\nfor (const file of files) {\n  if (!folders.has(file.parentId)) {\n    rootFiles.push({\n      id: file.id,\n      nom: file.name,\n      type: 'fichier',\n      mimeType: file.mimeType\n    });\n  }\n}\n\n// Construire la structure finale\nconst structure = {\n  dossiers: rootFolders.map(id => buildFolderTree(id)).filter(Boolean),\n  fichiers: rootFiles\n};\n\n// Statistiques\nlet totalSousDossiers = 0;\nlet totalFichiers = files.length;\n\nfunction countItems(node) {\n  if (!node) return;\n  totalSousDossiers++;\n  for (const sub of node.sousDossiers || []) {\n    countItems(sub);\n  }\n}\n\nstructure.dossiers.forEach(countItems);\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    statistiques: {\n      totalDossiers: folders.size,\n      totalFichiers: totalFichiers,\n      dossiersRacine: rootFolders.length,\n      fichiersRacine: rootFiles.length\n    },\n    arborescence: structure\n  }\n}];"
+      },
+      "id": "code-process",
+      "name": "Process & Build Tree",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json; charset=utf-8"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-final",
+      "name": "Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [840, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Start": {
+      "main": [
+        [
+          {
+            "node": "Get All Drive Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Drive Items": {
+      "main": [
+        [
+          {
+            "node": "Process & Build Tree",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process & Build Tree": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

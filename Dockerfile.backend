@@ -1,0 +1,34 @@
+# Dockerfile pour le Backend E-audit (Python/FastAPI)
+FROM python:3.11-slim
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Installer les dépendances système nécessaires
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copier les fichiers du backend
+COPY py_backend/ ./py_backend/
+
+# Copier le fichier requirements.txt
+COPY py_backend/requirements.txt ./requirements.txt
+
+# Installer les dépendances Python
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Créer le répertoire pour les données persistantes
+RUN mkdir -p /root/.clara
+
+# Exposer le port 5000
+EXPOSE 5000
+
+# Variable d'environnement pour le mode production
+ENV PYTHONUNBUFFERED=1
+
+# Commande de démarrage
+CMD ["python", "py_backend/main.py", "--host", "0.0.0.0", "--port", "5000"]

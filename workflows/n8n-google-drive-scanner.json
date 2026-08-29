@@ -1,0 +1,111 @@
+{
+  "name": "Google Drive Scanner - Structure Complète",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "scan-drive",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "list",
+        "options": {
+          "fields": ["id", "name", "mimeType", "parents"]
+        }
+      },
+      "id": "google-drive-list-root",
+      "name": "List Root Items",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [440, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "google-drive-cred",
+          "name": "Google Cloud novembre"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fonction récursive pour construire l'arborescence\nconst items = $input.all();\n\n// Séparer dossiers et fichiers\nconst folders = [];\nconst files = [];\n\nfor (const item of items) {\n  const data = item.json;\n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    folders.push({\n      id: data.id,\n      name: data.name,\n      type: 'folder',\n      parentId: data.parents ? data.parents[0] : null\n    });\n  } else {\n    files.push({\n      id: data.id,\n      name: data.name,\n      type: 'file',\n      mimeType: data.mimeType,\n      parentId: data.parents ? data.parents[0] : null\n    });\n  }\n}\n\n// Construire la structure nested\nfunction buildTree(parentId = null) {\n  const result = [];\n  \n  // Ajouter les sous-dossiers\n  const subFolders = folders.filter(f => f.parentId === parentId);\n  for (const folder of subFolders) {\n    result.push({\n      id: folder.id,\n      name: folder.name,\n      type: 'folder',\n      children: buildTree(folder.id)\n    });\n  }\n  \n  // Ajouter les fichiers\n  const folderFiles = files.filter(f => f.parentId === parentId);\n  for (const file of folderFiles) {\n    result.push({\n      id: file.id,\n      name: file.name,\n      type: 'file',\n      mimeType: file.mimeType\n    });\n  }\n  \n  return result;\n}\n\n// Trouver les éléments racine (sans parent ou parent = root)\nconst rootFolderIds = new Set(folders.map(f => f.id));\nconst rootItems = [...folders, ...files].filter(item => {\n  return !item.parentId || !rootFolderIds.has(item.parentId);\n});\n\n// Construire depuis les racines\nconst tree = [];\nfor (const item of rootItems) {\n  if (item.type === 'folder') {\n    tree.push({\n      id: item.id,\n      name: item.name,\n      type: 'folder',\n      children: buildTree(item.id)\n    });\n  } else {\n    tree.push({\n      id: item.id,\n      name: item.name,\n      type: 'file',\n      mimeType: item.mimeType\n    });\n  }\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    totalFolders: folders.length,\n    totalFiles: files.length,\n    structure: tree\n  }\n}];"
+      },
+      "id": "code-build-tree",
+      "name": "Build Nested Structure",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [880, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "List Root Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Root Items": {
+      "main": [
+        [
+          {
+            "node": "Build Nested Structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Nested Structure": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0
+}

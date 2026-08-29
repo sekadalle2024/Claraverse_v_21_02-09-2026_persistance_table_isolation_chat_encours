@@ -1,0 +1,84 @@
+{
+  "name": "Google Drive - HTTP API Complet",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "scan-drive-http",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-200, 320],
+      "webhookId": "scan-drive-http"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "pageSize", "value": "500"},
+            {"name": "fields", "value": "files(id,name,mimeType,parents)"},
+            {"name": "supportsAllDrives", "value": "true"}
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-001",
+      "name": "API Google Drive",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [20, 320],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// CONFIGURATION\nconst DOSSIER_CIBLE = 'template rapport';\n\nconst response = $input.first().json;\nconst files = response.files || [];\n\nif (files.length === 0) {\n  return [{\n    json: {\n      success: false,\n      timestamp: new Date().toISOString(),\n      message: \"Aucun fichier trouvé\",\n      contenu: []\n    }\n  }];\n}\n\n// Étape 1: Construire un index des dossiers (id -> nom)\nconst dossiersMap = {};\nlet dossierCibleId = null;\nlet dossierCibleNom = null;\nconst cibleLower = DOSSIER_CIBLE.toLowerCase().trim();\n\nfor (const file of files) {\n  if (file.mimeType === 'application/vnd.google-apps.folder') {\n    dossiersMap[file.id] = file.name;\n    \n    const nomLower = (file.name || '').toLowerCase().trim();\n    if (nomLower === cibleLower || \n        nomLower === cibleLower.replace(/ /g, '_') ||\n        nomLower === cibleLower.replace(/ /g, '')) {\n      dossierCibleId = file.id;\n      dossierCibleNom = file.name;\n    }\n  }\n}\n\n// Si dossier cible non trouvé\nif (!dossierCibleId) {\n  return [{\n    json: {\n      success: false,\n      timestamp: new Date().toISOString(),\n      message: `Dossier '${DOSSIER_CIBLE}' non trouvé`,\n      dossierRecherche: DOSSIER_CIBLE,\n      dossiersDisponibles: Object.values(dossiersMap).slice(0, 30),\n      contenu: []\n    }\n  }];\n}\n\n// Étape 2: Filtrer les fichiers qui sont dans le dossier cible\nconst contenu = [];\n\nfor (const file of files) {\n  const parents = file.parents || [];\n  \n  // Vérifier si ce fichier est dans le dossier cible\n  if (parents.includes(dossierCibleId)) {\n    // Trouver le nom du dossier parent\n    const parentId = parents[0];\n    const parentNom = dossiersMap[parentId] || 'Inconnu';\n    \n    contenu.push({\n      fichier_id: file.id,\n      fichier_nom: file.name,\n      fichier_type: file.mimeType === 'application/vnd.google-apps.folder' ? 'dossier' : 'fichier',\n      fichier_mimeType: file.mimeType,\n      dossier_parent_id: parentId,\n      dossier_parent_nom: parentNom\n    });\n  }\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    dossierCible: {\n      id: dossierCibleId,\n      nom: dossierCibleNom\n    },\n    statistiques: {\n      totalElements: contenu.length,\n      sousDossiers: contenu.filter(e => e.fichier_type === 'dossier').length,\n      fichiers: contenu.filter(e => e.fichier_type === 'fichier').length\n    },\n    contenu: contenu\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Traitement",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [460, 320]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "API Google Drive", "type": "main", "index": 0}]]
+    },
+    "API Google Drive": {
+      "main": [[{"node": "Traitement", "type": "main", "index": 0}]]
+    },
+    "Traitement": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "pinData": {},
+  "meta": {"templateCredsSetupCompleted": true}
+}

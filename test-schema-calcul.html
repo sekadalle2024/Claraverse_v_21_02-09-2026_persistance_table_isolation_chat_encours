@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Schéma de Calcul</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            background: #f9fafb;
+        }
+        
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1f2937;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: #374151;
+            margin-top: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+        }
+        
+        th, td {
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: #f3f4f6;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .info-table {
+            background: #fef3c7;
+        }
+        
+        .info-table th, .info-table td {
+            border-color: #fbbf24;
+        }
+        
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+        
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        
+        .status.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+        
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        
+        button:hover {
+            background: #2563eb;
+        }
+        
+        button.secondary {
+            background: #6b7280;
+        }
+        
+        button.secondary:hover {
+            background: #4b5563;
+        }
+        
+        .console-output {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 1rem 0;
+        }
+        
+        .console-output .log {
+            margin: 0.25rem 0;
+        }
+        
+        .console-output .success {
+            color: #10b981;
+        }
+        
+        .console-output .error {
+            color: #ef4444;
+        }
+        
+        .console-output .warning {
+            color: #f59e0b;
+        }
+        
+        .prose {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Schéma de Calcul - Diagnostic</h1>
+    
+    <div class="test-section">
+        <h2>📋 Instructions</h2>
+        <ol>
+            <li>Ouvrez la console du navigateur (F12)</li>
+            <li>Cliquez sur le bouton "Tester le module"</li>
+            <li>Regardez les résultats ci-dessous et dans la console</li>
+        </ol>
+        
+        <button onclick="runDiagnostic()">🔍 Tester le module</button>
+        <button onclick="testProcessAll()" class="secondary">⚡ Forcer le traitement</button>
+        <button onclick="clearConsole()" class="secondary">🗑️ Effacer</button>
+        
+        <div id="status"></div>
+        <div id="console" class="console-output"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>✅ Exemple CORRECT - Avec toutes les conditions</h2>
+        <p><strong>Cette structure devrait fonctionner:</strong></p>
+        
+        <div class="prose">
+            <table class="info-table">
+                <tbody>
+                    <tr>
+                        <td><strong>Nature de test</strong></td>
+                        <td>Validation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Objectif</strong></td>
+                        <td>Valider le solde des comptes clients</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Libellé</th>
+                        <th>Montant</th>
+                        <th>Conclusion</th>
+                        <th>Assertion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>411000</td>
+                        <td>Clients</td>
+                        <td>1 000 000</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>411100</td>
+                        <td>Clients douteux</td>
+                        <td>50 000</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>❌ Exemple INCORRECT - Sans colonne requise</h2>
+        <p><strong>Cette structure NE fonctionnera PAS (pas de colonne Conclusion/Assertion/CTR):</strong></p>
+        
+        <div class="prose">
+            <table class="info-table">
+                <tbody>
+                    <tr>
+                        <td><strong>Nature de test</strong></td>
+                        <td>Validation</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Libellé</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>411000</td>
+                        <td>Clients</td>
+                        <td>1 000 000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>❌ Exemple INCORRECT - Sans "Nature de test"</h2>
+        <p><strong>Cette structure NE fonctionnera PAS (pas de table avec "Nature de test"):</strong></p>
+        
+        <div class="prose">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Compte</th>
+                        <th>Montant</th>
+                        <th>Conclusion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>411000</td>
+                        <td>1 000 000</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+        const statusDiv = document.getElementById('status');
+        
+        function log(message, type = 'log') {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log ${type}`;
+            logEntry.textContent = message;
+            consoleDiv.appendChild(logEntry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+            
+            // Aussi dans la vraie console
+            console.log(message);
+        }
+        
+        function clearConsole() {
+            consoleDiv.innerHTML = '';
+            statusDiv.innerHTML = '';
+        }
+        
+        function showStatus(message, type) {
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function runDiagnostic() {
+            clearConsole();
+            log('🔍 Démarrage du diagnostic...', 'log');
+            
+            // Test 1: Module chargé?
+            if (typeof window.SchemaCalculManager === 'undefined') {
+                log('❌ ERREUR: Module SchemaCalculManager non chargé!', 'error');
+                showStatus('❌ Le module n\'est pas chargé. Assurez-vous que papier-travail-schema-calcul.js est inclus.', 'error');
+                return;
+            }
+            
+            log('✅ Module SchemaCalculManager chargé', 'success');
+            
+            // Test 2: Commandes disponibles?
+            if (typeof window.schemaCalculCommands === 'undefined') {
+                log('⚠️ WARNING: Commandes de debug non disponibles', 'warning');
+            } else {
+                log('✅ Commandes de debug disponibles', 'success');
+            }
+            
+            // Test 3: localStorage?
+            try {
+                const testKey = 'test_schema_calcul';
+                localStorage.setItem(testKey, 'test');
+                localStorage.removeItem(testKey);
+                log('✅ localStorage fonctionne', 'success');
+            } catch (e) {
+                log('❌ ERREUR: localStorage non disponible - ' + e.message, 'error');
+            }
+            
+            // Test 4: Compter les tables
+            const allTables = document.querySelectorAll('table');
+            log(`📊 ${allTables.length} table(s) trouvée(s) dans la page`, 'log');
+            
+            // Test 5: Chercher les divs prose
+            const proseDivs = document.querySelectorAll('div.prose, div[class*="prose"]');
+            log(`📦 ${proseDivs.length} div(s) prose trouvée(s)`, 'log');
+            
+            // Test 6: Analyser chaque div prose
+            let foundValidStructure = false;
+            proseDivs.forEach((div, index) => {
+                const tables = div.querySelectorAll('table');
+                log(`\n📋 Div ${index + 1}: ${tables.length} table(s)`, 'log');
+                
+                if (tables.length >= 2) {
+                    // Chercher "Nature de test"
+                    let hasNatureDeTest = false;
+                    let hasModelizedTable = false;
+                    
+                    tables.forEach((table, tIndex) => {
+                        const text = table.textContent.toLowerCase();
+                        if (text.includes('nature') && text.includes('test')) {
+                            hasNatureDeTest = true;
+                            log(`  ✅ Table ${tIndex + 1}: Contient "Nature de test"`, 'success');
+                        }
+                        
+                        // Vérifier les colonnes
+                        const headers = Array.from(table.querySelectorAll('th, tr:first-child td'))
+                            .map(cell => cell.textContent.trim().toLowerCase());
+                        
+                        const hasRequiredColumn = headers.some(h => 
+                            h === 'conclusion' || h === 'assertion' || /^ctr\d*$/.test(h)
+                        );
+                        
+                        if (hasRequiredColumn) {
+                            hasModelizedTable = true;
+                            log(`  ✅ Table ${tIndex + 1}: A une colonne requise (${headers.join(', ')})`, 'success');
+                        } else if (headers.length > 0) {
+                            log(`  ⚠️ Table ${tIndex + 1}: Colonnes: ${headers.join(', ')}`, 'warning');
+                        }
+                    });
+                    
+                    if (hasNatureDeTest && hasModelizedTable) {
+                        foundValidStructure = true;
+                        log(`\n✅ Structure valide trouvée dans div ${index + 1}!`, 'success');
+                    } else {
+                        if (!hasNatureDeTest) {
+                            log(`  ❌ Manque: "Nature de test"`, 'error');
+                        }
+                        if (!hasModelizedTable) {
+                            log(`  ❌ Manque: Table avec colonne Conclusion/Assertion/CTR`, 'error');
+                        }
+                    }
+                }
+            });
+            
+            // Résultat final
+            if (foundValidStructure) {
+                showStatus('✅ Structure valide trouvée! Le schéma devrait pouvoir être créé.', 'success');
+                log('\n💡 Essayez de cliquer sur "Forcer le traitement" pour créer le schéma', 'log');
+            } else {
+                showStatus('❌ Aucune structure valide trouvée. Vérifiez les conditions requises.', 'error');
+                log('\n📝 Conditions requises:', 'warning');
+                log('  1. Au moins 2 tables dans une div', 'warning');
+                log('  2. Une table avec "Nature de test"', 'warning');
+                log('  3. Une table avec colonne Conclusion/Assertion/CTR', 'warning');
+            }
+        }
+        
+        function testProcessAll() {
+            clearConsole();
+            log('⚡ Forçage du traitement de toutes les tables...', 'log');
+            
+            if (typeof window.schemaCalculCommands === 'undefined') {
+                log('❌ Commandes non disponibles', 'error');
+                showStatus('❌ Les commandes de debug ne sont pas disponibles', 'error');
+                return;
+            }
+            
+            try {
+                window.schemaCalculCommands.processAll();
+                log('✅ Traitement lancé - Regardez la console principale (F12)', 'success');
+                showStatus('✅ Traitement lancé! Vérifiez si un schéma a été ajouté au-dessus des tables.', 'success');
+            } catch (e) {
+                log('❌ ERREUR: ' + e.message, 'error');
+                showStatus('❌ Erreur lors du traitement: ' + e.message, 'error');
+            }
+        }
+        
+        // Auto-run au chargement
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('📄 Page chargée - Prêt pour les tests', 'log');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

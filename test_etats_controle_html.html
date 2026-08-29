@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test États de Contrôle - États Financiers SYSCOHADA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .section:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .section-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .section-header .arrow {
+            transition: transform 0.3s ease;
+            font-size: 1.5em;
+        }
+        
+        .section.active .arrow {
+            transform: rotate(90deg);
+        }
+        
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .section.active .section-content {
+            max-height: 2000px;
+        }
+        
+        .section-body {
+            padding: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .total-row {
+            background-color: #f0f0f0;
+            font-weight: bold;
+            border-top: 2px solid #667eea;
+        }
+        
+        .ref-cell {
+            font-weight: bold;
+            color: #667eea;
+            width: 80px;
+        }
+        
+        .montant-cell {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .footer {
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Test États de Contrôle</h1>
+            <p>États Financiers SYSCOHADA Révisé - Module de Contrôle Exhaustif</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">📅 Généré le: 05 April 2026 à 00:53</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-box">
+                <h2 style="margin-bottom: 15px;">📊 Vue d'Ensemble</h2>
+                <p>Ce fichier a été généré automatiquement à partir de la balance démo.</p>
+                <p style="margin-top: 10px;">Les contrôles couvrent : la couverture des comptes, l'équilibre du bilan, la cohérence du résultat, et les sens des comptes.</p>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" onclick="expandAll()">📂 Tout Ouvrir</button>
+                <button class="btn" onclick="collapseAll()">📁 Tout Fermer</button>
+                <button class="btn" onclick="window.print()">🖨️ Imprimer</button>
+            </div>
+
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔍 Etat de contrôle Bilan Actif</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">REF</th>
+                                    <th style="width: auto;">LIBELLÉS</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">CA</td>
+                                    <td>Total Actif</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">CB</td>
+                                    <td>Nombre de postes</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">CD</td>
+                                    <td>Variation Total</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔍 Etat de contrôle Bilan Passif</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">REF</th>
+                                    <th style="width: auto;">LIBELLÉS</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">PA</td>
+                                    <td>Total Passif</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">PB</td>
+                                    <td>Nombre de postes</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">PD</td>
+                                    <td>Variation Total</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔍 Etat de contrôle Compte de Résultat</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">REF</th>
+                                    <th style="width: auto;">LIBELLÉS</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="">
+                                    <td class="ref-cell">RA</td>
+                                    <td>Résultat Net</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">RC</td>
+                                    <td>Nombre de postes</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">RE</td>
+                                    <td>Variation Résultat</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔍 Etat de contrôle Tableau des Flux de Trésorerie</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">REF</th>
+                                    <th style="width: auto;">LIBELLÉS</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="">
+                                    <td class="ref-cell">TA</td>
+                                    <td>Trésorerie finale</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">TC</td>
+                                    <td>Variation trésorerie</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">TE</td>
+                                    <td>Flux opérationnels</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔍 Etat de contrôle Sens des Comptes</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">REF</th>
+                                    <th style="width: auto;">LIBELLÉS</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="">
+                                    <td class="ref-cell">SA</td>
+                                    <td>Comptes en débit</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">SB</td>
+                                    <td>Comptes en crédit</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">SE</td>
+                                    <td>Total débit</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">SF</td>
+                                    <td>Total crédit</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">SI</td>
+                                    <td>Équilibre</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span>🔍 Etat d'équilibre Bilan</span>
+                    <span class="arrow">›</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 60px;">REF</th>
+                                    <th style="width: auto;">LIBELLÉS</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N</th>
+                                    <th style="width: 150px; text-align: right;">EXERCICE N-1</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">EA</td>
+                                    <td>Total Actif</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">EB</td>
+                                    <td>Total Passif</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">EC</td>
+                                    <td>Résultat Net</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="">
+                                    <td class="ref-cell">ED</td>
+                                    <td>Passif + Résultat</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                                <tr class="total-row">
+                                    <td class="ref-cell">EE</td>
+                                    <td>Équilibre</td>
+                                    <td class="montant-cell">0</td>
+                                    <td class="montant-cell">0</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p><strong>États de Contrôle - États Financiers SYSCOHADA Révisé</strong></p>
+            <p style="margin-top: 10px;">Module développé pour ClaraVerse - Projet Open Source</p>
+            <p style="margin-top: 5px;">📅 Date de génération: 05 April 2026 à 00:53</p>
+        </div>
+    </div>
+    
+    <script>
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('active');
+        }
+        
+        function expandAll() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.add('active');
+            });
+        }
+        
+        function collapseAll() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Test États de Contrôle chargé avec succès');
+        });
+    </script>
+</body>
+</html>

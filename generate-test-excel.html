@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de fichier Excel de test - Format Flowise</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            margin: 10px;
+            display: block;
+            width: 100%;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .preview {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Générateur Excel - Format Flowise</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instructions</h3>
+            <p>Ce générateur crée un fichier Excel de test avec la structure exacte pour tester l'extraction et le formatage Flowise dans ClaraVerse.</p>
+            <p><strong>Utilisation :</strong></p>
+            <ol>
+                <li>Cliquez sur "Générer fichier Excel de test"</li>
+                <li>Le fichier sera téléchargé automatiquement</li>
+                <li>Uploadez ce fichier dans ClaraVerse</li>
+                <li>Vérifiez que l'alerte affiche le format JSON Flowise correct</li>
+            </ol>
+        </div>
+
+        <button onclick="generateTestExcel()">📊 Générer fichier Excel de test</button>
+        
+        <div class="preview" id="preview">
+            <strong>Aperçu des données qui seront générées :</strong>
+            
+            Feuille 1: "Metadata"
+            - Etape: "Programme"
+            - reference: "Programme-001"
+            
+            Feuille 2: "Tasks"
+            - Colonnes: tâches clés, Point de controle, Risque, contrôle audit, Document
+            - 8 lignes de données de tâches de caisse
+            
+            Feuille 3: "Links"
+            - Télécharger: "https://www.notion.so/Projet-arc-narratif-templates-1f1913f0159380968c0bf66dec42d350?pvs=21"
+            
+            <strong>Format JSON Flowise attendu :</strong>
+            {
+              "Etape mission - Programme": [
+                {
+                  "table 1": {
+                    "Etape": "Programme",
+                    "reference": "Programme-001"
+                  }
+                },
+                {
+                  "table 2": [
+                    {
+                      "tâches clés": "Effectuer l'arrêté de caisse quotidien",
+                      "Point de controle": "Conformité du solde physique...",
+                      ...
+                    }
+                  ]
+                },
+                {
+                  "table 3": {
+                    "Télécharger": "https://www.notion.so/..."
+                  }
+                }
+              ]
+            }
+        </div>
+    </div>
+
+    <script>
+        function generateTestExcel() {
+            // Créer un nouveau classeur
+            const wb = XLSX.utils.book_new();
+            
+            // Feuille 1: Metadata (table 1)
+            const metadataData = [
+                ['Etape', 'reference'],
+                ['Programme', 'Programme-001']
+            ];
+            const ws1 = XLSX.utils.aoa_to_sheet(metadataData);
+            XLSX.utils.book_append_sheet(wb, ws1, 'Metadata');
+            
+            // Feuille 2: Tasks (table 2)
+            const tasksData = [
+                ['tâches clés', 'Point de controle', 'Risque', 'contrôle audit', 'Document'],
+                [
+                    'Effectuer l\'arrêté de caisse quotidien',
+                    'Conformité du solde physique avec le solde théorique du brouillard de caisse. Existence d\'un comptage contradictoire.',
+                    'Détournement d\'espèces, erreur de comptage non détectée, dissimulation d\'écarts.',
+                    '1. Sélectionner un échantillon d\'arrêtés de caisse sur la période. 2. Vérifier la présence d\'une double signature (caissier et superviseur). 3. Recalculer l\'arrêté et le rapprocher du brouillard de caisse et des pièces justificatives.',
+                    'Procès-verbal d\'arrêté de caisse, Brouillard de caisse.'
+                ],
+                [
+                    'Surveiller le niveau de l\'encaisse',
+                    'Respect du plafond d\'encaisse autorisé en fin de journée.',
+                    'Vol ou perte aggravée en cas de sinistre. Coût d\'opportunité (fonds oisifs).',
+                    '1. Obtenir la procédure de trésorerie fixant le plafond. 2. Analyser les soldes de caisse de fin de journée sur un mois. 3. Identifier les dépassements et vérifier s\'ils ont été justifiés et suivis d\'une remise en banque rapide.',
+                    'Procédure de trésorerie, Journal de caisse.'
+                ],
+                [
+                    'Effectuer les remises en banque',
+                    'Respect du délai de remise en banque des espèces et chèques (ex: J+1). Conformité des bordereaux.',
+                    'Perte ou vol des moyens de paiement, retard dans la disponibilité des fonds, risque d\'impayé accru sur les chèques.',
+                    '1. Suivre un échantillon de recettes (chèques, espèces) de leur réception à leur remise en banque. 2. Calculer le délai de remise. 3. Rapprocher les bordereaux de remise avec les souches et les relevés bancaires.',
+                    'Bordereaux de remise en banque, Relevés bancaires.'
+                ],
+                [
+                    'Justifier les dépenses de caisse',
+                    'Existence d\'une pièce justificative originale, conforme et approuvée pour chaque sortie de caisse.',
+                    'Dépenses non autorisées, non professionnelles ou fictives. Risque fiscal (rejet de charges).',
+                    '1. Sélectionner un échantillon de dépenses de caisse. 2. Pour chaque dépense, vérifier la présence d\'une pièce justificative valide. 3. S\'assurer que la pièce a été approuvée par un responsable autorisé avant le paiement.',
+                    'Pièces justificatives (factures, reçus), Brouillard de caisse.'
+                ],
+                [
+                    'Assurer la sécurité physique des fonds',
+                    'Fonds conservés dans un coffre-fort fermé. Accès restreint aux seules personnes habilitées.',
+                    'Vol interne ou externe très élevé.',
+                    '1. Inspection physique des installations (coffre-fort, serrures). 2. Entretien sur les pratiques de gestion de la clé/code. 3. Vérifier la liste des personnes habilitées et sa mise à jour.',
+                    'Procédure de gestion de caisse, Liste des personnes habilitées.'
+                ],
+                [
+                    'Gérer les accès et la séparation des tâches',
+                    'La personne qui gère la caisse est différente de celle qui enregistre les opérations en comptabilité.',
+                    'Manipulation des enregistrements comptables pour masquer un détournement.',
+                    '1. Analyser la matrice des habilitations du système comptable. 2. Vérifier que le caissier n\'a pas les droits pour comptabiliser les opérations de caisse. 3. Confirmer que la comptabilisation est faite par un tiers sur la base de documents validés.',
+                    'Matrice des habilitations, Description de fonction.'
+                ],
+                [
+                    'Réaliser des contrôles inopinés',
+                    'Existence de procès-verbaux de contrôles de caisse inopinés réalisés par un tiers indépendant (N+1, contrôle interne).',
+                    'Dissimulation de fraudes ou d\'erreurs sur une longue période. Manque de dissuasion.',
+                    '1. Demander les PV des contrôles inopinés sur les 12 derniers mois. 2. Vérifier leur fréquence (ex: trimestrielle). 3. Analyser le contenu des PV (travaux menés, écarts constatés, signature).',
+                    'Procès-verbaux de contrôle de caisse inopiné.'
+                ],
+                [
+                    'Gérer l\'alimentation de la caisse',
+                    'L\'alimentation de la caisse se fait par un moyen tracé (chèque, virement) et non par prélèvement sur les recettes.',
+                    'Rupture de l\'exhaustivité des recettes, perte de la piste d\'audit.',
+                    '1. Analyser les mouvements d\'alimentation de la caisse sur une période. 2. S\'assurer que chaque alimentation provient d\'un chèque ou virement bancaire. 3. Vérifier qu\'il n\'y a pas de prélèvement sur les recettes en espèces.',
+                    'Demandes d\'alimentation de caisse, Journal de caisse, Relevés bancaires.'
+                ]
+            ];
+            const ws2 = XLSX.utils.aoa_to_sheet(tasksData);
+            XLSX.utils.book_append_sheet(wb, ws2, 'Tasks');
+            
+            // Feuille 3: Links (table 3)
+            const linksData = [
+                ['Télécharger'],
+                ['https://www.notion.so/Projet-arc-narratif-templates-1f1913f0159380968c0bf66dec42d350?pvs=21']
+            ];
+            const ws3 = XLSX.utils.aoa_to_sheet(linksData);
+            XLSX.utils.book_append_sheet(wb, ws3, 'Links');
+            
+            // Générer et télécharger le fichier
+            const fileName = 'Etape mission - Programme.xlsx';
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`✅ Fichier Excel généré et téléchargé : ${fileName}\n\nVous pouvez maintenant l'uploader dans ClaraVerse pour tester l'extraction !`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Détection Table X-Ref</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #380101;
+            border-bottom: 3px solid #380101;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #380101;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .test-button {
+            background: #380101;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #5a0202;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        .error {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+        .info {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test Détection Table X-Ref Documentaire</h1>
+        
+        <div>
+            <button class="test-button" onclick="testDetection()">🔍 Tester Détection</button>
+            <button class="test-button" onclick="testColumnIndexes()">📊 Tester Index Colonnes</button>
+            <button class="test-button" onclick="testRowData()">📋 Tester Données Ligne</button>
+            <button class="test-button" onclick="clearResults()">🗑️ Effacer Résultats</button>
+        </div>
+        
+        <div id="results"></div>
+        
+        <h2>Table X-Ref Documentaire</h2>
+        <table id="xref-table">
+            <thead>
+                <tr>
+                    <th>no</th>
+                    <th>Cross references</th>
+                    <th>Document</th>
+                    <th>Client</th>
+                    <th>Exercice</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>[I30]</td>
+                    <td>AFRILAND</td>
+                    <td>FILTRACI</td>
+                    <td>2024</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>[I150]</td>
+                    <td>Balances generale</td>
+                    <td>FILTRACI</td>
+                    <td>2024</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>[I1]</td>
+                    <td>Lead sheet trésorerie</td>
+                    <td>FILTRACI</td>
+                    <td>2024</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function testDetection() {
+            clearResults();
+            addResult('<h3>🔍 Test de Détection de la Table</h3>', 'info');
+            
+            const table = document.getElementById('xref-table');
+            
+            // Test 1: Vérifier la structure de la table
+            addResult(`<strong>Structure de la table:</strong><br>
+                - Nombre de lignes: ${table.querySelectorAll('tr').length}<br>
+                - A un thead: ${table.querySelector('thead') ? 'Oui ✅' : 'Non ❌'}<br>
+                - A un tbody: ${table.querySelector('tbody') ? 'Oui ✅' : 'Non ❌'}`, 'info');
+            
+            // Test 2: Extraire les en-têtes
+            const headers = Array.from(table.querySelectorAll('th, thead td'))
+                .map(th => th.textContent.trim());
+            
+            addResult(`<strong>En-têtes trouvés:</strong><br>
+                <pre>${JSON.stringify(headers, null, 2)}</pre>`, 'info');
+            
+            // Test 3: Vérifier la détection des colonnes clés
+            const headersLower = headers.map(h => h.toLowerCase());
+            
+            const hasCrossRef = headersLower.some(h => 
+                (h.includes('cross') && h.includes('ref')) || 
+                h.includes('x-ref') || 
+                h.includes('xref')
+            );
+            
+            const hasDocument = headersLower.some(h => 
+                h.includes('document') || h.includes('doc')
+            );
+            
+            addResult(`<strong>Détection des colonnes:</strong><br>
+                - Colonne "Cross references" détectée: ${hasCrossRef ? 'Oui ✅' : 'Non ❌'}<br>
+                - Colonne "Document" détectée: ${hasDocument ? 'Oui ✅' : 'Non ❌'}`, 
+                hasCrossRef && hasDocument ? 'result' : 'error');
+            
+            // Test 4: Afficher les en-têtes en minuscules pour debug
+            addResult(`<strong>En-têtes en minuscules (pour debug):</strong><br>
+                <pre>${JSON.stringify(headersLower, null, 2)}</pre>`, 'info');
+        }
+
+        function testColumnIndexes() {
+            clearResults();
+            addResult('<h3>📊 Test des Index de Colonnes</h3>', 'info');
+            
+            const table = document.getElementById('xref-table');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            
+            // Trouver la ligne d'en-tête
+            const headerRow = rows[0];
+            const headerCells = Array.from(headerRow.querySelectorAll('th, td'));
+            
+            addResult(`<strong>Ligne d'en-tête (row 0):</strong><br>
+                Nombre de cellules: ${headerCells.length}`, 'info');
+            
+            // Afficher chaque cellule d'en-tête avec son index
+            let headerDetails = '<strong>Détails des cellules d\'en-tête:</strong><br><pre>';
+            headerCells.forEach((cell, index) => {
+                const text = cell.textContent.trim();
+                const textLower = text.toLowerCase();
+                headerDetails += `Index ${index}: "${text}" (lowercase: "${textLower}")\n`;
+            });
+            headerDetails += '</pre>';
+            addResult(headerDetails, 'info');
+            
+            // Trouver les index des colonnes
+            let crossRefIndex = -1;
+            let documentIndex = -1;
+            
+            headerCells.forEach((cell, index) => {
+                const text = cell.textContent.trim().toLowerCase();
+                if ((text.includes('cross') && text.includes('ref')) || 
+                    text.includes('x-ref') || text.includes('xref')) {
+                    crossRefIndex = index;
+                }
+                if (text.includes('document') || text === 'doc') {
+                    documentIndex = index;
+                }
+            });
+            
+            addResult(`<strong>Index trouvés:</strong><br>
+                - Index "Cross references": ${crossRefIndex} ${crossRefIndex !== -1 ? '✅' : '❌'}<br>
+                - Index "Document": ${documentIndex} ${documentIndex !== -1 ? '✅' : '❌'}`, 
+                crossRefIndex !== -1 && documentIndex !== -1 ? 'result' : 'error');
+        }
+
+        function testRowData() {
+            clearResults();
+            addResult('<h3>📋 Test des Données de Ligne</h3>', 'info');
+            
+            const table = document.getElementById('xref-table');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            
+            // Trouver les index des colonnes
+            const headerRow = rows[0];
+            const headerCells = Array.from(headerRow.querySelectorAll('th, td'));
+            
+            let crossRefIndex = -1;
+            let documentIndex = -1;
+            
+            headerCells.forEach((cell, index) => {
+                const text = cell.textContent.trim().toLowerCase();
+                if ((text.includes('cross') && text.includes('ref')) || 
+                    text.includes('x-ref') || text.includes('xref')) {
+                    crossRefIndex = index;
+                }
+                if (text.includes('document') || text === 'doc') {
+                    documentIndex = index;
+                }
+            });
+            
+            if (crossRefIndex === -1 || documentIndex === -1) {
+                addResult('❌ Impossible de trouver les index des colonnes', 'error');
+                return;
+            }
+            
+            addResult(`<strong>Index utilisés:</strong><br>
+                - Cross references: ${crossRefIndex}<br>
+                - Document: ${documentIndex}`, 'info');
+            
+            // Tester chaque ligne de données
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = Array.from(row.querySelectorAll('td, th'));
+                
+                const crossRef = cells[crossRefIndex]?.textContent.trim() || '';
+                const document = cells[documentIndex]?.textContent.trim() || '';
+                const fileName = `${crossRef}-${document}`;
+                
+                addResult(`<strong>Ligne ${i}:</strong><br>
+                    - Cross references: "${crossRef}"<br>
+                    - Document: "${document}"<br>
+                    - Nom de fichier: "${fileName}"`, 'result');
+            }
+        }
+
+        // Exécuter le test au chargement
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testDetection();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

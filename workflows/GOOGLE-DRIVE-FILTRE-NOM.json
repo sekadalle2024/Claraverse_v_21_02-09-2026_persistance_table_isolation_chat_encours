@@ -1,0 +1,75 @@
+{
+  "name": "Google Drive - Filtre Par Nom",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "scan-dossier-cible",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-200, 320],
+      "webhookId": "scan-dossier-cible"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 500,
+        "filter": {},
+        "options": {}
+      },
+      "id": "gd-001",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [20, 320],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "WTDsvHYQAso7C0Xe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// CONFIGURATION: Nom du dossier/fichier cible\nconst NOM_CIBLE = 'template rapport';\n\nconst items = $input.all();\n\nif (!items || items.length === 0) {\n  return [{\n    json: {\n      success: false,\n      timestamp: new Date().toISOString(),\n      message: \"Aucun élément trouvé dans Google Drive\",\n      contenu: []\n    }\n  }];\n}\n\n// Chercher tous les éléments qui correspondent au nom cible\nconst elementsTrouves = [];\nconst cibleLower = NOM_CIBLE.toLowerCase().trim();\n\nfor (const item of items) {\n  const data = item.json;\n  if (!data || !data.id) continue;\n  \n  const nomLower = (data.name || '').toLowerCase().trim();\n  \n  // Correspondance exacte ou avec variantes\n  if (nomLower === cibleLower || \n      nomLower === cibleLower.replace(/ /g, '_') ||\n      nomLower === cibleLower.replace(/ /g, '')) {\n    elementsTrouves.push({\n      fichier_id: data.id,\n      fichier_nom: data.name,\n      fichier_mimeType: data.mimeType || 'unknown',\n      dossier_parent_id: NOM_CIBLE,\n      dossier_parent_nom: NOM_CIBLE\n    });\n  }\n}\n\nif (elementsTrouves.length === 0) {\n  // Chercher des correspondances partielles\n  const correspondancesPartielles = items\n    .filter(i => i.json && i.json.name && i.json.name.toLowerCase().includes(cibleLower.split(' ')[0]))\n    .map(i => i.json.name)\n    .slice(0, 20);\n    \n  return [{\n    json: {\n      success: false,\n      timestamp: new Date().toISOString(),\n      message: `Aucun élément nommé '${NOM_CIBLE}' trouvé`,\n      recherche: NOM_CIBLE,\n      correspondancesPartielles: correspondancesPartielles,\n      contenu: []\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    recherche: NOM_CIBLE,\n    statistiques: {\n      totalTrouves: elementsTrouves.length\n    },\n    contenu: elementsTrouves\n  }\n}];"
+      },
+      "id": "code-001",
+      "name": "Filtrer Par Nom",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {"responseCode": 200}
+      },
+      "id": "resp-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [460, 320]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Google Drive", "type": "main", "index": 0}]]
+    },
+    "Google Drive": {
+      "main": [[{"node": "Filtrer Par Nom", "type": "main", "index": 0}]]
+    },
+    "Filtrer Par Nom": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {"executionOrder": "v1"},
+  "pinData": {},
+  "meta": {"templateCredsSetupCompleted": true}
+}

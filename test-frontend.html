@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Frontend Claraverse</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        #results {
+            white-space: pre-wrap;
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1>🔍 Diagnostic Frontend Claraverse</h1>
+        <p>Cliquez sur les boutons ci-dessous pour tester différents aspects de l'application.</p>
+    </div>
+
+    <div class="test-card">
+        <h2>Tests Disponibles</h2>
+        <button onclick="testViteServer()">1. Tester Serveur Vite</button>
+        <button onclick="testIndexHTML()">2. Tester index.html</button>
+        <button onclick="testMainTSX()">3. Tester main.tsx</button>
+        <button onclick="testConsole()">4. Vérifier Console</button>
+        <button onclick="clearResults()">Effacer Résultats</button>
+    </div>
+
+    <div class="test-card">
+        <h2>Résultats</h2>
+        <div id="results">Aucun test exécuté pour le moment...</div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            results.textContent += `\n[${timestamp}] ${icon} ${message}`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').textContent = 'Résultats effacés...\n';
+        }
+
+        async function testViteServer() {
+            log('Test du serveur Vite...', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/');
+                if (response.ok) {
+                    log('✓ Serveur Vite accessible sur http://localhost:5173/', 'success');
+                    const html = await response.text();
+                    if (html.includes('<!doctype html>')) {
+                        log('✓ HTML valide retourné', 'success');
+                    } else {
+                        log('⚠ HTML retourné mais format inattendu', 'error');
+                    }
+                } else {
+                    log(`✗ Erreur HTTP: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`✗ Impossible de se connecter au serveur: ${error.message}`, 'error');
+                log('→ Assurez-vous que "npm run dev" est en cours d\'exécution', 'info');
+            }
+        }
+
+        async function testIndexHTML() {
+            log('Test de index.html...', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/');
+                const html = await response.text();
+                
+                // Vérifier la balise script
+                if (html.includes('type="module" src="/src/main.tsx"')) {
+                    log('✓ Balise script correcte trouvée', 'success');
+                } else if (html.includes('type="module src="/src/main.tsx"')) {
+                    log('✗ ERREUR: Guillemet manquant dans la balise script!', 'error');
+                    log('→ Correction nécessaire: type="module" src=...', 'info');
+                } else {
+                    log('⚠ Balise script non trouvée ou format différent', 'error');
+                }
+
+                // Vérifier le div root
+                if (html.includes('<div id="root">')) {
+                    log('✓ Div #root trouvé', 'success');
+                } else {
+                    log('✗ Div #root manquant!', 'error');
+                }
+            } catch (error) {
+                log(`✗ Erreur lors du test: ${error.message}`, 'error');
+            }
+        }
+
+        async function testMainTSX() {
+            log('Test de main.tsx...', 'info');
+            try {
+                const response = await fetch('http://localhost:5173/src/main.tsx');
+                if (response.ok) {
+                    log('✓ Fichier main.tsx accessible', 'success');
+                } else {
+                    log(`✗ Erreur HTTP: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`✗ Erreur: ${error.message}`, 'error');
+            }
+        }
+
+        function testConsole() {
+            log('Vérification de la console...', 'info');
+            log('→ Ouvrez la console du navigateur (F12)', 'info');
+            log('→ Allez sur http://localhost:5173/', 'info');
+            log('→ Cherchez des erreurs en rouge', 'info');
+            log('→ Les erreurs courantes:', 'info');
+            log('  - Failed to fetch module', 'info');
+            log('  - Unexpected token', 'info');
+            log('  - Cannot find module', 'info');
+        }
+
+        // Test automatique au chargement
+        window.addEventListener('load', () => {
+            log('Page de diagnostic chargée', 'success');
+            log('Cliquez sur les boutons pour lancer les tests', 'info');
+        });
+    </script>
+</body>
+</html>

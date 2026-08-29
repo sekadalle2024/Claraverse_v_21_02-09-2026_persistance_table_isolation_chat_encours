@@ -1,0 +1,72 @@
+{
+  "name": "Google Drive Scanner V3 - Robuste",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "scan-drive",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-v3-001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 340]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "operation": "search",
+        "limit": 500,
+        "queryString": "",
+        "options": {}
+      },
+      "id": "gd-v3-001",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [440, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer les items (peut être vide)\nconst items = $input.all();\n\n// Si aucun item, retourner une réponse vide mais valide\nif (!items || items.length === 0 || !items[0].json || Object.keys(items[0].json).length === 0) {\n  return [{\n    json: {\n      success: true,\n      timestamp: new Date().toISOString(),\n      message: \"Aucun fichier trouvé dans Google Drive\",\n      statistiques: {\n        totalDossiers: 0,\n        totalFichiers: 0\n      },\n      elements: {\n        dossiers: [],\n        fichiers: []\n      }\n    }\n  }];\n}\n\n// Séparer dossiers et fichiers\nconst dossiers = [];\nconst fichiers = [];\n\nfor (const item of items) {\n  const data = item.json;\n  \n  // Vérifier que l'item a des données\n  if (!data || !data.id) continue;\n  \n  if (data.mimeType === 'application/vnd.google-apps.folder') {\n    dossiers.push({\n      id: data.id,\n      nom: data.name || 'Sans nom',\n      type: 'dossier',\n      mimeType: data.mimeType\n    });\n  } else {\n    fichiers.push({\n      id: data.id,\n      nom: data.name || 'Sans nom',\n      type: 'fichier',\n      mimeType: data.mimeType || 'unknown'\n    });\n  }\n}\n\n// Construire la réponse\nreturn [{\n  json: {\n    success: true,\n    timestamp: new Date().toISOString(),\n    statistiques: {\n      totalDossiers: dossiers.length,\n      totalFichiers: fichiers.length,\n      totalElements: dossiers.length + fichiers.length\n    },\n    elements: {\n      dossiers: dossiers,\n      fichiers: fichiers\n    }\n  }\n}];"
+      },
+      "id": "code-v3-001",
+      "name": "Traitement",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 340],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "resp-v3-001",
+      "name": "Reponse",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [920, 340]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Google Drive", "type": "main", "index": 0}]]
+    },
+    "Google Drive": {
+      "main": [[{"node": "Traitement", "type": "main", "index": 0}]]
+    },
+    "Traitement": {
+      "main": [[{"node": "Reponse", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
