@@ -22,6 +22,12 @@ declare global {
         id: string;
       };
     };
+    PersistanceLogger?: {
+      logTableRestored: (keyword: string, tableId: string) => void;
+      logSessionIdSource: (source: string, sessionId: string) => void;
+      logCriticalError: (type: string, message: string) => void;
+      logDuplicateDetected: (keyword: string, action: string) => void;
+    };
   }
 }
 
@@ -1338,6 +1344,17 @@ export class FlowiseTableBridge {
    */
   private injectTableIntoDOM(tableData: FlowiseGeneratedTableRecord): void {
     try {
+      // ✅ EXCEPTION: Ne pas restaurer Table_Consolidation et Table_Resultat
+      // Ces tables sont gérées par conso.js avec des event listeners dynamiques
+      if (tableData.keyword === 'Table_Consolidation' || 
+          tableData.keyword === 'Table_Resultat' ||
+          tableData.keyword.includes('Consolidation') ||
+          tableData.keyword.includes('Resultat') ||
+          tableData.keyword.includes('Résultat')) {
+        console.log(`⏭️ Skip restoration of "${tableData.keyword}" (managed by conso.js)`);
+        return;
+      }
+      
       // Find an existing table with the same keyword
       const existingTable = this.findTableByKeyword(tableData.keyword);
       
@@ -1346,25 +1363,41 @@ export class FlowiseTableBridge {
         return;
       }
 
-      // Find the container of this table
-      const container = existingTable.closest('[data-container-id]') as HTMLElement;
-      
-      if (!container) {
-        console.log(`ℹ️ No container found for table "${tableData.keyword}", skipping restoration`);
+      // ✅ CORRECTION DOUBLONS: Mettre à jour la table existante au lieu de créer nouveau wrapper
+      // Vérifier si la table a déjà été restaurée (éviter doublons)
+      if (existingTable.getAttribute('data-restored') === 'true') {
+        console.log(`ℹ️ Table "${tableData.keyword}" déjà restaurée, skip duplication`);
         return;
       }
 
-      // Create the table wrapper
-      const tableWrapper = this.createTableWrapper(tableData);
+      // Créer un conteneur temporaire pour parser le HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = tableData.html;
+      const restoredTable = tempDiv.querySelector('table');
 
-      // Replace the entire content of the container with the restored table
-      container.innerHTML = '';
-      container.appendChild(tableWrapper);
+      if (!restoredTable) {
+        console.error(`❌ HTML invalide pour table "${tableData.keyword}"`);
+        return;
+      }
+
+      // Remplacer le contenu HTML de la table existante
+      existingTable.innerHTML = restoredTable.innerHTML;
       
-      // Mark container as restored
-      container.setAttribute('data-restored-content', 'true');
+      // Copier les attributs importants
+      if (restoredTable.className) {
+        existingTable.className = restoredTable.className;
+      }
+      
+      // Marquer comme restaurée pour éviter futures duplications
+      existingTable.setAttribute('data-restored', 'true');
+      existingTable.setAttribute('data-restored-timestamp', Date.now().toString());
+      
+      // 🔔 LOG via système centralisé
+      if (window.PersistanceLogger) {
+        window.PersistanceLogger.logTableRestored(tableData.keyword, tableData.id);
+      }
 
-      console.log(`✅ Restored table "${tableData.keyword}" (${tableData.id}) into existing container`);
+      console.log(`✅ Restored table "${tableData.keyword}" (${tableData.id}) by updating existing table`);
 
     } catch (error) {
       console.error(`❌ Error restoring table ${tableData.id}:`, error);
@@ -1378,34 +1411,48 @@ export class FlowiseTableBridge {
   private findTableByKeyword(keyword: string): HTMLTableElement | null {
     const tables = document.querySelectorAll('table');
     
-    // First try: Search by keyword attribute
+    // PRIORITÉ 1: Search by data-keyword attribute directly on table
+    // This is critical for conso.js tables restored from IndexedDB
     for (const table of tables) {
-      const wrapper = table.closest('[data-n8n-keyword]');
-      if (wrapper?.getAttribute('data-n8n-keyword') === keyword) {
+      const tableKeyword = (table as HTMLTableElement).dataset.keyword;
+      if (tableKeyword === keyword) {
+        console.log(`✅ [Bridge] Table trouvée via data-keyword: "${keyword}"`);
         return table as HTMLTableElement;
       }
     }
     
-    // Second try: Search by matching first header cell content
+    // PRIORITÉ 2: Search by keyword attribute on wrapper (legacy n8n tables)
+    for (const table of tables) {
+      const wrapper = table.closest('[data-n8n-keyword]');
+      if (wrapper?.getAttribute('data-n8n-keyword') === keyword) {
+        console.log(`✅ [Bridge] Table trouvée via data-n8n-keyword: "${keyword}"`);
+        return table as HTMLTableElement;
+      }
+    }
+    
+    // PRIORITÉ 3: Search by matching first header cell content
     // The keyword is often the first column header
     for (const table of tables) {
       const firstHeader = table.querySelector('th');
       if (firstHeader?.textContent?.trim().toLowerCase() === keyword.toLowerCase()) {
+        console.log(`✅ [Bridge] Table trouvée via premier <th>: "${keyword}"`);
         return table as HTMLTableElement;
       }
     }
     
-    // Third try: Search by any header containing the keyword
+    // PRIORITÉ 4: Search by any header containing the keyword
     for (const table of tables) {
       const headers = Array.from(table.querySelectorAll('th'));
       const hasMatchingHeader = headers.some(th => 
         th.textContent?.trim().toLowerCase().includes(keyword.toLowerCase())
       );
       if (hasMatchingHeader) {
+        console.log(`✅ [Bridge] Table trouvée via header contenant: "${keyword}"`);
         return table as HTMLTableElement;
       }
     }
     
+    console.warn(`⚠️ [Bridge] Aucune table trouvée pour keyword: "${keyword}"`);
     return null;
   }
 

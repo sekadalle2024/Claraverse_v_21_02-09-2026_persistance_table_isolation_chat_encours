@@ -407,6 +407,20 @@ const ClaraAssistant: React.FC<ClaraAssistantProps> = ({ onPageChange }) => {
   // User and session state
   const [userName, setUserName] = useState<string>('');
   const [currentSession, setCurrentSession] = useState<ClaraChatSession | null>(null);
+  
+  // ✅ CRITIQUE: SessionId stable pour isolation parfaite
+  const [stableSessionId, setStableSessionId] = useState<string>(() => 
+    `clara-session-${Date.now()}-${Math.random().toString(36).substr(2, 11)}`
+  );
+  
+  // Mettre à jour stableSessionId quand currentSession change
+  useEffect(() => {
+    if (currentSession?.id && currentSession.id !== stableSessionId) {
+      setStableSessionId(currentSession.id);
+      console.log('🔄 [React] SessionId mis à jour:', currentSession.id.substring(0, 30) + '...');
+    }
+  }, [currentSession?.id]);
+  
   const [messages, setMessages] = useState<ClaraMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -3724,7 +3738,12 @@ ${data.timezone ? `• **Timezone:** ${data.timezone}` : ''}`;
   };
 
   return (
-    <div className="flex h-screen w-full relative" data-clara-container>
+    <div 
+      className="flex h-screen w-full relative" 
+      data-clara-container
+      data-session-id={stableSessionId}
+      data-chat-session-id={stableSessionId}
+    >
       {/* Wallpaper */}
       {wallpaperUrl && (
         <div 
