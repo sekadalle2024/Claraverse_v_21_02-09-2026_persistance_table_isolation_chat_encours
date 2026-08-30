@@ -839,6 +839,10 @@
       // ✅ HARMONISATION CSS : Utiliser les mêmes classes que les autres tables Claraverse
       consoTable.className = "min-w-full border border-gray-200 dark:border-gray-700 rounded-lg claraverse-conso-table";
       consoTable.dataset.forTable = tableId;
+      // ✅ CRITIQUE: Ajouter data-keyword pour permettre restauration depuis IndexedDB
+      consoTable.dataset.keyword = "Table_Consolidation";
+      // ✅ CRITIQUE: Ajouter data-table-id stable
+      consoTable.dataset.tableId = `table_consolidation_${tableId}`;
       consoTable.style.cssText = `
           margin-bottom: 1.5rem;
           border-collapse: separate;
@@ -880,6 +884,33 @@
       const parent = table.parentElement;
       if (!parent) return null;
       return parent.querySelector(".claraverse-conso-table");
+    }
+    
+    findResultatTable(table) {
+      // Méthode helper pour trouver la table Résultat associée
+      const parent = table.parentElement;
+      if (!parent) {
+        debug.warn("⚠️ [findResultatTable] Pas de parent pour la table");
+        return null;
+      }
+      
+      // Chercher table avec colonne Résultat
+      const tables = parent.querySelectorAll('table');
+      debug.log(`🔍 [findResultatTable] ${tables.length} table(s) trouvée(s) dans le parent`);
+      
+      for (const t of tables) {
+        const headers = Array.from(t.querySelectorAll('th'));
+        const hasResultat = headers.some(h => 
+          h.textContent.toLowerCase().includes('resultat') || 
+          h.textContent.toLowerCase().includes('résultat')
+        );
+        if (hasResultat && t !== table) {
+          debug.log(`✅ [findResultatTable] Table Résultat trouvée avec ${headers.length} colonnes`);
+          return t;
+        }
+      }
+      debug.warn("⚠️ [findResultatTable] Aucune table Résultat trouvée");
+      return null;
     }
 
     insertConsoTable(table, consoTable) {
@@ -1296,9 +1327,47 @@
 
         // 1. Mise à jour de la table RÉSULTAT (version complète) - EN PREMIER
         const resultatUpdated = this.updateResultatTable(table, content, consolidationData);
+        
+        // ✅ CRITIQUE: Réinstaller les listeners sur la table Résultat
+        if (resultatUpdated) {
+          const resultatTable = this.findResultatTable(table);
+          if (resultatTable) {
+            const resultatHeaders = this.getTableHeaders(resultatTable);
+            debug.log("🔧 [CONSO] Réinstallation listeners sur Table_Resultat");
+            this.setupTableInteractions(resultatTable, resultatHeaders);
+          }
+        }
 
         // 2. Mise à jour de la table CONSO (version simplifiée) - EN SECOND
         const consoUpdated = this.updateConsoTable(table, simpleContent);
+        
+        // ✅ CRITIQUE: FORCER SAUVEGARDE IMMÉDIATE des tables mises à jour
+        const tableId = this.generateUniqueTableId(table);
+        
+        if (resultatUpdated) {
+          const resultatTable = this.findResultatTable(table);
+          if (resultatTable) {
+            debug.log("💾 [CONSO] Sauvegarde forcée Table_Resultat");
+            setTimeout(() => this.saveTableDataNow(resultatTable), 100);
+          }
+        }
+        
+        if (consoUpdated) {
+          const consoTable = document.querySelector(`table.claraverse-conso-table[data-for-table="${tableId}"]`);
+          if (consoTable) {
+            debug.log("💾 [CONSO] Sauvegarde forcée Table_Consolidation");
+            setTimeout(() => this.saveTableDataNow(consoTable), 100);
+          }
+        }
+        
+        // ✅ CRITIQUE: Réinstaller les listeners sur la table principale (Modelized_table avec Conclusion)
+        const mainHeaders = this.getTableHeaders(table);
+        if (mainHeaders.some(h => this.matchesColumn(h.text, "conclusion"))) {
+          debug.log("🔧 [CONSO] Réinstallation listeners sur table principale (Conclusion)");
+          setTimeout(() => {
+            this.setupTableInteractions(table, mainHeaders);
+          }, 150); // Délai légèrement plus long pour laisser le DOM se stabiliser
+        }
 
         // 3. Sauvegarder les données après consolidation
         this.saveConsolidationData(table, content, simpleContent);
@@ -1524,6 +1593,19 @@
       const htmlContent = fullContent;
 
       const applyResultatToTable = (potentialTable) => {
+        // ✅ CRITIQUE: Ajouter data-keyword pour permettre restauration depuis IndexedDB
+        if (!potentialTable.dataset.keyword) {
+          potentialTable.dataset.keyword = "Table_Resultat";
+          debug.log("✏️ Ajout data-keyword='Table_Resultat' sur table trouvée");
+        }
+        
+        // ✅ CRITIQUE: Ajouter data-table-id stable si absent
+        if (!potentialTable.dataset.tableId) {
+          const stableId = `table_resultat_${tableId || Date.now()}`;
+          potentialTable.dataset.tableId = stableId;
+          debug.log("✏️ Ajout data-table-id:", stableId);
+        }
+        
         const tableHeaders = this.getTableHeaders(potentialTable);
         const colResultat = tableHeaders.findIndex(h => h.text.includes("resultat") || h.text.includes("résultat"));
         

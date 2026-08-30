@@ -1,0 +1,234 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                 EXEMPLE ALERTES DIAGNOSTIC                        ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SCÉNARIO 1: ✅ TOUT FONCTIONNE                                  │
+└─────────────────────────────────────────────────────────────────┘
+
+Commande: window.runFullDiagnostic()
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🔍 DIAGNOSTIC COMPLET ClaraVerse                                │
+│                                                                 │
+│ ✅ ✅ ✅ TOUT FONCTIONNE CORRECTEMENT ✅ ✅ ✅                  │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ ✅ Isolation des chats: ACTIVE                                  │
+│    SessionId: clara-session-173550600...                        │
+│                                                                 │
+│ ✅ conso.js: INTÉGRÉ                                            │
+│                                                                 │
+│ ✅ Doublons: AUCUN                                              │
+│    Tables uniques: 3                                            │
+│                                                                 │
+│ ✅ Tables:                                                      │
+│    • Consolidation: Présente                                    │
+│    • Resultat: Présente                                         │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 📊 Voir console (F12) pour détails complets                    │
+│                                                                 │
+│                          [OK]                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SCÉNARIO 2: ⚠️ PROBLÈMES DÉTECTÉS                              │
+└─────────────────────────────────────────────────────────────────┘
+
+Commande: window.runFullDiagnostic()
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🔍 DIAGNOSTIC COMPLET ClaraVerse                                │
+│                                                                 │
+│ ⚠️ ⚠️ ⚠️ PROBLÈMES DÉTECTÉS ⚠️ ⚠️ ⚠️                          │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ ❌ Isolation compromise - data-session-id problématique         │
+│ ❌ conso.js pas intégré correctement                            │
+│ ❌ Doublons de tables détectés                                  │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 📊 DÉTAILS:                                                     │
+│                                                                 │
+│ 🔴 Isolation:                                                   │
+│    • SessionId dans DOM: NON                                    │
+│    • Source: sessionStorage                                     │
+│                                                                 │
+│ 🔴 conso.js:                                                    │
+│    • Existe: Oui                                                │
+│    • Intégré: NON                                               │
+│    • saveTableDataNow: NON                                      │
+│                                                                 │
+│ 🔴 Doublons:                                                    │
+│    • Total tables: 5                                            │
+│    • Keywords uniques: 3                                        │
+│    • Voir console pour détails                                  │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 🔧 ACTIONS:                                                     │
+│                                                                 │
+│ 1. Vérifier compilation React                                   │
+│ 2. Vérifier ClaraAssistant.tsx ligne 411-425                    │
+│                                                                 │
+│ 1. Attendre 2-3 secondes puis relancer                          │
+│ 2. Vérifier index.html ligne 134                                │
+│                                                                 │
+│ 1. Vérifier flowiseTableBridge.ts ligne 1342                    │
+│ 2. Chercher logs '⏭️ Skip restoration'                         │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 📊 Console (F12) pour détails complets                         │
+│                                                                 │
+│                          [OK]                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SCÉNARIO 3: ⚠️ ISOLATION COMPROMISE UNIQUEMENT                 │
+└─────────────────────────────────────────────────────────────────┘
+
+Commande: window.runFullDiagnostic()
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🔍 DIAGNOSTIC COMPLET ClaraVerse                                │
+│                                                                 │
+│ ⚠️ ⚠️ ⚠️ PROBLÈMES DÉTECTÉS ⚠️ ⚠️ ⚠️                          │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ ❌ Isolation compromise - data-session-id problématique         │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 📊 DÉTAILS:                                                     │
+│                                                                 │
+│ 🔴 Isolation:                                                   │
+│    • SessionId dans DOM: NON                                    │
+│    • Source: undefined                                          │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 🔧 ACTIONS:                                                     │
+│                                                                 │
+│ 1. Vérifier compilation React                                   │
+│ 2. Vérifier ClaraAssistant.tsx ligne 411-425                    │
+│                                                                 │
+│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            │
+│                                                                 │
+│ 📊 Console (F12) pour détails complets                         │
+│                                                                 │
+│                          [OK]                                   │
+└─────────────────────────────────────────────────────────────────┘
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                      UTILISATION                                  ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+1. Démarrer application:
+   npm run dev
+
+2. Ouvrir Console (F12)
+
+3. Exécuter diagnostic:
+   window.runFullDiagnostic()
+
+4. Alerte s'affiche automatiquement
+
+5. Cliquer [OK] pour fermer
+
+6. Voir console pour détails complets
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                  AUTRES FONCTIONS DISPONIBLES                     ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+Ces fonctions N'AFFICHENT PAS d'alerte (console uniquement):
+
+• window.checkSessionId()        → Vérifier isolation
+• window.checkConsoIntegration() → Vérifier conso.js
+• window.checkTableDuplicates()  → Vérifier doublons
+• window.checkTableSaves()       → Vérifier tables
+
+Seul window.runFullDiagnostic() affiche une alerte visuelle.
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                    INFORMATIONS AFFICHÉES                         ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SI ✅ TOUT FONCTIONNE                                           │
+└─────────────────────────────────────────────────────────────────┘
+
+• État isolation (ACTIVE)
+• SessionId (première partie visible)
+• État conso.js (INTÉGRÉ)
+• Nombre de doublons (AUCUN)
+• Nombre de keywords uniques
+• Présence tables Consolidation/Resultat
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ SI ⚠️ PROBLÈMES DÉTECTÉS                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+• Liste des problèmes détectés
+• Détails de chaque problème:
+  - Isolation: SessionId dans DOM, Source
+  - conso.js: Existe, Intégré, Méthodes
+  - Doublons: Total tables, Keywords uniques
+• Actions recommandées pour corriger
+• Lien vers console pour détails complets
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                        AVANTAGES                                  ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+✅ Visibilité immédiate des problèmes
+✅ Pas besoin d'ouvrir la console pour diagnostic rapide
+✅ Informations structurées et lisibles
+✅ Actions recommandées incluses
+✅ Détails complets toujours dans console (F12)
+
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                    WORKFLOW RECOMMANDÉ                            ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+1. Au démarrage app:
+   → Exécuter: window.runFullDiagnostic()
+   → Voir alerte: ✅ ou ⚠️
+
+2. Si ✅ tout OK:
+   → Continuer normalement
+   → Pas d'action requise
+
+3. Si ⚠️ problèmes:
+   → Lire détails dans alerte
+   → Suivre actions recommandées
+   → Ouvrir console (F12) pour détails
+   → Corriger problèmes
+   → Relancer diagnostic
+
+4. Après corrections:
+   → Exécuter: window.runFullDiagnostic()
+   → Vérifier: ✅ tout OK
+
+
+═══════════════════════════════════════════════════════════════════════
+
+Les alertes sont maintenant intégrées dans index.html et s'affichent
+automatiquement lors de l'appel à window.runFullDiagnostic()
+
+═══════════════════════════════════════════════════════════════════════

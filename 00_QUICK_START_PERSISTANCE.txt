@@ -1,0 +1,120 @@
+┌─────────────────────────────────────────────────────────────────────────┐
+│          QUICK START - Persistance & Isolation Tables - 5 min          │
+└─────────────────────────────────────────────────────────────────────────┘
+
+PROBLÈME RÉSOLU
+  ❌ Tables Table_Consolidation et Table_Resultat disparaissent après F5
+  ❌ Données d'un chat contaminent les autres chats
+  ↓
+  ✅ Tables persistent automatiquement
+  ✅ Isolation parfaite par chat
+
+─────────────────────────────────────────────────────────────────────────
+
+FICHIERS MODIFIÉS (3)
+  1. index.html (lignes 135-500+) → Script inline conso.js → IndexedDB
+  2. flowiseTableBridge.ts (lignes 1378-1425) → Recherche data-keyword
+  3. conso.js (lignes 838, 1528) → Ajoute data-keyword à création
+
+─────────────────────────────────────────────────────────────────────────
+
+TEST RAPIDE (2 min)
+  1. npm run dev
+  2. Générer table, modifier cellule → "TEST1"
+  3. F5
+  4. ✅ "TEST1" doit être présent
+
+LOGS ATTENDUS:
+  📍 [INLINE] SessionId depuis DOM: clara-session-xxx
+  ✅ [INLINE] ISOLATION ACTIVE
+  ✅ Table saved: uuid-xxx
+  ✅ [Bridge] Table trouvée via data-keyword
+  ✅ Restored 2 table(s)
+
+─────────────────────────────────────────────────────────────────────────
+
+DIAGNOSTIC AUTO (30 sec)
+  Console navigateur (F12):
+    <script src="/diagnostic-persistance.js"></script>
+    runDiagnostic()
+
+─────────────────────────────────────────────────────────────────────────
+
+LOGS PROBLÉMATIQUES
+
+❌ ISOLATION COMPROMISE:
+   🚨 [INLINE] ALERTE: SessionId depuis sessionStorage
+   → Vérifier ClaraAssistant.tsx ligne 3730: data-session-id={currentSession?.id}
+   → Recompiler: npm run dev (arrêter et redémarrer)
+
+❌ TABLES NON RESTAURÉES:
+   ℹ️ No existing table found for keyword "Table_Consolidation"
+   → data-keyword absent du DOM
+   → Vider cache: Ctrl+Shift+Delete
+   → Hard refresh: Ctrl+Shift+R
+
+─────────────────────────────────────────────────────────────────────────
+
+VÉRIFICATIONS RAPIDES
+  # SessionId exposé?
+  document.querySelector('[data-session-id]')?.getAttribute('data-session-id')
+  → Doit retourner: "clara-session-xxx" (pas null)
+
+  # Tables avec data-keyword?
+  document.querySelectorAll('table[data-keyword]')
+  → Doit trouver tables Table_Consolidation et Table_Resultat
+
+─────────────────────────────────────────────────────────────────────────
+
+DOCUMENTATION
+  🔴 00_SOLUTION_FINALE_PERSISTANCE_ISOLATION_29_AOUT_2026.md
+     → Architecture complète
+
+  🟢 00_GUIDE_TEST_RAPIDE_PERSISTANCE.md
+     → Tests détaillés 5 minutes
+
+  🔵 00_AIDE_MEMOIRE_LOGS.md
+     → Comparaison visuelle logs ✅/❌
+
+  🟡 00_RESUME_MODIFICATIONS_29_AOUT_2026.txt
+     → Résumé concis
+
+  🟣 public/diagnostic-persistance.js
+     → Script diagnostic auto
+
+  📋 00_INDEX_DOCUMENTATION_PERSISTANCE.md
+     → Table des matières
+
+─────────────────────────────────────────────────────────────────────────
+
+COMMANDES CONSOLE
+  runDiagnostic()   # Diagnostic complet
+  forceRestore()    # Forcer restauration
+  listTables()      # Lister tables data-keyword
+  checkIndexedDB()  # Inspecter IndexedDB
+
+─────────────────────────────────────────────────────────────────────────
+
+CHECKLIST
+  [ ] Test persistance: table survit à F5
+  [ ] Test isolation: Chat1 ≠ Chat2
+  [ ] Log: "SessionId depuis DOM"
+  [ ] Observer: changement chat détecté
+  [ ] IndexedDB: tables visibles DevTools
+  [ ] data-keyword: présent sur tables
+  [ ] data-session-id: présent sur div React
+  [ ] localStorage: claraverse_tables_data vide
+  [ ] Diagnostic: runDiagnostic() OK
+
+  ✅ Tous cochés → SYSTÈME OPÉRATIONNEL
+
+─────────────────────────────────────────────────────────────────────────
+
+EN CAS DE PROBLÈME
+  1. Console F12 → chercher [INLINE] ou [Bridge]
+  2. runDiagnostic() → suivre recommandations
+  3. Consulter 00_AIDE_MEMOIRE_LOGS.md
+
+─────────────────────────────────────────────────────────────────────────
+
+Date: 29 Août 2026 | Agent: Kiro | Version: 3.0

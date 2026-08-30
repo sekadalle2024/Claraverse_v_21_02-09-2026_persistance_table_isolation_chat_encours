@@ -419,7 +419,7 @@ const ClaraAssistant: React.FC<ClaraAssistantProps> = ({ onPageChange }) => {
       setStableSessionId(currentSession.id);
       console.log('🔄 [React] SessionId mis à jour:', currentSession.id.substring(0, 30) + '...');
     }
-  }, [currentSession?.id]);
+  }, [currentSession?.id, stableSessionId]);
   
   const [messages, setMessages] = useState<ClaraMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);

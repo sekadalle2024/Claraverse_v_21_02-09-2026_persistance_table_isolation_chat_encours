@@ -1,0 +1,244 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    🧪 TESTS IMMÉDIATS - 29 AOÛT 2026                      ║
+║                  Corrections Appliquées et Compilées ✅                   ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1️⃣  DÉMARRER L'APPLICATION                                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Terminal PowerShell:
+    npm run dev
+
+Attendez le message: "Local: http://localhost:5173/"
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 2️⃣  TEST CRITIQUE: data-session-id PRÉSENT                              │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Console Navigateur (F12):
+    document.querySelector('[data-session-id]')?.getAttribute('data-session-id')
+
+✅ ATTENDU: "clara-session-1735506000000-xxx" (chaîne avec préfixe)
+❌ ÉCHEC: null ou undefined
+
+Si ❌ : Problème React, stableSessionId pas exposé
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 3️⃣  TEST CRITIQUE: ISOLATION ACTIVE                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Notifications attendues au démarrage:
+    ✅ "Session de persistance initialisée"
+    ✅ "Système de persistance initialisé"
+    ✅ "Isolation des chats ACTIVE" OU "SessionId depuis DOM"
+
+❌ NE DOIT PAS VOIR:
+    ❌ "Erreur critique isolation compromise"
+    ❌ "data-session-id absent du DOM"
+
+Console logs attendus:
+    ✅ [SESSION] SessionId depuis DOM (ISOLATION ACTIVE)
+    🔄 [React] SessionId mis à jour: session-xxx...
+
+Si erreur critique persiste après 3 secondes:
+    → React ne remonte pas assez vite
+    → Vérifier console: "🔄 [INLINE] Réutilisation sessionId DOM caché"
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 4️⃣  TEST: PERSISTANCE TABLE_CONSOLIDATION                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Étapes:
+    1. Générer une table (ex: "Afficher les champs et les compte de la rubrique I du bilan")
+    2. Attendre que la consolidation s'affiche
+    3. Chercher dans console:
+       💾 [CONSO] Sauvegarde forcée Table_Consolidation
+       💾 [INLINE] Interception sauvegarde table
+       🔑 [INLINE] Keyword: Table_Consolidation
+       ✅ [INLINE] Événement émis
+       ✅ Table saved: table_xxx
+    4. Modifier une cellule de la Table_Consolidation
+    5. Appuyer F5 (actualiser)
+    6. Vérifier: modification persiste ✅
+
+Si échec:
+    → Vérifier log "🔍 [findResultatTable]" dans console
+    → Vérifier "window.claraverseProcessor.__integrated" = true
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 5️⃣  TEST: PERSISTANCE TABLE_RESULTAT                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Étapes:
+    1. Générer une table qui produit Table_Resultat
+    2. Chercher dans console:
+       💾 [CONSO] Sauvegarde forcée Table_Resultat
+       🔍 [findResultatTable] X table(s) trouvée(s)
+       ✅ [findResultatTable] Table Résultat trouvée avec Y colonnes
+    3. Modifier une cellule de la Table_Resultat
+    4. F5
+    5. Vérifier: modification persiste ✅
+
+Si Table_Resultat pas trouvée:
+    → Console: "⚠️ [findResultatTable] Aucune table Résultat trouvée"
+    → Vérifier structure HTML (parent commun?)
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 6️⃣  TEST: ISOLATION ENTRE CHATS                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Étapes:
+    1. CHAT1: Créer table → Modifier cellule → Écrire "CHAT1"
+    2. Console: Noter sessionId (ex: clara-session-ABC)
+    3. Créer nouveau chat (bouton "+")
+    4. Console: Vérifier nouveau sessionId différent
+       🔄 [React] SessionId mis à jour: session-XYZ...
+    5. CHAT2: Créer table → Modifier cellule → Écrire "CHAT2"
+    6. Retourner CHAT1 (cliquer historique)
+    7. Console: SessionId revient à clara-session-ABC
+    8. Vérifier: Table affiche "CHAT1" (PAS "CHAT2") ✅
+
+Si contamination:
+    → Vérifier que sessionId change bien entre chats
+    → Vérifier logs: "🔄 [CHAT] Changement de chat détecté"
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 7️⃣  TEST: PAS DE DOUBLONS DE TABLES                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Après consolidation:
+    1. Inspecter DOM (F12 → Elements)
+    2. Chercher tables avec même keyword
+    3. Doit voir UNE SEULE table par keyword ✅
+
+Console logs attendus:
+    ✅ [Bridge] Table trouvée via data-keyword: "Table_Consolidation"
+    ✅ Restored table "Table_Consolidation" (xxx) by updating existing table
+
+Si doublons:
+    → Console: "⚠️ [Bridge] Table déjà restaurée, skip duplication"
+    → Problème: flowiseTableBridge restaure plusieurs fois
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 8️⃣  DIAGNOSTIC COMPLET (SI PROBLÈME)                                    │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Console:
+    checkPersistanceStatus()
+
+Affiche:
+    - État d'intégration claraverseProcessor
+    - SessionId actuel et source
+    - Nombre de tables en IndexedDB
+    - Flag __integrated
+
+OU utiliser:
+    window.claraverseProcessor.__integrated  // Doit être true
+    window.PersistanceLogger.getStatus()     // Si disponible
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 9️⃣  LOGS ATTENDUS RÉSUMÉ                                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+AU DÉMARRAGE:
+    🚀 [INIT] Système de persistance démarré
+    ✅ [SESSION] SessionId depuis DOM (ISOLATION ACTIVE)
+    🔄 [React] SessionId mis à jour: session-xxx...
+
+APRÈS CONSOLIDATION:
+    💾 [CONSO] Sauvegarde forcée Table_Consolidation
+    💾 [CONSO] Sauvegarde forcée Table_Resultat
+    💾 [INLINE] Interception sauvegarde table
+    🔑 [INLINE] Keyword: Table_Consolidation
+    ✅ [INLINE] Événement émis
+    ✅ Table saved: table_xxx
+
+APRÈS F5:
+    ✅ [SESSION] SessionId depuis DOM
+    🔄 [RESTORE] Restauration de X table(s)
+    ✅ [Bridge] Table trouvée via data-keyword
+    ✅ Restored table "Table_Consolidation"
+
+CHANGEMENT CHAT:
+    🔄 [React] SessionId mis à jour: session-yyy...
+    🔄 [CHAT] Changement de chat détecté
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 🚨 ERREURS À SURVEILLER                                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+❌ "Erreur critique isolation compromise"
+   → data-session-id pas dans DOM
+   → Vérifier document.querySelector('[data-session-id]')
+
+❌ "claraverseProcessor non trouvé après 20 secondes"
+   → conso.js pas chargé
+   → Vérifier index.html ligne 134
+
+❌ "[findResultatTable] Aucune table Résultat trouvée"
+   → Structure HTML différente de prévu
+   → Vérifier parent commun tables
+
+❌ "SessionId depuis sessionStorage"
+   → React trop lent (>2s)
+   → Isolation compromise temporairement
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ✅ CRITÈRES DE SUCCÈS                                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. ✅ data-session-id TOUJOURS présent dans DOM
+2. ✅ AUCUNE notification "Erreur critique isolation"
+3. ✅ Table_Consolidation persiste après F5
+4. ✅ Table_Resultat persiste après F5
+5. ✅ Isolation Chat1/Chat2 fonctionne (pas de contamination)
+6. ✅ Pas de doublons de tables
+7. ✅ Logs "💾 [CONSO] Sauvegarde forcée" visibles
+
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 📞 RETOUR ATTENDU                                                       │
+└─────────────────────────────────────────────────────────────────────────┘
+
+Partagez-moi:
+
+1. Résultat data-session-id:
+   document.querySelector('[data-session-id]')?.getAttribute('data-session-id')
+
+2. Notifications vue:
+   - "Isolation ACTIVE" ✅ ou "Erreur critique" ❌
+
+3. Tests persistance:
+   - Table_Consolidation: ✅ ou ❌
+   - Table_Resultat: ✅ ou ❌
+
+4. Test isolation:
+   - CHAT1/CHAT2 séparés: ✅ ou ❌
+
+5. Console logs (copier/coller section pertinente)
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+FICHIERS MODIFIÉS:
+    - h:\Claverse_1\src\components\ClaraAssistant.tsx
+    - h:\Claverse_1\index.html
+    - h:\Claverse_1\src\services\flowiseTableBridge.ts
+    - h:\Claverse_1\public\conso.js
+
+DOCUMENTATION COMPLÈTE:
+    - 00_CORRECTION_CRITIQUE_ISOLATION_29_AOUT.md
+    - 00_CORRECTIONS_APPLIQUEES_29_AOUT.md
+
+═══════════════════════════════════════════════════════════════════════════

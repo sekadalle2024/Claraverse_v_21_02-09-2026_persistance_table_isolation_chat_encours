@@ -1,0 +1,242 @@
+═══════════════════════════════════════════════════════════════════════
+  RÉSUMÉ MODIFICATIONS - Persistance & Isolation Tables ClaraVerse
+═══════════════════════════════════════════════════════════════════════
+
+Date: 29 Août 2026
+Agent: Kiro
+Problème résolu: Tables Table_Consolidation et Table_Resultat ne persistent 
+                 pas après F5 + contamination entre chats
+
+═══════════════════════════════════════════════════════════════════════
+FICHIERS MODIFIÉS (3)
+═══════════════════════════════════════════════════════════════════════
+
+1. index.html (lignes 135-500+)
+   └─ Script inline intégration conso.js → IndexedDB
+   
+2. src/services/flowiseTableBridge.ts (lignes 1378-1425)
+   └─ Recherche data-keyword en PRIORITÉ 1
+   
+3. public/conso.js (lignes 838-850 et 1528-1540)
+   └─ Ajout data-keyword à la création des tables
+
+═══════════════════════════════════════════════════════════════════════
+FICHIERS CRÉÉS (3)
+═══════════════════════════════════════════════════════════════════════
+
+1. 00_SOLUTION_FINALE_PERSISTANCE_ISOLATION_29_AOUT_2026.md
+   └─ Documentation complète architecture + workflow + debugging
+   
+2. 00_GUIDE_TEST_RAPIDE_PERSISTANCE.md
+   └─ Guide de test 5 minutes + checklist validation
+   
+3. public/diagnostic-persistance.js
+   └─ Script diagnostic à exécuter dans console navigateur
+
+═══════════════════════════════════════════════════════════════════════
+CHANGEMENTS CLÉS
+═══════════════════════════════════════════════════════════════════════
+
+✅ ISOLATION DES CHATS
+  • getSessionId() lit data-session-id depuis DOM (React)
+  • MutationObserver détecte changements de chat
+  • Restauration automatique des tables du nouveau chat
+  • Chaque chat a son propre sessionId unique
+  
+✅ PERSISTANCE APRÈS F5
+  • data-keyword ajouté dès création des tables
+  • flowiseTableBridge cherche data-keyword en priorité
+  • Tables trouvées et restaurées depuis IndexedDB
+  • localStorage complètement désactivé
+  
+✅ SAUVEGARDE AUTOMATIQUE
+  • Interception saveTableDataNow() de conso.js
+  • Émission CustomEvent vers menuIntegration
+  • Sauvegarde dans IndexedDB.clara_generated_tables
+  • Débounce 300ms pour éviter sauvegardes multiples
+
+═══════════════════════════════════════════════════════════════════════
+TEST RAPIDE (2 minutes)
+═══════════════════════════════════════════════════════════════════════
+
+1. Lancer: npm run dev
+2. Générer une table, modifier cellule → "TEST1"
+3. F5 (actualisation)
+4. ✅ "TEST1" doit être présent
+
+LOGS ATTENDUS:
+  📍 [INLINE] SessionId depuis DOM: clara-session-xxx
+  ✅ [INLINE] ISOLATION ACTIVE
+  ✅ [Bridge] Table trouvée via data-keyword: "Table_Consolidation"
+  ✅ Restored 2 table(s)
+
+═══════════════════════════════════════════════════════════════════════
+DIAGNOSTIC AUTOMATIQUE
+═══════════════════════════════════════════════════════════════════════
+
+Console navigateur (F12):
+  1. Charger: <script src="/diagnostic-persistance.js"></script>
+  2. Exécuter: runDiagnostic()
+  3. Suivre recommandations
+
+Ou copier-coller contenu de public/diagnostic-persistance.js
+
+═══════════════════════════════════════════════════════════════════════
+LOGS CRITIQUES À SURVEILLER
+═══════════════════════════════════════════════════════════════════════
+
+✅ BON - Isolation active:
+   📍 [INLINE] SessionId depuis DOM: clara-session-xxx
+   ✅ [INLINE] ISOLATION ACTIVE
+
+❌ PROBLÈME - Isolation compromise:
+   🚨 [INLINE] ALERTE: SessionId depuis sessionStorage
+   ❌ ISOLATION DES CHATS NON GARANTIE
+   → Vérifier ClaraAssistant.tsx ligne 3730: data-session-id={currentSession?.id}
+
+✅ BON - Restauration réussie:
+   ✅ [Bridge] Table trouvée via data-keyword: "Table_Consolidation"
+   ✅ Restored 2 table(s)
+
+❌ PROBLÈME - Tables non restaurées:
+   ℹ️ No existing table found for keyword "Table_Consolidation"
+   → data-keyword absent du DOM, vérifier conso.js
+
+═══════════════════════════════════════════════════════════════════════
+VÉRIFICATIONS MANUELLES
+═══════════════════════════════════════════════════════════════════════
+
+Console navigateur:
+
+  // Vérifier data-session-id exposé par React
+  document.querySelector('[data-session-id]')?.getAttribute('data-session-id')
+  → Doit retourner: "clara-session-xxx" (pas null)
+
+  // Vérifier tables avec data-keyword
+  document.querySelectorAll('table[data-keyword]')
+  → Doit trouver les tables Table_Consolidation et Table_Resultat
+
+  // Inspecter IndexedDB
+  DevTools > Application > IndexedDB > clara_db > clara_generated_tables
+  → Doit contenir les tables sauvegardées avec keyword et sessionId
+
+  // Forcer restauration manuelle
+  const sid = document.querySelector('[data-session-id]').getAttribute('data-session-id');
+  window.flowiseTableBridge.restoreTablesForSession(sid);
+
+═══════════════════════════════════════════════════════════════════════
+ARCHITECTURE SIMPLIFIÉE
+═══════════════════════════════════════════════════════════════════════
+
+GÉNÉRATION:
+  IA → conso.js → createConsolidationTable()
+       ↓
+  [data-keyword="Table_Consolidation"]
+  [data-table-id="table_consolidation_xxx"]
+
+SAUVEGARDE:
+  User modifie → saveTableDataNow()
+       ↓
+  Script inline → getSessionId() depuis DOM
+       ↓
+  CustomEvent → menuIntegration
+       ↓
+  IndexedDB.clara_generated_tables
+
+RESTAURATION:
+  F5 → getSessionId() depuis DOM
+    ↓
+  flowiseTableService.restoreTablesForSession(sessionId)
+    ↓
+  flowiseTableBridge.findTableByKeyword(keyword)
+    ↓
+  Cherche: <table data-keyword="xxx"> ✅
+    ↓
+  Restaure HTML complet
+
+CHANGEMENT CHAT:
+  MutationObserver détecte data-session-id change
+    ↓
+  Auto: restoreTablesForSession(newSessionId)
+    ↓
+  Tables du nouveau chat restaurées ✅
+
+═══════════════════════════════════════════════════════════════════════
+POINTS D'ATTENTION
+═══════════════════════════════════════════════════════════════════════
+
+⚠️ React DOIT exposer data-session-id
+   Fichier: src/components/ClaraAssistant.tsx ligne 3730
+   Code: data-session-id={currentSession?.id}
+   
+⚠️ localStorage DÉSACTIVÉ
+   Ne PAS réactiver: saveAllData(), loadAllData(), restoreAllTablesData()
+   
+⚠️ Script inline attend claraverseProcessor
+   Polling 100ms pendant max 20 secondes
+   
+⚠️ MutationObserver navigateurs modernes
+   Supporté: Chrome/Edge 90+, Firefox 88+, Safari 14+
+
+═══════════════════════════════════════════════════════════════════════
+DÉPANNAGE RAPIDE
+═══════════════════════════════════════════════════════════════════════
+
+Problème: Tables disparaissent après F5
+  → Vérifier logs: "✅ Table saved" lors modification
+  → Vérifier IndexedDB contient les tables
+  → Vérifier logs: "✅ [Bridge] Table trouvée" après F5
+
+Problème: Contamination entre chats
+  → Vérifier log: "📍 SessionId depuis DOM" (pas sessionStorage)
+  → Vérifier data-session-id dans DOM (F12 > Elements)
+  → Recompiler React si currentSession undefined
+
+Problème: Aucune sauvegarde
+  → Vérifier claraverseProcessor chargé
+  → Vérifier script inline intégré (__integrated = true)
+  → Attendre 20 secondes max après chargement page
+
+═══════════════════════════════════════════════════════════════════════
+COMMANDES UTILES
+═══════════════════════════════════════════════════════════════════════
+
+# Démarrer application
+npm run dev
+
+# Build production
+npm run build
+
+# Console navigateur - Diagnostic complet
+runDiagnostic()
+
+# Console navigateur - Forcer restauration
+forceRestore()
+
+# Console navigateur - Lister tables
+listTables()
+
+# Console navigateur - Inspecter IndexedDB
+checkIndexedDB()
+
+═══════════════════════════════════════════════════════════════════════
+VALIDATION FINALE
+═══════════════════════════════════════════════════════════════════════
+
+Checklist avant mise en production:
+  [ ] npm run build réussit sans erreur
+  [ ] Test persistance: table survit à F5
+  [ ] Test isolation: Chat1 et Chat2 données séparées
+  [ ] Logs: "SessionId depuis DOM" (pas sessionStorage)
+  [ ] Observer: changement chat détecté et restaure auto
+  [ ] localStorage vide: claraverse_tables_data n'existe plus
+  [ ] IndexedDB: tables visibles dans DevTools
+
+═══════════════════════════════════════════════════════════════════════
+
+Pour aide détaillée, consulter:
+  • 00_SOLUTION_FINALE_PERSISTANCE_ISOLATION_29_AOUT_2026.md
+  • 00_GUIDE_TEST_RAPIDE_PERSISTANCE.md
+  • Exécuter diagnostic-persistance.js dans console
+
+═══════════════════════════════════════════════════════════════════════

@@ -127,11 +127,15 @@
   <script src="/localstorage-cleanup.js"></script>
 
   <!-- Pont de persistance - DOIT être chargé AVANT menu.js et conso.js -->
-  <script src="/menu-perssistence-bridge.js"></script>
-s
-  <!-- Scripts utsilisant le système de persistance -->
+  <script src="/menu-persistence-bridge.js"></script>
+
+  <!-- Scripts utilisant le système de persistance -->
   <script src="/menu.js"></script>
-  <script src="/conso.js"></script>
+  <script src="/conso.js"></scriptJ>
+  
+  <!-- ⭐ SYSTÈME DE LOGS ET NOTIFICATIONS VISUELLES -->
+  <script src="/persistance-logger.js"></script>
+  <script src="/persistance-logger-integration.js"></script>
   
   <!-- ⭐ INTÉGRATION DIRECTE DANS INDEX.HTML -->
   <script>
@@ -168,6 +172,12 @@ s
         if (processor.__integrated) {
           console.log("ℹ️ [INLINE] Déjà intégré, skip");
           return;
+        }
+        
+        // 🔔 LOG: Initialisation système
+        if (window.PersistanceLogger) {
+          const sessionId = getSessionId();
+          window.PersistanceLogger.logInit(sessionId);
         }
         
         const originalSaveTableDataNow = processor.saveTableDataNow;
@@ -326,6 +336,19 @@ s
         const keyword = extractKeyword(table);
         console.log("🔑 [INLINE] Keyword:", keyword);
         
+        // CRITIQUE: Ajouter data-keyword sur la table pour restauration future
+        if (!table.dataset.keyword) {
+          table.dataset.keyword = keyword;
+          console.log("✏️ [INLINE] Ajout data-keyword sur table:", keyword);
+        }
+        
+        // CRITIQUE: Ajouter data-table-id stable si absent
+        if (!table.dataset.tableId) {
+          const tableId = `table_${keyword.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}`;
+          table.dataset.tableId = tableId;
+          console.log("✏️ [INLINE] Ajout data-table-id:", tableId);
+        }
+        
         const sessionId = getSessionId();
         console.log("📍 [INLINE] SessionId:", sessionId.substring(0, 30) + "...");
         
@@ -386,32 +409,181 @@ s
         return `Table_${Date.now()}`;
       }
       
+      // VARIABLE GLOBALE pour cache sessionId actuel
+      let cachedSessionId = null;
+      let sessionIdSource = null; // Pour debugging
+      let sessionIdRetryCount = 0;
+      const MAX_SESSION_RETRY = 20; // 20 tentatives = 2 secondes max
+      
       function getSessionId() {
-        // FORCER utilisation d'un sessionId VRAIMENT stable
+        // FORCER utilisation d'un sessionId VRAIMENT stable PAR CHAT
+        
+        // 1. PRIORITÉ ABSOLUE: DOM (React expose currentSession.id via stableSessionId)
+        try {
+          const sessionElement = document.querySelector('[data-session-id], [data-chat-session-id], [data-clara-session-id]');
+          if (sessionElement) {
+            const domSessionId = sessionElement.getAttribute('data-session-id') || 
+                                sessionElement.getAttribute('data-chat-session-id') ||
+                                sessionElement.getAttribute('data-clara-session-id');
+            if (domSessionId && domSessionId !== 'unknown' && domSessionId !== 'undefined') {
+              // Mise à jour du cache si différent
+              if (cachedSessionId !== domSessionId) {
+                console.log("📍 [INLINE] SessionId depuis DOM:", domSessionId.substring(0, 30) + "...");
+                console.log("✅ [INLINE] ISOLATION ACTIVE - SessionId unique par chat");
+                
+                // 🔔 LOG via système centralisé
+                if (window.PersistanceLogger) {
+                  window.PersistanceLogger.logSessionIdSource('DOM', domSessionId);
+                }
+                
+                cachedSessionId = domSessionId;
+                sessionIdSource = 'DOM';
+                sessionIdRetryCount = 0; // Reset retry counter
+              }
+              return domSessionId;
+            }
+          }
+        } catch (e) {
+          console.warn("⚠️ [INLINE] Impossible de lire sessionId depuis DOM:", e.message);
+        }
+        
+        // ✅ NOUVEAU: Si pas encore de sessionId DOM et qu'on a un cache valide, le réutiliser temporairement
+        if (cachedSessionId && sessionIdSource === 'DOM' && sessionIdRetryCount < MAX_SESSION_RETRY) {
+          sessionIdRetryCount++;
+          console.log(`🔄 [INLINE] Réutilisation sessionId DOM caché (retry ${sessionIdRetryCount}/${MAX_SESSION_RETRY})`);
+          return cachedSessionId; // Réutiliser l'ancien sessionId pendant que React remonte
+        }
+        
+        // 2. Essayer l'URL (paramètres)
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const paramNames = ['sessionId', 'session', 'chatId', 'chat_id'];
+          for (const param of paramNames) {
+            const urlSessionId = urlParams.get(param);
+            if (urlSessionId) {
+              if (cachedSessionId !== urlSessionId) {
+                console.log("📍 [INLINE] SessionId depuis URL:", urlSessionId.substring(0, 30) + "...");
+                cachedSessionId = urlSessionId;
+                sessionIdSource = 'URL';
+              }
+              return urlSessionId;
+            }
+          }
+        } catch (e) {}
+        
+        // 3. Essayer claraDB (accès direct à la session React)
+        try {
+          // Attendre que React soit monté
+          if (window.claraDB) {
+            // Méthode 1: getCurrentSession
+            if (typeof window.claraDB.getCurrentSession === 'function') {
+              const session = window.claraDB.getCurrentSession();
+              if (session && session.id) {
+                if (cachedSessionId !== session.id) {
+                  console.log("📍 [INLINE] SessionId depuis claraDB.getCurrentSession:", session.id.substring(0, 30) + "...");
+                  cachedSessionId = session.id;
+                  sessionIdSource = 'claraDB';
+                }
+                return session.id;
+              }
+            }
+            
+            // Méthode 2: getActiveClaraSession (si disponible)
+            if (typeof window.claraDB.getActiveClaraSession === 'function') {
+              const activeSession = window.claraDB.getActiveClaraSession();
+              if (activeSession && activeSession.id) {
+                if (cachedSessionId !== activeSession.id) {
+                  console.log("📍 [INLINE] SessionId depuis claraDB.getActiveClaraSession:", activeSession.id.substring(0, 30) + "...");
+                  cachedSessionId = activeSession.id;
+                  sessionIdSource = 'claraDB';
+                }
+                return activeSession.id;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("⚠️ [INLINE] Erreur claraDB:", e.message);
+        }
+        
+        // 4. ⚠️ FALLBACK DANGEREUX: sessionStorage (pas isolé par chat)
         const STABLE_KEY = 'claraverse_stable_session';
         
-        // 1. Vérifier sessionStorage en priorité
         try {
           let stored = sessionStorage.getItem(STABLE_KEY);
           if (stored) {
-            console.log("📍 [INLINE] SessionId réutilisé depuis sessionStorage");
+            if (sessionIdSource !== 'sessionStorage') {
+              console.error("🚨 [INLINE] ALERTE: SessionId depuis sessionStorage");
+              console.error("   ❌ ISOLATION DES CHATS NON GARANTIE");
+              console.error("   ❌ Les tables peuvent être partagées entre chats!");
+              console.error("   💡 Vérifiez que React expose bien data-session-id");
+              
+              // 🔔 NOTIFICATION CRITIQUE
+              if (window.PersistanceLogger) {
+                window.PersistanceLogger.logCriticalError('isolation-compromise', 
+                  'data-session-id absent du DOM - React ne l\'expose pas');
+              }
+              
+              sessionIdSource = 'sessionStorage';
+            }
+            cachedSessionId = stored;
             return stored;
           }
-        } catch (e) {
-          console.warn("⚠️ [INLINE] sessionStorage non accessible");
-        }
+        } catch (e) {}
         
-        // 2. Créer UN SEUL sessionId pour TOUTE la session du navigateur
-        const newSession = `stable_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        // 5. DERNIER RECOURS: Créer nouveau sessionId
+        const newSession = `fallback_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         
         try {
           sessionStorage.setItem(STABLE_KEY, newSession);
-          console.log("📍 [INLINE] Nouveau sessionId créé et stocké:", newSession.substring(0, 40) + "...");
-        } catch (e) {
-          console.warn("⚠️ [INLINE] Impossible de stocker sessionId");
-        }
+          console.error("🚨 [INLINE] Nouveau sessionId créé (FALLBACK)");
+          console.error("   ❌ Isolation des chats NON garantie");
+          sessionIdSource = 'new-sessionStorage';
+        } catch (e) {}
         
+        cachedSessionId = newSession;
         return newSession;
+      }
+      
+      // Observer pour détecter changement de data-session-id (changement de chat)
+      function watchSessionIdChanges() {
+        const targetNode = document.body;
+        const config = { attributes: true, subtree: true, attributeFilter: ['data-session-id', 'data-chat-session-id'] };
+        
+        const callback = function(mutationsList) {
+          for (const mutation of mutationsList) {
+            if (mutation.type === 'attributes') {
+              const newSessionId = mutation.target.getAttribute('data-session-id') || 
+                                   mutation.target.getAttribute('data-chat-session-id');
+              
+              if (newSessionId && newSessionId !== cachedSessionId) {
+                console.log("🔄 [INLINE] CHANGEMENT DE CHAT DÉTECTÉ!");
+                console.log("   Ancien sessionId:", cachedSessionId?.substring(0, 30) + "...");
+                console.log("   Nouveau sessionId:", newSessionId.substring(0, 30) + "...");
+                cachedSessionId = newSessionId;
+                sessionIdSource = 'DOM';
+                
+                // Force restauration des tables pour le nouveau chat
+                if (window.flowiseTableBridge && window.flowiseTableBridge.restoreTablesForSession) {
+                  console.log("🔄 [INLINE] Restauration automatique pour nouveau chat...");
+                  window.flowiseTableBridge.restoreTablesForSession(newSessionId)
+                    .then(() => console.log("✅ [INLINE] Tables du nouveau chat restaurées"))
+                    .catch(err => console.warn("⚠️ [INLINE] Erreur restauration:", err.message));
+                }
+              }
+            }
+          }
+        };
+        
+        const observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
+        console.log("👁️ [INLINE] Observer installé pour détecter changements de session");
+      }
+      
+      // Démarrer l'observer dès que possible
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', watchSessionIdChanges);
+      } else {
+        watchSessionIdChanges();
       }
       
       function testIntegration() {
@@ -512,6 +684,353 @@ s
       }, 2000);
       
     })();
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔍 FONCTIONS DE DIAGNOSTIC GLOBAL (Accessibles via Console)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Diagnostic 1: Vérifier état SessionId et isolation
+     */
+    window.checkSessionId = function() {
+      console.log("═══════════════════════════════════════════");
+      console.log("🔍 DIAGNOSTIC: SessionId et Isolation");
+      console.log("═══════════════════════════════════════════");
+      
+      const element = document.querySelector('[data-session-id]');
+      const sessionId = element?.getAttribute('data-session-id');
+      
+      console.log("1️⃣ data-session-id dans DOM:");
+      console.log("   Element:", element ? "✅ Trouvé" : "❌ Absent");
+      console.log("   SessionId:", sessionId || "❌ null/undefined");
+      
+      if (sessionId) {
+        console.log("   Longueur:", sessionId.length, "caractères");
+        console.log("   Préfixe:", sessionId.substring(0, 15) + "...");
+        console.log("   ✅ Isolation ACTIVE");
+      } else {
+        console.log("   ❌ ISOLATION COMPROMISE");
+        console.log("   → React ne remonte pas stableSessionId");
+      }
+      
+      console.log("\n2️⃣ Cache interne:");
+      console.log("   cachedSessionId:", cachedSessionId ? cachedSessionId.substring(0, 30) + "..." : "null");
+      console.log("   sessionIdSource:", sessionIdSource);
+      console.log("   sessionIdRetryCount:", sessionIdRetryCount);
+      
+      console.log("\n3️⃣ Recommandations:");
+      if (!sessionId) {
+        console.log("   ⚠️ Vérifier ClaraAssistant.tsx ligne 411-425");
+        console.log("   ⚠️ Vérifier compilation React (npm run dev)");
+      } else if (sessionIdSource === 'sessionStorage') {
+        console.log("   ⚠️ React trop lent (>2s)");
+        console.log("   ⚠️ Risque de contamination entre chats");
+      } else {
+        console.log("   ✅ Tout fonctionne correctement");
+      }
+      
+      console.log("═══════════════════════════════════════════\n");
+      
+      return {
+        hasElement: !!element,
+        sessionId: sessionId,
+        source: sessionIdSource,
+        retryCount: sessionIdRetryCount,
+        isolated: !!sessionId && sessionIdSource === 'DOM'
+      };
+    };
+    
+    /**
+     * Diagnostic 2: Vérifier intégration conso.js
+     */
+    window.checkConsoIntegration = function() {
+      console.log("═══════════════════════════════════════════");
+      console.log("🔍 DIAGNOSTIC: Intégration conso.js");
+      console.log("═══════════════════════════════════════════");
+      
+      console.log("1️⃣ window.claraverseProcessor:");
+      console.log("   Existe:", !!window.claraverseProcessor ? "✅" : "❌");
+      
+      if (window.claraverseProcessor) {
+        console.log("   __integrated:", window.claraverseProcessor.__integrated ? "✅" : "❌");
+        console.log("   saveTableDataNow:", typeof window.claraverseProcessor.saveTableDataNow);
+        console.log("   setupTableInteractions:", typeof window.claraverseProcessor.setupTableInteractions);
+        console.log("   findResultatTable:", typeof window.claraverseProcessor.findResultatTable);
+      } else {
+        console.log("   ❌ claraverseProcessor non trouvé");
+        console.log("   → Vérifier que conso.js est chargé");
+      }
+      
+      console.log("\n2️⃣ Recommandations:");
+      if (!window.claraverseProcessor) {
+        console.log("   ⚠️ Vérifier index.html ligne 134: <script src=\"/conso.js\">");
+        console.log("   ⚠️ Vérifier que le fichier existe: h:\\Claverse_1\\public\\conso.js");
+      } else if (!window.claraverseProcessor.__integrated) {
+        console.log("   ⚠️ Script inline n'a pas intégré claraverseProcessor");
+        console.log("   ⚠️ Attendre 2-3 secondes puis relancer ce diagnostic");
+      } else {
+        console.log("   ✅ Intégration complète et fonctionnelle");
+      }
+      
+      console.log("═══════════════════════════════════════════\n");
+      
+      return {
+        exists: !!window.claraverseProcessor,
+        integrated: window.claraverseProcessor?.__integrated || false,
+        hasSaveMethod: typeof window.claraverseProcessor?.saveTableDataNow === 'function'
+      };
+    };
+    
+    /**
+     * Diagnostic 3: Vérifier doublons de tables
+     */
+    window.checkTableDuplicates = function() {
+      console.log("═══════════════════════════════════════════");
+      console.log("🔍 DIAGNOSTIC: Doublons de Tables");
+      console.log("═══════════════════════════════════════════");
+      
+      const allTables = document.querySelectorAll('table');
+      const byKeyword = {};
+      
+      allTables.forEach(table => {
+        const keyword = table.dataset.keyword || 'sans-keyword';
+        if (!byKeyword[keyword]) {
+          byKeyword[keyword] = [];
+        }
+        byKeyword[keyword].push({
+          element: table,
+          id: table.dataset.tableId,
+          restored: table.dataset.restored,
+          className: table.className
+        });
+      });
+      
+      console.log(`📊 Total tables: ${allTables.length}`);
+      console.log(`📊 Keywords uniques: ${Object.keys(byKeyword).length}\n`);
+      
+      let hasDuplicates = false;
+      
+      Object.entries(byKeyword).forEach(([keyword, tables]) => {
+        if (tables.length > 1) {
+          hasDuplicates = true;
+          console.log(`❌ DOUBLON: "${keyword}" → ${tables.length} tables`);
+          tables.forEach((t, i) => {
+            console.log(`   ${i + 1}. ID: ${t.id || 'none'}, Restored: ${t.restored || 'non'}, Class: ${t.className || 'none'}`);
+          });
+        } else {
+          console.log(`✅ Unique: "${keyword}"`);
+        }
+      });
+      
+      console.log("\n2️⃣ Recommandations:");
+      if (hasDuplicates) {
+        console.log("   ⚠️ Des doublons existent");
+        console.log("   ⚠️ Vérifier flowiseTableBridge.ts ligne 1342");
+        console.log("   ⚠️ Chercher logs console: '⏭️ Skip restoration'");
+        console.log("   ⚠️ Vérifier attribut data-restored='true'");
+      } else {
+        console.log("   ✅ Aucun doublon détecté");
+      }
+      
+      console.log("═══════════════════════════════════════════\n");
+      
+      return {
+        totalTables: allTables.length,
+        uniqueKeywords: Object.keys(byKeyword).length,
+        hasDuplicates: hasDuplicates,
+        byKeyword: byKeyword
+      };
+    };
+    
+    /**
+     * Diagnostic 4: Vérifier sauvegarde Table_conso et Table_Resultat
+     */
+    window.checkTableSaves = function() {
+      console.log("═══════════════════════════════════════════");
+      console.log("🔍 DIAGNOSTIC: Sauvegarde Tables");
+      console.log("═══════════════════════════════════════════");
+      
+      const consolidationTable = document.querySelector('table[data-keyword="Table_Consolidation"]');
+      const resultatTable = document.querySelector('table[data-keyword="Table_Resultat"]');
+      
+      console.log("1️⃣ Table_Consolidation:");
+      if (consolidationTable) {
+        console.log("   ✅ Trouvée dans DOM");
+        console.log("   data-table-id:", consolidationTable.dataset.tableId || "❌ absent");
+        console.log("   data-keyword:", consolidationTable.dataset.keyword || "❌ absent");
+        console.log("   data-restored:", consolidationTable.dataset.restored || "non");
+      } else {
+        console.log("   ❌ Pas trouvée dans DOM");
+        console.log("   → Table pas encore générée");
+      }
+      
+      console.log("\n2️⃣ Table_Resultat:");
+      if (resultatTable) {
+        console.log("   ✅ Trouvée dans DOM");
+        console.log("   data-table-id:", resultatTable.dataset.tableId || "❌ absent");
+        console.log("   data-keyword:", resultatTable.dataset.keyword || "❌ absent");
+        console.log("   data-restored:", resultatTable.dataset.restored || "non");
+      } else {
+        console.log("   ❌ Pas trouvée dans DOM");
+        console.log("   → Table pas encore générée");
+      }
+      
+      console.log("\n3️⃣ Instructions Test:");
+      console.log("   1. Générer une table avec consolidation");
+      console.log("   2. Chercher dans console:");
+      console.log("      - '💾 [CONSO] Sauvegarde forcée Table_Consolidation'");
+      console.log("      - '💾 [CONSO] Sauvegarde forcée Table_Resultat'");
+      console.log("      - '💾 [INLINE] Interception sauvegarde table'");
+      console.log("      - '✅ Table saved: table_xxx'");
+      console.log("   3. Si logs absents → Sauvegarde ne se déclenche pas");
+      
+      console.log("═══════════════════════════════════════════\n");
+      
+      return {
+        hasConsolidation: !!consolidationTable,
+        hasResultat: !!resultatTable,
+        consolidationId: consolidationTable?.dataset.tableId,
+        resultatId: resultatTable?.dataset.tableId
+      };
+    };
+    
+    /**
+     * Diagnostic COMPLET - Tout en un
+     */
+    window.runFullDiagnostic = function() {
+      console.log("\n\n");
+      console.log("╔═══════════════════════════════════════════════════════════════╗");
+      console.log("║                 🔍 DIAGNOSTIC COMPLET                         ║");
+      console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+      
+      const results = {
+        sessionId: window.checkSessionId(),
+        consoIntegration: window.checkConsoIntegration(),
+        duplicates: window.checkTableDuplicates(),
+        tableSaves: window.checkTableSaves()
+      };
+      
+      console.log("╔═══════════════════════════════════════════════════════════════╗");
+      console.log("║                    📊 RÉSUMÉ GLOBAL                           ║");
+      console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+      
+      const issues = [];
+      
+      if (!results.sessionId.isolated) {
+        issues.push("Isolation compromise - data-session-id problématique");
+      }
+      
+      if (!results.consoIntegration.integrated) {
+        issues.push("conso.js pas intégré correctement");
+      }
+      
+      if (results.duplicates.hasDuplicates) {
+        issues.push("Doublons de tables détectés");
+      }
+      
+      if (!results.tableSaves.hasConsolidation && !results.tableSaves.hasResultat) {
+        issues.push("Aucune table de consolidation générée (normal si pas encore testée)");
+      }
+      
+      // ✅ ALERTE VISUELLE
+      let alertMessage = "🔍 DIAGNOSTIC COMPLET ClaraVerse\n\n";
+      
+      if (issues.length === 0) {
+        console.log("✅ ✅ ✅ TOUT FONCTIONNE CORRECTEMENT ✅ ✅ ✅\n");
+        alertMessage += "✅ ✅ ✅ TOUT FONCTIONNE CORRECTEMENT ✅ ✅ ✅\n\n";
+        alertMessage += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        alertMessage += "✅ Isolation des chats: ACTIVE\n";
+        alertMessage += "   SessionId: " + results.sessionId.sessionId?.substring(0, 25) + "...\n\n";
+        alertMessage += "✅ conso.js: INTÉGRÉ\n\n";
+        alertMessage += "✅ Doublons: AUCUN\n";
+        alertMessage += "   Tables uniques: " + results.duplicates.uniqueKeywords + "\n\n";
+        alertMessage += "✅ Tables:\n";
+        alertMessage += "   • Consolidation: " + (results.tableSaves.hasConsolidation ? "Présente" : "Pas encore générée") + "\n";
+        alertMessage += "   • Resultat: " + (results.tableSaves.hasResultat ? "Présente" : "Pas encore générée") + "\n\n";
+        alertMessage += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        alertMessage += "📊 Voir console (F12) pour détails complets";
+      } else {
+        console.log("⚠️ PROBLÈMES DÉTECTÉS:\n");
+        issues.forEach(issue => console.log("   " + issue));
+        console.log("");
+        
+        alertMessage += "⚠️ ⚠️ ⚠️ PROBLÈMES DÉTECTÉS ⚠️ ⚠️ ⚠️\n\n";
+        alertMessage += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        
+        issues.forEach(issue => {
+          alertMessage += "❌ " + issue + "\n";
+        });
+        
+        alertMessage += "\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        alertMessage += "📊 DÉTAILS:\n\n";
+        
+        if (!results.sessionId.isolated) {
+          alertMessage += "🔴 Isolation:\n";
+          alertMessage += "   • SessionId dans DOM: " + (results.sessionId.hasElement ? "Oui" : "NON") + "\n";
+          alertMessage += "   • Source: " + (results.sessionId.source || "undefined") + "\n";
+          if (results.sessionId.sessionId) {
+            alertMessage += "   • ID: " + results.sessionId.sessionId.substring(0, 20) + "...\n";
+          }
+          alertMessage += "\n";
+        }
+        
+        if (!results.consoIntegration.integrated) {
+          alertMessage += "🔴 conso.js:\n";
+          alertMessage += "   • Existe: " + (results.consoIntegration.exists ? "Oui" : "NON") + "\n";
+          alertMessage += "   • Intégré: " + (results.consoIntegration.integrated ? "Oui" : "NON") + "\n";
+          alertMessage += "   • saveTableDataNow: " + (results.consoIntegration.hasSaveMethod ? "Oui" : "NON") + "\n";
+          alertMessage += "\n";
+        }
+        
+        if (results.duplicates.hasDuplicates) {
+          alertMessage += "🔴 Doublons:\n";
+          alertMessage += "   • Total tables: " + results.duplicates.totalTables + "\n";
+          alertMessage += "   • Keywords uniques: " + results.duplicates.uniqueKeywords + "\n";
+          alertMessage += "   • Voir console pour détails\n";
+          alertMessage += "\n";
+        }
+        
+        alertMessage += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        alertMessage += "🔧 ACTIONS:\n\n";
+        
+        if (!results.sessionId.isolated) {
+          alertMessage += "1. Vérifier compilation React\n";
+          alertMessage += "2. Vérifier ClaraAssistant.tsx ligne 411-425\n\n";
+        }
+        
+        if (!results.consoIntegration.integrated) {
+          alertMessage += "1. Attendre 2-3 secondes puis relancer\n";
+          alertMessage += "2. Vérifier index.html ligne 134\n\n";
+        }
+        
+        if (results.duplicates.hasDuplicates) {
+          alertMessage += "1. Vérifier flowiseTableBridge.ts ligne 1342\n";
+          alertMessage += "2. Chercher logs '⏭️ Skip restoration'\n\n";
+        }
+        
+        alertMessage += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+        alertMessage += "📊 Console (F12) pour détails complets";
+      }
+      
+      alert(alertMessage);
+      
+      console.log("═══════════════════════════════════════════════════════════════\n\n");
+      
+      return results;
+    };
+    
+    // Message d'aide
+    console.log("\n╔═══════════════════════════════════════════════════════════════╗");
+    console.log("║            🔍 FONCTIONS DE DIAGNOSTIC DISPONIBLES            ║");
+    console.log("╚═══════════════════════════════════════════════════════════════╝");
+    console.log("");
+    console.log("  📍 window.checkSessionId()        - Vérifier isolation chats");
+    console.log("  🔧 window.checkConsoIntegration() - Vérifier conso.js");
+    console.log("  📊 window.checkTableDuplicates()  - Vérifier doublons tables");
+    console.log("  💾 window.checkTableSaves()       - Vérifier sauvegardes");
+    console.log("  🎯 window.runFullDiagnostic()     - Diagnostic complet");
+    console.log("");
+    console.log("═══════════════════════════════════════════════════════════════\n");
     
     console.log("✅ [INLINE] Script chargé");
   </script>
