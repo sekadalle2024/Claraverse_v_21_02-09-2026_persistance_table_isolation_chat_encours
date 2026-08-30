@@ -413,13 +413,36 @@ const ClaraAssistant: React.FC<ClaraAssistantProps> = ({ onPageChange }) => {
     `clara-session-${Date.now()}-${Math.random().toString(36).substr(2, 11)}`
   );
   
-  // Mettre à jour stableSessionId quand currentSession change
+  // 🔒 CRITIQUE: Ne mettre à jour stableSessionId QUE si currentSession est une NOUVELLE session
+  // Ne PAS mettre à jour si currentSession.id existe déjà mais a été modifié (refresh DB, etc.)
+  const initialSessionIdRef = useRef<string | null>(null);
+  
   useEffect(() => {
-    if (currentSession?.id && currentSession.id !== stableSessionId) {
-      setStableSessionId(currentSession.id);
-      console.log('🔄 [React] SessionId mis à jour:', currentSession.id.substring(0, 30) + '...');
+    if (!currentSession?.id) {
+      return; // Pas de session active
     }
-  }, [currentSession?.id, stableSessionId]);
+    
+    // Si c'est la première fois qu'on voit une session, l'enregistrer
+    if (!initialSessionIdRef.current) {
+      initialSessionIdRef.current = currentSession.id;
+      
+      // Si currentSession.id diffère du stableSessionId initial, utiliser currentSession.id
+      if (currentSession.id !== stableSessionId) {
+        setStableSessionId(currentSession.id);
+        console.log('🔄 [React] SessionId initial défini:', currentSession.id.substring(0, 30) + '...');
+      }
+      return;
+    }
+    
+    // Si currentSession.id a VRAIMENT changé (différent de la ref), c'est un changement de chat
+    if (currentSession.id !== initialSessionIdRef.current) {
+      initialSessionIdRef.current = currentSession.id;
+      setStableSessionId(currentSession.id);
+      console.log('🔄 [React] Changement de chat détecté:', currentSession.id.substring(0, 30) + '...');
+    }
+    
+    // Sinon, on garde stableSessionId stable même si currentSession.id change légèrement
+  }, [currentSession?.id]);
   
   const [messages, setMessages] = useState<ClaraMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);

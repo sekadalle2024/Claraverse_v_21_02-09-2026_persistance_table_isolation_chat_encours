@@ -336,6 +336,29 @@
         const keyword = extractKeyword(table);
         console.log("🔑 [INLINE] Keyword:", keyword);
         
+        // CRITIQUE: Vérifier sessionId AVANT de sauvegarder
+        const sessionId = getSessionId();
+        if (!sessionId) {
+          console.warn("⚠️ [INLINE] Sauvegarde ignorée - SessionId pas encore disponible");
+          console.warn("   Table:", keyword);
+          console.warn("   Réessayez dans 100ms...");
+          
+          // Réessayer après un court délai
+          setTimeout(() => {
+            const retrySessionId = getSessionId();
+            if (retrySessionId) {
+              console.log("🔄 [INLINE] SessionId maintenant disponible, sauvegarde relancée");
+              emitSaveEvent(table);
+            } else {
+              console.error("❌ [INLINE] SessionId toujours indisponible après retry");
+              console.error("   Table NON sauvegardée:", keyword);
+            }
+          }, 100);
+          return;
+        }
+        
+        console.log("📍 [INLINE] SessionId:", sessionId.substring(0, 30) + "...");
+        
         // CRITIQUE: Ajouter data-keyword sur la table pour restauration future
         if (!table.dataset.keyword) {
           table.dataset.keyword = keyword;
@@ -348,9 +371,6 @@
           table.dataset.tableId = tableId;
           console.log("✏️ [INLINE] Ajout data-table-id:", tableId);
         }
-        
-        const sessionId = getSessionId();
-        console.log("📍 [INLINE] SessionId:", sessionId.substring(0, 30) + "...");
         
         const event = new CustomEvent('flowise:table:save:request', {
           detail: {
@@ -505,43 +525,36 @@
           console.warn("⚠️ [INLINE] Erreur claraDB:", e.message);
         }
         
-        // 4. ⚠️ FALLBACK DANGEREUX: sessionStorage (pas isolé par chat)
-        const STABLE_KEY = 'claraverse_stable_session';
+        // 4. ⚠️ PLUS DE FALLBACK sessionStorage - On refuse de fonctionner sans sessionId valide
         
-        try {
-          let stored = sessionStorage.getItem(STABLE_KEY);
-          if (stored) {
-            if (sessionIdSource !== 'sessionStorage') {
-              console.error("🚨 [INLINE] ALERTE: SessionId depuis sessionStorage");
-              console.error("   ❌ ISOLATION DES CHATS NON GARANTIE");
-              console.error("   ❌ Les tables peuvent être partagées entre chats!");
-              console.error("   💡 Vérifiez que React expose bien data-session-id");
-              
-              // 🔔 NOTIFICATION CRITIQUE
-              if (window.PersistanceLogger) {
-                window.PersistanceLogger.logCriticalError('isolation-compromise', 
-                  'data-session-id absent du DOM - React ne l\'expose pas');
-              }
-              
-              sessionIdSource = 'sessionStorage';
-            }
-            cachedSessionId = stored;
-            return stored;
-          }
-        } catch (e) {}
+        // Si on arrive ici, c'est que React n'a pas encore exposé le sessionId
+        // On NE CRÉE PAS de fallback qui contaminerait les chats
         
-        // 5. DERNIER RECOURS: Créer nouveau sessionId
-        const newSession = `fallback_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        if (sessionIdRetryCount < MAX_SESSION_RETRY) {
+          sessionIdRetryCount++;
+          console.warn(`⏳ [INLINE] SessionId pas encore disponible (tentative ${sessionIdRetryCount}/${MAX_SESSION_RETRY})`);
+          console.warn("   Attente que React expose data-session-id...");
+          
+          // Retourner null pour signaler qu'on ne peut pas encore opérer
+          return null;
+        }
         
-        try {
-          sessionStorage.setItem(STABLE_KEY, newSession);
-          console.error("🚨 [INLINE] Nouveau sessionId créé (FALLBACK)");
-          console.error("   ❌ Isolation des chats NON garantie");
-          sessionIdSource = 'new-sessionStorage';
-        } catch (e) {}
+        // Après MAX_SESSION_RETRY tentatives, on alerte l'utilisateur
+        console.error("🚨 [INLINE] ERREUR CRITIQUE: SessionId introuvable après 2 secondes");
+        console.error("   ❌ ISOLATION DES CHATS NON GARANTIE");
+        console.error("   ❌ Le système de persistance ne peut pas fonctionner");
+        console.error("   💡 Vérifiez que React expose bien data-session-id");
+        console.error("   💡 Vérifiez ClaraAssistant.tsx ligne ~3743");
         
-        cachedSessionId = newSession;
-        return newSession;
+        // 🔔 NOTIFICATION CRITIQUE
+        if (window.PersistanceLogger) {
+          window.PersistanceLogger.logCriticalError('isolation-compromise', 
+            'data-session-id absent du DOM après 2s - React ne l\'expose pas');
+        }
+        
+        // Retourner null au lieu d'un fallback dangereux
+        sessionIdSource = 'FAILED';
+        return null;
       }
       
       // Observer pour détecter changement de data-session-id (changement de chat)
@@ -1019,18 +1032,911 @@
       return results;
     };
     
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔍 DIAGNOSTIC AVANCÉ DOUBLONS ET CONTAMINATION
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    window.investigateDoublons = function() {
+      console.log("\n" + "=".repeat(70));
+      console.log("🔍 INVESTIGATION DOUBLONS DE TABLES");
+      console.log("=".repeat(70) + "\n");
+      
+      const allTables = document.querySelectorAll('table');
+      const byKeyword = {};
+      
+      allTables.forEach((table, index) => {
+        const keyword = table.dataset.keyword || `sans-keyword-${index}`;
+        
+        if (!byKeyword[keyword]) {
+          byKeyword[keyword] = [];
+        }
+        
+        byKeyword[keyword].push({
+          index: index,
+          id: table.id || 'no-id',
+          tableId: table.dataset.tableId || 'no-table-id',
+          restored: table.dataset.restored || 'false',
+          parent: table.parentElement?.tagName || 'unknown',
+          html: table.outerHTML.substring(0, 100) + '...'
+        });
+      });
+      
+      // Afficher doublons
+      const doublons = Object.entries(byKeyword).filter(([k, tables]) => tables.length > 1);
+      
+      if (doublons.length === 0) {
+        console.log("✅ Aucun doublon détecté");
+        return;
+      }
+      
+      console.log(`❌ ${doublons.length} keyword(s) avec doublons:\n`);
+      
+      doublons.forEach(([keyword, tables]) => {
+        console.log(`\n📋 Keyword: "${keyword}" (${tables.length}x)`);
+        tables.forEach((t, i) => {
+          console.log(`  ${i + 1}. Index DOM: ${t.index}`);
+          console.log(`     - id: ${t.id}`);
+          console.log(`     - tableId: ${t.tableId}`);
+          console.log(`     - restored: ${t.restored}`);
+          console.log(`     - parent: ${t.parent}`);
+          console.log(`     - HTML: ${t.html}`);
+        });
+      });
+      
+      console.log("\n" + "=".repeat(70));
+      console.log("💡 SUGGESTIONS:");
+      console.log("- Si restored='true' pour plusieurs: restauration en double");
+      console.log("- Si tableId identiques: même table dupliquée");
+      console.log("- Si tableId différents: tables créées séparément");
+      console.log("=".repeat(70) + "\n");
+    };
+    
+    window.investigateContamination = async function() {
+      console.log("\n" + "=".repeat(70));
+      console.log("🔍 INVESTIGATION CONTAMINATION ENTRE CHATS");
+      console.log("=".repeat(70) + "\n");
+      
+      // 1. SessionId actuel
+      const currentSessionId = document.querySelector('[data-session-id]')?.getAttribute('data-session-id');
+      console.log("📍 SessionId actuel (DOM):", currentSessionId);
+      
+      if (!currentSessionId) {
+        console.error("❌ Pas de sessionId dans DOM!");
+        return;
+      }
+      
+      // 2. Vérifier IndexedDB
+      try {
+        const dbRequest = indexedDB.open('ClaraverseDB', 1);
+        
+        dbRequest.onsuccess = function(event) {
+          const db = event.target.result;
+          const transaction = db.transaction(['generatedTables'], 'readonly');
+          const store = transaction.objectStore('generatedTables');
+          const getAllRequest = store.getAll();
+          
+          getAllRequest.onsuccess = function() {
+            const allTables = getAllRequest.result;
+            console.log(`\n📊 Total tables dans IndexedDB: ${allTables.length}`);
+            
+            // Grouper par sessionId
+            const bySession = {};
+            allTables.forEach(table => {
+              const sid = table.sessionId || 'no-session';
+              if (!bySession[sid]) {
+                bySession[sid] = [];
+              }
+              bySession[sid].push(table);
+            });
+            
+            console.log(`\n🔑 Nombre de sessions distinctes: ${Object.keys(bySession).length}`);
+            
+            // Afficher détails
+            Object.entries(bySession).forEach(([sessionId, tables]) => {
+              const isCurrent = sessionId === currentSessionId;
+              const marker = isCurrent ? "✅ SESSION ACTUELLE" : "⚠️ Autre session";
+              
+              console.log(`\n${marker}`);
+              console.log(`SessionId: ${sessionId.substring(0, 40)}...`);
+              console.log(`Tables: ${tables.length}`);
+              
+              if (tables.length <= 5) {
+                tables.forEach(t => {
+                  console.log(`  - ${t.keyword} (id: ${t.id})`);
+                });
+              } else {
+                tables.slice(0, 3).forEach(t => {
+                  console.log(`  - ${t.keyword} (id: ${t.id})`);
+                });
+                console.log(`  ... et ${tables.length - 3} autres`);
+              }
+            });
+            
+            // Vérifier tables DOM vs IndexedDB
+            console.log("\n" + "─".repeat(70));
+            console.log("🔍 VÉRIFICATION TABLES DOM VS INDEXEDDB");
+            console.log("─".repeat(70) + "\n");
+            
+            const domTables = Array.from(document.querySelectorAll('table')).map(t => ({
+              keyword: t.dataset.keyword || 'no-keyword',
+              tableId: t.dataset.tableId || 'no-table-id'
+            }));
+            
+            console.log(`Tables visibles DOM: ${domTables.length}`);
+            domTables.forEach(t => {
+              console.log(`  - ${t.keyword} (${t.tableId})`);
+            });
+            
+            const currentSessionTables = bySession[currentSessionId] || [];
+            console.log(`\nTables dans IndexedDB pour session actuelle: ${currentSessionTables.length}`);
+            currentSessionTables.forEach(t => {
+              console.log(`  - ${t.keyword} (${t.id})`);
+            });
+            
+            // Détecter contamination
+            console.log("\n" + "─".repeat(70));
+            console.log("🚨 DÉTECTION CONTAMINATION");
+            console.log("─".repeat(70) + "\n");
+            
+            const otherSessionTables = allTables.filter(t => t.sessionId !== currentSessionId);
+            const contaminatedKeywords = domTables.filter(domTable => {
+              return otherSessionTables.some(dbTable => dbTable.keyword === domTable.keyword);
+            });
+            
+            if (contaminatedKeywords.length > 0) {
+              console.error(`❌ CONTAMINATION DÉTECTÉE: ${contaminatedKeywords.length} table(s)`);
+              contaminatedKeywords.forEach(t => {
+                console.error(`  - ${t.keyword}: présent dans DOM mais appartient à autre session`);
+              });
+            } else {
+              console.log("✅ Aucune contamination détectée");
+            }
+            
+            console.log("\n" + "=".repeat(70) + "\n");
+          };
+          
+          getAllRequest.onerror = function() {
+            console.error("❌ Erreur lecture IndexedDB");
+          };
+        };
+        
+        dbRequest.onerror = function() {
+          console.error("❌ Erreur ouverture IndexedDB");
+        };
+        
+      } catch (e) {
+        console.error("❌ Erreur accès IndexedDB:", e);
+      }
+    };
+    
+    window.testTableSave = function() {
+      console.log("\n" + "=".repeat(70));
+      console.log("🧪 TEST SAUVEGARDE TABLE");
+      console.log("=".repeat(70) + "\n");
+      
+      const tables = document.querySelectorAll('table');
+      if (tables.length === 0) {
+        console.error("❌ Aucune table trouvée dans DOM");
+        return;
+      }
+      
+      const testTable = tables[0];
+      const keyword = testTable.dataset.keyword || 'no-keyword';
+      
+      console.log(`📋 Test sur table: "${keyword}"`);
+      console.log(`   Index DOM: 0`);
+      console.log(`   ID: ${testTable.id || 'no-id'}`);
+      
+      // Installer écouteur événement
+      let eventReceived = false;
+      const handler = function(e) {
+        eventReceived = true;
+        console.log("\n✅ Événement flowise:table:save:request REÇU");
+        console.log(`   Keyword: ${e.detail.keyword}`);
+        console.log(`   SessionId: ${e.detail.sessionId?.substring(0, 40)}...`);
+        console.log(`   Source: ${e.detail.source}`);
+        document.removeEventListener('flowise:table:save:request', handler);
+      };
+      
+      document.addEventListener('flowise:table:save:request', handler);
+      
+      // Déclencher sauvegarde
+      console.log("\n🔄 Déclenchement sauvegarde...");
+      
+      if (window.claraverseProcessor && window.claraverseProcessor.saveTableDataNow) {
+        try {
+          window.claraverseProcessor.saveTableDataNow(testTable);
+          
+          // Vérifier après 500ms
+          setTimeout(() => {
+            if (eventReceived) {
+              console.log("\n✅ TEST RÉUSSI: Événement émis correctement");
+            } else {
+              console.error("\n❌ TEST ÉCHOUÉ: Événement PAS émis");
+              console.error("   Vérifier index.html wrappe bien saveTableDataNow");
+            }
+            console.log("\n" + "=".repeat(70) + "\n");
+          }, 500);
+          
+        } catch (e) {
+          console.error("❌ Erreur lors de saveTableDataNow:", e);
+          document.removeEventListener('flowise:table:save:request', handler);
+        }
+      } else {
+        console.error("❌ window.claraverseProcessor.saveTableDataNow pas disponible");
+        document.removeEventListener('flowise:table:save:request', handler);
+      }
+    };
+    
     // Message d'aide
     console.log("\n╔═══════════════════════════════════════════════════════════════╗");
     console.log("║            🔍 FONCTIONS DE DIAGNOSTIC DISPONIBLES            ║");
     console.log("╚═══════════════════════════════════════════════════════════════╝");
     console.log("");
-    console.log("  📍 window.checkSessionId()        - Vérifier isolation chats");
-    console.log("  🔧 window.checkConsoIntegration() - Vérifier conso.js");
-    console.log("  📊 window.checkTableDuplicates()  - Vérifier doublons tables");
-    console.log("  💾 window.checkTableSaves()       - Vérifier sauvegardes");
-    console.log("  🎯 window.runFullDiagnostic()     - Diagnostic complet");
+    console.log("  📍 window.checkSessionId()            - Vérifier isolation chats");
+    console.log("  🔧 window.checkConsoIntegration()     - Vérifier conso.js");
+    console.log("  📊 window.checkTableDuplicates()      - Vérifier doublons tables");
+    console.log("  💾 window.checkTableSaves()           - Vérifier sauvegardes");
+    console.log("  🎯 window.runFullDiagnostic()         - Diagnostic complet");
+    console.log("");
+    console.log("  🔬 window.investigateDoublons()       - 🆕 Analyser doublons détaillés");
+    console.log("  🔬 window.investigateContamination()  - 🆕 Analyser contamination");
+    console.log("  🧪 window.testTableSave()             - 🆕 Tester sauvegarde table");
     console.log("");
     console.log("═══════════════════════════════════════════════════════════════\n");
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔘 BOUTON DIAGNOSTIC SIMPLE (Sans dépendance PersistanceLogger)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function createSimpleDiagnosticButton() {
+      // Attendre que DOM soit prêt
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createSimpleDiagnosticButton);
+        return;
+      }
+      
+      // Vérifier si bouton existe déjà
+      if (document.getElementById('diagnostic-button-simple')) {
+        console.log("ℹ️ [Diagnostic] Bouton existe déjà");
+        return;
+      }
+      
+      const button = document.createElement('button');
+      button.id = 'diagnostic-button-simple';
+      button.innerHTML = '🔍<br><small style="font-size:9px">Test</small>';
+      button.title = 'Diagnostic Système - Cliquer pour vérifier état';
+      button.style.cssText = `
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: 2px solid rgba(255,255,255,0.3);
+        font-size: 20px;
+        line-height: 1.2;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 999999;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, -apple-system, sans-serif;
+        padding: 5px;
+      `;
+      
+      button.onmouseover = function() {
+        this.style.transform = 'scale(1.1) rotate(5deg)';
+        this.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)';
+      };
+      
+      button.onmouseout = function() {
+        this.style.transform = 'scale(1) rotate(0deg)';
+        this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+      };
+      
+      button.onclick = function() {
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 100);
+        
+        // Exécuter diagnostic
+        runQuickDiagnostic();
+      };
+      
+      document.body.appendChild(button);
+      console.log("✅ [Diagnostic] Bouton simple créé (bas droite)");
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📊 DIAGNOSTIC RAPIDE AVEC NOTIFICATION INTÉGRÉE
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    window.runQuickDiagnostic = function() {
+      console.log("🔍 [Quick Diagnostic] Démarrage...");
+      
+      // Vérifications
+      const element = document.querySelector('[data-session-id]');
+      const sessionId = element?.getAttribute('data-session-id');
+      const isolated = !!sessionId && sessionId !== 'undefined' && sessionId !== 'unknown';
+      const consoIntegrated = window.claraverseProcessor?.__integrated || false;
+      
+      const allTables = document.querySelectorAll('table');
+      const byKeyword = {};
+      allTables.forEach(table => {
+        const keyword = table.dataset.keyword || 'sans-keyword';
+        byKeyword[keyword] = (byKeyword[keyword] || 0) + 1;
+      });
+      const hasDuplicates = Object.values(byKeyword).some(count => count > 1);
+      
+      // Construire message
+      let message = "🔍 DIAGNOSTIC SYSTÈME\n\n";
+      let hasIssues = false;
+      
+      if (isolated) {
+        message += "✅ Isolation: ACTIVE\n";
+        message += `   ID: ${sessionId.substring(0, 25)}...\n\n`;
+      } else {
+        message += "❌ Isolation: COMPROMISE\n";
+        message += `   SessionId dans DOM: ${element ? 'Invalide' : 'Absent'}\n\n`;
+        hasIssues = true;
+      }
+      
+      if (consoIntegrated) {
+        message += "✅ conso.js: INTÉGRÉ\n\n";
+      } else {
+        message += "❌ conso.js: PAS INTÉGRÉ\n";
+        message += "   Attendre 2-3s puis relancer\n\n";
+        hasIssues = true;
+      }
+      
+      if (hasDuplicates) {
+        message += "❌ Doublons: DÉTECTÉS\n";
+        const duplicates = Object.entries(byKeyword).filter(([k, c]) => c > 1);
+        duplicates.forEach(([k, c]) => {
+          message += `   • ${k}: ${c}x\n`;
+        });
+        message += "\n";
+        hasIssues = true;
+      } else {
+        message += "✅ Doublons: AUCUN\n\n";
+      }
+      
+      message += `📊 Total: ${allTables.length} tables\n`;
+      message += `📊 Keywords: ${Object.keys(byKeyword).length} uniques`;
+      
+      // Afficher notification custom
+      showQuickNotification(message, hasIssues ? 'error' : 'success');
+      
+      // Logs console
+      if (hasIssues) {
+        console.warn("⚠️ [Quick Diagnostic] Problèmes détectés");
+      } else {
+        console.log("✅ [Quick Diagnostic] Tout fonctionne");
+      }
+      
+      // Aussi exécuter diagnostic complet dans console
+      if (window.runFullDiagnostic) {
+        setTimeout(() => window.runFullDiagnostic(), 200);
+      }
+    };
+    
+    function showQuickNotification(message, type = 'info') {
+      // Créer notification
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+        color: white;
+        padding: 16px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 999999;
+        max-width: 400px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      
+      notification.textContent = message;
+      
+      // Bouton fermer
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '×';
+      closeBtn.style.cssText = `
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `;
+      closeBtn.onclick = () => notification.remove();
+      
+      notification.appendChild(closeBtn);
+      document.body.appendChild(notification);
+      
+      // Auto-remove après 8 secondes
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.style.animation = 'slideOutRight 0.3s ease-in';
+          setTimeout(() => notification.remove(), 300);
+        }
+      }, 8000);
+    }
+    
+    // Ajouter animations CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(400px);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔘 BOUTONS DIAGNOSTIC AVANCÉS (Sans console - Tout dans notifications)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function createAdvancedDiagnosticButtons() {
+      // Attendre que DOM soit prêt
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createAdvancedDiagnosticButtons);
+        return;
+      }
+      
+      // Vérifier si boutons existent déjà
+      if (document.getElementById('diagnostic-buttons-container')) {
+        console.log("ℹ️ [Diagnostic] Boutons existent déjà");
+        return;
+      }
+      
+      // Conteneur pour les boutons
+      const container = document.createElement('div');
+      container.id = 'diagnostic-buttons-container';
+      container.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 999999;
+      `;
+      
+      // Fonction helper pour créer un bouton
+      function createButton(emoji, label, onClick, color) {
+        const button = document.createElement('button');
+        button.innerHTML = `${emoji}<br><small style="font-size:9px">${label}</small>`;
+        button.title = `Diagnostic: ${label}`;
+        button.style.cssText = `
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, ${color[0]} 0%, ${color[1]} 100%);
+          color: white;
+          border: 2px solid rgba(255,255,255,0.3);
+          font-size: 20px;
+          line-height: 1.2;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          transition: all 0.3s ease;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          font-family: system-ui, -apple-system, sans-serif;
+          padding: 5px;
+        `;
+        
+        button.onmouseover = function() {
+          this.style.transform = 'scale(1.1) rotate(5deg)';
+          this.style.boxShadow = `0 6px 20px ${color[0]}aa`;
+        };
+        
+        button.onmouseout = function() {
+          this.style.transform = 'scale(1) rotate(0deg)';
+          this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        };
+        
+        button.onclick = function() {
+          this.style.transform = 'scale(0.9)';
+          setTimeout(() => {
+            this.style.transform = 'scale(1)';
+          }, 100);
+          onClick();
+        };
+        
+        return button;
+      }
+      
+      // Bouton 1: Diagnostic Général
+      const btnGeneral = createButton('🔍', 'Test', runQuickDiagnostic, ['#667eea', '#764ba2']);
+      
+      // Bouton 2: Analyser Doublons
+      const btnDoublons = createButton('📋', 'Doublons', analyzeDoublonsUI, ['#f093fb', '#f5576c']);
+      
+      // Bouton 3: Analyser Contamination
+      const btnContamination = createButton('🔬', 'Contam', analyzeContaminationUI, ['#4facfe', '#00f2fe']);
+      
+      // Bouton 4: Tester Sauvegarde
+      const btnSave = createButton('💾', 'Save', testSaveUI, ['#43e97b', '#38f9d7']);
+      
+      container.appendChild(btnGeneral);
+      container.appendChild(btnDoublons);
+      container.appendChild(btnContamination);
+      container.appendChild(btnSave);
+      
+      document.body.appendChild(container);
+      console.log("✅ [Diagnostic] 4 boutons créés (bas droite)");
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📊 ANALYSE DOUBLONS (Interface)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function analyzeDoublonsUI() {
+      const allTables = document.querySelectorAll('table');
+      const byKeyword = {};
+      
+      allTables.forEach((table, index) => {
+        const keyword = table.dataset.keyword || `sans-keyword-${index}`;
+        
+        if (!byKeyword[keyword]) {
+          byKeyword[keyword] = [];
+        }
+        
+        byKeyword[keyword].push({
+          index: index,
+          id: table.id || 'no-id',
+          tableId: table.dataset.tableId || 'no-table-id',
+          restored: table.dataset.restored || 'false'
+        });
+      });
+      
+      const doublons = Object.entries(byKeyword).filter(([k, tables]) => tables.length > 1);
+      
+      let message = "📋 ANALYSE DOUBLONS\n\n";
+      
+      if (doublons.length === 0) {
+        message += "✅ Aucun doublon détecté\n\n";
+        message += `📊 Total: ${allTables.length} tables\n`;
+        message += `📊 Keywords uniques: ${Object.keys(byKeyword).length}`;
+        showLongNotification(message, 'success');
+        return;
+      }
+      
+      message += `❌ ${doublons.length} keyword(s) avec doublons:\n\n`;
+      
+      doublons.forEach(([keyword, tables]) => {
+        message += `• ${keyword}: ${tables.length}x\n`;
+        tables.forEach((t, i) => {
+          message += `  ${i + 1}. Index ${t.index} | restored=${t.restored}\n`;
+          if (i < tables.length - 1) message += `     tableId: ${t.tableId.substring(0, 20)}...\n`;
+        });
+        message += "\n";
+      });
+      
+      message += "💡 CAUSE PROBABLE:\n";
+      message += "Si restored='true' → Restauration en double\n";
+      message += "Si restored='false' → Génération multiple";
+      
+      showLongNotification(message, 'error');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔬 ANALYSE CONTAMINATION (Interface)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function analyzeContaminationUI() {
+      const currentSessionId = document.querySelector('[data-session-id]')?.getAttribute('data-session-id');
+      
+      if (!currentSessionId) {
+        showLongNotification("❌ ERREUR\n\nPas de sessionId dans DOM\nImpossible d'analyser contamination", 'error');
+        return;
+      }
+      
+      showLongNotification("🔄 ANALYSE EN COURS...\n\nAccès IndexedDB\nVeuillez patienter 2-3s", 'info');
+      
+      // Timeout de sécurité
+      const timeoutId = setTimeout(() => {
+        showLongNotification("⏱️ TIMEOUT\n\nIndexedDB ne répond pas\nEssayez de recharger (F5)", 'error');
+      }, 5000);
+      
+      try {
+        const dbRequest = indexedDB.open('ClaraverseDB', 1);
+        
+        dbRequest.onerror = function(event) {
+          clearTimeout(timeoutId);
+          console.error("IndexedDB error:", event);
+          showLongNotification("❌ ERREUR\n\nImpossible d'ouvrir IndexedDB\nPeut-être navigation privée?\n\nErreur: " + (event.target?.error?.message || 'Unknown'), 'error');
+        };
+        
+        dbRequest.onblocked = function() {
+          clearTimeout(timeoutId);
+          showLongNotification("⚠️ BLOQUÉ\n\nIndexedDB bloquée\nFermez autres onglets\net réessayez", 'error');
+        };
+        
+        dbRequest.onsuccess = function(event) {
+          try {
+            const db = event.target.result;
+            
+            if (!db.objectStoreNames.contains('generatedTables')) {
+              clearTimeout(timeoutId);
+              showLongNotification("❌ ERREUR\n\nTable 'generatedTables'\nn'existe pas dans DB\n\nDB vide ou corrompue", 'error');
+              return;
+            }
+            
+            const transaction = db.transaction(['generatedTables'], 'readonly');
+            
+            transaction.onerror = function(event) {
+              clearTimeout(timeoutId);
+              console.error("Transaction error:", event);
+              showLongNotification("❌ ERREUR TRANSACTION\n\n" + (event.target?.error?.message || 'Unknown error'), 'error');
+            };
+            
+            const store = transaction.objectStore('generatedTables');
+            const getAllRequest = store.getAll();
+            
+            getAllRequest.onerror = function(event) {
+              clearTimeout(timeoutId);
+              console.error("GetAll error:", event);
+              showLongNotification("❌ ERREUR LECTURE\n\n" + (event.target?.error?.message || 'Unknown error'), 'error');
+            };
+            
+            getAllRequest.onsuccess = function() {
+              clearTimeout(timeoutId);
+              
+              try {
+                const allTables = getAllRequest.result || [];
+                
+                // Grouper par sessionId
+                const bySession = {};
+                allTables.forEach(table => {
+                  const sid = table.sessionId || 'no-session';
+                  if (!bySession[sid]) {
+                    bySession[sid] = [];
+                  }
+                  bySession[sid].push(table);
+                });
+                
+                let message = "🔬 ANALYSE CONTAMINATION\n\n";
+                message += `📍 Session actuelle:\n${currentSessionId.substring(0, 30)}...\n\n`;
+                message += `📊 Total IndexedDB: ${allTables.length} tables\n`;
+                message += `🔑 Sessions distinctes: ${Object.keys(bySession).length}\n\n`;
+                
+                // Tables session actuelle
+                const currentTables = bySession[currentSessionId] || [];
+                message += `Session actuelle: ${currentTables.length} tables\n`;
+                
+                // Tables autres sessions
+                const otherSessionsCount = allTables.length - currentTables.length;
+                message += `Autres sessions: ${otherSessionsCount} tables\n\n`;
+                
+                // Vérifier tables DOM
+                const domTables = Array.from(document.querySelectorAll('table'));
+                message += `📺 Tables visibles DOM: ${domTables.length}\n\n`;
+                
+                // Détecter contamination
+                const domKeywords = domTables.map(t => t.dataset.keyword || 'no-keyword');
+                const otherSessionTables = allTables.filter(t => t.sessionId !== currentSessionId);
+                const contaminatedKeywords = domKeywords.filter(keyword => {
+                  return otherSessionTables.some(t => t.keyword === keyword);
+                });
+                
+                if (contaminatedKeywords.length > 0) {
+                  message += `❌ CONTAMINATION DÉTECTÉE!\n\n`;
+                  message += `${contaminatedKeywords.length} table(s) contamination:\n`;
+                  contaminatedKeywords.slice(0, 5).forEach(k => {
+                    message += `• ${k}\n`;
+                  });
+                  if (contaminatedKeywords.length > 5) {
+                    message += `... +${contaminatedKeywords.length - 5} autres\n`;
+                  }
+                  message += "\n💡 Ces tables appartiennent\nà d'autres chats";
+                  showLongNotification(message, 'error');
+                } else {
+                  message += "✅ AUCUNE CONTAMINATION\n\n";
+                  message += "Toutes les tables visibles\nappartiennent à ce chat";
+                  showLongNotification(message, 'success');
+                }
+                
+              } catch (e) {
+                console.error("Processing error:", e);
+                showLongNotification("❌ ERREUR TRAITEMENT\n\n" + e.message, 'error');
+              }
+            };
+            
+          } catch (e) {
+            clearTimeout(timeoutId);
+            console.error("Success handler error:", e);
+            showLongNotification("❌ ERREUR\n\n" + e.message, 'error');
+          }
+        };
+        
+      } catch (e) {
+        clearTimeout(timeoutId);
+        console.error("Catch error:", e);
+        showLongNotification(`❌ ERREUR\n\n${e.message}\n\nAccès IndexedDB échoué`, 'error');
+      }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🧪 TEST SAUVEGARDE (Interface)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function testSaveUI() {
+      const tables = document.querySelectorAll('table');
+      if (tables.length === 0) {
+        showLongNotification("❌ ERREUR\n\nAucune table trouvée\ndans le DOM", 'error');
+        return;
+      }
+      
+      const testTable = tables[0];
+      const keyword = testTable.dataset.keyword || 'no-keyword';
+      
+      let message = `🧪 TEST SAUVEGARDE\n\nTable: "${keyword}"\nIndex DOM: 0\n\n`;
+      message += "🔄 Déclenchement...\nPatientez 1 seconde";
+      
+      showLongNotification(message, 'info');
+      
+      // Installer écouteur événement
+      let eventReceived = false;
+      let eventDetails = null;
+      
+      const handler = function(e) {
+        eventReceived = true;
+        eventDetails = {
+          keyword: e.detail.keyword,
+          sessionId: e.detail.sessionId?.substring(0, 30) + '...',
+          source: e.detail.source
+        };
+        document.removeEventListener('flowise:table:save:request', handler);
+      };
+      
+      document.addEventListener('flowise:table:save:request', handler);
+      
+      // Déclencher sauvegarde
+      if (window.claraverseProcessor && window.claraverseProcessor.saveTableDataNow) {
+        try {
+          window.claraverseProcessor.saveTableDataNow(testTable);
+          
+          // Vérifier après 1 seconde
+          setTimeout(() => {
+            document.removeEventListener('flowise:table:save:request', handler);
+            
+            let resultMessage = `🧪 TEST SAUVEGARDE\n\nTable: "${keyword}"\n\n`;
+            
+            if (eventReceived) {
+              resultMessage += "✅ ÉVÉNEMENT ÉMIS\n\n";
+              resultMessage += `Keyword: ${eventDetails.keyword}\n`;
+              resultMessage += `Session: ${eventDetails.sessionId}\n`;
+              resultMessage += `Source: ${eventDetails.source}\n\n`;
+              resultMessage += "💡 Sauvegarde déclenchée\nVérifier IndexedDB dans 2s";
+              showLongNotification(resultMessage, 'success');
+            } else {
+              resultMessage += "❌ ÉVÉNEMENT PAS ÉMIS\n\n";
+              resultMessage += "💡 CAUSE PROBABLE:\n";
+              resultMessage += "• conso.js pas intégré\n";
+              resultMessage += "• SessionId invalide\n";
+              resultMessage += "• Wrapper pas actif\n\n";
+              resultMessage += "Vérifier console pour logs";
+              showLongNotification(resultMessage, 'error');
+            }
+          }, 1000);
+          
+        } catch (e) {
+          document.removeEventListener('flowise:table:save:request', handler);
+          showLongNotification(`❌ ERREUR\n\n${e.message}\n\nsaveTableDataNow échoué`, 'error');
+        }
+      } else {
+        document.removeEventListener('flowise:table:save:request', handler);
+        showLongNotification("❌ ERREUR\n\nconso.js pas disponible\nwindow.claraverseProcessor\nPAS INTÉGRÉ", 'error');
+      }
+    }
+    
+    // Notification longue (pour diagnostics détaillés)
+    function showLongNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+        color: white;
+        padding: 16px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 999999;
+        max-width: 450px;
+        max-height: 80vh;
+        overflow-y: auto;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        animation: slideInRight 0.3s ease-out;
+      `;
+      
+      notification.textContent = message;
+      
+      // Bouton fermer
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '×';
+      closeBtn.style.cssText = `
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `;
+      closeBtn.onclick = () => notification.remove();
+      
+      notification.appendChild(closeBtn);
+      
+      // Fermer autres notifications
+      document.querySelectorAll('[data-notification="true"]').forEach(n => n.remove());
+      notification.setAttribute('data-notification', 'true');
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove après 12 secondes (plus long pour diagnostics)
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.style.animation = 'slideOutRight 0.3s ease-in';
+          setTimeout(() => notification.remove(), 300);
+        }
+      }, 12000);
+    }
+    
+    // Créer boutons après 2 secondes
+    setTimeout(createAdvancedDiagnosticButtons, 2000);
     
     console.log("✅ [INLINE] Script chargé");
   </script>

@@ -581,6 +581,9 @@ export class FlowiseTableBridge {
     // Listen for Flowise table integrated events
     document.addEventListener('flowise:table:integrated', this.handleFlowiseTableIntegrated.bind(this));
 
+    // Listen for table save requests (from conso.js)
+    document.addEventListener('flowise:table:save:request', this.handleTableSaveRequest.bind(this));
+
     // Listen for session change events
     document.addEventListener('claraverse:session:changed', this.handleSessionChanged.bind(this));
 
@@ -600,6 +603,37 @@ export class FlowiseTableBridge {
     }
 
     this.handleTableIntegrated(detail);
+  }
+
+  /**
+   * Handle flowise:table:save:request events (from conso.js)
+   * Converts save request format to handleTableIntegrated format
+   */
+  private handleTableSaveRequest(event: Event): void {
+    const customEvent = event as CustomEvent<{
+      table: HTMLTableElement;
+      sessionId: string;
+      keyword: string;
+      source: string;
+    }>;
+    const detail = customEvent.detail;
+
+    if (!detail || !detail.table) {
+      console.warn('⚠️ Invalid flowise:table:save:request event, missing table');
+      return;
+    }
+
+    console.log(`💾 [Bridge] Handling save request for: ${detail.keyword}`);
+
+    // Convert to FlowiseTableIntegratedDetail format
+    const integratedDetail: FlowiseTableIntegratedDetail = {
+      table: detail.table,
+      keyword: detail.keyword,
+      source: detail.source || 'conso',
+      messageId: undefined // Will be detected automatically
+    };
+
+    this.handleTableIntegrated(integratedDetail);
   }
 
   /**
@@ -1355,7 +1389,29 @@ export class FlowiseTableBridge {
         return;
       }
       
-      // Find an existing table with the same keyword
+      // 🔥 CORRECTION CRITIQUE DOUBLONS: Compter toutes les tables avec ce keyword
+      const allTablesWithKeyword = document.querySelectorAll(`table[data-keyword="${tableData.keyword}"]`);
+      
+      if (allTablesWithKeyword.length > 0) {
+        // Il existe DÉJÀ une ou plusieurs tables avec ce keyword dans le DOM
+        // C'est soit une restauration déjà effectuée, soit Flowise vient de la générer
+        console.log(`⏭️ Skip restoration of "${tableData.keyword}" - ${allTablesWithKeyword.length} table(s) already in DOM`);
+        
+        // Marquer toutes ces tables comme "déjà traitées" pour éviter future restauration
+        allTablesWithKeyword.forEach(table => {
+          if (!table.getAttribute('data-restored')) {
+            table.setAttribute('data-skip-restore', 'true');
+          }
+        });
+        
+        return;
+      }
+      
+      // Si on arrive ici, aucune table avec ce keyword n'existe dans le DOM
+      // On peut restaurer en toute sécurité
+      console.log(`🔄 Restoring "${tableData.keyword}" - no existing table found in DOM`);
+      
+      // Find an existing table with the same keyword (ne devrait pas exister vu check ci-dessus)
       const existingTable = this.findTableByKeyword(tableData.keyword);
       
       if (!existingTable) {

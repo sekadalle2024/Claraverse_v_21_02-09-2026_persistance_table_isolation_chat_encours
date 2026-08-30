@@ -10,6 +10,7 @@
 (function() {
   'use strict';
   
+  console.log("🚀 [Logger] Début chargement persistance-logger.js");
   console.log("🔔 [Logger] Système de logs et notifications chargé");
   
   // ═══════════════════════════════════════════════════════════════════════
@@ -550,5 +551,7 @@
   console.log("   - togglePersistanceNotifications(true/false)");
   console.log("   - window.PersistanceLogger.runDiagnostic()");
   console.log("   - Bouton flottant 🔍 (bas droite)");
+  console.log("🎯 [Logger] window.PersistanceLogger existe:", typeof window.PersistanceLogger);
+  console.log("🎯 [Logger] runDiagnostic existe:", typeof window.PersistanceLogger?.runDiagnostic);
   
 })();
