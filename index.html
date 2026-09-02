@@ -137,6 +137,18 @@
   <script src="/persistance-logger.js"></script>
   <script src="/persistance-logger-integration.js"></script>
   
+  <!-- 🚫 DÉSACTIVATION RESTAURATION GLOBALE (AVANT REACT) -->
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🚫 FLAG GLOBAL : DÉSACTIVER RESTAURATION TABLES
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Ce flag est lu par flowiseTableBridge.ts pour bloquer toute restauration
+    // IMPORTANT: Doit être défini AVANT le chargement de React/TypeScript
+    window.DISABLE_TABLE_RESTORATION = true;
+    console.log("🚫 [GLOBAL FLAG] DISABLE_TABLE_RESTORATION = true");
+    console.log("🚫 [GLOBAL FLAG] Restauration tables DÉSACTIVÉE au niveau global");
+  </script>
+  
   <!-- ⭐ INTÉGRATION DIRECTE DANS INDEX.HTML -->
   <script>
     (function() {
@@ -1107,7 +1119,7 @@
       
       // 2. Vérifier IndexedDB
       try {
-        const dbRequest = indexedDB.open('ClaraverseDB', 1);
+        const dbRequest = indexedDB.open('clara_db', 12); // ✅ Bon nom DB
         
         dbRequest.onsuccess = function(event) {
           const db = event.target.result;
@@ -1598,13 +1610,33 @@
       // Bouton 4: Tester Sauvegarde
       const btnSave = createButton('💾', 'Save', testSaveUI, ['#43e97b', '#38f9d7']);
       
+      // Bouton 5: Logs Console
+      const btnLogs = createButton('📜', 'Logs', showConsoleLogs, ['#ff6b6b', '#ee5a6f']);
+      
+      // Bouton 6: Nettoyer DB
+      const btnCleanDB = createButton('🗑️', 'Clean', cleanIndexedDB, ['#e74c3c', '#c0392b']);
+      
+      // Bouton 7: Logs Système (capture TOUS les logs)
+      const btnSystemLogs = createButton('🔧', 'System', showSystemLogs, ['#9b59b6', '#8e44ad']);
+      
+      // Bouton 8: Test Automatique Complet
+      const btnAutoTest = createButton('🧪', 'Test Auto', runAutoTest, ['#f39c12', '#e67e22']);
+      
+      // Bouton 9: Nettoyer Storage (localStorage + sessionStorage)
+      const btnCleanStorage = createButton('🧹', 'Storage', cleanAllStorage, ['#e74c3c', '#c0392b']);
+      
       container.appendChild(btnGeneral);
       container.appendChild(btnDoublons);
       container.appendChild(btnContamination);
       container.appendChild(btnSave);
+      container.appendChild(btnLogs);
+      container.appendChild(btnSystemLogs);
+      container.appendChild(btnAutoTest);
+      container.appendChild(btnCleanStorage);
+      container.appendChild(btnCleanDB);
       
       document.body.appendChild(container);
-      console.log("✅ [Diagnostic] 4 boutons créés (bas droite)");
+      console.log("✅ [Diagnostic] 9 boutons créés (bas droite)");
     }
     
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1680,7 +1712,7 @@
       }, 5000);
       
       try {
-        const dbRequest = indexedDB.open('ClaraverseDB', 1);
+        const dbRequest = indexedDB.open('clara_db', 12); // ✅ Bon nom DB
         
         dbRequest.onerror = function(event) {
           clearTimeout(timeoutId);
@@ -1697,13 +1729,13 @@
           try {
             const db = event.target.result;
             
-            if (!db.objectStoreNames.contains('generatedTables')) {
+            if (!db.objectStoreNames.contains('clara_generated_tables')) {
               clearTimeout(timeoutId);
-              showLongNotification("❌ ERREUR\n\nTable 'generatedTables'\nn'existe pas dans DB\n\nDB vide ou corrompue", 'error');
+              showLongNotification("❌ ERREUR\n\nTable 'clara_generated_tables'\nn'existe pas dans DB\n\nDB vide ou corrompue", 'error');
               return;
             }
             
-            const transaction = db.transaction(['generatedTables'], 'readonly');
+            const transaction = db.transaction(['clara_generated_tables'], 'readonly');
             
             transaction.onerror = function(event) {
               clearTimeout(timeoutId);
@@ -1711,7 +1743,7 @@
               showLongNotification("❌ ERREUR TRANSACTION\n\n" + (event.target?.error?.message || 'Unknown error'), 'error');
             };
             
-            const store = transaction.objectStore('generatedTables');
+            const store = transaction.objectStore('clara_generated_tables');
             const getAllRequest = store.getAll();
             
             getAllRequest.onerror = function(event) {
@@ -1935,10 +1967,429 @@
       }, 12000);
     }
     
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📜 AFFICHER LOGS CONSOLE (Interface)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    // Capturer console.log
+    const capturedLogs = [];
+    const MAX_LOGS = 100;
+    const originalLog = console.log;
+    const originalWarn = console.warn;
+    const originalError = console.error;
+    
+    console.log = function(...args) {
+      capturedLogs.push({
+        type: 'log',
+        timestamp: new Date().toISOString(),
+        message: args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')
+      });
+      if (capturedLogs.length > MAX_LOGS) capturedLogs.shift();
+      originalLog.apply(console, args);
+    };
+    
+    console.warn = function(...args) {
+      capturedLogs.push({
+        type: 'warn',
+        timestamp: new Date().toISOString(),
+        message: args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')
+      });
+      if (capturedLogs.length > MAX_LOGS) capturedLogs.shift();
+      originalWarn.apply(console, args);
+    };
+    
+    console.error = function(...args) {
+      capturedLogs.push({
+        type: 'error',
+        timestamp: new Date().toISOString(),
+        message: args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')
+      });
+      if (capturedLogs.length > MAX_LOGS) capturedLogs.shift();
+      originalError.apply(console, args);
+    };
+    
+    function showConsoleLogs() {
+      let message = "📜 LOGS CONSOLE (50 derniers)\n\n";
+      
+      // Filtrer logs pertinents
+      const relevantKeywords = [
+        'Bridge', 'INLINE', 'React', 'Session', 'Skip', 'restoration',
+        'IndexedDB', 'save', 'Table', 'flowiseTableBridge', 'clara_generated',
+        'contamination', 'doublon'
+      ];
+      
+      const filteredLogs = capturedLogs.filter(log => {
+        const msg = log.message.toLowerCase();
+        return relevantKeywords.some(keyword => msg.includes(keyword.toLowerCase()));
+      });
+      
+      if (filteredLogs.length === 0) {
+        message += "❌ Aucun log pertinent capturé\n\n";
+        message += "💡 Les logs n'ont peut-être pas\nencore été générés.\n\n";
+        message += "Essayez:\n";
+        message += "1. Créer une table\n";
+        message += "2. Changer de chat\n";
+        message += "3. Cliquer à nouveau sur ce bouton";
+        showLongNotification(message, 'error');
+        return;
+      }
+      
+      const lastLogs = filteredLogs.slice(-50);
+      
+      message += `📊 ${lastLogs.length} logs capturés\n\n`;
+      message += "─".repeat(40) + "\n\n";
+      
+      lastLogs.forEach((log, i) => {
+        const time = new Date(log.timestamp).toLocaleTimeString();
+        const icon = log.type === 'error' ? '❌' : log.type === 'warn' ? '⚠️' : 'ℹ️';
+        const msg = log.message.substring(0, 100);
+        message += `${icon} ${time}\n${msg}\n\n`;
+      });
+      
+      message += "─".repeat(40) + "\n";
+      message += "💡 Cherchez:\n";
+      message += "• '⏭️ Skip restoration' → Doublons fix\n";
+      message += "• '💾 [Bridge] Handling' → Save fix\n";
+      message += "• 'IndexedDB: Creating' → DB init\n";
+      message += "• '🔄 [React] SessionId' → useRef fix";
+      
+      showLongNotification(message, 'info');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // � LOGS SYSTÈME COMPLETS (Tous logs, pas seulement Cross Ref)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    function showSystemLogs() {
+      let message = "📜 LOGS SYSTÈME (100 derniers)\n\n";
+      
+      if (capturedLogs.length === 0) {
+        message += "❌ Aucun log système capturé\n\n";
+        message += "💡 Les logs apparaîtront après:\n";
+        message += "• Ouverture chat\n";
+        message += "• Génération table\n";
+        message += "• Changement session";
+        showLongNotification(message, 'error');
+        return;
+      }
+      
+      // Prendre les 100 derniers logs (tous, sans filtre)
+      const lastLogs = capturedLogs.slice(-100);
+      
+      message += `📊 ${lastLogs.length} logs capturés\n\n`;
+      message += "─".repeat(40) + "\n\n";
+      
+      // Chercher spécifiquement le log DISABLED
+      const hasDisabledLog = lastLogs.some(log => 
+        log.message.includes('DISABLED') || 
+        log.message.includes('Skipping restoration')
+      );
+      
+      if (hasDisabledLog) {
+        message += "✅ LOG DÉSACTIVATION TROUVÉ!\n";
+        message += "La restauration est bien désactivée\n\n";
+        message += "─".repeat(40) + "\n\n";
+      } else {
+        message += "⚠️ LOG DÉSACTIVATION ABSENT\n";
+        message += "La restauration s'exécute encore!\n\n";
+        message += "─".repeat(40) + "\n\n";
+      }
+      
+      lastLogs.forEach((log, i) => {
+        const time = new Date(log.timestamp).toLocaleTimeString();
+        const icon = log.type === 'error' ? '❌' : log.type === 'warn' ? '⚠️' : 'ℹ️';
+        
+        // Limiter longueur message
+        let msg = log.message;
+        if (msg.length > 80) {
+          msg = msg.substring(0, 77) + '...';
+        }
+        
+        // Highlight logs importants
+        if (msg.includes('DISABLED') || msg.includes('Skipping')) {
+          message += `🚫 ${time}\n${msg}\n\n`;
+        } else if (msg.includes('SessionId') || msg.includes('React')) {
+          message += `🔄 ${time}\n${msg}\n\n`;
+        } else if (msg.includes('Bridge') || msg.includes('Handling')) {
+          message += `💾 ${time}\n${msg}\n\n`;
+        } else if (msg.includes('IndexedDB') || msg.includes('Creating')) {
+          message += `💿 ${time}\n${msg}\n\n`;
+        } else {
+          message += `${icon} ${time}\n${msg}\n\n`;
+        }
+      });
+      
+      message += "─".repeat(40) + "\n";
+      message += "💡 CHERCHEZ:\n";
+      message += "🚫 'DISABLED Skipping' → Restauration OFF\n";
+      message += "🔄 '[React] SessionId' → Isolation OK\n";
+      message += "💾 '[Bridge] Handling' → Save OK\n";
+      message += "💿 'IndexedDB: Creating' → DB init OK";
+      
+      showLongNotification(message, 'info');
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // �🗑️ NETTOYER INDEXEDDB (Interface)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    
+// ═══════════════════════════════════════════════════════════════════════════
+// 🧪 TEST AUTOMATIQUE COMPLET - À insérer dans index.html
+// ═══════════════════════════════════════════════════════════════════════════
+
+function runAutoTest() {
+  let message = "🧪 TEST AUTOMATIQUE COMPLET\n\n";
+  message += "─".repeat(40) + "\n\n";
+  
+  let allPassed = true;
+  const errors = [];
+  
+  // TEST 1: Flag Global
+  message += "TEST 1: Flag Global\n";
+  if (window.DISABLE_TABLE_RESTORATION === true) {
+    message += "✅ DISABLE_TABLE_RESTORATION = true\n\n";
+  } else {
+    message += "❌ Flag absent (valeur: " + window.DISABLE_TABLE_RESTORATION + ")\n\n";
+    allPassed = false;
+    errors.push("Flag global");
+  }
+  
+  // TEST 2: Log Désactivation
+  message += "TEST 2: Log Désactivation\n";
+  const hasDisabledLog = capturedLogs.some(log => 
+    log.message.includes('DISABLED') && 
+    (log.message.includes('Global flag') || log.message.includes('Skipping'))
+  );
+  
+  if (hasDisabledLog) {
+    message += "✅ Log 🚫 DISABLED trouvé\n\n";
+  } else {
+    message += "❌ Log 🚫 DISABLED absent\n\n";
+    allPassed = false;
+    errors.push("Log désactivation");
+  }
+  
+  // TEST 3: Contamination (async via IndexedDB)
+  message += "TEST 3: Contamination\n";
+  message += "⏳ Analyse en cours...\n\n";
+  
+  const sessionIdElement = document.querySelector('[data-session-id]');
+  const currentSessionId = sessionIdElement?.getAttribute('data-session-id')?.trim();
+  
+  if (!currentSessionId) {
+    message += "❌ SessionId non trouvé\n\n";
+    message += "─".repeat(40) + "\n\n";
+    message += "❌ TESTS INCOMPLETS\n\n";
+    errors.forEach(e => message += "• " + e + "\n");
+    showLongNotification(message, 'error');
+    return;
+  }
+  
+  const allTables = document.querySelectorAll('table');
+  const tablesDOM = allTables.length;
+  
+  try {
+    const dbRequest = indexedDB.open('clara_db', 12);
+    
+    dbRequest.onsuccess = function(event) {
+      const db = event.target.result;
+      
+      if (!db.objectStoreNames.contains('clara_generated_tables')) {
+        message += "⚠️ Store absent\n\n";
+        message += "─".repeat(40) + "\n";
+        message += "⚠️ TESTS PARTIELS\n";
+        showLongNotification(message, 'error');
+        return;
+      }
+      
+      const transaction = db.transaction(['clara_generated_tables'], 'readonly');
+      const store = transaction.objectStore('clara_generated_tables');
+      const getAllRequest = store.getAll();
+      
+      getAllRequest.onsuccess = function() {
+        const allRecords = getAllRequest.result || [];
+        const currentTables = allRecords.filter(r => r.sessionId === currentSessionId);
+        const otherTables = allRecords.filter(r => r.sessionId !== currentSessionId);
+        
+        let finalMessage = message;
+        
+        // Compter contamination
+        let contamination = 0;
+        allTables.forEach(table => {
+          const tableId = table.dataset.tableId || table.id;
+          const keyword = table.dataset.keyword;
+          
+          const isContaminated = otherTables.some(record => 
+            record.id === tableId || record.keyword === keyword
+          );
+          
+          if (isContaminated) contamination++;
+        });
+        
+        finalMessage += `📊 DB: ${allRecords.length} tables totales\n`;
+        finalMessage += `📊 Session: ${currentTables.length} tables\n`;
+        finalMessage += `📊 Autres: ${otherTables.length} tables\n`;
+        finalMessage += `📺 Visibles: ${tablesDOM} tables\n\n`;
+        
+        if (contamination === 0) {
+          finalMessage += "✅ Aucune contamination\n\n";
+        } else {
+          finalMessage += `❌ ${contamination} contamination(s)\n\n`;
+          allPassed = false;
+          errors.push(`${contamination} contamination`);
+        }
+        
+        // TEST 4: Doublons
+        finalMessage += "TEST 4: Doublons\n";
+        const byKeyword = {};
+        allTables.forEach((table, i) => {
+          const kw = table.dataset.keyword || `no-kw-${i}`;
+          if (!byKeyword[kw]) byKeyword[kw] = [];
+          byKeyword[kw].push(table);
+        });
+        
+        const doublons = Object.entries(byKeyword).filter(([k, t]) => t.length > 1);
+        
+        if (doublons.length === 0) {
+          finalMessage += `✅ Aucun doublon (${Object.keys(byKeyword).length} uniques)\n\n`;
+        } else {
+          finalMessage += `❌ ${doublons.length} doublon(s):\n`;
+          doublons.forEach(([kw, t]) => {
+            finalMessage += `   • ${kw}: ${t.length}x\n`;
+          });
+          finalMessage += "\n";
+          allPassed = false;
+          errors.push(`${doublons.length} doublons`);
+        }
+        
+        // RÉSULTAT FINAL
+        finalMessage += "─".repeat(40) + "\n\n";
+        
+        if (allPassed) {
+          finalMessage += "🎉 TOUS LES TESTS PASSÉS!\n\n";
+          finalMessage += "✅ Flag global actif\n";
+          finalMessage += "✅ Restauration OFF\n";
+          finalMessage += "✅ Zéro contamination\n";
+          finalMessage += "✅ Zéro doublon\n\n";
+          finalMessage += "💡 Système 100% OK";
+          showLongNotification(finalMessage, 'success');
+        } else {
+          finalMessage += `❌ ${errors.length} ERREUR(S):\n\n`;
+          errors.forEach((e, i) => finalMessage += `${i + 1}. ${e}\n`);
+          finalMessage += "\n💡 Vérifier logs et rebuild";
+          showLongNotification(finalMessage, 'error');
+        }
+      };
+    };
+    
+    dbRequest.onerror = function() {
+      message += "❌ Erreur IndexedDB\n";
+      showLongNotification(message, 'error');
+    };
+    
+  } catch (e) {
+    message += "❌ Exception: " + e.message + "\n";
+    showLongNotification(message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 🧹 NETTOYER STORAGE COMPLET (localStorage + sessionStorage + IndexedDB)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function cleanAllStorage() {
+  const confirmMessage = "⚠️ ATTENTION - NETTOYAGE COMPLET\n\nCette action va SUPPRIMER:\n\n🗑️ localStorage (configs)\n🗑️ sessionStorage (session)\n🗑️ IndexedDB (tables)\n\n❌ TOUTES vos données!\n\nConfirmer ?";
+  
+  if (!confirm(confirmMessage)) {
+    showLongNotification("ℹ️ ANNULÉ\n\nAucune modification.", 'info');
+    return;
+  }
+  
+  showLongNotification("🔄 NETTOYAGE...\n\nVeuillez patienter...", 'info');
+  
+  try {
+    let localKB = 0;
+    try {
+      for (let k in localStorage) {
+        if (localStorage.hasOwnProperty(k)) localKB += localStorage[k].length;
+      }
+      localStorage.clear();
+    } catch (e) { console.error('localStorage:', e); }
+    
+    let sessionKB = 0;
+    try {
+      for (let k in sessionStorage) {
+        if (sessionStorage.hasOwnProperty(k)) sessionKB += sessionStorage[k].length;
+      }
+      sessionStorage.clear();
+    } catch (e) { console.error('sessionStorage:', e); }
+    
+    const req = indexedDB.deleteDatabase('clara_db');
+    
+    req.onsuccess = () => {
+      showLongNotification(
+        "✅ NETTOYAGE OK!\n\n" +
+        "🗑️ localStorage: OK\n" +
+        "🗑️ sessionStorage: OK\n" +
+        "🗑️ IndexedDB: OK\n\n" +
+        `💾 ~${Math.round((localKB + sessionKB) / 1024)} KB libérés\n\n` +
+        "🔄 Rechargement dans 2s...",
+        'success'
+      );
+      setTimeout(() => location.reload(), 2000);
+    };
+    
+    req.onerror = (e) => {
+      showLongNotification("⚠️ PARTIEL\n\nStorage OK\nIndexedDB: Erreur", 'error');
+    };
+    
+  } catch (e) {
+    showLongNotification("❌ ERREUR\n\n" + e.message, 'error');
+  }
+}
+
+function cleanIndexedDB() {
+      const confirmMessage = "⚠️ ATTENTION\n\nCette action va SUPPRIMER toutes\nles tables sauvegardées en IndexedDB.\n\n🗑️ Cela éliminera la contamination\nmais vous perdrez toute persistance.\n\n✅ Vous devrez regénérer vos tables.\n\nConfirmer suppression ?";
+      
+      if (!confirm(confirmMessage)) {
+        showLongNotification("ℹ️ ANNULÉ\n\nNettoyage IndexedDB annulé.\nAucune modification effectuée.", 'info');
+        return;
+      }
+      
+      showLongNotification("🔄 NETTOYAGE...\n\nSuppression IndexedDB en cours\nVeuillez patienter...", 'info');
+      
+      try {
+        const deleteRequest = indexedDB.deleteDatabase('clara_db');
+        
+        deleteRequest.onsuccess = function() {
+          showLongNotification("✅ SUCCÈS\n\nIndexedDB supprimée avec succès!\n\n📊 Toutes tables effacées\n🔄 Rechargez (F5) pour\nréinitialiser complètement\n\n💡 Contamination éliminée", 'success');
+          
+          // Recharger après 3 secondes
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        };
+        
+        deleteRequest.onerror = function(event) {
+          console.error("Erreur suppression DB:", event);
+          showLongNotification("❌ ERREUR\n\nImpossible de supprimer DB\n\nErreur: " + (event.target?.error?.message || 'Unknown'), 'error');
+        };
+        
+        deleteRequest.onblocked = function() {
+          showLongNotification("⚠️ BLOQUÉ\n\nSuppression bloquée\n\nFermez tous les onglets\nde cette application\net réessayez", 'error');
+        };
+        
+      } catch (e) {
+        console.error("Exception suppression DB:", e);
+        showLongNotification("❌ ERREUR\n\n" + e.message, 'error');
+      }
+    }
+    
     // Créer boutons après 2 secondes
     setTimeout(createAdvancedDiagnosticButtons, 2000);
     
-    console.log("✅ [INLINE] Script chargé");
+    console.log("✅ [INLINE] Script chargé avec capture logs + clean DB");
   </script>
   
   <script src="/papier-travail-schema-calcul.js"></script>
