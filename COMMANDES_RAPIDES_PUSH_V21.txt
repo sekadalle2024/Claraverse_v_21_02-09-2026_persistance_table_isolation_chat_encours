@@ -1,0 +1,189 @@
+================================================================
+    COMMANDES RAPIDES - PUSH CLARAVERSE V21
+    À COPIER-COLLER DIRECTEMENT DANS POWERSHELL
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 MÉTHODE RECOMMANDÉE : Script automatisé
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Aller dans le dossier du projet
+cd h:\Claverse_1
+
+# Exécuter le script de push
+.\push-claraverse-v21-persistance-02-09-2026.ps1
+
+# Suivre les instructions à l'écran
+# Taper "O" quand demandé
+# Attendre 10-20 minutes
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 COMMANDES DE VÉRIFICATION (Avant push)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir l'état actuel
+git status
+
+# Voir la branche actuelle
+git branch
+
+# Voir le repository distant
+git remote -v
+
+# Voir les derniers commits
+git log --oneline -10
+
+# Voir la taille du projet
+Get-ChildItem -Recurse -File -Exclude .git | Measure-Object -Property Length -Sum | Select-Object @{Name="TailleMB";Expression={[math]::Round($_.Sum/1MB, 2)}}
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 CONFIGURATION GIT (Le script le fait automatiquement)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Désactiver la compression
+git config core.compression 0
+
+# Augmenter le buffer HTTP à 1 GB
+git config http.postBuffer 1048576000
+
+# Désactiver les timeouts
+git config http.lowSpeedTime 999999
+git config http.lowSpeedLimit 0
+
+# Optimiser les packs
+git config pack.windowMemory "100m"
+git config pack.packSizeLimit "100m"
+git config pack.threads "1"
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔄 MÉTHODE MANUELLE (Si le script ne fonctionne pas)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. Configurer le repository distant
+git remote set-url origin https://github.com/sekadalle2024/Claraverse_v_21_02-09-2026_persistance_table_isolation_chat_encours
+
+# 2. Vérifier la branche
+git checkout main
+
+# 3. Partie 1 : Code Source
+git add src/
+git commit -m "Sauvegarde ClaraVerse V21 - 02 Sept 2026 - Partie 1: Code Source"
+git push origin main
+
+# 4. Partie 2 : Backend
+git add py_backend/
+git commit -m "Sauvegarde ClaraVerse V21 - 02 Sept 2026 - Partie 2: Backend Python"
+git push origin main
+
+# 5. Partie 3 : Fichiers Publics
+git add public/
+git commit -m "Sauvegarde ClaraVerse V21 - 02 Sept 2026 - Partie 3: Fichiers Publics"
+git push origin main
+
+# 6. Partie 4 : Documentation principale
+git add "Doc menu demarrer/" "Doc export rapport/" "Doc_Lead_Balance/" "Doc_Etat_Fin/" "Doc papier de travail javascript/" "Doc Systeme persistance chat/"
+git commit -m "Sauvegarde ClaraVerse V21 - 02 Sept 2026 - Partie 4: Documentation principale"
+git push origin main
+
+# 7. Partie 5 : Documentations diverses
+git add *.md *.txt "Doc_Github_Issue/" "Doc Koyeb deploy/" "Doc backend github/" "deploiement-netlify/" "Doc cross ref documentaire menu/" "Doc_Heatmap_Risque/" "Doc_AIONUI/"
+git commit -m "Sauvegarde ClaraVerse V21 - 02 Sept 2026 - Partie 5: Documentations diverses"
+git push origin main
+
+# 8. Partie 6 : Fichiers restants
+git add .
+git commit -m "Sauvegarde ClaraVerse V21 - 02 Sept 2026 - Partie 6: Configuration"
+git push origin main
+
+# 9. Vérification finale
+git status
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🆘 DÉPANNAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Si erreur "Connection reset"
+# Attendre 5 minutes et relancer
+
+# Si erreur "HTTP 408 Timeout"
+# Vérifier la connexion :
+Test-Connection github.com -Count 4
+
+# Si push bloqué
+# Arrêter avec Ctrl+C puis vérifier :
+git status
+
+# Annuler le dernier commit (si nécessaire)
+git reset --soft HEAD~1
+
+# Forcer le push (DANGER - à utiliser avec précaution)
+git push origin main --force
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 VÉRIFICATION APRÈS PUSH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir l'état Git
+git status
+
+# Voir les commits poussés
+git log --oneline -10
+
+# Vérifier la synchronisation
+git fetch origin
+git status
+
+# Voir les branches
+git branch -a
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌐 LIENS UTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Repository GitHub :
+https://github.com/sekadalle2024/Claraverse_v_21_02-09-2026_persistance_table_isolation_chat_encours
+
+GitHub Desktop (solution alternative) :
+https://desktop.github.com/
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 COMMANDE ULTRA-RAPIDE (TOUT EN UNE LIGNE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd h:\Claverse_1; .\push-claraverse-v21-persistance-02-09-2026.ps1
+
+# Copiez-collez cette ligne et appuyez sur Entrée !
+
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 CONSEILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Utilisez le script automatisé (recommandé)
+✅ Assurez-vous d'avoir une connexion stable
+✅ N'interrompez pas le push en cours
+✅ Le script gère les retries automatiquement
+✅ Vérifiez sur GitHub après le push
+
+================================================================
+
+Date : 02 Septembre 2026
+Version : V21
+Repository : Claraverse_v_21_02-09-2026_persistance_table_isolation_chat_encours
+
+================================================================
