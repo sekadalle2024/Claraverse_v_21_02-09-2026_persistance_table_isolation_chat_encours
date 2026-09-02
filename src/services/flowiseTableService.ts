@@ -1886,6 +1886,87 @@ export class FlowiseTableService {
   getCacheUtilization(): number {
     return flowiseTableCache.getUtilization();
   }
+
+  /**
+   * Find table by keyword and session (anti-doublon)
+   * Returns existing table with same keyword in the session
+   * Used to detect duplicates and update instead of creating new entries
+   */
+  async findTableByKeywordAndSession(
+    sessionId: string,
+    keyword: string
+  ): Promise<FlowiseGeneratedTableRecord | null> {
+    try {
+      const tables = await this.restoreSessionTables(sessionId);
+      const found = tables.find(t => 
+        t.keyword.toLowerCase() === keyword.toLowerCase()
+      );
+      return found || null;
+    } catch (error) {
+      console.error('❌ Error finding table by keyword:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Update existing table (preserve id, update content)
+   * Used when table with same keyword is regenerated/modified
+   * Prevents duplicates by updating instead of creating new entry
+   */
+  async updateGeneratedTable(
+    tableId: string,
+    tableElement: HTMLTableElement,
+    keyword: string,
+    source: FlowiseTableSource,
+    messageId?: string
+  ): Promise<boolean> {
+    try {
+      // Récupérer table existante
+      const existing = await indexedDBService.getGeneratedTable(tableId);
+      if (!existing) {
+        console.warn(`⚠️ Table ${tableId} not found, cannot update`);
+        return false;
+      }
+
+      // Mettre à jour contenu
+      let html = tableElement.outerHTML;
+      const originalSize = html.length;
+      const metadata = this.extractTableMetadata(tableElement, html);
+
+      // Compress if needed
+      if (originalSize > this.COMPRESSION_THRESHOLD) {
+        html = this.compressHTML(html);
+        metadata.compressed = true;
+        metadata.originalSize = originalSize;
+      }
+
+      // Créer record mis à jour (garde même id)
+      const updatedRecord: FlowiseGeneratedTableRecord = {
+        ...existing,
+        html,
+        fingerprint: this.generateTableFingerprint(tableElement),
+        timestamp: new Date().toISOString(),
+        source,
+        messageId: messageId || existing.messageId,
+        metadata
+      };
+
+      // Sauver
+      await indexedDBService.putGeneratedTable(updatedRecord);
+      console.log(`✅ Table updated: ${tableId} (keyword: ${keyword})`);
+      
+      // Update cache if enabled
+      if (this.cachingEnabled) {
+        flowiseTableCache.set(tableId, updatedRecord);
+      }
+      
+      return true;
+
+    } catch (error) {
+      console.error('❌ Error updating table:', error);
+      return false;
+    }
+  }
 }
 
 // Export singleton instance

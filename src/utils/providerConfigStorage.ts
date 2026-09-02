@@ -3,10 +3,30 @@ const STORAGE_KEY = 'clara_provider_configs';
 import type { ClaraAIConfig } from '../types/clara_assistant_types';
 
 export function saveProviderConfig(providerId: string, config: ClaraAIConfig) {
-  const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  all[providerId] = config;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
-  console.log(`Saved config for provider ${providerId}:`, config);
+  try {
+    const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    all[providerId] = config;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+    console.log(`Saved config for provider ${providerId}:`, config);
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      console.error('❌ LocalStorage full! Attempting cleanup...');
+      
+      // Essayer de nettoyer les anciennes données
+      try {
+        // Garder seulement la config actuelle
+        const minimal = { [providerId]: config };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(minimal));
+        console.log('✅ Cleanup successful, saved minimal config');
+      } catch (retryError) {
+        console.error('❌ Cannot save config even after cleanup:', retryError);
+        alert('⚠️ Stockage saturé!\n\nOuvrez la console (F12) et exécutez:\nlocalStorage.clear();\nsessionStorage.clear();\nlocation.reload();');
+      }
+    } else {
+      console.error('❌ Error saving provider config:', error);
+      throw error;
+    }
+  }
 }
 
 export function loadProviderConfig(providerId: string): ClaraAIConfig | null {

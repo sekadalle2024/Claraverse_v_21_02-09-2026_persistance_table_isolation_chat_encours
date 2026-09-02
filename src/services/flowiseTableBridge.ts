@@ -76,30 +76,9 @@ export class FlowiseTableBridge {
    * Requirements: 1.2, 4.1, 4.2, 4.3, 4.4
    */
   private async initializeRestoration(): Promise<void> {
-    // Vérifier le gestionnaire de verrouillage
-    if ((window as any).restoreLockManager && !(window as any).restoreLockManager.canRestore()) {
-      console.log('🔒 Bridge: Restauration bloquée par le gestionnaire de verrouillage');
-      return;
-    }
-
-    // Wait for DOM to be fully ready
-    if (document.readyState === 'loading') {
-      await new Promise<void>(resolve => {
-        const handler = () => {
-          document.removeEventListener('DOMContentLoaded', handler);
-          resolve();
-        };
-        document.addEventListener('DOMContentLoaded', handler);
-      });
-    }
-
-    // Restore tables for the current session if one is detected
-    if (this.currentSessionId) {
-      console.log(`🔄 Auto-restoring tables for session: ${this.currentSessionId}`);
-      await this.restoreTablesForSession(this.currentSessionId);
-    } else {
-      console.log('ℹ️ No session detected on initialization, skipping auto-restore');
-    }
+    // 🚫 DÉSACTIVATION: Restauration désactivée pour prévenir contamination
+    console.log('🚫 [DISABLED] initializeRestoration disabled to prevent contamination');
+    return;
   }
 
   // ==================
@@ -623,14 +602,17 @@ export class FlowiseTableBridge {
       return;
     }
 
+    // 🚨 LOG DIAGNOSTIC: Confirmer bypass via conso.js (Hypothèse Gemini)
+    console.log(`🚨 [DIAGNOSTIC] Événement save:request reçu via conso.js pour: "${detail.keyword}"`);
     console.log(`💾 [Bridge] Handling save request for: ${detail.keyword}`);
 
     // Convert to FlowiseTableIntegratedDetail format
     const integratedDetail: FlowiseTableIntegratedDetail = {
       table: detail.table,
       keyword: detail.keyword,
-      source: detail.source || 'conso',
-      messageId: undefined // Will be detected automatically
+      source: (detail.source as FlowiseTableSource) || 'n8n',
+      messageId: undefined, // Will be detected automatically
+      timestamp: Date.now()
     };
 
     this.handleTableIntegrated(integratedDetail);
@@ -652,13 +634,9 @@ export class FlowiseTableBridge {
     console.log(`🔄 Session changed from ${this.currentSessionId} to: ${detail.sessionId}`);
     this.currentSessionId = detail.sessionId;
     
-    // Clear previously restored tables from DOM before loading new session
-    // Requirements: 9.3
-    this.clearRestoredTablesFromDOM();
-    
-    // Restore tables for the new session
-    // Requirements: 9.3
-    this.restoreTablesForSession(detail.sessionId);
+    // 🚫 DÉSACTIVATION: Ne pas restaurer au changement de session
+    console.log('🚫 [DISABLED] Skipping restoration on session change');
+    return;
   }
 
   /**
@@ -719,7 +697,45 @@ export class FlowiseTableBridge {
       // Generate fingerprint to check for duplicates
       const fingerprint = flowiseTableService.generateTableFingerprint(tableElement);
 
-      // Check if table already exists
+      // 🛡️ ANTI-DOUBLONS: Vérifier par keyword+session (pas seulement fingerprint)
+      // Évite duplication même si contenu légèrement modifié
+      const existingByKeyword = await flowiseTableService.findTableByKeywordAndSession(
+        this.currentSessionId,
+        keyword
+      );
+
+      if (existingByKeyword) {
+        // Table avec même keyword existe déjà dans cette session
+        const shouldUpdate = await this.shouldUpdateExistingTable(
+          existingByKeyword,
+          tableElement,
+          fingerprint
+        );
+        
+        if (shouldUpdate) {
+          console.log(`🔄 Updating existing table "${keyword}" (${existingByKeyword.id})`);
+          // Mettre à jour table existante (modifications conso.js ou manuelles)
+          const updated = await flowiseTableService.updateGeneratedTable(
+            existingByKeyword.id,
+            tableElement,
+            keyword,
+            source,
+            messageId
+          );
+          
+          if (updated) {
+            console.log(`✅ Table updated successfully: ${existingByKeyword.id}${messageId ? ` (linked to message: ${messageId})` : ''}`);
+            // Emit success event avec ID existant
+            this.emitTableSaved(existingByKeyword.id, this.currentSessionId, keyword, fingerprint);
+          }
+          return;
+        } else {
+          console.log(`ℹ️ Table "${keyword}" unchanged, skipping duplicate`);
+          return;
+        }
+      }
+
+      // Check if table already exists by fingerprint (fallback)
       const exists = await flowiseTableService.tableExists(this.currentSessionId, fingerprint);
 
       if (exists) {
@@ -763,6 +779,26 @@ export class FlowiseTableBridge {
       // Task 11.3: Retry failed saves after 2 seconds, max 2 attempts
       await this.retryTableSave(detail, error);
     }
+  }
+
+  /**
+   * Determine if existing table should be updated
+   * Compares fingerprints to detect content changes
+   */
+  private async shouldUpdateExistingTable(
+    existingTable: FlowiseGeneratedTableRecord,
+    newTableElement: HTMLTableElement,
+    newFingerprint: string
+  ): Promise<boolean> {
+    // Si fingerprint différent → Contenu modifié → Mettre à jour
+    if (existingTable.fingerprint !== newFingerprint) {
+      console.log(`🔄 Content changed for "${existingTable.keyword}" (fingerprint diff)`);
+      return true;
+    }
+
+    // Si fingerprint identique → Contenu inchangé → Skip
+    console.log(`ℹ️ Content unchanged for "${existingTable.keyword}"`);
+    return false;
   }
 
   /**
@@ -1020,8 +1056,21 @@ export class FlowiseTableBridge {
    * Restore all tables for a specific session
    * Requirements: 1.2, 4.1, 4.2, 4.5, 10.2, 10.5
    * Task 11: Enhanced with graceful error handling
+   * 
+   * 🚨 DÉSACTIVÉ TEMPORAIREMENT - Cause contamination entre chats
    */
   public async restoreTablesForSession(sessionId: string): Promise<void> {
+    // 🚫 VÉRIFIER FLAG GLOBAL (défini dans index.html)
+    if ((window as any).DISABLE_TABLE_RESTORATION === true) {
+      console.log(`🚫 [DISABLED] Global flag detected - Skipping restoreTablesForSession for "${sessionId}"`);
+      return;
+    }
+    
+    // 🚨 DÉSACTIVATION COMPLÈTE RESTAURATION (backup si flag absent)
+    console.log(`🚫 [DISABLED] Skipping restoreTablesForSession for "${sessionId}" - restoration temporarily disabled to prevent contamination`);
+    return;
+    
+    /* CODE ORIGINAL DÉSACTIVÉ
     try {
       console.log(`🔄 Restoring tables for session: ${sessionId}`);
 
@@ -1130,6 +1179,7 @@ export class FlowiseTableBridge {
       
       // Don't throw - gracefully fail
     }
+    */ // FIN CODE ORIGINAL DÉSACTIVÉ
   }
 
   /**
@@ -1375,8 +1425,15 @@ export class FlowiseTableBridge {
    * 
    * IMPORTANT: Matches tables by KEYWORD instead of containerID
    * because containerIDs change on each page reload.
+   * 
+   * 🚨 DÉSACTIVÉ TEMPORAIREMENT - Cause doublons et contamination
    */
   private injectTableIntoDOM(tableData: FlowiseGeneratedTableRecord): void {
+    // 🚨 DÉSACTIVATION COMPLÈTE RESTAURATION
+    console.log(`🚫 [DISABLED] Skipping restoration of "${tableData.keyword}" - restoration temporarily disabled to prevent contamination`);
+    return;
+    
+    /* CODE ORIGINAL DÉSACTIVÉ
     try {
       // ✅ EXCEPTION: Ne pas restaurer Table_Consolidation et Table_Resultat
       // Ces tables sont gérées par conso.js avec des event listeners dynamiques
@@ -1458,6 +1515,7 @@ export class FlowiseTableBridge {
     } catch (error) {
       console.error(`❌ Error restoring table ${tableData.id}:`, error);
     }
+    */ // FIN CODE DÉSACTIVÉ
   }
 
   /**
@@ -2240,6 +2298,12 @@ export class FlowiseTableBridge {
    * @returns Number of tables restored
    */
   public async restoreTablesChronologically(messages: any[]): Promise<number> {
+    // 🛡️ NIVEAU 3 - Vérification flag global (comme restoreTablesForSession)
+    if ((window as any).DISABLE_TABLE_RESTORATION === true) {
+      console.log(`🚫 [CHRONO] Global flag DISABLE_TABLE_RESTORATION detected, skipping chronological restoration`);
+      return 0;
+    }
+    
     if (!this.currentSessionId) {
       console.warn('⚠️ No active session, cannot restore tables chronologically');
       return 0;
@@ -2254,24 +2318,36 @@ export class FlowiseTableBridge {
         messages
       );
 
-      if (timeline.length === 0) {
+      // 🛡️ FILTRAGE DÉFENSIF STRICT - Isolation sessions (ROOT CAUSE FIX)
+      // Ne garder QUE les tables de la session actuelle pour éviter contamination
+      const filteredTimeline = timeline.filter(item => {
+        const belongsToSession = item.sessionId === this.currentSessionId;
+        if (!belongsToSession && item.type === 'table') {
+          console.warn(`🚫 [ISOLATION] Table autre session filtrée: "${(item as any).keyword}" (session: ${item.sessionId})`);
+        }
+        return belongsToSession;
+      });
+
+      if (filteredTimeline.length === 0) {
         console.log(`ℹ️ No timeline items for session ${this.currentSessionId}`);
         return 0;
       }
 
       // Validate timeline ordering
-      const isValid = flowiseTimelineService.validateTimelineOrdering(timeline);
+      const isValid = flowiseTimelineService.validateTimelineOrdering(filteredTimeline);
       if (!isValid) {
         console.error('❌ Timeline ordering validation failed');
       }
 
       // Filter only table items
-      const tableItems = timeline.filter(item => item.type === 'table') as TableTimelineItem[];
+      const tableItems = filteredTimeline.filter(item => item.type === 'table') as TableTimelineItem[];
 
       if (tableItems.length === 0) {
         console.log(`ℹ️ No tables to restore for session ${this.currentSessionId}`);
         return 0;
       }
+
+      console.log(`✅ Filtered timeline: ${tableItems.length} table(s) for session ${this.currentSessionId}`);
 
       // Restore each table in chronological order
       for (const tableItem of tableItems) {
